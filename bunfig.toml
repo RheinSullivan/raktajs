@@ -1,0 +1,15 @@
+[install]
+auto = "fallback"
+exact = false
+registry = "https://registry.npmjs.org/"
+
+[install.cache]
+disable = false
+
+[run]
+bun = true
+
+[build]
+target = "bun"
+splitting = false
+sourcemap = "external"

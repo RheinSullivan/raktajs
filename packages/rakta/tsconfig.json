@@ -1,0 +1,31 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "declarationDir": "./dist",
+    "jsx": "react-jsx",
+    "types": [
+      "node",
+      "bun",
+      "react",
+      "react-dom"
+    ],
+    "paths": {
+      "rakta": [
+        "./src/index.ts"
+      ],
+      "rakta/*": [
+        "./src/*/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

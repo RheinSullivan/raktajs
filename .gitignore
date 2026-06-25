@@ -1,0 +1,87 @@
+# Local history / editor backup
+.history/
+.history/**
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Dependencies
+node_modules/
+**/node_modules/
+.pnp/
+.pnp.cjs
+
+# Bun
+bun.lockb
+# Kalau mau commit lockfile Bun terbaru, jangan ignore bun.lock
+# bun.lock
+
+# Build output
+dist/
+**/dist/
+build/
+**/build/
+out/
+**/out/
+.next/
+.nuxt/
+.output/
+.vercel/
+.netlify/
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+bun-debug.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env*.example
+
+# Cache
+.cache/
+**/.cache/
+.turbo/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+
+# Testing / coverage
+coverage/
+**/coverage/
+.nyc_output/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / editor
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Generated package artifacts
+*.tgz
+
+# Rakta generated output
+.rakta/
+**/.rakta/
