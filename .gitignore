@@ -13,7 +13,6 @@ node_modules/
 
 # Bun
 bun.lockb
-# Kalau mau commit lockfile Bun terbaru, jangan ignore bun.lock
 # bun.lock
 
 # Build output

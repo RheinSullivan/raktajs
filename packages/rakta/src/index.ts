@@ -23,8 +23,6 @@ export function defineRaktaConfig(config: RaktaConfig): RaktaConfig {
 }
 
 export const RAKTA_NAME = "Rakta.js";
-
 export const RAKTA_VERSION = "0.1.0";
-
 export const RAKTA_TAGLINE =
   "Small in size. Fierce in speed. Alive in every route.";
