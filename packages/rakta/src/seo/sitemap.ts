@@ -209,15 +209,16 @@ export function generateSitemapIndexXml(
   const normalizedBase = normalizeBaseUrl(baseUrl);
   const xmlParts: string[] = [];
 
-  xmlParts.push(`
-    <?xml 
-        version="1.0" 
-        encoding="UTF-8"?
-    >
-`);
-  xmlParts.push(`
-    <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-`);
+    xmlParts.push(`
+        <?xml 
+            version="1.0" 
+            encoding="UTF-8"?
+        >
+    `);
+    
+    xmlParts.push(`
+        <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    `);
 
   for (const entry of sitemaps) {
     const fullLoc = createAbsoluteUrl(normalizedBase, entry.loc);
