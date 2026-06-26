@@ -23,8 +23,7 @@
     "declarationMap": true,
     "sourceMap": true,
     "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "ignoreDeprecations": "6.0",
+    "isolatedModules": true
   },
   "exclude": [
     "node_modules",

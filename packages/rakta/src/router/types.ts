@@ -7,9 +7,9 @@ export type RouteKind =
     | "api";
 
 export interface RouteSegment {
-    raw: string;
-    isDynamic: boolean;
-    paramName: string;
+  raw: string;
+  isDynamic: boolean;
+  paramName: string;
 };
 
 export interface RouteManifestEntry {
@@ -66,8 +66,8 @@ export type ApiRouteHandler = (
 export type ApiRouteModule = Partial<Record<ApiMethod, ApiRouteHandler>>;
 
 export type GenerateMetadataFn<TParams extends Record<string, string> = Record<string, string>> = (
-    context: (
-        params: TParams;
+    context: {
+        params: TParams,
         searchParams?: Record<string, string>
-    )
-) => Promise<import("../seo/metadata.ts").Metadata> | import("../seo/metadata.ts").Metada;
+    }
+) => Promise<import("../seo/metadata.ts").Metadata> | import("../seo/metadata.ts").Metadata;
