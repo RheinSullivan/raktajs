@@ -2,27 +2,27 @@ raktajs/
 ├─ packages/
 │  ├─ rakta/
 │  │  ├─ src/
-│  │  │  ├─ components/ (Done)
+│  │  │  ├─ components/              (Done)
 │  │  │  │  ├─ Click.tsx
 │  │  │  │  ├─ Picture.tsx
 │  │  │  │  └─ index.ts
-│  │  │  ├─ router/
+│  │  │  ├─ router/                  (Done)
 │  │  │  │  ├─ types.ts
 │  │  │  │  ├─ scanner.ts
 │  │  │  │  ├─ manifest.ts
 │  │  │  │  ├─ matcher.ts
 │  │  │  │  └─ index.ts
-│  │  │  ├─ seo/
+│  │  │  ├─ seo/                     (Done)
 │  │  │  │  ├─ metadata.ts
 │  │  │  │  ├─ head.tsx
 │  │  │  │  ├─ sitemap.ts
 │  │  │  │  ├─ robots.ts
 │  │  │  │  └─ index.ts
-│  │  │  ├─ config/
+│  │  │  ├─ config/                  ()
 │  │  │  │  ├─ define-config.ts
 │  │  │  │  ├─ load-config.ts
 │  │  │  │  └─ index.ts
-│  │  │  ├─ rpc/
+│  │  │  ├─ rpc/                     ()
 │  │  │  │  ├─ types.ts
 │  │  │  │  ├─ procedure.ts
 │  │  │  │  ├─ router.ts
