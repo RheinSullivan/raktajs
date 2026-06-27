@@ -3,7 +3,7 @@ import type {
   RenderModeDescriptor,
   RenderConfig,
   ResolvedRouteMode,
-} from "./types.js";
+} from "./types";
 
 export const RENDER_MODE_DESCRIPTORS: Readonly<Record<RenderMode, RenderModeDescriptor>> = {
   csr: {

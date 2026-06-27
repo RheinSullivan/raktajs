@@ -1,4 +1,4 @@
-import type { RenderConfig } from "../render/types.js";
+import type { RenderConfig } from "../render/types";
 
 export interface CssConfig {
   framework: "tailwind" | "bootstrap" | "sass" | "none";

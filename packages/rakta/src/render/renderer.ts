@@ -4,8 +4,8 @@ import type {
   RenderMode,
   RenderSuccess,
   RenderFailure,
-} from "./types.js";
-import { isRoadmapMode } from "./modes.js";
+} from "./types";
+import { isRoadmapMode } from "./modes";
 
 export interface RendererOptions {
   readonly appName: string;

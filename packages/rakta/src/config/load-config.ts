@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
-import type { RaktaConfig } from "./define-config.js";
-import { defaultConfig } from "./define-config.js";
+import type { RaktaConfig } from "./define-config";
+import { defaultConfig } from "./define-config";
 
 const CONFIG_FILENAMES: ReadonlyArray<string> = [
   "rakta.config.ts",
