@@ -2,10 +2,10 @@
   <img src=".docs/assets/raktajs_benner.png" alt="Rakta.js banner" width="100%" />
 </p>
 
-<h1 align="center">Rakta.js | Frameworks</h1>
+<h1 align="center">React Frameworks</h1>
 
 <p align="center">
-  <strong>A lightweight, composable frontend framework on Bun.</strong>
+  <strong>From the PEOPLE, for the PEOPLE. Let’s develop your app and make your dreams a reality together with the PEOPLE let’s not allow those in power to control us long live the PEOPLE. A lightweight front-end framework built on Bun and TypeScript, just for the PEOPLE!</strong>
 </p>
 
 <p align="center">
@@ -28,7 +28,7 @@
 </p>
 
 <p align="center">
-  <strong>Bun in the engine. React at the core. Cirebon in the soul.</strong>
+  <strong>Bun in the engine. Reacting from within. Cirebon in my soul and Garuda in my heart.</strong>
 </p>
 
 ---
@@ -39,9 +39,9 @@ Rakta.js is a lightweight, composable frontend framework built on React, Bun, an
 
 It provides file-based routing, flexible rendering modes, SEO tooling, PWA support, type-safe RPC patterns, state management, schema validation, an HTTP client, and a project generator that can create either frontend-only apps or fullstack apps.
 
-The name **Rakta** comes from Sanskrit. It reflects red, life energy, courage, strength, identity, and motion.
+The name **Rakta** (RAKyat sedang menderiTA) comes from Sanskrit. It symbolizes the color red, life energy, courage, strength, identity, and movement.
 
-The shrimp mascot represents Cirebon, a coastal city in West Java, Indonesia, known for its shrimp identity, cultural craft, palace heritage, and Mega Mendung / Trusmi batik visual language. Rakta.js uses this identity as a subtle foundation for a modern developer framework.
+This shrimp mascot represents Cirebon, a coastal city in West Java, Indonesia, known for its shrimp culture, cultural crafts, royal heritage, and the visual language of Mega Mendung/Trusmi batik. Rakta.js uses this identity as a subtle foundation for a modern developer framework.
 
 ---
 
@@ -54,7 +54,7 @@ The shrimp mascot represents Cirebon, a coastal city in West Java, Indonesia, kn
 | Image and navigation primitives usually feel generic | **ShrimpStep** and **TrusmiFrame** provide Rakta.js public component identity |
 | SEO often needs extra configuration                  | **MegaSignal** is designed for metadata, sitemap, robots, RSS, and JSON-LD    |
 | PWA support is usually an afterthought               | **ShrimpHarbor** is planned as the offline and installable app layer          |
-| Build tooling can feel heavy                         | **CheribonEngine** uses Bun-powered tooling                                   |
+| Build tooling can feel heavy                         | **CherbonsEngine** uses Bun-powered tooling                                   |
 | Runtime strategy needs to stay flexible              | **NorthCoastFlow** handles request and rendering flow                         |
 | Type-safe RPC can require extra libraries            | **NagaLimanWire** is Rakta.js type-safe RPC concept                           |
 | Projects need diagnostics                            | **JatiLens** is the project health and diagnostics layer                      |
@@ -75,7 +75,7 @@ Rakta.js uses its own framework language. The public naming avoids copying featu
 | **SunyaragiCrown** | Metadata and head manager                    |
 | **NagaLimanWire**  | Type-safe RPC concept                        |
 | **TrusmiThread**   | Auto import system                           |
-| **CheribonEngine** | Build and dev engine                         |
+| **CherbonsEngine** | Build and dev engine                         |
 | **NorthCoastFlow** | Runtime and rendering flow                   |
 | **MegaSignal**     | SEO, sitemap, robots, and RSS layer          |
 | **ShrimpHarbor**   | PWA and offline layer                        |
