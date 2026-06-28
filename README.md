@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./docs/assets/rakta-readme-banner.png" alt="Rakta.js banner" width="100%" />
+  <img src="./docs/assets/raktajs_benner.png" alt="Rakta.js banner" width="100%" />
 </p>
 
 <h1 align="center">Rakta.js | Frameworks</h1>
