@@ -2,7 +2,7 @@
   <img src="./docs/assets/rakta-readme-banner.png" alt="Rakta.js banner" width="100%" />
 </p>
 
-<h1 align="center">Rakta.js</h1>
+<h1 align="center">Rakta.js | Frameworks</h1>
 
 <p align="center">
   <strong>A lightweight, composable frontend framework on Bun.</strong>
@@ -199,12 +199,12 @@ Rakta.js supports multiple rendering strategies through configuration.
 
 | Mode     | Purpose                        |
 | -------- | ------------------------------ |
-| `csr`    | Client-side rendering          |
-| `ssr`    | Server-side rendering          |
+| `csr`    | Client side rendering          |
+| `ssr`    | Server side rendering          |
 | `ssg`    | Static site generation         |
 | `csg`    | Configurable static generation |
 | `spa`    | Single page application mode   |
-| `hybrid` | Route-level mixed rendering    |
+| `hybrid` | Route level mixed rendering    |
 
 Example:
 

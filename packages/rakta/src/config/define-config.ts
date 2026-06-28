@@ -30,6 +30,7 @@ export interface ServerConfig {
 }
 
 export interface BuildConfig {
+  entryPoint?: string;
   outDir?: string;
   sourcemap?: boolean;
   minify?: boolean;
@@ -85,7 +86,6 @@ export const defaultConfig: Required<RaktaConfig> = {
     titleTemplate: "%s | Rakta.js App",
     defaultDescription: "Built with Rakta.js",
     siteUrl: "http://localhost:3000",
-    // defaultOpenGraphImage: undefined,
   },
   server: {
     port: 3000,
@@ -95,6 +95,7 @@ export const defaultConfig: Required<RaktaConfig> = {
     trustProxy: false,
   },
   build: {
+    entryPoint: "entry.client.tsx",
     outDir: "dist",
     sourcemap: false,
     minify: true,

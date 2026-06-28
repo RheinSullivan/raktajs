@@ -1,84 +1,186 @@
 #!/usr/bin/env bun
 
+import { join } from "node:path";
+import { devCommand } from "./dev";
+import { buildCommand } from "./build";
+import { startCommand } from "./start";
+import { routesCommand } from "./routes";
+import { makeCommand } from "./make";
+import { seoGenerateCommand } from "./seo";
+import { importsGenerateCommand } from "./imports";
+import { rpcTypesCommand } from "./rpc-types";
+import { doctorCommand } from "./doctor";
+import { inspectBuild, printInspectReport } from "../forge/inspect";
+import { loadConfig } from "../config/load-config";
+
 const RED = "\x1b[31m";
 const BOLD = "\x1b[1m";
 const DIM = "\x1b[2m";
 const RESET = "\x1b[0m";
 
-const command = process.argv[2] ?? "help";
+const args = process.argv.slice(2);
+const selectedCommand = args[0] ?? "help";
+const firstArgument = args[1];
+const cwd = process.cwd();
 
 const BANNER = [
-  "",
-  `${BOLD}${RED} ██████╗   █████╗  ██╗  ██╗ ████████╗  █████╗          ██╗ ███████╗${RESET}`,
-  `${BOLD}${RED} ██╔══██╗ ██╔══██╗ ██║ ██╔╝ ╚══██╔══╝ ██╔══██╗         ██║ ██╔════╝${RESET}`,
-  `${BOLD}${RED} ██████╔╝ ███████║ █████╔╝     ██║    ███████║         ██║ ███████╗${RESET}`,
-  `${BOLD}${RED} ██╔══██╗ ██╔══██║ ██╔═██╗     ██║    ██╔══██║    ██   ██║ ╚════██║${RESET}`,
-  `${BOLD}${RED} ██║  ██║ ██║  ██║ ██║  ██╗    ██║    ██║  ██║ ██╗╚█████╔╝ ███████║${RESET}`,
-  `${BOLD}${RED} ╚═╝  ╚═╝ ╚═╝  ╚═╝ ╚═╝  ╚═╝    ╚═╝    ╚═╝  ╚═╝ ╚═╝ ╚════╝  ╚══════╝${RESET}`,
-  ""
+    "",
+    `${BOLD}${RED} ██████╗   █████╗  ██╗  ██╗ ████████╗  █████╗          ██╗ ███████╗${RESET}`,
+    `${BOLD}${RED} ██╔══██╗ ██╔══██╗ ██║ ██╔╝ ╚══██╔══╝ ██╔══██╗         ██║ ██╔════╝${RESET}`,
+    `${BOLD}${RED} ██████╔╝ ███████║ █████╔╝     ██║    ███████║         ██║ ███████╗${RESET}`,
+    `${BOLD}${RED} ██╔══██╗ ██╔══██║ ██╔═██╗     ██║    ██╔══██║    ██   ██║ ╚════██║${RESET}`,
+    `${BOLD}${RED} ██║  ██║ ██║  ██║ ██║  ██╗    ██║    ██║  ██║ ██╗╚█████╔╝ ███████║${RESET}`,
+    `${BOLD}${RED} ╚═╝  ╚═╝ ╚═╝  ╚═╝ ╚═╝  ╚═╝    ╚═╝    ╚═╝  ╚═╝ ╚═╝ ╚════╝  ╚══════╝${RESET}`,
+    "",
 ].join("\n");
 
 function printHelp(): void {
-  console.log(BANNER);
-  console.log(`${BOLD}${RED} Rakta.js CLI${RESET}`);
-  console.log(`${DIM} Small in size. Fierce in speed. Alive in every route.${RESET}`);
-  console.log("");
-  console.log(`${BOLD}Commands:${RESET}`);
-  console.log("  rakta dev");
-  console.log("  rakta build");
-  console.log("  rakta start");
-  console.log("  rakta routes");
-  console.log("  rakta make:page <name>");
-  console.log("  rakta make:component <name>");
-  console.log("  rakta make:api <name>");
-  console.log("  rakta make:layout <name>");
-  console.log("  rakta seo:generate");
-  console.log("  rakta imports:generate");
-  console.log("  rakta rpc:types");
-  console.log("  rakta forge:inspect");
-  console.log("  rakta tide:render");
-  console.log("  rakta doctor");
-  console.log("");
-}
+    console.log(BANNER);
+    console.log(`${BOLD}${RED} Rakta.js CLI${RESET}`);
+    console.log(`${DIM} Small in size. Fierce in speed. Alive in every route.${RESET}`);
+    console.log("");
+    console.log(`${BOLD}Usage:${RESET}`);
+    console.log("  bun rakta <command> [options]");
+    console.log("");
+    console.log(`${BOLD}Commands:${RESET}`);
+    console.log("  rakta dev");
+    console.log("  rakta build");
+    console.log("  rakta start");
+    console.log("  rakta routes");
+    console.log("");
+    console.log("  rakta make:page <name>");
+    console.log("  rakta make:layout <name>");
+    console.log("  rakta make:component <name>");
+    console.log("  rakta make:api <name>");
+    console.log("");
+    console.log("  rakta seo:generate");
+    console.log("  rakta imports:generate");
+    console.log("  rakta rpc:types");
+    console.log("");
+    console.log("  rakta forge:inspect");
+    console.log("  rakta tide:render");
+    console.log("  rakta doctor");
+    console.log("  rakta help");
+    console.log("");
+};
 
-function runCommand(selectedCommand: string): void {
-  if (
-    selectedCommand === "help" ||
-    selectedCommand === "--help" ||
-    selectedCommand === "-h"
-  ) {
-    printHelp();
-    return;
-  }
+function getRequiredArgument(
+    commandName: string,
+    value: string | undefined
+): string {
+    if (typeof value === "string" && value.trim().length > 0) {
+        return value;
+    }
 
-  console.log(`${BOLD}${RED}Rakta.js${RESET} ${DIM}running command:${RESET} ${selectedCommand}`);
+    console.error(`${BOLD}${RED}Rakta.js${RESET} ${DIM}missing argument for:${RESET} ${commandName}`);
+    console.error(`${DIM}Usage: rakta ${commandName} <name>${RESET}`);
+    process.exit(1);
+};
 
-  if (selectedCommand === "dev") {
-    console.log(`${DIM}Starting Rakta.js development server...${RESET}`);
-    return;
-  }
+async function runForgeInspect(): Promise<void> {
+    const config = await loadConfig(cwd);
+    const outputDirectory = config.build.outDir ?? "dist";
 
-  if (selectedCommand === "build") {
-    console.log(`${DIM}Building Rakta.js application...${RESET}`);
-    return;
-  }
+    const report = inspectBuild({
+        outDir: join(cwd, outputDirectory),
+        renderConfig: config.render,
+    });
 
-  if (selectedCommand === "start") {
-    console.log(`${DIM}Starting Rakta.js production server...${RESET}`);
-    return;
-  }
+    printInspectReport(report);
+};
 
-  if (selectedCommand === "routes") {
-    console.log(`${DIM}Scanning Rakta.js app routes...${RESET}`);
-    return;
-  }
+async function main(): Promise<void> {
+    switch (selectedCommand) {
+        case "help":
+        case "--help":
+        case "-h":
+            printHelp();
+            break;
 
-  if (selectedCommand === "doctor") {
-    console.log(`${DIM}Checking Rakta.js project health...${RESET}`);
-    return;
-  }
+        case "dev":
+            await devCommand(cwd);
+            break;
 
-  console.log(`${DIM}Command registered: ${selectedCommand}${RESET}`);
-}
+        case "build":
+            await buildCommand(cwd);
+            break;
 
-runCommand(command);
+        case "start":
+            await startCommand(cwd);
+            break;
+
+        case "routes":
+            await routesCommand(cwd);
+            break;
+
+        case "make:page":
+            await makeCommand(
+                "page",
+                getRequiredArgument("make:page", firstArgument),
+                cwd
+            );
+            break;
+
+        case "make:layout":
+            await makeCommand(
+                "layout",
+                getRequiredArgument("make:layout", firstArgument),
+                cwd
+            );
+            break;
+
+        case "make:component":
+            await makeCommand(
+                "component",
+                getRequiredArgument("make:component", firstArgument),
+                cwd
+            );
+            break;
+
+        case "make:api":
+            await makeCommand(
+                "api",
+                getRequiredArgument("make:api", firstArgument),
+                cwd
+            );
+            break;
+
+        case "seo:generate":
+            await seoGenerateCommand(cwd);
+            break;
+
+        case "imports:generate":
+            await importsGenerateCommand(cwd);
+            break;
+
+        case "rpc:types":
+            await rpcTypesCommand(cwd);
+            break;
+
+        case "forge:inspect":
+            await runForgeInspect();
+            break;
+
+        case "tide:render":
+            console.log(`${BOLD}${RED}Rakta.js${RESET} ${DIM}tide:render is planned for v0.2.0.${RESET}`);
+            break;
+
+        case "doctor":
+            await doctorCommand(cwd);
+            break;
+
+        default:
+            console.error(`${BOLD}${RED}Rakta.js${RESET} ${DIM}unknown command:${RESET} ${selectedCommand}`);
+            printHelp();
+            process.exit(1);
+    }
+};
+
+main().catch((error: unknown) => {
+    const message = error instanceof Error
+        ? error.message
+        : String(error);
+
+    console.error(`\n${BOLD}${RED}Rakta.js error:${RESET} ${message}\n`);
+    process.exit(1);
+});
