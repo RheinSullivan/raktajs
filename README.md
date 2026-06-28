@@ -45,7 +45,7 @@ Rakta.js is a lightweight, composable frontend framework built on React, Bun, an
 
 It provides file-based routing, flexible rendering modes, SEO tooling, PWA support, type-safe RPC patterns, state management, schema validation, an HTTP client, and a project generator that can create either frontend-only apps or fullstack apps.
 
-The name **Rakta** comes from Sanskrit. It symbolizes red, life energy, courage, strength, identity, and movement. Inside this name, there is also a quiet reminder: when ordinary people carry heavy days in silence, every small tool should help them build something that belongs to them, not something that keeps them waiting at the gate.
+The name **Rakta** comes from Sanskrit. It symbolizes red, life energy, courage, strength, identity, and movement. Inside this name, there is also a quiet reminder, when ordinary people carry heavy days in silence, every small tool should help them build something that belongs to them, not something that keeps them waiting at the gate.
 
 The shrimp mascot represents Cirebon, a coastal city in West Java, Indonesia, known for its shrimp culture, cultural crafts, royal heritage, and the visual language of Mega Mendung and Trusmi batik. Rakta.js uses this identity as a subtle foundation for a modern developer framework.
 
