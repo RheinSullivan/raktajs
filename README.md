@@ -1,11 +1,12 @@
+````md
 <p align="center">
-  <img src=".docs/assets/raktajs_benner.png" alt="Rakta.js banner" width="100%" />
+  <img src=".docs/assets//raktajs_benner.png" alt="Rakta.js banner" width="100%" />
 </p>
 
-<h1 align="center">React Frameworks</h1>
+<h1 align="center">React Framework</h1>
 
 <p align="center">
-  <strong>From the PEOPLE, for the PEOPLE. Let’s develop your app and make your dreams a reality together with the PEOPLE let’s not allow those in power to control us long live the PEOPLE. A lightweight front-end framework built on Bun and TypeScript, just for the PEOPLE!</strong>
+  <strong>A lightweight, composable frontend framework built on Bun, React, and TypeScript.</strong>
 </p>
 
 <p align="center">
@@ -17,18 +18,24 @@
     <img src="https://img.shields.io/badge/License-MIT-red.svg" alt="MIT License" />
   </a>
   <a href="https://www.npmjs.com/package/create-rakta-app">
-    <img src="https://img.shields.io/npm/v/create-rakta-app?label=create-rakta-app&color=red" alt="npm package" />
+    <img src="https://img.shields.io/badge/create--rakta--app-CLI-red.svg" alt="create rakta app CLI" />
   </a>
   <a href="https://bun.sh">
-    <img src="https://img.shields.io/badge/runtime-Bun-black" alt="Bun Runtime" />
+    <img src="https://img.shields.io/badge/runtime-Bun-ff69b4.svg" alt="Bun runtime" />
   </a>
-  <img src="https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white" alt="React 19" />
-  <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white" alt="TypeScript 5.x" />
-  <img src="https://img.shields.io/github/stars/RheinSullivan/raktajs?style=flat&logo=github" alt="GitHub Stars" />
+  <a href="https://react.dev">
+    <img src="https://img.shields.io/badge/React-19-149ECA.svg?logo=react&logoColor=white" alt="React 19" />
+  </a>
+  <a href="https://www.typescriptlang.org">
+    <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6.svg?logo=typescript&logoColor=white" alt="TypeScript 5.x" />
+  </a>
+  <a href="https://github.com/RheinSullivan/raktajs">
+    <img src="https://img.shields.io/badge/GitHub%20Stars-0-black.svg?logo=github&logoColor=white" alt="GitHub stars" />
+  </a>
 </p>
 
 <p align="center">
-  <strong>Bun in the engine. Reacting from within. Cirebon in my soul and Garuda in my heart.</strong>
+  <strong>Bun in the engine. React at the core. Cirebon in the soul. Garuda in the heart.</strong>
 </p>
 
 ---
@@ -39,9 +46,11 @@ Rakta.js is a lightweight, composable frontend framework built on React, Bun, an
 
 It provides file-based routing, flexible rendering modes, SEO tooling, PWA support, type-safe RPC patterns, state management, schema validation, an HTTP client, and a project generator that can create either frontend-only apps or fullstack apps.
 
-The name **Rakta** (RAKyat sedang menderiTA) comes from Sanskrit. It symbolizes the color red, life energy, courage, strength, identity, and movement.
+The name **Rakta** comes from Sanskrit. It symbolizes red, life energy, courage, strength, identity, and movement. Inside this name, there is also a quiet reminder: when ordinary people carry heavy days in silence, every small tool should help them build something that belongs to them, not something that keeps them waiting at the gate.
 
-This shrimp mascot represents Cirebon, a coastal city in West Java, Indonesia, known for its shrimp culture, cultural crafts, royal heritage, and the visual language of Mega Mendung/Trusmi batik. Rakta.js uses this identity as a subtle foundation for a modern developer framework.
+The shrimp mascot represents Cirebon, a coastal city in West Java, Indonesia, known for its shrimp culture, cultural crafts, royal heritage, and the visual language of Mega Mendung and Trusmi batik. Rakta.js uses this identity as a subtle foundation for a modern developer framework.
+
+Rakta.js is built for people who want speed without losing control, structure without unnecessary weight, and a framework identity that feels alive, local, and independent.
 
 ---
 
@@ -89,7 +98,7 @@ Create a new Rakta.js app:
 
 ```bash
 bun create-rakta-app@latest my-app
-```
+````
 
 Move into the project:
 
@@ -442,7 +451,7 @@ Recommended enterprise separation:
 | `apps/admin`          | Internal dashboard                |
 | `apps/docs`           | Documentation site                |
 | `packages/ui`         | Shared UI primitives              |
-| `packages/contracts`  | Shared request/response contracts |
+| `packages/contracts`  | Shared request and response types |
 | `packages/validators` | Shared schema validation          |
 | `backend`             | Backend service                   |
 | `infrastructure`      | Deployment and ops files          |
@@ -582,3 +591,6 @@ Built with a Cirebon soul, a red identity, and a frontend-first mindset.
 MIT License.
 
 Copyright © Rhein Sullivan.
+
+```
+```
