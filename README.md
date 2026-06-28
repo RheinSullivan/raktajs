@@ -1,4 +1,3 @@
-````md
 <p align="center">
   <img src=".docs/assets//raktajs_benner.png" alt="Rakta.js banner" width="100%" />
 </p>
@@ -591,6 +590,3 @@ Built with a Cirebon soul, a red identity, and a frontend-first mindset.
 MIT License.
 
 Copyright © Rhein Sullivan.
-
-```
-```
