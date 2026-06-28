@@ -1,8 +1,15 @@
-// CSS Framework
-export type CssFramework = "tailwind" | "bootstrap" | "sass";
-// Backend FrameWork
-export type BackendFramework = "gaman" | "express" | "nest" | "adonis";
-// Database Model
+export type CssFramework =
+    | "tailwind"
+    | "bootstrap"
+    | "sass"
+    | "none";
+
+export type BackendFramework =
+    | "gaman"
+    | "express"
+    | "nest"
+    | "adonis";
+
 export type Database =
     | "postgresql"
     | "mysql"
@@ -15,22 +22,37 @@ export type Database =
     | "neon"
     | "turso";
 
+export type RenderMode =
+    | "csr"
+    | "ssr"
+    | "ssg"
+    | "csg"
+    | "spa"
+    | "hybrid";
+
+export type ProjectMode =
+    | "fullstack"
+    | "frontend-only";
+
 export interface ProjectFile {
-    path: string;
-    content: string;
-};
+    readonly path: string;
+    readonly content: string;
+}
 
 export interface ProjectConfig {
-    projectName: string;
-    cssFramework: CssFramework;
-    backendFramework: BackendFramework;
-    database: Database
-};
+    readonly projectName: string;
+    readonly projectMode: ProjectMode;
+    readonly cssFramework: CssFramework;
+    readonly renderMode: RenderMode;
+    readonly backendFramework: BackendFramework;
+    readonly database: Database;
+}
 
 export const CSS_DISPLAY: Record<CssFramework, string> = {
-    tailwind: "TailwindCSS",
+    tailwind: "Tailwind CSS",
     bootstrap: "Bootstrap",
-    sass: "SASS"
+    sass: "SASS",
+    none: "None",
 };
 
 export const BACKEND_DISPLAY: Record<BackendFramework, string> = {
@@ -51,4 +73,18 @@ export const DATABASE_DISPLAY: Record<Database, string> = {
     planetscale: "PlanetScale",
     neon: "Neon",
     turso: "Turso",
+};
+
+export const RENDER_MODE_DISPLAY: Record<RenderMode, string> = {
+    csr: "CSR — Client-Side Rendering",
+    ssr: "SSR — Server-Side Rendering",
+    ssg: "SSG — Static Site Generation",
+    csg: "CSG — Configurable Static Generation",
+    spa: "SPA — Single Page Application",
+    hybrid: "Hybrid — Mixed per-route",
+};
+
+export const PROJECT_MODE_DISPLAY: Record<ProjectMode, string> = {
+    fullstack: "Fullstack app (frontend + backend + database)",
+    "frontend-only": "Frontend only (no backend, no database)",
 };
