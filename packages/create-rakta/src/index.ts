@@ -5,140 +5,133 @@ import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import pc from "picocolors";
 import { printBanner } from "./ascii";
-import {
-  promptProjectName,
-  runPrompts,
-} from "./prompts";
+import { promptProjectName, runPrompts } from "./prompts";
 import { generateProjectFiles } from "./generator";
-import { writeProjectFiles } from "./file-system";
+import { writeProjectFiles } from "./fileSystem";
 import {
-  BACKEND_DISPLAY,
-  CSS_DISPLAY,
-  DATABASE_DISPLAY,
-  PROJECT_MODE_DISPLAY,
-  RENDER_MODE_DISPLAY,
+	BACKEND_DISPLAY,
+	CSS_DISPLAY,
+	DATABASE_DISPLAY,
+	PROJECT_MODE_DISPLAY,
+	RENDER_MODE_DISPLAY,
 } from "./types";
 import type { ProjectConfig } from "./types";
 
-function getProjectNameFromArgs(args: ReadonlyArray<string>): string | undefined {
-  const nameArg = args.find((arg) => !arg.startsWith("--"));
+function getProjectNameFromArgs(
+	cliArgs: ReadonlyArray<string>,
+): string | undefined {
+	const nameArg = cliArgs.find((arg) => !arg.startsWith("--"));
 
-  if (nameArg && nameArg.trim().length > 0) {
-    return nameArg.trim();
-  }
+	if (nameArg !== undefined && nameArg.trim().length > 0) {
+		return nameArg.trim();
+	}
 
-  return undefined;
+	return undefined;
 }
 
 function formatFullstackCommands(): string {
-  return [
-    `${pc.dim("# Terminal 1")}`,
-    "cd frontend",
-    "bun install",
-    "bun run dev",
-    "",
-    `${pc.dim("# Terminal 2")}`,
-    "cd backend",
-    "bun install",
-    "bun run dev",
-  ].join("\n  ");
+	return [
+		`${pc.dim("# Terminal 1")}`,
+		"cd frontend",
+		"bun install",
+		"bun run dev",
+		"",
+		`${pc.dim("# Terminal 2")}`,
+		"cd backend",
+		"bun install",
+		"bun run dev",
+	].join("\n  ");
 }
 
 function formatFrontendOnlyCommands(projectName: string): string {
-  return [
-    `cd ${projectName}`,
-    "bun install",
-    "bun run dev",
-  ].join("\n  ");
+	return [`cd ${projectName}`, "bun install", "bun run dev"].join("\n  ");
 }
 
-function printSuccessMessage(
-  config: ProjectConfig
-): void {
-  const modeLabel = PROJECT_MODE_DISPLAY[config.projectMode];
-  const cssLabel = CSS_DISPLAY[config.cssFramework];
-  const renderLabel = RENDER_MODE_DISPLAY[config.renderMode];
-  const isFullstack = config.projectMode === "fullstack";
+function printSuccessMessage(projectConfig: ProjectConfig): void {
+	const modeLabel = PROJECT_MODE_DISPLAY[projectConfig.projectMode];
+	const cssLabel = CSS_DISPLAY[projectConfig.cssFramework];
+	const renderLabel = RENDER_MODE_DISPLAY[projectConfig.renderMode];
+	const isFullstack = projectConfig.projectMode === "fullstack";
 
-  const backendLine = isFullstack
-    ? `${pc.dim("Backend:")} ${BACKEND_DISPLAY[config.backendFramework]}`
-    : "";
+	const backendLine = isFullstack
+		? `${pc.dim("Backend:")} ${BACKEND_DISPLAY[projectConfig.backendFramework]}`
+		: "";
 
-  const databaseLine = isFullstack
-    ? `${pc.dim("DB:")}      ${DATABASE_DISPLAY[config.database]}`
-    : "";
+	const databaseLine = isFullstack
+		? `${pc.dim("DB:")} ${DATABASE_DISPLAY[projectConfig.database]}`
+		: "";
 
-  const nextSteps = isFullstack
-    ? formatFullstackCommands()
-    : formatFrontendOnlyCommands(config.projectName);
+	const nextSteps = isFullstack
+		? formatFullstackCommands()
+		: formatFrontendOnlyCommands(projectConfig.projectName);
 
-  console.log(`
-${pc.bold(pc.green("Project created!"))}
+	console.log(`
+      ${pc.bold(pc.green("Project created!"))}
 
-${pc.dim("Mode:")}    ${modeLabel}
-${pc.dim("CSS:")}     ${cssLabel}
-${pc.dim("Render:")}  ${renderLabel}
-${backendLine}
-${databaseLine}
+      ${pc.dim("Mode:")}    ${modeLabel}
+      ${pc.dim("CSS:")}     ${cssLabel}
+      ${pc.dim("Render:")}  ${renderLabel}
+      ${backendLine}
+      ${databaseLine}
 
-${pc.bold("Next steps:")}
+      ${pc.bold("Next steps:")}
 
-  ${nextSteps}
+        ${nextSteps}
 
-${pc.bold("Frontend:")} ${pc.cyan("http://localhost:3000")}
-${isFullstack ? `${pc.bold("Backend:")}  ${pc.cyan("http://localhost:4000")}` : ""}
-`);
+      ${pc.bold("Frontend:")} ${pc.cyan("http://localhost:3000")}
+      ${
+				isFullstack
+					? `${pc.bold("Backend:")}  ${pc.cyan("http://localhost:4000")}`
+					: ""
+			}
+    `);
 }
 
 async function main(): Promise<void> {
-  const rawArgs = process.argv.slice(2);
+	const rawArgs = process.argv.slice(2);
 
-  printBanner();
+	printBanner();
 
-  const projectNameFromArgs = getProjectNameFromArgs(rawArgs);
-  const projectName = projectNameFromArgs ?? await promptProjectName("my-rakta-app");
+	const projectNameFromArgs = getProjectNameFromArgs(rawArgs);
+	const projectName =
+		projectNameFromArgs ?? (await promptProjectName("my-rakta-app"));
 
-  const targetPath = resolve(
-    process.cwd(),
-    projectName
-  );
+	const targetPath = resolve(process.cwd(), projectName);
 
-  if (existsSync(targetPath)) {
-    clack.cancel(
-      `Directory ${pc.bold(pc.yellow(projectName))} already exists. Choose a different name.`
-    );
-    process.exit(1);
-  }
+	if (existsSync(targetPath)) {
+		clack.cancel(
+			`Directory ${pc.bold(pc.yellow(projectName))} already exists. Choose a different name.`,
+		);
+		process.exit(1);
+	}
 
-  const config = await runPrompts(projectName);
+	const projectConfig = await runPrompts(projectName);
 
-  const spinner = clack.spinner();
+	const loadingSpinner = clack.spinner();
+	loadingSpinner.start("Generating project files...");
 
-  spinner.start("Generating project files...");
+	const generatedFiles = generateProjectFiles(projectConfig);
 
-  const files = generateProjectFiles(config);
+	try {
+		writeProjectFiles(targetPath, generatedFiles);
+		loadingSpinner.stop(pc.green("Project files generated."));
+	} catch (caughtError) {
+		loadingSpinner.stop(pc.red("File generation failed."));
 
-  try {
-    writeProjectFiles(targetPath, files);
-    spinner.stop(pc.green("Project files generated."));
-  } catch (error) {
-    spinner.stop(pc.red("File generation failed."));
+		if (caughtError instanceof Error) {
+			console.error(pc.red(caughtError.message));
+		}
 
-    if (error instanceof Error) {
-      console.error(pc.red(error.message));
-    }
+		process.exit(1);
+	}
 
-    process.exit(1);
-  }
-
-  printSuccessMessage(config);
+	printSuccessMessage(projectConfig);
 }
 
-main().catch((error: unknown) => {
-  const message = error instanceof Error
-    ? error.message
-    : String(error);
+main().catch((caughtError: unknown) => {
+	const errorMessage =
+		caughtError instanceof Error ? caughtError.message : String(caughtError);
 
-  console.error(pc.red(`\nError: ${message}\n`));
-  process.exit(1);
+	console.error(pc.red(`\nError: ${errorMessage}\n`));
+	process.exit(1);
 });

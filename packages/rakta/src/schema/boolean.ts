@@ -2,21 +2,21 @@ import type { ValidationError } from "./errors";
 import { RaktaType } from "./types";
 
 export class BooleanType extends RaktaType<boolean> {
-  _run(value: unknown): ReadonlyArray<ValidationError> {
-    if (typeof value !== "boolean") {
-      return [
-        {
-          path: [],
-          message: "Expected a boolean",
-          code: "invalid_type",
-        },
-      ];
-    }
+	_run(value: unknown): ReadonlyArray<ValidationError> {
+		if (typeof value !== "boolean") {
+			return [
+				{
+					path: [],
+					message: "Expected a boolean",
+					code: "invalid_type",
+				},
+			];
+		}
 
-    return [];
-  }
+		return [];
+	}
 }
 
 export function boolean(): BooleanType {
-  return new BooleanType();
+	return new BooleanType();
 }

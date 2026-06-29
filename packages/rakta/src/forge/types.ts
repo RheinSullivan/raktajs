@@ -2,61 +2,61 @@ import type { RouteManifest } from "../router/types.js";
 import type { RenderMode, RenderConfig } from "../render/types.js";
 
 export interface ForgeDevServerOptions {
-  readonly port: number;
-  readonly host: string;
-  readonly appDir: string;
-  readonly publicDir: string;
-  readonly appName: string;
-  readonly renderConfig: RenderConfig;
+	readonly port: number;
+	readonly host: string;
+	readonly appDir: string;
+	readonly publicDir: string;
+	readonly appName: string;
+	readonly renderConfig: RenderConfig;
 }
 
 export interface ForgeBuildOptions {
-  readonly entryPoint: string;
-  readonly outDir: string;
-  readonly appDir: string;
-  readonly publicDir: string;
-  readonly appName: string;
-  readonly sourcemap: boolean;
-  readonly minify: boolean;
-  readonly splitting: boolean;
-  readonly target: "browser" | "bun" | "node";
-  readonly renderConfig: RenderConfig;
+	readonly entryPoint: string;
+	readonly outDir: string;
+	readonly appDir: string;
+	readonly publicDir: string;
+	readonly appName: string;
+	readonly sourcemap: boolean;
+	readonly minify: boolean;
+	readonly splitting: boolean;
+	readonly target: "browser" | "bun" | "node";
+	readonly renderConfig: RenderConfig;
 }
 
 export type ArtifactKind = "script" | "stylesheet" | "asset" | "manifest";
 
 export interface ForgeBuildArtifact {
-  readonly outputPath: string;
-  readonly sizeBytes: number;
-  readonly kind: ArtifactKind;
+	readonly outputPath: string;
+	readonly sizeBytes: number;
+	readonly kind: ArtifactKind;
 }
 
 export interface ForgeBuildResult {
-  readonly success: boolean;
-  readonly artifacts: ReadonlyArray<ForgeBuildArtifact>;
-  readonly manifest: RouteManifest;
-  readonly buildMs: number;
-  readonly errors: ReadonlyArray<string>;
+	readonly success: boolean;
+	readonly artifacts: ReadonlyArray<ForgeBuildArtifact>;
+	readonly manifest: RouteManifest;
+	readonly buildMs: number;
+	readonly errors: ReadonlyArray<string>;
 }
 
 export interface ForgeRouteModeEntry {
-  readonly pattern: string;
-  readonly mode: RenderMode;
-  readonly source: "route-override" | "default";
+	readonly pattern: string;
+	readonly mode: RenderMode;
+	readonly source: "route-override" | "default";
 }
 
 export interface ForgeInspectReport {
-  readonly buildDir: string;
-  readonly artifacts: ReadonlyArray<ForgeBuildArtifact>;
-  readonly manifest: RouteManifest;
-  readonly routeModes: ReadonlyArray<ForgeRouteModeEntry>;
-  readonly totalSizeBytes: number;
-  readonly inspectedAt: string;
+	readonly buildDir: string;
+	readonly artifacts: ReadonlyArray<ForgeBuildArtifact>;
+	readonly manifest: RouteManifest;
+	readonly routeModes: ReadonlyArray<ForgeRouteModeEntry>;
+	readonly totalSizeBytes: number;
+	readonly inspectedAt: string;
 }
 
 export interface ForgeDevServerHandle {
-  readonly port: number;
-  readonly host: string;
-  readonly url: string;
-  readonly stop: () => void;
+	readonly port: number;
+	readonly host: string;
+	readonly url: string;
+	readonly stop: () => void;
 }

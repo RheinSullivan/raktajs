@@ -1,27 +1,25 @@
 import { join } from "node:path";
-import { loadConfig } from "../config/load-config.js";
-import { createBunAdapter } from "../tide/adapter.js";
+import { loadConfig } from "../config/loadConfig";
+import { createBunAdapter } from "../tide/adapter";
 
-export async function startCommand(
-    cwd: string = process.cwd()
-): Promise<void> {
-    const config = await loadConfig(cwd);
-    const outputDirectory = config.build.outDir ?? "dist";
+export async function startCommand(cwd: string = process.cwd()): Promise<void> {
+	const projectConfig = await loadConfig(cwd);
+	const outputDirectory = projectConfig.build.outDir ?? "dist";
 
-    console.log("\n Starting Rakta.js production server...\n");
+	console.log("\n Starting Rakta.js production server...\n");
 
-    const adapter = createBunAdapter(
-        {
-            kind: "bun",
-            port: config.port,
-            host: config.server.hostname ?? "0.0.0.0",
-            appName: config.appName,
-            appDir: join(cwd, config.appDir),
-            publicDir: join(cwd, config.publicDir),
-            outDir: join(cwd, outputDirectory),
-        },
-        config.render
-    );
+	const serverAdapter = createBunAdapter(
+		{
+			kind: "bun",
+			port: projectConfig.port,
+			host: projectConfig.server.hostname ?? "0.0.0.0",
+			appName: projectConfig.appName,
+			appDir: join(cwd, projectConfig.appDir),
+			publicDir: join(cwd, projectConfig.publicDir),
+			outDir: join(cwd, outputDirectory),
+		},
+		projectConfig.render,
+	);
 
-    await adapter.start();
-};
+	await serverAdapter.start();
+}

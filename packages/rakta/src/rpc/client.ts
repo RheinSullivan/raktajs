@@ -1,95 +1,95 @@
 import type { RouterDefinition, RouterClient, RpcEnvelope } from "./types";
 
 export interface RaktaClientConfig {
-  readonly baseUrl: string;
-  readonly headers?: Record<string, string>;
-  readonly timeout?: number;
+	readonly baseUrl: string;
+	readonly headers?: Record<string, string>;
+	readonly timeout?: number;
 }
 
 export interface RaktaRpcErrorDetail {
-  readonly path: ReadonlyArray<string>;
-  readonly message: string;
+	readonly path: ReadonlyArray<string>;
+	readonly message: string;
 }
 
 export class RaktaRpcError extends Error {
-  readonly code: string;
-  readonly details?: ReadonlyArray<RaktaRpcErrorDetail>;
+	readonly code: string;
+	readonly details?: ReadonlyArray<RaktaRpcErrorDetail>;
 
-  constructor(
-    message: string,
-    code: string,
-    details?: ReadonlyArray<RaktaRpcErrorDetail>
-  ) {
-    super(message);
+	constructor(
+		message: string,
+		code: string,
+		details?: ReadonlyArray<RaktaRpcErrorDetail>,
+	) {
+		super(message);
 
-    this.name = "RaktaRpcError";
-    this.code = code;
+		this.name = "RaktaRpcError";
+		this.code = code;
 
-    if (details) {
-      this.details = details;
-    }
-  }
+		if (details !== undefined) {
+			this.details = details;
+		}
+	}
 }
 
 async function callProcedure<TInput, TOutput>(
-  config: RaktaClientConfig,
-  procedureName: string,
-  input: TInput
+	clientConfig: RaktaClientConfig,
+	procedureName: string,
+	procedureInput: TInput,
 ): Promise<TOutput> {
-  const controller = new AbortController();
-  const timeoutMs = config.timeout ?? 30_000;
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
+	const abortController = new AbortController();
+	const timeoutMs = clientConfig.timeout ?? 30_000;
+	const timeoutHandle = setTimeout(() => abortController.abort(), timeoutMs);
 
-  let response: Response;
+	let response: Response;
 
-  try {
-    response = await fetch(config.baseUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...config.headers,
-      },
-      body: JSON.stringify({
-        procedure: procedureName,
-        input,
-      }),
-      signal: controller.signal,
-    });
-  } finally {
-    clearTimeout(timer);
-  }
+	try {
+		response = await fetch(clientConfig.baseUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				...(clientConfig.headers ?? {}),
+			},
+			body: JSON.stringify({
+				procedure: procedureName,
+				input: procedureInput,
+			}),
+			signal: abortController.signal,
+		});
+	} finally {
+		clearTimeout(timeoutHandle);
+	}
 
-  const envelope = await response.json() as RpcEnvelope<TOutput>;
+	const responseEnvelope = (await response.json()) as RpcEnvelope<TOutput>;
 
-  if (!envelope.ok) {
-    throw new RaktaRpcError(
-      envelope.error,
-      envelope.code,
-      envelope.details
-    );
-  }
+	if (!responseEnvelope.ok) {
+		throw new RaktaRpcError(
+			responseEnvelope.error,
+			responseEnvelope.code,
+			responseEnvelope.details,
+		);
+	}
 
-  return envelope.data;
+	return responseEnvelope.data;
 }
 
 /**
- * Creates a type-safe RPC client.
+ * CarubanWire — Creates a type-safe RPC client.
  *
  * Usage:
  *   const api = createRaktaClient<AppRouter>({ baseUrl: "http://localhost:4000/rpc" });
  *   const result = await api.hello.query({ name: "Rakta" });
  */
 export function createRaktaClient<TRouter extends RouterDefinition>(
-  config: RaktaClientConfig
+	clientConfig: RaktaClientConfig,
 ): RouterClient<TRouter> {
-  return new Proxy({} as RouterClient<TRouter>, {
-    get(_target, procedureName: string) {
-      return {
-        query: (input: unknown) =>
-          callProcedure(config, procedureName, input),
-        mutate: (input: unknown) =>
-          callProcedure(config, procedureName, input),
-      };
-    },
-  });
+	return new Proxy({} as RouterClient<TRouter>, {
+		get(_target, procedureName: string) {
+			return {
+				query: (procedureInput: unknown) =>
+					callProcedure(clientConfig, procedureName, procedureInput),
+				mutate: (procedureInput: unknown) =>
+					callProcedure(clientConfig, procedureName, procedureInput),
+			};
+		},
+	});
 }

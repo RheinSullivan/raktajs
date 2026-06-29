@@ -1,147 +1,218 @@
-import { render, resolveRouteMode, type RenderConfig } from "rakta/render";
-import { buildErrorResponse, buildHtmlResponse, createRuntimeContext } from "./runtime";
-import { generateManifest, matchRoute } from "rakta/router";
-import { join } from "path";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { render, resolveRouteMode, type RenderConfig } from "../render";
+import { generateManifest, matchRoute } from "../router";
+import {
+	buildErrorResponse,
+	buildHtmlResponse,
+	createRuntimeContext,
+} from "./runtime";
 import type { TideAdapter, TideAdapterConfig } from "./types";
-import { existsSync, readFileSync } from "fs";
 
-// CLI integration: bun rakta tide render
-const STATIC_MINE: Readonly<Record<string, string>> = {
-    ".js": "applicaton/javascript; charset=utf-8",
-    ".ts": "applicaton/javascript; charset=utf-8",
-    ".css": "text/css; charset=utf-8",
-    ".json": "application/json; charset=utf-8",
-    ".png": "image/png",
-    ".jpg": "image/jpg",
-    ".jpeg": "image/jpeg",
-    ".webp": "image/webp",
-    ".svg": "image/svg+xml",
-    ".ico": "image/x-icon",
-    ".woff": "font/woff",
-    ".woff2": "font/woff2",
+const STATIC_MIME_TYPES: Readonly<Record<string, string>> = {
+	".js": "application/javascript; charset=utf-8",
+	".ts": "application/javascript; charset=utf-8",
+	".css": "text/css; charset=utf-8",
+	".json": "application/json; charset=utf-8",
+	".png": "image/png",
+	".jpg": "image/jpeg",
+	".jpeg": "image/jpeg",
+	".webp": "image/webp",
+	".svg": "image/svg+xml",
+	".ico": "image/x-icon",
+	".woff": "font/woff",
+	".woff2": "font/woff2",
 };
 
-function mimeForPath(filePath: string): string {
-    const ext = filePath.slice(filePath.lastIndexOf(".")).toLowerCase();
-    return STATIC_MINE[ext] ?? "application/octet-stream";
-};
+type ApiRouteHandler = (request: Request) => Response | Promise<Response>;
 
 interface ApiRouteExports {
-    GET?: (req: Request) => Promise<Response>;
-    POST?: (req: Request) => Promise<Response>;
-    PUT?: (req: Request) => Promise<Response>;
-    PATCH?: (req: Request) => Promise<Response>;
-    DELETE?: (req: Request) => Promise<Response>;
-    HEAD?: (req: Request) => Promise<Response>;
-    OPTIONS?: (req: Request) => Promise<Response>;
-};
+	readonly GET?: ApiRouteHandler;
+	readonly POST?: ApiRouteHandler;
+	readonly PUT?: ApiRouteHandler;
+	readonly PATCH?: ApiRouteHandler;
+	readonly DELETE?: ApiRouteHandler;
+	readonly HEAD?: ApiRouteHandler;
+	readonly OPTIONS?: ApiRouteHandler;
+}
+
+function mimeForPath(filePath: string): string {
+	const extensionIndex = filePath.lastIndexOf(".");
+
+	if (extensionIndex < 0) {
+		return "application/octet-stream";
+	}
+
+	const extension = filePath.slice(extensionIndex).toLowerCase();
+
+	return STATIC_MIME_TYPES[extension] ?? "application/octet-stream";
+}
+
+function normalizeStaticPath(pathname: string): string {
+	const pathnameWithoutLeadingSlash = pathname.replace(/^\/+/, "");
+
+	if (pathnameWithoutLeadingSlash.length > 0) {
+		return pathnameWithoutLeadingSlash;
+	}
+
+	return "index.html";
+}
+
+function isApiRouteExports(value: unknown): value is ApiRouteExports {
+	if (typeof value !== "object" || value === null) {
+		return false;
+	}
+
+	return true;
+}
+
+function getApiRouteHandler(
+	routeExports: ApiRouteExports,
+	method: string,
+): ApiRouteHandler | undefined {
+	if (method === "GET") {
+		return routeExports.GET;
+	}
+
+	if (method === "POST") {
+		return routeExports.POST;
+	}
+
+	if (method === "PUT") {
+		return routeExports.PUT;
+	}
+
+	if (method === "PATCH") {
+		return routeExports.PATCH;
+	}
+
+	if (method === "DELETE") {
+		return routeExports.DELETE;
+	}
+
+	if (method === "HEAD") {
+		return routeExports.HEAD;
+	}
+
+	if (method === "OPTIONS") {
+		return routeExports.OPTIONS;
+	}
+
+	return undefined;
+}
 
 /**
-* Creates the Bun Tide adapter
-* Handles static files, API routes, and page renoering.
-*/
+ * Creates the Bun Tide adapter.
+ * Handles static files, API routes, and page rendering.
+ */
 export function createBunAdapter(
-  adapterConfig: TideAdapterConfig,
-  renderConfig: RenderConfig
+	adapterConfig: TideAdapterConfig,
+	renderConfig: RenderConfig,
 ): TideAdapter {
-  const manifest = generateManifest(adapterConfig.appDir);
-  const searchDirs = [adapterConfig.publicDir, adapterConfig.outDir];
+	const manifest = generateManifest(adapterConfig.appDir);
+	const searchDirectories = [adapterConfig.publicDir, adapterConfig.outDir];
 
-  // eslint-disable-next-line prefer-const
-  let server: ReturnType<typeof Bun.serve>;
+	let serverInstance: ReturnType<typeof Bun.serve> | undefined;
 
-  async function handle(request: Request): Promise<Response> {
-    const url = new URL(request.url);
-    const { pathname } = url;
+	async function handle(request: Request): Promise<Response> {
+		const url = new URL(request.url);
+		const { pathname } = url;
+		const staticPathname = normalizeStaticPath(pathname);
 
-    // Static file resolution
-    for (const dir of searchDirs) {
-      const filePath = join(dir, pathname);
-      if (existsSync(filePath) && !filePath.endsWith("/")) {
-        return new Response(readFileSync(filePath), {
-          headers: {
-            "Content-Type": mimeForPath(pathname),
-            "Cache-Control": "public, max-age=31536000, immutable",
-          },
-        });
-      }
-    }
+		for (const searchDirectory of searchDirectories) {
+			const filePath = join(searchDirectory, staticPathname);
 
-    // API route resolution
-    const apiRoutes = manifest.routes.filter((r) => r.kind === "api");
-    const apiMatch = matchRoute(pathname, apiRoutes);
+			if (existsSync(filePath) && !filePath.endsWith("/")) {
+				return new Response(readFileSync(filePath), {
+					headers: {
+						"Content-Type": mimeForPath(filePath),
+						"Cache-Control": "public, max-age=31536000, immutable",
+					},
+				});
+			}
+		}
 
-    if (apiMatch) {
-      const modulePath = join(
-        adapterConfig.appDir, 
-        apiMatch.entry.filePath
-      );
+		const apiRoutes = manifest.routes.filter((route) => route.kind === "api");
+		const apiMatch = matchRoute(pathname, apiRoutes);
 
-      const mod = await import(modulePath) as ApiRouteExports;
-      const method = request.method.toUpperCase() as keyof ApiRouteExports;
-      const handler = mod[method];
+		if (apiMatch) {
+			const modulePath = join(adapterConfig.appDir, apiMatch.entry.filePath);
 
-      if (typeof handler !== "function") {
-        return new Response(
-            "Method not allowed", 
-            { status: 405 }
-        );
-      }
+			const routeModule: unknown = await import(modulePath);
 
-      return await handler(request);
-    }
+			if (!isApiRouteExports(routeModule)) {
+				return new Response("Invalid API route module", {
+					status: 500,
+				});
+			}
 
-    // Page route rendering
-    const resolved = resolveRouteMode(
-        pathname, 
-        renderConfig
-    );
-    const context = createRuntimeContext(
-        request, 
-        url, 
-        {}, 
-        resolved.mode
-    );
+			const handler = getApiRouteHandler(
+				routeModule,
+				request.method.toUpperCase(),
+			);
 
-    const renderResult = await render(
-      {
-        routePath: context.pathname,
-        mode: context.resolvedMode,
-        params: context.params,
-        searchParams: context.searchParams,
-        requestHeaders: context.requestHeaders,
-        timestampMs: context.timestampMs,
-      },
-      {
-        appName: adapterConfig.appName,
-        scriptPath: "/app.js",
-        cssPath: "/globals.css",
-        lang: "en",
-      }
-    );
+			if (!handler) {
+				return new Response("Method not allowed", {
+					status: 405,
+				});
+			}
 
-    if (renderResult.kind === "failure") {
-      return buildErrorResponse(renderResult.reason, renderResult.httpStatus);
-    }
+			return await handler(request);
+		}
 
-    return buildHtmlResponse(renderResult.html, renderResult.httpStatus);
-  }
+		const resolvedRouteMode = resolveRouteMode(pathname, renderConfig);
 
-  return {
-    kind: "bun",
-    handle,
-    start: async (): Promise<void> => {
-      server = Bun.serve({
-        port: adapterConfig.port,
-        hostname: adapterConfig.host,
-        fetch: handle,
-      });
-      console.log(
-        `[Rakta.js Tide] Running at http://${adapterConfig.host}:${server.port}`
-      );
-    },
-    stop: (): void => {
-      server?.stop();
-    },
-  };
+		const runtimeContext = createRuntimeContext(
+			request,
+			url,
+			{},
+			resolvedRouteMode.mode,
+		);
+
+		const renderResult = await render(
+			{
+				routePath: runtimeContext.pathname,
+				mode: runtimeContext.resolvedMode,
+				params: runtimeContext.params,
+				searchParams: runtimeContext.searchParams,
+				requestHeaders: runtimeContext.requestHeaders,
+				timestampMs: runtimeContext.timestampMs,
+			},
+			{
+				appName: adapterConfig.appName,
+				scriptPath: "/app.js",
+				cssPath: "/globals.css",
+				lang: "en",
+			},
+		);
+
+		if (renderResult.kind === "failure") {
+			return buildErrorResponse(renderResult.reason, renderResult.httpStatus);
+		}
+
+		return buildHtmlResponse(renderResult.html, renderResult.httpStatus);
+	}
+
+	return {
+		kind: "bun",
+		handle,
+		start: async (): Promise<void> => {
+			serverInstance = Bun.serve({
+				port: adapterConfig.port,
+				hostname: adapterConfig.host,
+				fetch: handle,
+			});
+
+			console.log(
+				`[Rakta.js Tide] Running at http://${adapterConfig.host}:${serverInstance.port}`,
+			);
+		},
+		stop: (): void => {
+			if (!serverInstance) {
+				return;
+			}
+
+			serverInstance.stop();
+		},
+	};
 }

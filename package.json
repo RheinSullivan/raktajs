@@ -1,43 +1,44 @@
 {
-  "name": "rakta-js-monorepo",
-  "version": "0.1.0",
-  "private": true,
-  "description": "Rakta.js monorepo - framework source, create app CLI, examples, and documentation.",
-  "author": "Rhein Sullivan | Vyagra Nexus",
-  "license": "MIT",
-  "homepage": "https://raktajs.dev",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/RheinSullivan/raktajs.git"
-  },
-  "bugs": {
-    "url": "https://github.com/RheinSullivan/raktajs/issues"
-  },
-  "workspaces": [
-    "packages/*",
-    "examples/*"
-  ],
-  "scripts": {
-    "dev": "bun run dev:rakta",
-    "build": "bun run build:rakta && bun run build:create-rakta",
-    "typecheck": "bun run typecheck:rakta && bun run typecheck:create-rakta",
-    "clean": "rm -rf node_modules bun.lockb bun.lock package-lock.json packages/rakta/dist packages/create-rakta/dist",
-    "dev:rakta": "bun run packages/rakta/src/cli/rakta.ts dev",
-    "dev:create-rakta": "bun run packages/create-rakta/src/index.ts",
-    "build:rakta": "bun build packages/rakta/src/index.ts --outdir packages/rakta/dist --target bun --sourcemap=external && bun build packages/rakta/src/cli/rakta.ts --outfile packages/rakta/dist/cli/rakta.js --target bun --sourcemap=external",
-    "build:create-rakta": "bun build packages/create-rakta/src/index.ts --outfile packages/create-rakta/dist/index.js --target bun --sourcemap=external",
-    "typecheck:rakta": "tsc -p packages/rakta/tsconfig.json --noEmit",
-    "typecheck:create-rakta": "tsc -p packages/create-rakta/tsconfig.json --noEmit",
-    "test": "bun test",
-    "lint": "bunx @biomejs/biome check .",
-    "format": "bunx @biomejs/biome format --write ."
-  },
-  "devDependencies": {
-    "@types/bun": "^1.1.0",
-    "@types/node": "^20.0.0",
-    "@types/react": "^18.3.0",
-    "@types/react-dom": "^18.3.0",
-    "typescript": "^5.5.0"
-  },
-  "packageManager": "bun@1.3.11"
+	"name": "rakta-js-monorepo",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Rakta.js monorepo - framework source, create app CLI, examples, and documentation.",
+	"author": "Rhein Sullivan | Vyagra Nexus™",
+	"license": "MIT",
+	"homepage": "https://raktajs.dev",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/RheinSullivan/raktajs.git"
+	},
+	"bugs": {
+		"url": "https://github.com/RheinSullivan/raktajs/issues"
+	},
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"dev": "bun run dev:rakta",
+		"build": "bun run build:rakta && bun run build:create-rakta",
+		"typecheck": "bun run typecheck:rakta && bun run typecheck:create-rakta",
+		"clean": "rm -rf node_modules packages/rakta/dist packages/create-rakta/dist",
+		"dev:rakta": "bun run packages/rakta/src/cli/rakta.ts dev",
+		"dev:create-rakta": "bun run packages/create-rakta/src/index.ts",
+		"build:rakta": "bun build packages/rakta/src/index.ts --outdir packages/rakta/dist --target bun --sourcemap=external && bun build packages/rakta/src/cli/rakta.ts --outdir packages/rakta/dist/cli --target bun --sourcemap=external",
+		"build:create-rakta": "bun build packages/create-rakta/src/index.ts --outdir packages/create-rakta/dist --target bun --sourcemap=external",
+		"typecheck:rakta": "tsc -p packages/rakta/tsconfig.json --noEmit",
+		"typecheck:create-rakta": "tsc -p packages/create-rakta/tsconfig.json --noEmit",
+		"test": "bun test --pass-with-no-tests",
+		"lint": "bunx @biomejs/biome check .",
+		"format": "bunx @biomejs/biome format --write .",
+		"check:workspace": "bun run typecheck && bun run lint"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.5.1",
+		"@types/bun": "^1.3.14",
+		"@types/node": "^26.0.1",
+		"@types/react": "^19.2.17",
+		"@types/react-dom": "^19.2.3",
+		"typescript": "^6.0.3"
+	},
+	"packageManager": "bun@1.3.11"
 }

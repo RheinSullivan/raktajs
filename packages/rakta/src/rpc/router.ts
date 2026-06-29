@@ -2,108 +2,131 @@ import type { RouterDefinition, RpcPayload, RpcEnvelope } from "./types";
 import { RaktaSchemaError } from "../schema/errors";
 
 /**
- * Creates a Rakta RPC router from a map of procedure definitions.
+ * CarubanWire - Creates a Rakta RPC router from a map of procedure definitions.
  * The return value is typed as `TRouter` so TypeScript can infer procedure types.
  */
 export function createRaktaRouter<TRouter extends RouterDefinition>(
-  procedures: TRouter
+	procedures: TRouter,
 ): TRouter {
-  return procedures;
+	return procedures;
 }
 
 /**
  * Creates an HTTP request handler for the given router.
  * Mount at your chosen base path, e.g. POST /rpc
- *
- * CLI integration: bun rakta tide:render
  */
 export function createRpcHandler<TRouter extends RouterDefinition>(
-  router: TRouter
+	router: TRouter,
 ): (request: Request) => Promise<Response> {
-  return async (request: Request): Promise<Response> => {
-    if (request.method !== "POST") {
-      return jsonResponse<string>(
-        { ok: false, error: "Only POST requests are accepted", code: "method_not_allowed" },
-        405
-      );
-    }
+	return async (request: Request): Promise<Response> => {
+		if (request.method !== "POST") {
+			return buildJsonResponse<string>(
+				{
+					ok: false,
+					error: "Only POST requests are accepted",
+					code: "method_not_allowed",
+				},
+				405,
+			);
+		}
 
-    let payload: RpcPayload;
-    try {
-      payload = await request.json() as RpcPayload;
-    } catch {
-      return jsonResponse<string>(
-        { ok: false, error: "Invalid JSON body", code: "parse_error" },
-        400
-      );
-    }
+		let rpcPayload: RpcPayload;
 
-    if (typeof payload.procedure !== "string") {
-      return jsonResponse<string>(
-        { ok: false, error: "Missing procedure name", code: "invalid_request" },
-        400
-      );
-    }
+		try {
+			rpcPayload = (await request.json()) as RpcPayload;
+		} catch {
+			return buildJsonResponse<string>(
+				{ ok: false, error: "Invalid JSON body", code: "parse_error" },
+				400,
+			);
+		}
 
-    const procedure = router[payload.procedure];
-    if (!procedure) {
-      return jsonResponse<string>(
-        {
-          ok: false,
-          error: `Procedure "${payload.procedure}" not found`,
-          code: "not_found",
-        },
-        404
-      );
-    }
+		if (typeof rpcPayload.procedure !== "string") {
+			return buildJsonResponse<string>(
+				{
+					ok: false,
+					error: "Missing procedure name",
+					code: "invalid_request",
+				},
+				400,
+			);
+		}
 
-    // Validate input if schema is provided
-    let validatedInput: unknown = payload.input;
+		const selectedProcedure = router[rpcPayload.procedure];
 
-    if (procedure.inputSchema) {
-      const validationErrors = procedure.inputSchema._run(payload.input);
-      if (validationErrors.length > 0) {
-        return jsonResponse<string>(
-          {
-            ok: false,
-            error: "Input validation failed",
-            code: "validation_error",
-            details: validationErrors.map((e) => ({
-              path: e.path,
-              message: e.message,
-            })),
-          },
-          422
-        );
-      }
-      validatedInput = procedure.inputSchema.parse(payload.input);
-    }
+		if (selectedProcedure === undefined) {
+			return buildJsonResponse<string>(
+				{
+					ok: false,
+					error: `Procedure "${rpcPayload.procedure}" not found`,
+					code: "not_found",
+				},
+				404,
+			);
+		}
 
-    try {
-      const output = await procedure.handler({ input: validatedInput });
-      return jsonResponse({ ok: true, data: output }, 200);
-    } catch (err) {
-      if (err instanceof RaktaSchemaError) {
-        return jsonResponse<string>(
-          { ok: false, error: err.message, code: "schema_error" },
-          422
-        );
-      }
-      const message = err instanceof Error ? err.message : "Internal server error";
-      return jsonResponse<string>(
-        { ok: false, error: message, code: "internal_error" },
-        500
-      );
-    }
-  };
+		let validatedInput: unknown = rpcPayload.input;
+
+		if (selectedProcedure.inputSchema !== undefined) {
+			const validationErrors = selectedProcedure.inputSchema._run(
+				rpcPayload.input,
+			);
+
+			if (validationErrors.length > 0) {
+				return buildJsonResponse<string>(
+					{
+						ok: false,
+						error: "Input validation failed",
+						code: "validation_error",
+						details: validationErrors.map((validationError) => ({
+							path: validationError.path,
+							message: validationError.message,
+						})),
+					},
+					422,
+				);
+			}
+
+			validatedInput = selectedProcedure.inputSchema.parse(rpcPayload.input);
+		}
+
+		try {
+			const procedureOutput = await selectedProcedure.handler({
+				input: validatedInput,
+			});
+
+			return buildJsonResponse({ ok: true, data: procedureOutput }, 200);
+		} catch (caughtError) {
+			if (caughtError instanceof RaktaSchemaError) {
+				return buildJsonResponse<string>(
+					{
+						ok: false,
+						error: caughtError.message,
+						code: "schema_error",
+					},
+					422,
+				);
+			}
+
+			const errorMessage =
+				caughtError instanceof Error
+					? caughtError.message
+					: "Internal server error";
+
+			return buildJsonResponse<string>(
+				{ ok: false, error: errorMessage, code: "internal_error" },
+				500,
+			);
+		}
+	};
 }
 
-function jsonResponse<TData>(
-  envelope: RpcEnvelope<TData>,
-  status: number
+function buildJsonResponse<TData>(
+	responseEnvelope: RpcEnvelope<TData>,
+	statusCode: number,
 ): Response {
-  return new Response(JSON.stringify(envelope), {
-    status,
-    headers: { "Content-Type": "application/json; charset=utf-8" },
-  });
+	return new Response(JSON.stringify(responseEnvelope), {
+		status: statusCode,
+		headers: { "Content-Type": "application/json; charset=utf-8" },
+	});
 }

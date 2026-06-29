@@ -1,90 +1,74 @@
-export type CssFramework =
-    | "tailwind"
-    | "bootstrap"
-    | "sass"
-    | "none";
+export type CssFramework = "tailwind" | "bootstrap" | "sass" | "none";
 
-export type BackendFramework =
-    | "gaman"
-    | "express"
-    | "nest"
-    | "adonis";
+export type BackendFramework = "gaman" | "express" | "nest" | "adonis";
 
 export type Database =
-    | "postgresql"
-    | "mysql"
-    | "mongodb"
-    | "firebase"
-    | "sqlite"
-    | "mariadb"
-    | "redis"
-    | "planetscale"
-    | "neon"
-    | "turso";
+	| "postgresql"
+	| "mysql"
+	| "mongodb"
+	| "firebase"
+	| "sqlite"
+	| "mariadb"
+	| "redis"
+	| "planetscale"
+	| "neon"
+	| "turso";
 
-export type RenderMode =
-    | "csr"
-    | "ssr"
-    | "ssg"
-    | "csg"
-    | "spa"
-    | "hybrid";
+export type RenderMode = "csr" | "ssr" | "ssg" | "csg" | "spa" | "hybrid";
 
-export type ProjectMode =
-    | "fullstack"
-    | "frontend-only";
+export type ProjectMode = "fullstack" | "frontend-only";
 
 export interface ProjectFile {
-    readonly path: string;
-    readonly content: string;
+	readonly path: string;
+	readonly content: string;
 }
 
 export interface ProjectConfig {
-    readonly projectName: string;
-    readonly projectMode: ProjectMode;
-    readonly cssFramework: CssFramework;
-    readonly renderMode: RenderMode;
-    readonly backendFramework: BackendFramework;
-    readonly database: Database;
+	readonly projectName: string;
+	readonly projectMode: ProjectMode;
+	readonly cssFramework: CssFramework;
+	readonly renderMode: RenderMode;
+	readonly backendFramework: BackendFramework;
+	readonly database: Database;
 }
 
 export const CSS_DISPLAY: Record<CssFramework, string> = {
-    tailwind: "Tailwind CSS",
-    bootstrap: "Bootstrap",
-    sass: "SASS",
-    none: "None",
+	tailwind: "Tailwind CSS",
+	bootstrap: "Bootstrap",
+	sass: "SASS",
+	none: "None",
 };
 
 export const BACKEND_DISPLAY: Record<BackendFramework, string> = {
-    gaman: "Gaman.js",
-    express: "Express.js",
-    nest: "Nest.js",
-    adonis: "Adonis.js",
+	gaman: "Gaman.js",
+	express: "Express.js",
+	nest: "Nest.js",
+	adonis: "Adonis.js",
 };
 
 export const DATABASE_DISPLAY: Record<Database, string> = {
-    postgresql: "PostgreSQL",
-    mysql: "MySQL",
-    mongodb: "MongoDB",
-    firebase: "Firebase",
-    sqlite: "SQLite",
-    mariadb: "MariaDB",
-    redis: "Redis",
-    planetscale: "PlanetScale",
-    neon: "Neon",
-    turso: "Turso",
+	postgresql: "PostgreSQL",
+	mysql: "MySQL",
+	mongodb: "MongoDB",
+	firebase: "Firebase",
+	sqlite: "SQLite",
+	mariadb: "MariaDB",
+	redis: "Redis",
+	planetscale: "PlanetScale",
+	neon: "Neon",
+	turso: "Turso",
 };
 
 export const RENDER_MODE_DISPLAY: Record<RenderMode, string> = {
-    csr: "CSR — Client-Side Rendering",
-    ssr: "SSR — Server-Side Rendering",
-    ssg: "SSG — Static Site Generation",
-    csg: "CSG — Configurable Static Generation",
-    spa: "SPA — Single Page Application",
-    hybrid: "Hybrid — Mixed per-route",
+	csr: "CSR — Client-Side Rendering",
+	ssr: "SSR — Server-Side Rendering",
+	ssg: "SSG — Static Site Generation",
+	csg: "CSG — Configurable Static Generation",
+	spa: "SPA — Single Page Application",
+	hybrid: "Hybrid — Mixed per-route",
 };
 
 export const PROJECT_MODE_DISPLAY: Record<ProjectMode, string> = {
-    fullstack: "Fullstack app (frontend + backend + database)",
-    "frontend-only": "Frontend only (no backend, no database)",
+	fullstack: "Fullstack app (frontend + backend + database)",
+	"frontend-only": "Frontend only (no backend, no database)",
 };

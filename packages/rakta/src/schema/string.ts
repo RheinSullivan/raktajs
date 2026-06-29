@@ -8,125 +8,123 @@ const URL_PATTERN = /^https?:\/\/[^\s$.?#].[^\s]*$/i;
 type StringRule = (value: string) => ReadonlyArray<ValidationError>;
 
 export class StringType extends RaktaType<string> {
-    private readonly rules: ReadonlyArray<StringRule>;
+	private readonly rules: ReadonlyArray<StringRule>;
 
-    constructor(rules: ReadonlyArray<StringRule> = []) {
-        super();
-        this.rules = rules;
-    };
+	constructor(rules: ReadonlyArray<StringRule> = []) {
+		super();
+		this.rules = rules;
+	}
 
-    private addRule(rule: StringRule): StringType {
-        return new StringType([
-            ...this.rules,
-            rule,
-        ]);
-    };
+	private addRule(rule: StringRule): StringType {
+		return new StringType([...this.rules, rule]);
+	}
 
-    _run(value: unknown): ReadonlyArray<ValidationError> {
-        if (typeof value !== "string") {
-            return [
-                {
-                    path: [],
-                    message: "Expected a string",
-                    code: "invalid_type",
-                },
-            ];
-        }
+	_run(value: unknown): ReadonlyArray<ValidationError> {
+		if (typeof value !== "string") {
+			return [
+				{
+					path: [],
+					message: "Expected a string",
+					code: "invalid_type",
+				},
+			];
+		}
 
-        const errors: ValidationError[] = [];
+		const errors: ValidationError[] = [];
 
-        for (const rule of this.rules) {
-            errors.push(...rule(value));
-        }
+		for (const rule of this.rules) {
+			errors.push(...rule(value));
+		}
 
-        return errors;
-    };
+		return errors;
+	}
 
-    min(length: number): StringType {
-        return this.addRule((value: string): ReadonlyArray<ValidationError> => {
-            if (value.length >= length) {
-                return [];
-            }
+	min(length: number): StringType {
+		return this.addRule((value: string): ReadonlyArray<ValidationError> => {
+			if (value.length >= length) {
+				return [];
+			}
 
-            return [
-                {
-                    path: [],
-                    message: `Must be at least ${length} character(s)`,
-                    code: "too_small",
-                },
-            ];
-        });
-    };
+			return [
+				{
+					path: [],
+					message: `Must be at least ${length} character(s)`,
+					code: "too_small",
+				},
+			];
+		});
+	}
 
-    max(length: number): StringType {
-        return this.addRule((value: string): ReadonlyArray<ValidationError> => {
-            if (value.length <= length) {
-                return [];
-            }
+	max(length: number): StringType {
+		return this.addRule((value: string): ReadonlyArray<ValidationError> => {
+			if (value.length <= length) {
+				return [];
+			}
 
-            return [
-                {
-                    path: [],
-                    message: `Must be at most ${length} character(s)`,
-                    code: "too_big",
-                },
-            ];
-        });
-    };
+			return [
+				{
+					path: [],
+					message: `Must be at most ${length} character(s)`,
+					code: "too_big",
+				},
+			];
+		});
+	}
 
-    email(): StringType {
-        return this.addRule((value: string): ReadonlyArray<ValidationError> => {
-            if (EMAIL_PATTERN.test(value)) {
-                return [];
-            }
+	email(): StringType {
+		return this.addRule((value: string): ReadonlyArray<ValidationError> => {
+			if (EMAIL_PATTERN.test(value)) {
+				return [];
+			}
 
-            return [
-                {
-                    path: [],
-                    message: "Invalid email address",
-                    code: "invalid_email",
-                },
-            ];
-        });
-    };
+			return [
+				{
+					path: [],
+					message: "Invalid email address",
+					code: "invalid_email",
+				},
+			];
+		});
+	}
 
-    url(): StringType {
-        return this.addRule((value: string): ReadonlyArray<ValidationError> => {
-            if (URL_PATTERN.test(value)) {
-                return [];
-            }
+	url(): StringType {
+		return this.addRule((value: string): ReadonlyArray<ValidationError> => {
+			if (URL_PATTERN.test(value)) {
+				return [];
+			}
 
-            return [
-                {
-                    path: [],
-                    message: "Invalid URL",
-                    code: "invalid_url",
-                },
-            ];
-        });
-    };
+			return [
+				{
+					path: [],
+					message: "Invalid URL",
+					code: "invalid_url",
+				},
+			];
+		});
+	}
 
-    regex(pattern: RegExp, customMessage?: string): StringType {
-        return this.addRule((value: string): ReadonlyArray<ValidationError> => {
-            if (pattern.test(value)) {
-                return [];
-            }
+	regex(pattern: RegExp, customMessage?: string): StringType {
+		return this.addRule((value: string): ReadonlyArray<ValidationError> => {
+			if (pattern.test(value)) {
+				return [];
+			}
 
-            return [
-                {
-                    path: [],
-                    message: customMessage ?? `Did not match pattern ${pattern.toString()}`,
-                    code: "invalid_pattern",
-                },
-            ];
-        });
-    };
+			return [
+				{
+					path: [],
+					message:
+						customMessage ?? `Did not match pattern ${pattern.toString()}`,
+					code: "invalid_pattern",
+				},
+			];
+		});
+	}
 
-    nonempty(): StringType {
-        return this.min(1);
-    };
-};
+	nonempty(): StringType {
+		return this.min(1);
+	}
+}
 
 export function string(): StringType {
-    return new StringType();
-};
+	return new StringType();
+}
