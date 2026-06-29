@@ -1,6 +1,6 @@
 import type { ValidationError } from "./errors";
 import { prefixErrors } from "./errors";
-import { RaktaType, type Infer } from "./types";
+import { type Infer, RaktaType } from "./types";
 
 export type ShapeRecord = Record<string, RaktaType<unknown>>;
 

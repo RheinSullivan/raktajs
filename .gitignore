@@ -83,3 +83,12 @@ temp/
 # Rakta generated output
 .rakta/
 **/.rakta/
+
+.history/
+node_modules/
+dist/
+coverage/
+.next/
+.git/
+packages/rakta/dist/
+packages/create-rakta/dist/

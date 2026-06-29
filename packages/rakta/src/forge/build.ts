@@ -1,11 +1,11 @@
-import { join, resolve } from "node:path";
 import { mkdirSync } from "node:fs";
+import { join, resolve } from "node:path";
+import { generateManifest, writeManifest } from "../router/manifest";
 import type {
+	ForgeBuildArtifact,
 	ForgeBuildOptions,
 	ForgeBuildResult,
-	ForgeBuildArtifact,
 } from "./types";
-import { generateManifest, writeManifest } from "../router/manifest";
 
 /**
  * Runs the Rakta.js Forge build pipeline.

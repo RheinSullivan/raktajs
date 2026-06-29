@@ -1,13 +1,14 @@
 #!/usr/bin/env bun
 
-import * as clack from "@clack/prompts";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
+import * as clack from "@clack/prompts";
 import pc from "picocolors";
 import { printBanner } from "./ascii";
-import { promptProjectName, runPrompts } from "./prompts";
-import { generateProjectFiles } from "./generator";
 import { writeProjectFiles } from "./fileSystem";
+import { generateProjectFiles } from "./generator";
+import { promptProjectName, runPrompts } from "./prompts";
+import type { ProjectConfig } from "./types";
 import {
 	BACKEND_DISPLAY,
 	CSS_DISPLAY,
@@ -15,7 +16,6 @@ import {
 	PROJECT_MODE_DISPLAY,
 	RENDER_MODE_DISPLAY,
 } from "./types";
-import type { ProjectConfig } from "./types";
 
 function getProjectNameFromArgs(
 	cliArgs: ReadonlyArray<string>,

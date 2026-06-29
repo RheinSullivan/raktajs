@@ -1,6 +1,6 @@
 import type {
-	RouteManifestEntry,
 	MatchedRoute,
+	RouteManifestEntry,
 	RouteSegment,
 } from "./types.js";
 
@@ -23,7 +23,7 @@ function buildPatternRegex(segments: RouteSegment[]): {
 		return escapeRegex(segment.raw);
 	});
 
-	const pattern = parts.length === 0 ? "" : "/" + parts.join("/");
+	const pattern = parts.length === 0 ? "" : `/${parts.join("/")}`;
 	const regex = new RegExp(`^${pattern || "/"}$`);
 
 	return { regex, paramNames };
@@ -72,7 +72,7 @@ export function findLayoutsForPathname(
 		if (layout.urlPattern === "/") return true;
 		return (
 			pathname === layout.urlPattern ||
-			pathname.startsWith(layout.urlPattern + "/")
+			pathname.startsWith(`${layout.urlPattern}/`)
 		);
 	});
 }

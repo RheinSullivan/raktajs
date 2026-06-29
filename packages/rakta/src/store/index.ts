@@ -1,12 +1,12 @@
 export { createRaktaStore } from "./createStore";
 
 export type {
+	GetStateFn,
+	ListenerFn,
+	SelectorFn,
 	SetStateArg,
 	SetStateFn,
-	GetStateFn,
-	SelectorFn,
-	ListenerFn,
-	UnsubscribeFn,
 	StateCreator,
 	StoreApi,
+	UnsubscribeFn,
 } from "./types";

@@ -28,8 +28,8 @@
 		"typecheck:rakta": "tsc -p packages/rakta/tsconfig.json --noEmit",
 		"typecheck:create-rakta": "tsc -p packages/create-rakta/tsconfig.json --noEmit",
 		"test": "bun test --pass-with-no-tests",
-		"lint": "bunx @biomejs/biome check .",
-		"format": "bunx @biomejs/biome format --write .",
+		"lint": "bunx @biomejs/biome check package.json tsconfig.base.json biome.json workspace.test.ts packages/create-rakta/package.json packages/create-rakta/tsconfig.json packages/create-rakta/src packages/rakta/package.json packages/rakta/tsconfig.json packages/rakta/src templates/frontendOnly/package.json templates/frontendOnly/tsconfig.json templates/frontendOnly/rakta-env.d.ts templates/frontendOnly/app templates/frontendOnly/styles",
+		"format": "bunx @biomejs/biome check --write package.json tsconfig.base.json biome.json workspace.test.ts packages/create-rakta/package.json packages/create-rakta/tsconfig.json packages/create-rakta/src packages/rakta/package.json packages/rakta/tsconfig.json packages/rakta/src templates/frontendOnly/package.json templates/frontendOnly/tsconfig.json templates/frontendOnly/rakta-env.d.ts templates/frontendOnly/app templates/frontendOnly/styles",
 		"check:workspace": "bun run typecheck && bun run lint"
 	},
 	"devDependencies": {

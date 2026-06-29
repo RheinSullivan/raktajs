@@ -1,9 +1,10 @@
 // CLI: bun rakta imports:generate
-import { loadConfig } from "../config/loadConfig";
+
 import {
 	generateAutoImports,
 	printAutoImportSummary,
 } from "../auto-import/generator";
+import { loadConfig } from "../config/loadConfig";
 
 export async function importsGenerateCommand(
 	cwd: string = process.cwd(),

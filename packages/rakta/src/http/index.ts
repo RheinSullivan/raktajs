@@ -1,24 +1,23 @@
 export {
+	HttpNetworkError,
+	HttpResponseError,
+	HttpTimeoutError,
+} from "./errors";
+export {
 	createRaktaHttp,
 	RaktaHttpClient,
 } from "./panturaFetch";
 
-export {
-	HttpResponseError,
-	HttpTimeoutError,
-	HttpNetworkError,
-} from "./errors";
-
 export type {
-	HttpMethod,
-	HttpQueryValue,
-	HttpQueryParams,
+	HttpClientConfig,
+	HttpJsonArray,
+	HttpJsonObject,
 	HttpJsonPrimitive,
 	HttpJsonValue,
-	HttpJsonObject,
-	HttpJsonArray,
+	HttpMethod,
+	HttpQueryParams,
+	HttpQueryValue,
 	HttpRequestBody,
-	HttpClientConfig,
 	HttpRequestConfig,
 	RequestInterceptorFn,
 	ResponseInterceptorFn,

@@ -1,14 +1,14 @@
-import { existsSync, statSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
-import type {
-	ForgeInspectReport,
-	ForgeBuildArtifact,
-	ArtifactKind,
-	ForgeRouteModeEntry,
-} from "./types";
-import { readManifest } from "../router/manifest";
 import { resolveRouteMode } from "../render/modes";
 import type { RenderConfig } from "../render/types";
+import { readManifest } from "../router/manifest";
+import type {
+	ArtifactKind,
+	ForgeBuildArtifact,
+	ForgeInspectReport,
+	ForgeRouteModeEntry,
+} from "./types";
 
 export interface InspectOptions {
 	readonly outDir: string;

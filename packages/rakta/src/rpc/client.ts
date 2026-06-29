@@ -1,4 +1,4 @@
-import type { RouterDefinition, RouterClient, RpcEnvelope } from "./types";
+import type { RouterClient, RouterDefinition, RpcEnvelope } from "./types";
 
 export interface RaktaClientConfig {
 	readonly baseUrl: string;

@@ -1,5 +1,5 @@
+import type { RenderConfig, RenderMode } from "../render/types.js";
 import type { RouteManifest } from "../router/types.js";
-import type { RenderMode, RenderConfig } from "../render/types.js";
 
 export interface ForgeDevServerOptions {
 	readonly port: number;

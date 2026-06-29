@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { render, resolveRouteMode, type RenderConfig } from "../render";
+import { type RenderConfig, render, resolveRouteMode } from "../render";
 import { generateManifest, matchRoute } from "../router";
 import {
 	buildErrorResponse,

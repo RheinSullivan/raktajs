@@ -1,10 +1,10 @@
-import { join } from "node:path";
 import { existsSync, readFileSync } from "node:fs";
-import type { ForgeDevServerOptions, ForgeDevServerHandle } from "./types";
-import { generateManifest } from "../router/manifest";
+import { join } from "node:path";
 import { resolveRouteMode } from "../render/modes";
 import { render } from "../render/renderer";
+import { generateManifest } from "../router/manifest";
 import { matchRoute } from "../router/matcher";
+import type { ForgeDevServerHandle, ForgeDevServerOptions } from "./types";
 
 const DEFAULT_DEV_PORT = 3000;
 

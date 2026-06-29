@@ -1,6 +1,6 @@
 // CLI: bun rakta rpc:types
 // Regenerates shared/types/rpc.ts which re-exports AppRouter for frontend use.
-import { mkdirSync, writeFileSync, existsSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 export async function rpcTypesCommand(

@@ -1,16 +1,16 @@
+import {
+	HttpNetworkError,
+	HttpResponseError,
+	HttpTimeoutError,
+} from "./errors";
 import type {
 	HttpClientConfig,
+	HttpMethod,
 	HttpRequestBody,
 	HttpRequestConfig,
-	HttpMethod,
 	RequestInterceptorFn,
 	ResponseInterceptorFn,
 } from "./types";
-import {
-	HttpResponseError,
-	HttpTimeoutError,
-	HttpNetworkError,
-} from "./errors";
 
 type HttpJsonResponse = HttpRequestBody | string;
 

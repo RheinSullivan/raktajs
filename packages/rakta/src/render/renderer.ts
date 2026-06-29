@@ -1,11 +1,11 @@
+import { isRoadmapMode } from "./modes";
 import type {
 	RenderContext,
-	RenderResult,
-	RenderMode,
-	RenderSuccess,
 	RenderFailure,
+	RenderMode,
+	RenderResult,
+	RenderSuccess,
 } from "./types";
-import { isRoadmapMode } from "./modes";
 
 export interface RendererOptions {
 	readonly appName: string;

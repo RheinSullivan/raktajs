@@ -1,5 +1,5 @@
-import { readdirSync, statSync, existsSync } from "node:fs";
-import { join, relative, sep } from "node:path";
+import { existsSync, readdirSync, statSync } from "node:fs";
+import { join, relative } from "node:path";
 import type { RouteKind, RouteManifestEntry, RouteSegment } from "./types.js";
 
 const FILE_TO_KIND: Record<string, RouteKind> = {
@@ -47,7 +47,7 @@ function segmentsToUrlPattern(segments: RouteSegment[]): string {
 			? `:${segment.paramName}`
 			: segment.raw,
 	);
-	return "/" + parts.join("/");
+	return `/${parts.join("/")}`;
 }
 
 function scanDirectory(

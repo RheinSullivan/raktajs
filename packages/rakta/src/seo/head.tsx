@@ -1,10 +1,10 @@
 import { Fragment, type ReactElement } from "react";
 import {
-	resolveRobotsContent,
-	resolveTitle,
 	type JsonLd,
 	type Metadata,
 	type OpenGraphImage,
+	resolveRobotsContent,
+	resolveTitle,
 } from "./metadata";
 
 export interface HeadProps {
@@ -13,6 +13,33 @@ export interface HeadProps {
 
 function KeywordsContent(keywords: string | string[]): string {
 	return Array.isArray(keywords) ? keywords.join(", ") : keywords;
+}
+
+function getAuthorKey(authorName: string): string {
+	return `author-${authorName}`;
+}
+
+function getIconKey(
+	prefix: string,
+	iconUrl: string,
+	iconSizes?: string,
+): string {
+	if (iconSizes && iconSizes.length > 0) {
+		return `${prefix}-${iconUrl}-${iconSizes}`;
+	}
+
+	return `${prefix}-${iconUrl}`;
+}
+
+function getOpenGraphImageKey(image: OpenGraphImage): string {
+	const width = image.width ? String(image.width) : "auto-width";
+	const height = image.height ? String(image.height) : "auto-height";
+
+	return `og-image-${image.url}-${width}-${height}`;
+}
+
+function getJsonLdKey(schema: JsonLd): string {
+	return `jsonld-${JSON.stringify(schema)}`;
 }
 
 export function RaktaHead({ metadata }: HeadProps): ReactElement {
@@ -58,8 +85,12 @@ export function RaktaHead({ metadata }: HeadProps): ReactElement {
 			)}
 
 			{/* Authors meta */}
-			{metadata.authors?.map((author, index) => (
-				<meta key={`author-${index}`} name="author" content={author.name} />
+			{metadata.authors?.map((author) => (
+				<meta
+					key={getAuthorKey(author.name)}
+					name="author"
+					content={author.name}
+				/>
 			))}
 
 			{/* Canonical meta */}
@@ -79,9 +110,9 @@ export function RaktaHead({ metadata }: HeadProps): ReactElement {
 				(typeof metadata.icons.icon === "string" ? (
 					<link rel="icon" href={metadata.icons.icon} />
 				) : (
-					metadata.icons.icon.map((icon, index) => (
+					metadata.icons.icon.map((icon) => (
 						<link
-							key={`icon-${index}`}
+							key={getIconKey("icon", icon.url, icon.sizes)}
 							rel="icon"
 							href={icon.url}
 							sizes={icon.sizes}
@@ -96,9 +127,9 @@ export function RaktaHead({ metadata }: HeadProps): ReactElement {
 				(typeof metadata.icons.apple === "string" ? (
 					<link rel="apple-touch-icon" href={metadata.icons.apple} />
 				) : (
-					metadata.icons.apple.map((icon, index) => (
+					metadata.icons.apple.map((icon) => (
 						<link
-							key={`apple-${index}`}
+							key={getIconKey("apple", icon.url, icon.sizes)}
 							rel="apple-touch-icon"
 							href={icon.url}
 							sizes={icon.sizes}
@@ -138,31 +169,26 @@ export function RaktaHead({ metadata }: HeadProps): ReactElement {
 					{metadata.openGraph.locale && (
 						<meta property="og:locale" content={metadata.openGraph.locale} />
 					)}
-					{metadata.openGraph.images?.map(
-						(image: OpenGraphImage, index: number) => (
-							<Fragment key={`og-image-${index}`}>
-								<meta property="og:image" content={image.url} />
-								{image.width && (
-									<meta
-										property="og:image:width"
-										content={String(image.width)}
-									/>
-								)}
-								{image.height && (
-									<meta
-										property="og:image:height"
-										content={String(image.height)}
-									/>
-								)}
-								{image.alt && (
-									<meta property="og:image:alt" content={image.alt} />
-								)}
-								{image.type && (
-									<meta property="og:image:type" content={image.type} />
-								)}
-							</Fragment>
-						),
-					)}
+					{metadata.openGraph.images?.map((image: OpenGraphImage) => (
+						<Fragment key={getOpenGraphImageKey(image)}>
+							<meta property="og:image" content={image.url} />
+							{image.width && (
+								<meta property="og:image:width" content={String(image.width)} />
+							)}
+							{image.height && (
+								<meta
+									property="og:image:height"
+									content={String(image.height)}
+								/>
+							)}
+							{image.alt && (
+								<meta property="og:image:alt" content={image.alt} />
+							)}
+							{image.type && (
+								<meta property="og:image:type" content={image.type} />
+							)}
+						</Fragment>
+					))}
 				</>
 			)}
 
@@ -216,12 +242,10 @@ export function RaktaHead({ metadata }: HeadProps): ReactElement {
 				})}
 
 			{/* JSON-LD */}
-			{jsonLdArray.map((schema, index) => (
-				<script
-					key={`jsonld-${index}`}
-					type="application/ld+json"
-					dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-				/>
+			{jsonLdArray.map((schema) => (
+				<script key={getJsonLdKey(schema)} type="application/ld+json">
+					{JSON.stringify(schema)}
+				</script>
 			))}
 		</>
 	);

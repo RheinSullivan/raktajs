@@ -1,7 +1,7 @@
 import type {
+	RenderConfig,
 	RenderMode,
 	RenderModeDescriptor,
-	RenderConfig,
 	ResolvedRouteMode,
 } from "./types";
 

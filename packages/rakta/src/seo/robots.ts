@@ -66,7 +66,7 @@ export function generateRobotsTxt(options: RobotsOptions): string {
         `);
 	}
 
-	return lines.join("\n").trimEnd() + "\n";
+	return `${lines.join("\n").trimEnd()}\n`;
 }
 
 export function createRobotsHandler(options: RobotsOptions): () => Response {

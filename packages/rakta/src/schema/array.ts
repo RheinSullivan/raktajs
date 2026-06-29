@@ -1,5 +1,5 @@
 import type { ValidationError } from "./errors";
-import { RaktaType, type Infer } from "./types";
+import { type Infer, RaktaType } from "./types";
 
 export class ArrayType<TItem extends RaktaType<unknown>> extends RaktaType<
 	Array<Infer<TItem>>

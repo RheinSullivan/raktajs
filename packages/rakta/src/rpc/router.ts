@@ -1,5 +1,5 @@
-import type { RouterDefinition, RpcPayload, RpcEnvelope } from "./types";
 import { RaktaSchemaError } from "../schema/errors";
+import type { RouterDefinition, RpcEnvelope, RpcPayload } from "./types";
 
 /**
  * CarubanWire - Creates a Rakta RPC router from a map of procedure definitions.

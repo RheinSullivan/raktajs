@@ -1,40 +1,39 @@
 export {
-	string,
-	StringType,
-} from "./string";
-export {
-	number,
-	NumberType,
-} from "./number";
-export {
-	boolean,
-	BooleanType,
-} from "./boolean";
-export {
-	object,
-	ObjectType,
-} from "./object";
-export {
-	array,
 	ArrayType,
+	array,
 } from "./array";
 export {
-	RaktaType,
-	OptionalType,
-} from "./types";
-export {
-	RaktaSchemaError,
-	preFixErrors,
-} from "./errors";
-
+	BooleanType,
+	boolean,
+} from "./boolean";
 export type {
-	ValidationError,
-	ParseSuccess,
 	ParseFailure,
 	ParseResult,
+	ParseSuccess,
+	ValidationError,
 } from "./errors";
-export type { Infer } from "./types";
+export {
+	preFixErrors,
+	RaktaSchemaError,
+} from "./errors";
+export {
+	NumberType,
+	number,
+} from "./number";
 export type {
-	ShapeRecord,
 	InferShape,
+	ShapeRecord,
 } from "./object";
+export {
+	ObjectType,
+	object,
+} from "./object";
+export {
+	StringType,
+	string,
+} from "./string";
+export type { Infer } from "./types";
+export {
+	OptionalType,
+	RaktaType,
+} from "./types";

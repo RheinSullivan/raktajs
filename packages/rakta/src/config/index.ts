@@ -1,21 +1,19 @@
+export type {
+	AutoImportConfig,
+	BuildConfig,
+	CorsConfig,
+	CssConfig,
+	RaktaConfig,
+	RpcConfig,
+	SeoConfig,
+	ServerConfig,
+} from "./defineConfig";
 export {
+	defaultConfig,
 	defineConfig,
 	defineRaktaConfig,
-	defaultConfig,
 } from "./defineConfig";
-
 export {
 	loadConfig,
 	mergeConfig,
 } from "./loadConfig";
-
-export type {
-	RaktaConfig,
-	CssConfig,
-	SeoConfig,
-	ServerConfig,
-	CorsConfig,
-	BuildConfig,
-	AutoImportConfig,
-	RpcConfig,
-} from "./defineConfig";

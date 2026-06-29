@@ -1,4 +1,3 @@
-import React from "react";
 import ShrimpRunGame from "./components/shrimpRunGame";
 
 export default function HomePage() {

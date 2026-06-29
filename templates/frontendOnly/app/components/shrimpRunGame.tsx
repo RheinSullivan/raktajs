@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import RaktaShrimpMascot from "./raktaShrimptMascot";
+import { useCallback, useEffect, useRef, useState } from "react";
+import RaktaShrimpMascot from "./raktaShrimpMascot";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -84,7 +84,7 @@ function checkCollision(
  * - Collision detection with margin
  * - High score tracked in component state
  * - Keyboard (Space) and click/tap support
- * - Fully accessible: role, tabIndex, aria-label
+ * - Accessible button game canvas
  * - SVG shrimp mascot — no external assets
  */
 export default function ShrimpRunGame() {
@@ -98,7 +98,6 @@ export default function ShrimpRunGame() {
 		isJumping: false,
 	});
 
-	// Refs for game loop (avoids stale closure issues)
 	const gameStatusRef = useRef<GameStatus>("idle");
 	const scoreRef = useRef(0);
 	const shrimpRef = useRef<ShrimpState>({
@@ -112,9 +111,7 @@ export default function ShrimpRunGame() {
 	const lastObstacleTimeRef = useRef(0);
 	const lastScoreTickRef = useRef(0);
 
-	// ── Jump ──────────────────────────────────────────────────────────────────
-
-	const jump = useCallback(() => {
+	const jump = useCallback((): void => {
 		if (gameStatusRef.current === "dead") {
 			return;
 		}
@@ -130,14 +127,13 @@ export default function ShrimpRunGame() {
 				velocityY: JUMP_VELOCITY,
 				isJumping: true,
 			};
+
 			shrimpRef.current = nextShrimp;
 			setShrimp(nextShrimp);
 		}
 	}, []);
 
-	// ── Reset ─────────────────────────────────────────────────────────────────
-
-	const resetGame = useCallback(() => {
+	const resetGame = useCallback((): void => {
 		const freshShrimp: ShrimpState = {
 			yPosition: 0,
 			velocityY: 0,
@@ -158,8 +154,6 @@ export default function ShrimpRunGame() {
 		setGameStatus("idle");
 	}, []);
 
-	// ── Game loop ─────────────────────────────────────────────────────────────
-
 	useEffect(() => {
 		let previousTimestamp = 0;
 
@@ -172,13 +166,11 @@ export default function ShrimpRunGame() {
 			const deltaTime = timestamp - previousTimestamp;
 			previousTimestamp = timestamp;
 
-			// Skip frames that are too large (tab was backgrounded, etc.)
 			if (deltaTime > 100) {
 				animationFrameRef.current = requestAnimationFrame(gameTick);
 				return;
 			}
 
-			// ── Shrimp physics ────────────────────────────────────────────────
 			const currentShrimp = shrimpRef.current;
 			let nextVelocityY = currentShrimp.velocityY + GRAVITY;
 			let nextYPosition = currentShrimp.yPosition - nextVelocityY;
@@ -197,7 +189,6 @@ export default function ShrimpRunGame() {
 			shrimpRef.current = nextShrimp;
 			setShrimp(nextShrimp);
 
-			// ── Obstacles ─────────────────────────────────────────────────────
 			const obstacleSpeed = getObstacleSpeed(scoreRef.current);
 
 			const movedObstacles = obstaclesRef.current
@@ -207,7 +198,6 @@ export default function ShrimpRunGame() {
 				}))
 				.filter((obstacle) => obstacle.xPosition + obstacle.width > -10);
 
-			// Spawn new obstacle
 			if (
 				timestamp - lastObstacleTimeRef.current > OBSTACLE_SPAWN_INTERVAL_MS &&
 				movedObstacles.length < 3
@@ -216,19 +206,19 @@ export default function ShrimpRunGame() {
 				const obstacleWidth = 20 + Math.floor(Math.random() * 20);
 
 				movedObstacles.push({
-					id: obstacleIdRef.current++,
+					id: obstacleIdRef.current,
 					xPosition: CANVAS_WIDTH + 20,
 					width: obstacleWidth,
 					height: obstacleHeight,
 				});
 
+				obstacleIdRef.current += 1;
 				lastObstacleTimeRef.current = timestamp;
 			}
 
 			obstaclesRef.current = movedObstacles;
 			setObstacles([...movedObstacles]);
 
-			// ── Collision detection ───────────────────────────────────────────
 			for (const obstacle of movedObstacles) {
 				if (checkCollision(nextShrimp.yPosition, obstacle)) {
 					gameStatusRef.current = "dead";
@@ -241,7 +231,6 @@ export default function ShrimpRunGame() {
 				}
 			}
 
-			// ── Score increment ───────────────────────────────────────────────
 			if (timestamp - lastScoreTickRef.current > SCORE_TICK_MS) {
 				scoreRef.current += 1;
 				setScore(scoreRef.current);
@@ -258,8 +247,6 @@ export default function ShrimpRunGame() {
 		};
 	}, []);
 
-	// ── Keyboard handler ──────────────────────────────────────────────────────
-
 	useEffect(() => {
 		function handleKeyDown(keyboardEvent: KeyboardEvent): void {
 			if (keyboardEvent.code === "Space") {
@@ -275,18 +262,13 @@ export default function ShrimpRunGame() {
 		};
 	}, [jump]);
 
-	// ── Derived values ────────────────────────────────────────────────────────
-
 	const shrimpBottomOffset = GROUND_STRIP_HEIGHT + shrimp.yPosition;
 	const isDead = gameStatus === "dead";
 	const isIdle = gameStatus === "idle";
 	const isRunning = gameStatus === "running";
 
-	// ── Render ────────────────────────────────────────────────────────────────
-
 	return (
 		<div className="shrimp-run-wrapper">
-			{/* Score display */}
 			<div
 				style={{
 					display: "flex",
@@ -302,11 +284,9 @@ export default function ShrimpRunGame() {
 				)}
 			</div>
 
-			{/* Game canvas */}
-			<div
+			<button
+				type="button"
 				className="shrimp-run-canvas"
-				role="button"
-				tabIndex={0}
 				aria-label="ShrimpRun game area. Click or press Space to jump."
 				onClick={jump}
 				onKeyDown={(keyboardEvent) => {
@@ -325,10 +305,12 @@ export default function ShrimpRunGame() {
 					overflow: "hidden",
 					cursor: "pointer",
 					userSelect: "none",
+					padding: 0,
+					display: "block",
+					textAlign: "left",
 				}}
 			>
-				{/* Ground strip */}
-				<div
+				<span
 					className="shrimp-run-ground"
 					style={{
 						position: "absolute",
@@ -341,8 +323,7 @@ export default function ShrimpRunGame() {
 					}}
 				/>
 
-				{/* Shrimp character */}
-				<div
+				<span
 					style={{
 						position: "absolute",
 						left: SHRIMP_START_X,
@@ -352,11 +333,10 @@ export default function ShrimpRunGame() {
 					}}
 				>
 					<RaktaShrimpMascot isJumping={shrimp.isJumping} isDead={isDead} />
-				</div>
+				</span>
 
-				{/* Obstacles */}
 				{obstacles.map((obstacle) => (
-					<div
+					<span
 						key={obstacle.id}
 						style={{
 							position: "absolute",
@@ -370,9 +350,8 @@ export default function ShrimpRunGame() {
 					/>
 				))}
 
-				{/* Idle overlay */}
 				{isIdle && (
-					<div
+					<span
 						style={{
 							position: "absolute",
 							inset: 0,
@@ -385,12 +364,11 @@ export default function ShrimpRunGame() {
 						}}
 					>
 						Press Space or click to start
-					</div>
+					</span>
 				)}
 
-				{/* Game over overlay */}
 				{isDead && (
-					<div
+					<span
 						style={{
 							position: "absolute",
 							inset: 0,
@@ -415,12 +393,11 @@ export default function ShrimpRunGame() {
 						<span style={{ color: "#94a3b8", fontSize: "0.875rem" }}>
 							Score: {score}
 						</span>
-					</div>
+					</span>
 				)}
 
-				{/* Running milestone flash */}
 				{isRunning && score > 0 && score % 50 === 0 && (
-					<div
+					<span
 						style={{
 							position: "absolute",
 							top: 8,
@@ -433,18 +410,16 @@ export default function ShrimpRunGame() {
 						}}
 					>
 						{score}!
-					</div>
+					</span>
 				)}
-			</div>
+			</button>
 
-			{/* Status message */}
 			<p className="shrimp-run-message">
 				{isIdle && "🦐 Click or press Space to make the shrimp jump!"}
 				{isRunning && "🦐 Don't hit the obstacles!"}
 				{isDead && "The shrimp got cooked. Try again!"}
 			</p>
 
-			{/* Restart button — only shown when dead */}
 			{isDead && (
 				<button
 					type="button"

@@ -16,21 +16,31 @@ function createStoreApi<TState>(
 
 	const getState = (): TState => currentState;
 
+	const emitChange = (nextState: TState, previousState: TState): void => {
+		if (Object.is(previousState, nextState)) {
+			return;
+		}
+
+		for (const listenerFn of listeners) {
+			listenerFn(nextState, previousState);
+		}
+	};
+
 	const setState = (arg: SetStateArg<TState>): void => {
-		const prevState = currentState;
+		const previousState = currentState;
 		const partialUpdate = typeof arg === "function" ? arg(currentState) : arg;
+
 		currentState = {
 			...currentState,
 			...partialUpdate,
 		};
 
-		if (!Object.is(prevState, currentState)) {
-			listeners.forEach((listenerFn) => listenerFn(currentState, prevState));
-		}
+		emitChange(currentState, previousState);
 	};
 
 	const subscribe = (listenerFn: ListenerFn<TState>): UnsubscribeFn => {
 		listeners.add(listenerFn);
+
 		return () => {
 			listeners.delete(listenerFn);
 		};
@@ -40,12 +50,10 @@ function createStoreApi<TState>(
 	const initialState = currentState;
 
 	const reset = (): void => {
-		const prevState = currentState;
+		const previousState = currentState;
 		currentState = initialState;
 
-		if (!Object.is(prevState, currentState)) {
-			listeners.forEach((listenerFn) => listenerFn(currentState, prevState));
-		}
+		emitChange(currentState, previousState);
 	};
 
 	return {
@@ -84,19 +92,17 @@ export function createRaktaStore<TState>(
 	function useStore<TSelected>(
 		selector?: SelectorFn<TState, TSelected>,
 	): TState | TSelected {
-		if (selector !== undefined) {
-			return useSyncExternalStore(
-				storeApi.subscribe,
-				() => selector(storeApi.getState()),
-				() => selector(storeApi.getState()),
-			);
-		}
+		const getSnapshot = (): TState | TSelected => {
+			const state = storeApi.getState();
 
-		return useSyncExternalStore(
-			storeApi.subscribe,
-			storeApi.getState,
-			storeApi.getState,
-		);
+			if (selector !== undefined) {
+				return selector(state);
+			}
+
+			return state;
+		};
+
+		return useSyncExternalStore(storeApi.subscribe, getSnapshot, getSnapshot);
 	}
 
 	return Object.assign(useStore, storeApi);

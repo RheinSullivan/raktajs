@@ -1,5 +1,5 @@
-import { mkdirSync, writeFileSync, existsSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { loadConfig } from "../config/loadConfig";
 
 type MakeTarget = "page" | "layout" | "component" | "api";
@@ -16,9 +16,14 @@ function writeIfNew(filePath: string, content: string): void {
 		console.warn(`  Already exists: ${filePath}`);
 		return;
 	}
+
 	mkdirSync(dirname(filePath), { recursive: true });
 	writeFileSync(filePath, content, "utf-8");
 	console.log(`  Created: ${filePath}`);
+}
+
+function getRelativeFilePath(filePath: string, cwd: string): string {
+	return filePath.replace(`${cwd}/`, "");
 }
 
 export async function makeCommand(
@@ -35,7 +40,7 @@ export async function makeCommand(
 			const filePath = join(appDir, name, "page.tsx");
 			writeIfNew(
 				filePath,
-				`// ${filePath.replace(cwd + "/", "")}
+				`// ${getRelativeFilePath(filePath, cwd)}
 import React from "react";
 import type { Metadata } from "rakta/seo";
 
@@ -59,7 +64,7 @@ export default function ${componentName}Page() {
 			const filePath = join(appDir, name, "layout.tsx");
 			writeIfNew(
 				filePath,
-				`// ${filePath.replace(cwd + "/", "")}
+				`// ${getRelativeFilePath(filePath, cwd)}
 import React from "react";
 import type { LayoutProps } from "rakta/router";
 
@@ -97,7 +102,7 @@ export default ${componentName};
 			const filePath = join(appDir, "api", name, "route.ts");
 			writeIfNew(
 				filePath,
-				`// ${filePath.replace(cwd + "/", "")}
+				`// ${getRelativeFilePath(filePath, cwd)}
 import type { RouteContext } from "rakta/router";
 
 export async function GET(_request: Request, context: RouteContext): Promise<Response> {

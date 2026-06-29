@@ -1,17 +1,17 @@
 #!/usr/bin/env bun
 
 import { join } from "node:path";
-import { devCommand } from "./dev";
-import { buildCommand } from "./build";
-import { startCommand } from "./start";
-import { routesCommand } from "./routes";
-import { makeCommand } from "./make";
-import { seoGenerateCommand } from "./seo";
-import { importsGenerateCommand } from "./imports";
-import { rpcTypesCommand } from "./rpc-types";
-import { doctorCommand } from "./doctor";
-import { inspectBuild, printInspectReport } from "../forge/inspect";
 import { loadConfig } from "../config/loadConfig";
+import { inspectBuild, printInspectReport } from "../forge/inspect";
+import { buildCommand } from "./build";
+import { devCommand } from "./dev";
+import { doctorCommand } from "./doctor";
+import { importsGenerateCommand } from "./imports";
+import { makeCommand } from "./make";
+import { routesCommand } from "./routes";
+import { rpcTypesCommand } from "./rpc-types";
+import { seoGenerateCommand } from "./seo";
+import { startCommand } from "./start";
 
 const RED = "\x1b[31m";
 const BOLD = "\x1b[1m";

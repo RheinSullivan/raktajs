@@ -1,46 +1,41 @@
 // Head
-export { RaktaHead } from "./head";
+
 export type { HeadProps } from "./head";
-
-// Metadata
-export {
-	resolveTitle,
-	mergeMetadata,
-	resolveRobotsContent,
-} from "./metadata";
-
+export { RaktaHead } from "./head";
 export type {
-	Robots,
-	JsonLd,
-	Metadata,
-	OpenGraph,
-	JsonLdGraph,
-	TwitterCard,
-	OpenGraphImage,
 	AlternateLinks,
 	GenerateMetadataFn,
+	JsonLd,
+	JsonLdGraph,
+	Metadata,
+	OpenGraph,
+	OpenGraphImage,
+	Robots,
+	TwitterCard,
 } from "./metadata";
-
-// Sitemap
+// Metadata
 export {
-	generateSitemapXml,
-	createSitemapHandler,
-	generateSitemapIndexXml,
-} from "./sitemap";
-
+	mergeMetadata,
+	resolveRobotsContent,
+	resolveTitle,
+} from "./metadata";
 export type {
-	SitemapEntry,
-	SitemapOptions,
-	SitemapIndexEntry,
-} from "./sitemap";
-
+	RobotsOptions,
+	RobotsRule,
+} from "./robots";
 // Robots
 export {
-	generateRobotsTxt,
 	createRobotsHandler,
+	generateRobotsTxt,
 } from "./robots";
-
 export type {
-	RobotsRule,
-	RobotsOptions,
-} from "./robots";
+	SitemapEntry,
+	SitemapIndexEntry,
+	SitemapOptions,
+} from "./sitemap";
+// Sitemap
+export {
+	createSitemapHandler,
+	generateSitemapIndexXml,
+	generateSitemapXml,
+} from "./sitemap";

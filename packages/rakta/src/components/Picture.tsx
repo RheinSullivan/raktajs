@@ -1,10 +1,10 @@
 import React, {
-	useState,
-	useCallback,
-	useRef,
-	useEffect,
-	type HTMLAttributes,
 	type CSSProperties,
+	type HTMLAttributes,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
 } from "react";
 
 type ObjectFitValue = "contain" | "cover" | "fill" | "none" | "scale-down";
@@ -123,7 +123,6 @@ export function Picture({
 					data-loading={resolvedLoading}
 					data-decoding={priority ? "sync" : "async"}
 					aria-label={alt}
-					role="img"
 					title={title}
 					className={className}
 					style={pictureStyle}
@@ -142,7 +141,6 @@ export function Picture({
 			data-loading={resolvedLoading}
 			data-decoding={priority ? "sync" : "async"}
 			aria-label={alt}
-			role="img"
 			title={title}
 			className={className}
 			style={pictureStyle}

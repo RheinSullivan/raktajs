@@ -1,27 +1,27 @@
-export { scanRoutes } from "./scanner.js";
 export {
 	generateManifest,
-	writeManifest,
-	readManifest,
 	printManifest,
+	readManifest,
+	writeManifest,
 } from "./manifest.js";
 export {
-	matchRoute,
 	findLayoutsForPathname,
 	findSpecialRoute,
+	matchRoute,
 } from "./matcher.js";
+export { scanRoutes } from "./scanner.js";
 
 export type {
-	RouteKind,
-	RouteSegment,
-	RouteManifestEntry,
-	RouteManifest,
-	MatchedRoute,
-	RouteContext,
-	PageProps,
-	LayoutProps,
 	ApiMethod,
 	ApiRouteHandler,
 	ApiRouteModule,
 	GenerateMetadataFn,
+	LayoutProps,
+	MatchedRoute,
+	PageProps,
+	RouteContext,
+	RouteKind,
+	RouteManifest,
+	RouteManifestEntry,
+	RouteSegment,
 } from "./types.js";
