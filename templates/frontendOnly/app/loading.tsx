@@ -1,15 +1,7 @@
 export default function Loading() {
 	return (
-		<main className="page-shell">
-			<div
-				style={{
-					textAlign: "center",
-					padding: "4rem 0",
-					color: "#94a3b8",
-				}}
-			>
-				<p>Loading...</p>
-			</div>
+		<main className="flex min-h-screen items-center justify-center bg-[#050505] px-4">
+			<p className="text-sm font-medium text-slate-400">Loading...</p>
 		</main>
 	);
 }

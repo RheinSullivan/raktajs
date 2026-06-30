@@ -1,5 +1,3 @@
-/* Rakta.js - ShrimpRun Starter Global Styles */
-
 @import "tailwindcss";
 
 :root {
@@ -9,6 +7,7 @@
 	--color-surface: #0e111a;
 	--color-border: rgba(255, 255, 255, 0.1);
 	--color-muted: #94a3b8;
+	color-scheme: dark;
 }
 
 html {
@@ -19,6 +18,12 @@ body {
 	margin: 0;
 	min-width: 320px;
 	min-height: 100vh;
+	color: var(--color-foreground);
+	background: var(--color-background);
+	font-family:
+		ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+		Roboto, sans-serif;
+	-webkit-font-smoothing: antialiased;
 }
 
 *,
@@ -27,14 +32,14 @@ body {
 	box-sizing: border-box;
 }
 
-body {
-	margin: 0;
-	color: var(--color-foreground);
-	background: var(--color-background);
-	font-family:
-		ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-		Roboto, sans-serif;
-	-webkit-font-smoothing: antialiased;
+@keyframes shrimpLegs {
+	0% {
+		transform: translateY(0);
+	}
+
+	50% {
+		transform: translateY(2px);
+	}
 }
 
 .page-shell {

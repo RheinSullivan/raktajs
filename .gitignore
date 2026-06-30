@@ -92,3 +92,6 @@ coverage/
 .git/
 packages/rakta/dist/
 packages/create-rakta/dist/
+biome-errors.txt
+appArchitecture.md
+monorepoArchitecture.md

@@ -1,9 +1,7 @@
-import type React from "react";
-
 interface RaktaShrimpMascotProps {
 	readonly isJumping: boolean;
 	readonly isDead: boolean;
-	readonly style?: React.CSSProperties;
+	readonly style?: import("react").CSSProperties;
 }
 
 /**
@@ -32,11 +30,11 @@ export default function RaktaShrimpMascot({
 			role="img"
 		>
 			<style>{`
-                @keyframes shrimpLegs {
-                    0%  { transform: translateY(0); }
-                    50% { transform: translateY(2px); }
-                }
-            `}</style>
+				@keyframes shrimpLegs {
+					0%  { transform: translateY(0); }
+					50% { transform: translateY(2px); }
+				}
+			`}</style>
 
 			{/* Body */}
 			<path
@@ -63,6 +61,7 @@ export default function RaktaShrimpMascot({
 			{/* Eye */}
 			<circle cx="34" cy="18" r="4" fill="#1e293b" />
 			<circle cx="35" cy="17" r="2" fill={eyeColor} />
+
 			{isDead && (
 				<>
 					<line

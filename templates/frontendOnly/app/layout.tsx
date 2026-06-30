@@ -1,8 +1,5 @@
-import type React from "react";
-import "../styles/globals.css";
-
 interface RootLayoutProps {
-	readonly children: React.ReactNode;
+	readonly children: import("react").ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
@@ -13,7 +10,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				<title>Rakta.js App</title>
 			</head>
-			<body>{children}</body>
+			<body className="min-h-screen bg-[#050505] text-slate-50 antialiased">
+				{children}
+			</body>
 		</html>
 	);
 }

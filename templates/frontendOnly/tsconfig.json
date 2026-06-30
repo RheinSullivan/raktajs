@@ -10,6 +10,7 @@
 		"exactOptionalPropertyTypes": true,
 		"noImplicitOverride": true,
 		"noFallthroughCasesInSwitch": true,
+		"noUncheckedSideEffectImports": true,
 		"forceConsistentCasingInFileNames": true,
 		"skipLibCheck": true,
 		"esModuleInterop": true,

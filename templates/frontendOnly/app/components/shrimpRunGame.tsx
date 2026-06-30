@@ -1,6 +1,3 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import RaktaShrimpMascot from "./raktaShrimpMascot";
-
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type GameStatus = "idle" | "running" | "dead";
@@ -33,6 +30,8 @@ const SPEED_INCREMENT_PER_SCORE = 0.003;
 const OBSTACLE_SPAWN_INTERVAL_MS = 1600;
 const SCORE_TICK_MS = 80;
 const COLLISION_MARGIN = 8;
+const MAX_CONCURRENT_OBSTACLES = 3;
+const FRAME_SKIP_THRESHOLD_MS = 100;
 
 // ─── Physics helpers ──────────────────────────────────────────────────────────
 
@@ -166,7 +165,7 @@ export default function ShrimpRunGame() {
 			const deltaTime = timestamp - previousTimestamp;
 			previousTimestamp = timestamp;
 
-			if (deltaTime > 100) {
+			if (deltaTime > FRAME_SKIP_THRESHOLD_MS) {
 				animationFrameRef.current = requestAnimationFrame(gameTick);
 				return;
 			}
@@ -192,15 +191,17 @@ export default function ShrimpRunGame() {
 			const obstacleSpeed = getObstacleSpeed(scoreRef.current);
 
 			const movedObstacles = obstaclesRef.current
-				.map((obstacle) => ({
-					...obstacle,
-					xPosition: obstacle.xPosition - obstacleSpeed,
-				}))
+				.map(
+					(obstacle): ObstacleState => ({
+						...obstacle,
+						xPosition: obstacle.xPosition - obstacleSpeed,
+					}),
+				)
 				.filter((obstacle) => obstacle.xPosition + obstacle.width > -10);
 
 			if (
 				timestamp - lastObstacleTimeRef.current > OBSTACLE_SPAWN_INTERVAL_MS &&
-				movedObstacles.length < 3
+				movedObstacles.length < MAX_CONCURRENT_OBSTACLES
 			) {
 				const obstacleHeight = 30 + Math.floor(Math.random() * 30);
 				const obstacleWidth = 20 + Math.floor(Math.random() * 20);
@@ -223,7 +224,7 @@ export default function ShrimpRunGame() {
 				if (checkCollision(nextShrimp.yPosition, obstacle)) {
 					gameStatusRef.current = "dead";
 					setGameStatus("dead");
-					setHighScore((previousHighScore) =>
+					setHighScore((previousHighScore: number) =>
 						Math.max(previousHighScore, scoreRef.current),
 					);
 					animationFrameRef.current = requestAnimationFrame(gameTick);
@@ -268,28 +269,22 @@ export default function ShrimpRunGame() {
 	const isRunning = gameStatus === "running";
 
 	return (
-		<div className="shrimp-run-wrapper">
-			<div
-				style={{
-					display: "flex",
-					gap: "2rem",
-					alignItems: "center",
-				}}
-			>
-				<span className="shrimp-run-score">Score: {score}</span>
+		<div className="flex flex-col items-start gap-4 py-4">
+			<div className="flex flex-wrap items-center gap-8">
+				<span className="font-mono text-xl font-bold tabular-nums text-red-600">
+					Score: {score}
+				</span>
 				{highScore > 0 && (
-					<span style={{ color: "#94a3b8", fontSize: "0.875rem" }}>
-						Best: {highScore}
-					</span>
+					<span className="text-sm text-slate-400">Best: {highScore}</span>
 				)}
 			</div>
 
 			<button
 				type="button"
-				className="shrimp-run-canvas"
+				className="relative block max-w-full cursor-pointer select-none overflow-hidden rounded-2xl border-2 border-red-600/30 bg-[#0e111a] p-0 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
 				aria-label="ShrimpRun game area. Click or press Space to jump."
 				onClick={jump}
-				onKeyDown={(keyboardEvent) => {
+				onKeyDown={(keyboardEvent: import("react").KeyboardEvent) => {
 					if (keyboardEvent.code === "Space") {
 						keyboardEvent.preventDefault();
 						jump();
@@ -298,34 +293,18 @@ export default function ShrimpRunGame() {
 				style={{
 					width: CANVAS_WIDTH,
 					height: CANVAS_HEIGHT,
-					position: "relative",
-					background: "#0e111a",
-					borderRadius: 16,
-					border: "2px solid rgba(220,38,38,0.3)",
-					overflow: "hidden",
-					cursor: "pointer",
-					userSelect: "none",
-					padding: 0,
-					display: "block",
-					textAlign: "left",
 				}}
 			>
 				<span
-					className="shrimp-run-ground"
+					className="absolute bottom-0 left-0 w-full rounded-sm bg-red-600"
 					style={{
-						position: "absolute",
-						bottom: 0,
-						left: 0,
-						width: "100%",
 						height: GROUND_STRIP_HEIGHT,
-						background: "#dc2626",
-						borderRadius: "2px",
 					}}
 				/>
 
 				<span
+					className="absolute"
 					style={{
-						position: "absolute",
 						left: SHRIMP_START_X,
 						bottom: shrimpBottomOffset,
 						width: SHRIMP_WIDTH,
@@ -338,83 +317,39 @@ export default function ShrimpRunGame() {
 				{obstacles.map((obstacle) => (
 					<span
 						key={obstacle.id}
+						className="absolute rounded-t bg-red-600"
 						style={{
-							position: "absolute",
 							left: obstacle.xPosition,
 							bottom: GROUND_STRIP_HEIGHT,
 							width: obstacle.width,
 							height: obstacle.height,
-							background: "#dc2626",
-							borderRadius: "4px 4px 0 0",
 						}}
 					/>
 				))}
 
 				{isIdle && (
-					<span
-						style={{
-							position: "absolute",
-							inset: 0,
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-							color: "#94a3b8",
-							fontSize: "0.875rem",
-							pointerEvents: "none",
-						}}
-					>
+					<span className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-slate-400">
 						Press Space or click to start
 					</span>
 				)}
 
 				{isDead && (
-					<span
-						style={{
-							position: "absolute",
-							inset: 0,
-							display: "flex",
-							flexDirection: "column",
-							alignItems: "center",
-							justifyContent: "center",
-							gap: "0.5rem",
-							background: "rgba(5, 5, 5, 0.75)",
-						}}
-					>
-						<span
-							style={{
-								color: "#dc2626",
-								fontWeight: 700,
-								fontSize: "1.125rem",
-								letterSpacing: "0.1em",
-							}}
-						>
+					<span className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/75">
+						<span className="text-lg font-bold tracking-widest text-red-600">
 							GAME OVER
 						</span>
-						<span style={{ color: "#94a3b8", fontSize: "0.875rem" }}>
-							Score: {score}
-						</span>
+						<span className="text-sm text-slate-400">Score: {score}</span>
 					</span>
 				)}
 
 				{isRunning && score > 0 && score % 50 === 0 && (
-					<span
-						style={{
-							position: "absolute",
-							top: 8,
-							right: 12,
-							color: "#dc2626",
-							fontWeight: 700,
-							fontSize: "0.75rem",
-							letterSpacing: "0.1em",
-							opacity: 0.8,
-						}}
-					>
+					<span className="absolute right-3 top-2 text-xs font-bold tracking-widest text-red-600 opacity-80">
 						{score}!
 					</span>
 				)}
 			</button>
 
-			<p className="shrimp-run-message">
+			<p className="min-h-5 text-sm text-slate-400">
 				{isIdle && "🦐 Click or press Space to make the shrimp jump!"}
 				{isRunning && "🦐 Don't hit the obstacles!"}
 				{isDead && "The shrimp got cooked. Try again!"}
@@ -423,7 +358,7 @@ export default function ShrimpRunGame() {
 			{isDead && (
 				<button
 					type="button"
-					className="shrimp-run-restart"
+					className="w-fit rounded-lg bg-red-600 px-6 py-2 font-semibold text-white transition hover:bg-red-700 active:bg-red-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
 					onClick={resetGame}
 				>
 					Restart
