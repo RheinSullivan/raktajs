@@ -20,9 +20,15 @@ export function generateRobotsTxt(options: RobotsOptions): string {
 			: [rule.userAgent];
 
 		for (const agent of agents) {
-			lines.push(`
-                User-agent: ${agent}
-            `);
+			lines.push(`User-agent: ${agent}`);
+		}
+
+		if (rule.allow) {
+			const allowPaths = Array.isArray(rule.allow) ? rule.allow : [rule.allow];
+
+			for (const allowPath of allowPaths) {
+				lines.push(`Allow: ${allowPath}`);
+			}
 		}
 
 		if (rule.disAllow) {
@@ -30,17 +36,13 @@ export function generateRobotsTxt(options: RobotsOptions): string {
 				? rule.disAllow
 				: [rule.disAllow];
 
-			for (const path of disAllowPaths) {
-				lines.push(`
-                    Disallow: ${path}
-                `);
+			for (const disAllowPath of disAllowPaths) {
+				lines.push(`Disallow: ${disAllowPath}`);
 			}
 		}
 
 		if (rule.crawlDelay !== undefined) {
-			lines.push(`
-                CrawlDelay: ${rule.crawlDelay}
-            `);
+			lines.push(`Crawl-delay: ${rule.crawlDelay}`);
 		}
 
 		lines.push("");
@@ -51,19 +53,15 @@ export function generateRobotsTxt(options: RobotsOptions): string {
 			? options.sitemap
 			: [options.sitemap];
 
-		for (const sitemap of sitemaps) {
-			lines.push(`
-                    Sitemaps: ${sitemap}
-                `);
+		for (const sitemapUrl of sitemaps) {
+			lines.push(`Sitemap: ${sitemapUrl}`);
 		}
 
 		lines.push("");
 	}
 
 	if (options.host) {
-		lines.push(`
-            Host: ${options.host}
-        `);
+		lines.push(`Host: ${options.host}`);
 	}
 
 	return `${lines.join("\n").trimEnd()}\n`;
@@ -71,12 +69,12 @@ export function generateRobotsTxt(options: RobotsOptions): string {
 
 export function createRobotsHandler(options: RobotsOptions): () => Response {
 	return () => {
-		const text = generateRobotsTxt(options);
+		const robotsText = generateRobotsTxt(options);
 
-		return new Response(text, {
+		return new Response(robotsText, {
 			status: 200,
 			headers: {
-				ContentType: "text/plain; charset=utf-8",
+				"Content-Type": "text/plain; charset=utf-8",
 				"Cache-Control": "public, max-age=3600, s-maxage=86400",
 			},
 		});

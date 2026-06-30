@@ -50,19 +50,19 @@ export function Picture({
 }: PictureProps): React.ReactElement {
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [hasError, setHasError] = useState(false);
+	const imageRef = useRef<HTMLImageElement>(null);
 	const pictureRef = useRef<HTMLPictureElement>(null);
 
-	// If prioritu is set, override loading to eager
 	const resolvedLoading: "lazy" | "eager" = priority
 		? "eager"
 		: loading === "auto"
 			? "lazy"
 			: loading;
 
-	// Check if the image is already loaded or cached
 	useEffect(() => {
-		const picture = pictureRef.current;
-		if (picture) {
+		const imageElement = imageRef.current;
+
+		if (imageElement?.complete) {
 			setIsLoaded(true);
 			onLoadComplete?.();
 		}
@@ -79,24 +79,21 @@ export function Picture({
 	}, [onError]);
 
 	const resolvedPath = hasError && blurDataURL ? blurDataURL : path;
+	const resolvedWidth = responsive ? "100%" : (width ?? "auto");
 
 	const wrapperStyle: CSSProperties = {
 		position: "relative",
 		display: "inline-block",
 		overflow: "hidden",
 		height: height ?? "auto",
-		width: responsive ? "100%" : (width ?? "auto"),
+		width: resolvedWidth,
 	};
 
-	const pictureStyle: CSSProperties = {
+	const imageStyle: CSSProperties = {
 		display: "block",
 		height: height ?? undefined,
-		width: responsive ? "100%" : (width ?? "auto"),
+		width: resolvedWidth,
 		minHeight: height ?? undefined,
-		backgroundImage: `url(${resolvedPath})`,
-		backgroundSize: objectFit,
-		backgroundRepeat: "no-repeat",
-		backgroundPosition: "center",
 		objectFit,
 		transition: blurDataURL ? "filter 0.3s ease" : undefined,
 		filter:
@@ -106,7 +103,6 @@ export function Picture({
 		...style,
 	};
 
-	// If there's blur placeholder, render as a wrapper with background
 	if (blurDataURL) {
 		return (
 			<div
@@ -117,37 +113,39 @@ export function Picture({
 					backgroundPosition: "center",
 				}}
 			>
-				<picture
-					ref={pictureRef}
-					data-path={resolvedPath}
-					data-loading={resolvedLoading}
-					data-decoding={priority ? "sync" : "async"}
-					aria-label={alt}
-					title={title}
-					className={className}
-					style={pictureStyle}
-					onLoad={handleLoad}
-					onError={handleError}
-					{...rest}
-				/>
+				<picture ref={pictureRef} className={className} {...rest}>
+					<img
+						ref={imageRef}
+						src={resolvedPath}
+						alt={alt}
+						aria-label={alt}
+						title={title}
+						loading={resolvedLoading}
+						decoding={priority ? "sync" : "async"}
+						style={imageStyle}
+						onLoad={handleLoad}
+						onError={handleError}
+					/>
+				</picture>
 			</div>
 		);
 	}
 
 	return (
-		<picture
-			ref={pictureRef}
-			data-path={hasError ? path : path}
-			data-loading={resolvedLoading}
-			data-decoding={priority ? "sync" : "async"}
-			aria-label={alt}
-			title={title}
-			className={className}
-			style={pictureStyle}
-			onLoad={handleLoad}
-			onError={handleError}
-			{...rest}
-		/>
+		<picture ref={pictureRef} className={className} {...rest}>
+			<img
+				ref={imageRef}
+				src={resolvedPath}
+				alt={alt}
+				aria-label={alt}
+				title={title}
+				loading={resolvedLoading}
+				decoding={priority ? "sync" : "async"}
+				style={imageStyle}
+				onLoad={handleLoad}
+				onError={handleError}
+			/>
+		</picture>
 	);
 }
 

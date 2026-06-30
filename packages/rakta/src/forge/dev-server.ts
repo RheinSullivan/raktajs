@@ -35,13 +35,13 @@ function resolveDevPort(port: number): number {
 }
 
 interface ApiRouteExports {
-	GET?: (req: Request) => Promise<Response>;
-	POST?: (req: Request) => Promise<Response>;
-	PUT?: (req: Request) => Promise<Response>;
-	PATCH?: (req: Request) => Promise<Response>;
-	DELETE?: (req: Request) => Promise<Response>;
-	HEAD?: (req: Request) => Promise<Response>;
-	OPTIONS?: (req: Request) => Promise<Response>;
+	GET?: (request: Request) => Promise<Response>;
+	POST?: (request: Request) => Promise<Response>;
+	PUT?: (request: Request) => Promise<Response>;
+	PATCH?: (request: Request) => Promise<Response>;
+	DELETE?: (request: Request) => Promise<Response>;
+	HEAD?: (request: Request) => Promise<Response>;
+	OPTIONS?: (request: Request) => Promise<Response>;
 }
 
 /**
@@ -78,9 +78,9 @@ export function startDevServer(
 
 			if (apiMatch) {
 				const modulePath = join(options.appDir, apiMatch.entry.filePath);
-				const mod = (await import(modulePath)) as ApiRouteExports;
+				const routeModule = (await import(modulePath)) as ApiRouteExports;
 				const method = request.method.toUpperCase() as keyof ApiRouteExports;
-				const handler = mod[method];
+				const handler = routeModule[method];
 
 				if (typeof handler !== "function") {
 					return new Response("Method not allowed", { status: 405 });
@@ -130,13 +130,13 @@ export function startDevServer(
 		},
 	});
 
-	const serverPorts =
+	const serverPort =
 		typeof server.port === "number" ? server.port : resolvedPort;
 
 	return {
-		port: serverPorts,
+		port: serverPort,
 		host: options.host,
-		url: `http://${options.host}:${serverPorts}`,
+		url: `http://${options.host}:${serverPort}`,
 		stop: () => server.stop(),
 	};
 }

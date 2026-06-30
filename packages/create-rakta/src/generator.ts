@@ -145,8 +145,10 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 					compilerOptions: {
 						outDir: "./dist",
 						rootDir: "./",
+						types: ["react", "react-dom"],
 					},
 					include: [
+						"rakta-env.d.ts",
 						"app/**/*",
 						"components/**/*",
 						"styles/**/*",
@@ -159,12 +161,16 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 			),
 		},
 		{
+			path: "rakta-env.d.ts",
+			content: generateFrontendOnlyRaktaEnv(),
+		},
+		{
 			path: "rakta.config.ts",
-			content: `import { defineRaktaConfig } from "rakta";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  render: {\n    defaultMode: "csr",\n    routes: {}\n  }\n});\n`,
+			content: `import { defineRaktaConfig } from "rakta";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  render: {\n    defaultMode: "csr",\n    routes: {},\n  },\n});\n`,
 		},
 		{
 			path: "app/layout.tsx",
-			content: generateFrontendOnlyLayout(cssFramework, styleFileName),
+			content: generateFrontendOnlyLayout(),
 		},
 		{
 			path: "app/page.tsx",
@@ -183,11 +189,11 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 			content: generateFrontendOnlyNotFound(),
 		},
 		{
-			path: "components/raktaShrimpMascot.tsx",
+			path: "app/components/raktaShrimpMascot.tsx",
 			content: generateShrimpMascotComponent(),
 		},
 		{
-			path: "components/shrimpRunGame.tsx",
+			path: "app/components/shrimpRunGame.tsx",
 			content: generateShrimpRunGameComponent(),
 		},
 		{
@@ -645,7 +651,57 @@ function getCssDevDependencies(
 }
 
 function getFrontendOnlyCssGlobals(cssFramework: CssFramework): string {
-	return `/* ShrimpRun — Rakta.js starter */\n${getCssGlobals(cssFramework)}\n\n/* ShrimpRun Game Styles */\n.shrimp-run-wrapper {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 1rem;\n  padding: 2rem 0;\n}\n\n.shrimp-run-canvas {\n  position: relative;\n  width: 640px;\n  max-width: 100%;\n  height: 160px;\n  background: #0e111a;\n  border-radius: 16px;\n  border: 2px solid rgba(220, 38, 38, 0.3);\n  overflow: hidden;\n  cursor: pointer;\n}\n\n.shrimp-run-ground {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  width: 100%;\n  height: 4px;\n  background: #dc2626;\n  border-radius: 2px;\n}\n\n.shrimp-run-score {\n  font-size: 1.5rem;\n  font-weight: 700;\n  color: #dc2626;\n  font-variant-numeric: tabular-nums;\n}\n\n.shrimp-run-message {\n  color: #94a3b8;\n  font-size: 0.875rem;\n}\n\n.shrimp-run-restart {\n  background: #dc2626;\n  color: white;\n  border: none;\n  border-radius: 8px;\n  padding: 0.5rem 1.5rem;\n  font-size: 1rem;\n  font-weight: 600;\n  cursor: pointer;\n  transition: background 0.15s;\n}\n\n.shrimp-run-restart:hover {\n  background: #b91c1c;\n}\n`;
+	const cssImport =
+		cssFramework === "tailwind"
+			? `@import "tailwindcss";\n\n`
+			: cssFramework === "bootstrap"
+				? `@import url("https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css");\n\n`
+				: cssFramework === "sass"
+					? `$color-primary: #dc2626;\n$color-background: #050505;\n$color-foreground: #f8fafc;\n\n`
+					: "";
+
+	return `${cssImport}:root {
+  --color-primary: #dc2626;
+  --color-background: #050505;
+  --color-foreground: #f8fafc;
+  --color-surface: #0e111a;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-muted: #94a3b8;
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: var(--color-foreground);
+  background: var(--color-background);
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+@keyframes shrimpLegs {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(2px);
+  }
+}
+`;
 }
 
 function getCssGlobals(cssFramework: CssFramework): string {
@@ -720,17 +776,57 @@ button {
 
 // ─── Inline template generators ──────────────────────────────────────────────
 
-function generateFrontendOnlyLayout(
-	cssFramework: CssFramework,
-	styleFileName: string,
-): string {
-	const cssImport =
-		cssFramework !== "none" ? `import "../styles/${styleFileName}";\n` : "";
+function generateFrontendOnlyRaktaEnv(): string {
+	return `declare module "*.css";
+declare module "*.scss";
+declare module "*.sass";
 
-	return `import React from "react";
-${cssImport}
-interface RootLayoutProps {
-  readonly children: React.ReactNode;
+type RaktaClickAttributes = Omit<
+  import("react").AnchorHTMLAttributes<HTMLAnchorElement>,
+  "href"
+> & {
+  readonly to: string;
+};
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      click: RaktaClickAttributes;
+    }
+  }
+
+  const useCallback: typeof import("react").useCallback;
+  const useEffect: typeof import("react").useEffect;
+  const useRef: typeof import("react").useRef;
+  const useState: typeof import("react").useState;
+
+  const ShrimpRunGame: typeof import("./app/components/shrimpRunGame").default;
+  const RaktaShrimpMascot: typeof import("./app/components/raktaShrimpMascot").default;
+}
+
+declare module "react/jsx-runtime" {
+  namespace JSX {
+    interface IntrinsicElements {
+      click: RaktaClickAttributes;
+    }
+  }
+}
+
+declare module "react/jsx-dev-runtime" {
+  namespace JSX {
+    interface IntrinsicElements {
+      click: RaktaClickAttributes;
+    }
+  }
+}
+
+export {};
+`;
+}
+
+function generateFrontendOnlyLayout(): string {
+	return `interface RootLayoutProps {
+  readonly children: import("react").ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
@@ -741,7 +837,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Rakta.js App</title>
       </head>
-      <body>{children}</body>
+      <body className="min-h-screen bg-[#050505] text-slate-50 antialiased">
+        {children}
+      </body>
     </html>
   );
 }
@@ -749,26 +847,45 @@ export default function RootLayout({ children }: RootLayoutProps) {
 }
 
 function generateFrontendOnlyPage(projectName: string): string {
-	return `import React from "react";
-import ShrimpRunGame from "../components/shrimpRunGame";
-
-export default function HomePage() {
+	return `export default function HomePage() {
   return (
-    <main className="page-shell">
-      <section className="hero-card">
-        <p className="eyebrow">THE RED ROUTER FRAMEWORK</p>
-        <h1>Welcome to ${projectName}</h1>
-        <p>
+    <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col gap-6 px-4 py-16 sm:px-6 lg:px-8">
+      <section className="rounded-3xl border border-white/10 bg-[#0e111a] p-8 shadow-2xl shadow-red-950/20">
+        <p className="mb-2 text-xs font-bold uppercase tracking-[0.3em] text-red-600">
+          THE RED ROUTER FRAMEWORK
+        </p>
+        <h1 className="mb-3 text-4xl font-extrabold leading-tight text-white md:text-6xl">
+          Welcome to ${projectName}
+        </h1>
+        <p className="max-w-2xl text-base leading-7 text-slate-400">
           Built with Rakta.js — Small in size. Fierce in speed. Alive in every route.
         </p>
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <click
+            to="/offline"
+            className="rounded-xl border border-red-500/40 px-4 py-2 text-sm font-semibold text-red-400 transition hover:border-red-400 hover:text-red-300"
+          >
+            Open offline page
+          </click>
+          <click
+            to="/dashboard"
+            className="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+          >
+            View dashboard
+          </click>
+        </div>
       </section>
 
-      <section className="feature-card">
-        <p className="eyebrow">SHRIMPRUN</p>
-        <h2>Play ShrimpRun</h2>
-        <p style={{ color: "#94a3b8", fontSize: "0.875rem" }}>
-          Press Space or click the game area to jump. Avoid the obstacles!
+      <section className="rounded-3xl border border-white/10 bg-[#0e111a] p-8 shadow-2xl shadow-red-950/20">
+        <p className="mb-2 text-xs font-bold uppercase tracking-[0.3em] text-red-600">
+          SHRIMPRUN
         </p>
+        <h2 className="mb-1 text-2xl font-bold text-white">Play ShrimpRun</h2>
+        <p className="mb-6 text-sm leading-6 text-slate-400">
+          Press Space or click the game area to jump. Avoid the red obstacles!
+        </p>
+
         <ShrimpRunGame />
       </section>
     </main>
@@ -778,14 +895,10 @@ export default function HomePage() {
 }
 
 function generateFrontendOnlyLoading(): string {
-	return `import React from "react";
-
-export default function Loading() {
+	return `export default function Loading() {
   return (
-    <main className="page-shell">
-      <div style={{ textAlign: "center", padding: "4rem 0", color: "#94a3b8" }}>
-        <p>Loading...</p>
-      </div>
+    <main className="flex min-h-screen items-center justify-center bg-[#050505] px-4">
+      <p className="text-sm font-medium text-slate-400">Loading...</p>
     </main>
   );
 }
@@ -793,37 +906,31 @@ export default function Loading() {
 }
 
 function generateFrontendOnlyError(): string {
-	return `import React from "react";
-
-interface ErrorPageProps {
+	return `interface ErrorPageProps {
   readonly error: Error;
   readonly reset: () => void;
 }
 
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
   return (
-    <main className="page-shell">
-      <section className="hero-card">
-        <p className="eyebrow" style={{ color: "#dc2626" }}>ERROR</p>
-        <h1>Something went wrong</h1>
-        <p style={{ color: "#94a3b8" }}>{error.message}</p>
-        <div className="button-row">
-          <button
-            type="button"
-            onClick={reset}
-            style={{
-              background: "#dc2626",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              padding: "0.5rem 1.5rem",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            Try again
-          </button>
-        </div>
+    <main className="mx-auto flex min-h-screen w-full max-w-3xl items-center px-4 py-16">
+      <section className="w-full rounded-3xl border border-white/10 bg-[#0e111a] p-8 shadow-2xl shadow-red-950/20">
+        <p className="mb-2 text-xs font-bold uppercase tracking-[0.3em] text-red-600">
+          ERROR
+        </p>
+        <h1 className="mb-3 text-3xl font-extrabold text-white">
+          Something went wrong
+        </h1>
+        <p className="mb-6 wrap-break-word text-sm leading-6 text-slate-400">
+          {error.message}
+        </p>
+        <button
+          type="button"
+          onClick={reset}
+          className="rounded-lg bg-red-600 px-6 py-2 font-semibold text-white transition hover:bg-red-700 active:bg-red-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
+        >
+          Try again
+        </button>
       </section>
     </main>
   );
@@ -832,20 +939,25 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 }
 
 function generateFrontendOnlyNotFound(): string {
-	return `import React from "react";
-
-export default function NotFound() {
+	return `export default function NotFound() {
   return (
-    <main className="page-shell">
-      <section className="hero-card">
-        <p className="eyebrow">404</p>
-        <h1>Page not found</h1>
-        <p style={{ color: "#94a3b8" }}>
+    <main className="mx-auto flex min-h-screen w-full max-w-3xl items-center px-4 py-16">
+      <section className="w-full rounded-3xl border border-white/10 bg-[#0e111a] p-8 shadow-2xl shadow-red-950/20">
+        <p className="mb-2 text-xs font-bold uppercase tracking-[0.3em] text-red-600">
+          404
+        </p>
+        <h1 className="mb-3 text-3xl font-extrabold text-white">
+          Page not found
+        </h1>
+        <p className="mb-6 text-sm leading-6 text-slate-400">
           The page you are looking for does not exist.
         </p>
-        <div className="button-row">
-          <a href="/">Return home</a>
-        </div>
+        <click
+          to="/"
+          className="font-semibold text-red-500 underline-offset-4 transition hover:text-red-400 hover:underline"
+        >
+          Return home
+        </click>
       </section>
     </main>
   );
@@ -854,17 +966,15 @@ export default function NotFound() {
 }
 
 function generateShrimpMascotComponent(): string {
-	return `import React from "react";
-
-interface RaktaShrimpMascotProps {
+	return `interface RaktaShrimpMascotProps {
   readonly isJumping: boolean;
   readonly isDead: boolean;
-  readonly style?: React.CSSProperties;
+  readonly style?: import("react").CSSProperties;
 }
 
 /**
  * RaktaShrimpMascot — The animated shrimp hero of ShrimpRun.
- * Drawn entirely with inline SVG, no external assets required.
+ * Drawn entirely with inline SVG. No external assets required.
  */
 export default function RaktaShrimpMascot({
   isJumping,
@@ -873,28 +983,28 @@ export default function RaktaShrimpMascot({
 }: RaktaShrimpMascotProps) {
   const bodyColor = isDead ? "#6b7280" : "#dc2626";
   const eyeColor = isDead ? "#374151" : "#fff";
-  const legAnimation = isJumping || isDead ? "none" : "shrimpLegs 0.3s steps(2) infinite";
+  const legAnimation =
+    isJumping || isDead ? "none" : "shrimpLegs 0.3s steps(2) infinite";
 
   return (
     <svg
       viewBox="0 0 48 48"
       width="48"
       height="48"
-      style={{
-        display: "block",
-        ...style,
-      }}
-      aria-label={isDead ? "dead shrimp" : isJumping ? "shrimp jumping" : "running shrimp"}
+      style={{ display: "block", ...style }}
+      aria-label={
+        isDead ? "dead shrimp" : isJumping ? "shrimp jumping" : "running shrimp"
+      }
       role="img"
     >
-      <style>{
-        \`@keyframes shrimpLegs {
+      <style>{\`
+        @keyframes shrimpLegs {
           0%  { transform: translateY(0); }
           50% { transform: translateY(2px); }
-        }\`
-      }</style>
+        }
+      \`}</style>
 
-      {/* Body — curved shrimp shape */}
+      {/* Body */}
       <path
         d="M8 30 Q10 14 24 12 Q38 10 40 22 Q42 32 32 36 Q20 40 8 30Z"
         fill={bodyColor}
@@ -919,28 +1029,114 @@ export default function RaktaShrimpMascot({
       {/* Eye */}
       <circle cx="34" cy="18" r="4" fill="#1e293b" />
       <circle cx="35" cy="17" r="2" fill={eyeColor} />
+
       {isDead && (
         <>
-          <line x1="32" y1="16" x2="36" y2="20" stroke="#374151" strokeWidth="1.5" />
-          <line x1="36" y1="16" x2="32" y2="20" stroke="#374151" strokeWidth="1.5" />
+          <line
+            x1="32"
+            y1="16"
+            x2="36"
+            y2="20"
+            stroke="#374151"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="36"
+            y1="16"
+            x2="32"
+            y2="20"
+            stroke="#374151"
+            strokeWidth="1.5"
+          />
         </>
       )}
 
       {/* Antennae */}
-      <line x1="34" y1="14" x2="40" y2="6" stroke={bodyColor} strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="32" y1="13" x2="36" y2="4" stroke={bodyColor} strokeWidth="1.5" strokeLinecap="round" />
+      <line
+        x1="34"
+        y1="14"
+        x2="40"
+        y2="6"
+        stroke={bodyColor}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="32"
+        y1="13"
+        x2="36"
+        y2="4"
+        stroke={bodyColor}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
 
-      {/* Tail fan */}
-      <path d="M10 30 Q4 26 6 20" stroke={bodyColor} strokeWidth="2" fill="none" strokeLinecap="round" />
-      <path d="M10 30 Q2 30 4 36" stroke={bodyColor} strokeWidth="2" fill="none" strokeLinecap="round" />
-      <path d="M10 30 Q6 34 8 40" stroke={bodyColor} strokeWidth="2" fill="none" strokeLinecap="round" />
+      {/* Tail */}
+      <path
+        d="M10 30 Q4 26 6 20"
+        stroke={bodyColor}
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M10 30 Q2 30 4 36"
+        stroke={bodyColor}
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M10 30 Q6 34 8 40"
+        stroke={bodyColor}
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+      />
 
-      {/* Legs with animation */}
-      <g style={{ animation: legAnimation, transformOrigin: "24px 36px" }}>
-        <line x1="18" y1="36" x2="14" y2="44" stroke={bodyColor} strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="22" y1="38" x2="18" y2="46" stroke={bodyColor} strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="26" y1="38" x2="24" y2="46" stroke={bodyColor} strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="30" y1="37" x2="28" y2="45" stroke={bodyColor} strokeWidth="1.5" strokeLinecap="round" />
+      {/* Legs */}
+      <g
+        style={{
+          animation: legAnimation,
+          transformOrigin: "24px 36px",
+        }}
+      >
+        <line
+          x1="18"
+          y1="36"
+          x2="14"
+          y2="44"
+          stroke={bodyColor}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+        <line
+          x1="22"
+          y1="38"
+          x2="18"
+          y2="46"
+          stroke={bodyColor}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+        <line
+          x1="26"
+          y1="38"
+          x2="24"
+          y2="46"
+          stroke={bodyColor}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+        <line
+          x1="30"
+          y1="37"
+          x2="28"
+          y2="45"
+          stroke={bodyColor}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
       </g>
     </svg>
   );
@@ -949,10 +1145,7 @@ export default function RaktaShrimpMascot({
 }
 
 function generateShrimpRunGameComponent(): string {
-	return `import React, { useState, useEffect, useRef, useCallback } from "react";
-import RaktaShrimpMascot from "./raktaShrimpMascot";
-
-// ─── Types ───────────────────────────────────────────────────────────────────
+	return `// ─── Types ────────────────────────────────────────────────────────────────────
 
 type GameStatus = "idle" | "running" | "dead";
 
@@ -969,9 +1162,11 @@ interface ShrimpState {
   readonly isJumping: boolean;
 }
 
-// ─── Constants ───────────────────────────────────────────────────────────────
+// ─── Constants ────────────────────────────────────────────────────────────────
 
-const GROUND_Y = 100;
+const CANVAS_WIDTH = 640;
+const CANVAS_HEIGHT = 160;
+const GROUND_STRIP_HEIGHT = 4;
 const SHRIMP_START_X = 60;
 const SHRIMP_WIDTH = 48;
 const SHRIMP_HEIGHT = 48;
@@ -979,31 +1174,36 @@ const GRAVITY = 1.4;
 const JUMP_VELOCITY = -18;
 const INITIAL_OBSTACLE_SPEED = 5;
 const SPEED_INCREMENT_PER_SCORE = 0.003;
-const CANVAS_WIDTH = 640;
-const CANVAS_HEIGHT = 160;
 const OBSTACLE_SPAWN_INTERVAL_MS = 1600;
 const SCORE_TICK_MS = 80;
 const COLLISION_MARGIN = 8;
+const MAX_CONCURRENT_OBSTACLES = 3;
+const FRAME_SKIP_THRESHOLD_MS = 100;
 
-// ─── Helper ──────────────────────────────────────────────────────────────────
+// ─── Physics helpers ──────────────────────────────────────────────────────────
 
 function getObstacleSpeed(currentScore: number): number {
   return INITIAL_OBSTACLE_SPEED + currentScore * SPEED_INCREMENT_PER_SCORE;
 }
 
 function checkCollision(
-  shrimpY: number,
-  obstacle: ObstacleState
+  shrimpYPosition: number,
+  obstacle: ObstacleState,
 ): boolean {
   const shrimpLeft = SHRIMP_START_X + COLLISION_MARGIN;
   const shrimpRight = SHRIMP_START_X + SHRIMP_WIDTH - COLLISION_MARGIN;
-  const shrimpTop = GROUND_Y - shrimpY - SHRIMP_HEIGHT + COLLISION_MARGIN;
-  const shrimpBottom = GROUND_Y - shrimpY;
+  const shrimpTop =
+    CANVAS_HEIGHT -
+    GROUND_STRIP_HEIGHT -
+    shrimpYPosition -
+    SHRIMP_HEIGHT +
+    COLLISION_MARGIN;
+  const shrimpBottom = CANVAS_HEIGHT - GROUND_STRIP_HEIGHT - shrimpYPosition;
 
   const obstacleLeft = obstacle.xPosition + COLLISION_MARGIN;
   const obstacleRight = obstacle.xPosition + obstacle.width - COLLISION_MARGIN;
-  const obstacleTop = CANVAS_HEIGHT - GROUND_Y_OFFSET - obstacle.height;
-  const obstacleBottom = CANVAS_HEIGHT - GROUND_Y_OFFSET;
+  const obstacleTop = CANVAS_HEIGHT - GROUND_STRIP_HEIGHT - obstacle.height;
+  const obstacleBottom = CANVAS_HEIGHT - GROUND_STRIP_HEIGHT;
 
   return (
     shrimpLeft < obstacleRight &&
@@ -1013,16 +1213,25 @@ function checkCollision(
   );
 }
 
-// Ground offset from canvas bottom (ground strip height)
-const GROUND_Y_OFFSET = 4;
-
-// ─── Component ───────────────────────────────────────────────────────────────
+// ─── Component ────────────────────────────────────────────────────────────────
 
 /**
- * ShrimpRun — The default Rakta.js interactive starter game.
+ * ShrimpRun — Default Rakta.js interactive starter game.
  *
- * Like the Chrome offline Dino game, but the dinosaur is a Rakta.js shrimp.
- * Press Space or click to jump. Avoid the red obstacles!
+ * Like the Chrome offline Dino game, but the dinosaur is an animated shrimp.
+ * Press Space or click the game canvas to jump. Avoid the red obstacles!
+ *
+ * Features:
+ * - React state only — no external game library
+ * - requestAnimationFrame game loop
+ * - Physics: gravity + jump velocity
+ * - Score that increases over time
+ * - Speed ramps up as score grows
+ * - Collision detection with margin
+ * - High score tracked in component state
+ * - Keyboard (Space) and click/tap support
+ * - Accessible button game canvas
+ * - SVG shrimp mascot — no external assets
  */
 export default function ShrimpRunGame() {
   const [gameStatus, setGameStatus] = useState<GameStatus>("idle");
@@ -1048,8 +1257,10 @@ export default function ShrimpRunGame() {
   const lastObstacleTimeRef = useRef(0);
   const lastScoreTickRef = useRef(0);
 
-  const jump = useCallback(() => {
-    if (gameStatusRef.current === "dead") return;
+  const jump = useCallback((): void => {
+    if (gameStatusRef.current === "dead") {
+      return;
+    }
 
     if (gameStatusRef.current === "idle") {
       gameStatusRef.current = "running";
@@ -1062,19 +1273,20 @@ export default function ShrimpRunGame() {
         velocityY: JUMP_VELOCITY,
         isJumping: true,
       };
+
       shrimpRef.current = nextShrimp;
       setShrimp(nextShrimp);
     }
   }, []);
 
-  const resetGame = useCallback(() => {
-    const nextShrimp: ShrimpState = {
+  const resetGame = useCallback((): void => {
+    const freshShrimp: ShrimpState = {
       yPosition: 0,
       velocityY: 0,
       isJumping: false,
     };
 
-    shrimpRef.current = nextShrimp;
+    shrimpRef.current = freshShrimp;
     obstaclesRef.current = [];
     obstacleIdRef.current = 0;
     scoreRef.current = 0;
@@ -1082,13 +1294,11 @@ export default function ShrimpRunGame() {
     lastObstacleTimeRef.current = 0;
     lastScoreTickRef.current = 0;
 
-    setShrimp(nextShrimp);
+    setShrimp(freshShrimp);
     setObstacles([]);
     setScore(0);
     setGameStatus("idle");
   }, []);
-
-  // ── Game loop ──────────────────────────────────────────────────────────────
 
   useEffect(() => {
     let previousTimestamp = 0;
@@ -1099,15 +1309,14 @@ export default function ShrimpRunGame() {
         return;
       }
 
-      const elapsed = timestamp - previousTimestamp;
+      const deltaTime = timestamp - previousTimestamp;
       previousTimestamp = timestamp;
 
-      if (elapsed > 100) {
+      if (deltaTime > FRAME_SKIP_THRESHOLD_MS) {
         animationFrameRef.current = requestAnimationFrame(gameTick);
         return;
       }
 
-      // Update shrimp physics
       const currentShrimp = shrimpRef.current;
       let nextVelocityY = currentShrimp.velocityY + GRAVITY;
       let nextYPosition = currentShrimp.yPosition - nextVelocityY;
@@ -1117,60 +1326,59 @@ export default function ShrimpRunGame() {
         nextVelocityY = 0;
       }
 
-      const nextIsJumping = nextYPosition > 0;
       const nextShrimp: ShrimpState = {
         yPosition: nextYPosition,
         velocityY: nextVelocityY,
-        isJumping: nextIsJumping,
+        isJumping: nextYPosition > 0,
       };
 
       shrimpRef.current = nextShrimp;
       setShrimp(nextShrimp);
 
-      // Update obstacles
-      const currentSpeed = getObstacleSpeed(scoreRef.current);
-      const nextObstacles = obstaclesRef.current
-        .map((obstacle) => ({
-          ...obstacle,
-          xPosition: obstacle.xPosition - currentSpeed,
-        }))
+      const obstacleSpeed = getObstacleSpeed(scoreRef.current);
+
+      const movedObstacles = obstaclesRef.current
+        .map(
+          (obstacle): ObstacleState => ({
+            ...obstacle,
+            xPosition: obstacle.xPosition - obstacleSpeed,
+          }),
+        )
         .filter((obstacle) => obstacle.xPosition + obstacle.width > -10);
 
-      // Spawn new obstacle
       if (
         timestamp - lastObstacleTimeRef.current > OBSTACLE_SPAWN_INTERVAL_MS &&
-        nextObstacles.length < 3
+        movedObstacles.length < MAX_CONCURRENT_OBSTACLES
       ) {
         const obstacleHeight = 30 + Math.floor(Math.random() * 30);
         const obstacleWidth = 20 + Math.floor(Math.random() * 20);
 
-        nextObstacles.push({
-          id: obstacleIdRef.current++,
+        movedObstacles.push({
+          id: obstacleIdRef.current,
           xPosition: CANVAS_WIDTH + 20,
           width: obstacleWidth,
           height: obstacleHeight,
         });
 
+        obstacleIdRef.current += 1;
         lastObstacleTimeRef.current = timestamp;
       }
 
-      obstaclesRef.current = nextObstacles;
-      setObstacles([...nextObstacles]);
+      obstaclesRef.current = movedObstacles;
+      setObstacles([...movedObstacles]);
 
-      // Collision detection
-      for (const obstacle of nextObstacles) {
+      for (const obstacle of movedObstacles) {
         if (checkCollision(nextShrimp.yPosition, obstacle)) {
           gameStatusRef.current = "dead";
           setGameStatus("dead");
-          setHighScore((previousHigh) =>
-            Math.max(previousHigh, scoreRef.current)
+          setHighScore((previousHighScore: number) =>
+            Math.max(previousHighScore, scoreRef.current),
           );
           animationFrameRef.current = requestAnimationFrame(gameTick);
           return;
         }
       }
 
-      // Score tick
       if (timestamp - lastScoreTickRef.current > SCORE_TICK_MS) {
         scoreRef.current += 1;
         setScore(scoreRef.current);
@@ -1187,8 +1395,6 @@ export default function ShrimpRunGame() {
     };
   }, []);
 
-  // ── Keyboard handler ───────────────────────────────────────────────────────
-
   useEffect(() => {
     function handleKeyDown(keyboardEvent: KeyboardEvent): void {
       if (keyboardEvent.code === "Space") {
@@ -1204,130 +1410,102 @@ export default function ShrimpRunGame() {
     };
   }, [jump]);
 
-  // ── Derived values ─────────────────────────────────────────────────────────
-
-  const shrimpBottomPx = GROUND_Y_OFFSET + shrimp.yPosition;
+  const shrimpBottomOffset = GROUND_STRIP_HEIGHT + shrimp.yPosition;
   const isDead = gameStatus === "dead";
   const isIdle = gameStatus === "idle";
-
-  // ── Render ─────────────────────────────────────────────────────────────────
+  const isRunning = gameStatus === "running";
 
   return (
-    <div className="shrimp-run-wrapper">
-      {/* Score row */}
-      <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
-        <span className="shrimp-run-score">Score: {score}</span>
+    <div className="flex flex-col items-start gap-4 py-4">
+      <div className="flex flex-wrap items-center gap-8">
+        <span className="font-mono text-xl font-bold tabular-nums text-red-600">
+          Score: {score}
+        </span>
         {highScore > 0 && (
-          <span style={{ color: "#94a3b8", fontSize: "0.875rem" }}>
-            Best: {highScore}
-          </span>
+          <span className="text-sm text-slate-400">Best: {highScore}</span>
         )}
       </div>
 
-      {/* Game canvas */}
-      <div
-        className="shrimp-run-canvas"
-        role="button"
-        tabIndex={0}
+      <button
+        type="button"
+        className="relative block max-w-full cursor-pointer select-none overflow-hidden rounded-2xl border-2 border-red-600/30 bg-[#0e111a] p-0 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
         aria-label="ShrimpRun game area. Click or press Space to jump."
         onClick={jump}
-        onKeyDown={(keyboardEvent) => {
+        onKeyDown={(keyboardEvent: import("react").KeyboardEvent) => {
           if (keyboardEvent.code === "Space") {
             keyboardEvent.preventDefault();
             jump();
           }
         }}
-        style={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT }}
+        style={{
+          width: CANVAS_WIDTH,
+          height: CANVAS_HEIGHT,
+        }}
       >
-        {/* Ground strip */}
-        <div className="shrimp-run-ground" />
-
-        {/* Shrimp */}
-        <div
+        <span
+          className="absolute bottom-0 left-0 w-full rounded-sm bg-red-600"
           style={{
-            position: "absolute",
+            height: GROUND_STRIP_HEIGHT,
+          }}
+        />
+
+        <span
+          className="absolute"
+          style={{
             left: SHRIMP_START_X,
-            bottom: shrimpBottomPx,
+            bottom: shrimpBottomOffset,
             width: SHRIMP_WIDTH,
             height: SHRIMP_HEIGHT,
           }}
         >
-          <RaktaShrimpMascot
-            isJumping={shrimp.isJumping}
-            isDead={isDead}
-          />
-        </div>
+          <RaktaShrimpMascot isJumping={shrimp.isJumping} isDead={isDead} />
+        </span>
 
-        {/* Obstacles */}
         {obstacles.map((obstacle) => (
-          <div
+          <span
             key={obstacle.id}
+            className="absolute rounded-t bg-red-600"
             style={{
-              position: "absolute",
               left: obstacle.xPosition,
-              bottom: GROUND_Y_OFFSET,
+              bottom: GROUND_STRIP_HEIGHT,
               width: obstacle.width,
               height: obstacle.height,
-              background: "#dc2626",
-              borderRadius: "4px 4px 0 0",
             }}
           />
         ))}
 
-        {/* Idle overlay */}
         {isIdle && (
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#94a3b8",
-              fontSize: "0.875rem",
-              pointerEvents: "none",
-            }}
-          >
+          <span className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-slate-400">
             Press Space or click to start
-          </div>
+          </span>
         )}
 
-        {/* Dead overlay */}
         {isDead && (
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "0.75rem",
-              background: "rgba(5, 5, 5, 0.7)",
-            }}
-          >
-            <span style={{ color: "#dc2626", fontWeight: 700, fontSize: "1.125rem" }}>
+          <span className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/75">
+            <span className="text-lg font-bold tracking-widest text-red-600">
               GAME OVER
             </span>
-            <span style={{ color: "#94a3b8", fontSize: "0.875rem" }}>
-              Score: {score}
-            </span>
-          </div>
+            <span className="text-sm text-slate-400">Score: {score}</span>
+          </span>
         )}
-      </div>
 
-      {/* Status message */}
-      <p className="shrimp-run-message">
-        {isIdle && "🦐 Tap or press Space to make the shrimp jump!"}
-        {gameStatus === "running" && "🦐 Don't hit the obstacles!"}
+        {isRunning && score > 0 && score % 50 === 0 && (
+          <span className="absolute right-3 top-2 text-xs font-bold tracking-widest text-red-600 opacity-80">
+            {score}!
+          </span>
+        )}
+      </button>
+
+      <p className="min-h-5 text-sm text-slate-400">
+        {isIdle && "🦐 Click or press Space to make the shrimp jump!"}
+        {isRunning && "🦐 Don't hit the obstacles!"}
         {isDead && "The shrimp got cooked. Try again!"}
       </p>
 
-      {/* Restart button */}
       {isDead && (
         <button
           type="button"
-          className="shrimp-run-restart"
+          className="w-fit rounded-lg bg-red-600 px-6 py-2 font-semibold text-white transition hover:bg-red-700 active:bg-red-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
           onClick={resetGame}
         >
           Restart

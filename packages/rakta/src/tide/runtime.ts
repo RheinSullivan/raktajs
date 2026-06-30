@@ -43,22 +43,22 @@ export function buildHtmlResponse(
 	status: number = 200,
 ): Response {
 	return buildTextResponse(html, status, {
-		"Content-Type": "text.html; charset=utf-8",
+		"Content-Type": "text/html; charset=utf-8",
 	});
 }
 
 export function buildJsonResponse(
-	data: Record<string, string | number | boolean | object>,
+	responseData: Record<string, string | number | boolean | object>,
 	status: number = 200,
 ): Response {
-	return buildTextResponse(JSON.stringify(data), status, {
+	return buildTextResponse(JSON.stringify(responseData), status, {
 		"Content-Type": "application/json; charset=utf-8",
 	});
 }
 
 export function buildErrorResponse(
-	massage: string,
+	errorMessage: string,
 	status: number = 500,
 ): Response {
-	return buildJsonResponse({ error: massage }, status);
+	return buildJsonResponse({ error: errorMessage }, status);
 }
