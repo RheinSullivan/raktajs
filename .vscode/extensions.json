@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "bradlc.vscode-tailwindcss",
+    "oven.bun-vscode",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig"
+  ],
+  "unwantedRecommendations": [
+    "esbenp.prettier-vscode",
+    "hookyqr.beautify"
+  ]
+}

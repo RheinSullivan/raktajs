@@ -1,0 +1,70 @@
+name: Feature request
+description: Suggest an idea or improvement for Rakta.js.
+title: "[feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement to Rakta.js. Please describe
+        the problem before jumping to the solution — it helps us evaluate
+        whether the feature fits the framework's frontend-first, Bun-first
+        philosophy.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the situation you ran into that motivated this request.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: |
+        Describe the feature or API you have in mind. If it touches a
+        named Rakta.js layer (MendungWeave, ShrimpStep, TrusmiFrame,
+        CarubanWire, PanturaFetch, WaliSignal, ShrimpHarbor, TrusmiThread,
+        CherbonsEngine, JatiLens, KasepuhanGate, KanomanShield,
+        SunyaragiCrown, NorthCoastFlow), please mention which one.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any alternative solutions or workarounds you've tried.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - Router (MendungWeave)
+        - Components (ShrimpStep / TrusmiFrame)
+        - RPC (CarubanWire)
+        - HTTP client (PanturaFetch)
+        - Store
+        - SEO (WaliSignal / SunyaragiCrown)
+        - PWA (ShrimpHarbor)
+        - Auto import (TrusmiThread)
+        - Build / dev tooling (CherbonsEngine)
+        - CLI (create-rakta-app)
+        - Documentation
+        - Other
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues and this has not already been requested.
+          required: true

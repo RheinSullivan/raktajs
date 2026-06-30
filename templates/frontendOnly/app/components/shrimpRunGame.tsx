@@ -350,8 +350,8 @@ export default function ShrimpRunGame() {
 			</button>
 
 			<p className="min-h-5 text-sm text-slate-400">
-				{isIdle && "🦐 Click or press Space to make the shrimp jump!"}
-				{isRunning && "🦐 Don't hit the obstacles!"}
+				{isIdle && "Click or press Space to make the shrimp jump!"}
+				{isRunning && "Don't hit the obstacles!"}
 				{isDead && "The shrimp got cooked. Try again!"}
 			</p>
 

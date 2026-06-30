@@ -1,0 +1,30 @@
+{
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "explicit",
+    "quickfix.biome": "explicit"
+  },
+  "[typescript][typescriptreact][javascript][javascriptreact][json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "files.exclude": {
+    "**/.history": true,
+    "**/dist": true,
+    "**/.rakta": true
+  },
+  "search.exclude": {
+    "**/.history": true,
+    "**/dist": true,
+    "**/node_modules": true,
+    "**/bun.lock": true
+  },
+  "files.eol": "\n",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": false,
+  "tailwindCSS.experimental.classRegex": [
+    ["className\\s*=\\s*\"([^\"]*)\"", "([a-zA-Z0-9\\-:/]+)"]
+  ]
+}
