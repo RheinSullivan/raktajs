@@ -4,7 +4,9 @@
     "bradlc.vscode-tailwindcss",
     "oven.bun-vscode",
     "dbaeumer.vscode-eslint",
-    "editorconfig.editorconfig"
+    "editorconfig.editorconfig",
+		"yoavbls.pretty-ts-errors",
+		"pkief.material-icon-theme"
   ],
   "unwantedRecommendations": [
     "esbenp.prettier-vscode",
