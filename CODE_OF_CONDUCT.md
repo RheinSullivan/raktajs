@@ -15,12 +15,12 @@ Code of Conduct ini berlaku untuk semua orang yang berpartisipasi di project Rak
 Sebagai maintainer dan contributor Rakta.js, kami berkomitmen untuk menjaga lingkungan kontribusi yang terbuka, ramah, dan bebas dari pelecehan.
 
 Kami ingin Rakta.js menjadi tempat yang aman untuk:
-- developer yang baru pertama kali membuat Pull Request
-- developer yang sedang belajar open source
-- developer yang memakai Rakta.js untuk project pribadi
-- developer yang memakai Rakta.js untuk project production
-- maintainer yang menjaga kualitas project
-- contributor yang datang dari background, bahasa, dan level pengalaman berbeda
+- Developer yang baru pertama kali membuat Pull Request
+- Developer yang sedang belajar open source
+- Developer yang memakai Rakta.js untuk project pribadi
+- Developer yang memakai Rakta.js untuk project production
+- Maintainer yang menjaga kualitas project
+- Contributor yang datang dari background, bahasa, dan level pengalaman berbeda
 
 Kami menghargai kontribusi teknis, dokumentasi, diskusi, bug report, saran fitur, review kode, dan masukan yang membantu Rakta.js menjadi lebih baik.
 
@@ -76,11 +76,11 @@ Rakta.js terinspirasi oleh banyak framework dan tool. Perbandingan teknis boleh 
 ### Tanggung Jawab Maintainer
 
 Maintainer bertanggung jawab untuk:
-- menjelaskan standar perilaku yang berlaku
-- menjaga diskusi tetap sehat
-- meninjau laporan pelanggaran dengan adil
-- mengambil tindakan jika ada perilaku yang merugikan komunitas
-- menjaga agar proses kontribusi tetap aman dan produktif
+- Menjelaskan standar perilaku yang berlaku
+- Menjaga diskusi tetap sehat
+- Meninjau laporan pelanggaran dengan adil
+- Mengambil tindakan jika ada perilaku yang merugikan komunitas
+- Menjaga agar proses kontribusi tetap aman dan produktif
 
 Maintainer boleh menghapus, menyembunyikan, atau menolak komentar, issue, Pull Request, commit, atau kontribusi lain yang melanggar Code of Conduct ini.
 
@@ -91,14 +91,14 @@ Maintainer juga boleh membatasi akses contributor yang terus mengganggu project.
 ### Ruang Lingkup
 
 Code of Conduct ini berlaku di semua ruang project Rakta.js, termasuk:
-- issue
+- Issue
 - Pull Request
-- discussion
-- commit message
-- komentar review
-- dokumentasi
-- channel komunitas resmi
-- percakapan public ketika seseorang mewakili Rakta.js
+- Discussion
+- Commit message
+- Komentar review
+- Dokumentasi
+- Channel komunitas resmi
+- Percakapan public ketika seseorang mewakili Rakta.js
 
 Code of Conduct ini juga berlaku ketika seseorang menggunakan nama Rakta.js, logo Rakta.js, atau posisi sebagai maintainer/contributor Rakta.js di ruang public.
 
@@ -109,12 +109,12 @@ Code of Conduct ini juga berlaku ketika seseorang menggunakan nama Rakta.js, log
 Jika kamu melihat atau mengalami perilaku yang melanggar Code of Conduct ini, laporkan ke maintainer project.
 
 Saat melaporkan, sertakan informasi yang jelas jika memungkinkan:
-- link issue, Pull Request, atau discussion
-- screenshot jika diperlukan
-- waktu kejadian
-- username yang terlibat
-- ringkasan singkat masalah
-- dampak yang terjadi
+- Link issue, Pull Request, atau discussion
+- Screenshot jika diperlukan
+- Waktu kejadian
+- Username yang terlibat
+- Ringkasan singkat masalah
+- Dampak yang terjadi
 
 Laporan akan ditinjau dengan serius dan tidak akan digunakan untuk menyerang pelapor.
 
@@ -127,13 +127,13 @@ Jangan membuka public issue untuk masalah yang berisi informasi sensitif. Gunaka
 Tindakan yang dapat diambil maintainer tergantung pada tingkat pelanggaran.
 
 Beberapa tindakan yang mungkin dilakukan:
-- memberi peringatan
-- meminta perubahan bahasa atau sikap
-- menyembunyikan komentar
-- menutup issue atau Pull Request
-- menolak kontribusi
-- membatasi partisipasi sementara
-- memblokir contributor dari project jika pelanggaran berat atau berulang
+- Memberi peringatan
+- Meminta perubahan bahasa atau sikap
+- Menyembunyikan komentar
+- Menutup issue atau Pull Request
+- Menolak kontribusi
+- Membatasi partisipasi sementara
+- Memblokir contributor dari project jika pelanggaran berat atau berulang
 
 Tujuannya bukan untuk mempermalukan orang, tetapi untuk menjaga project tetap aman, sehat, dan produktif.
 
@@ -194,12 +194,12 @@ This Code of Conduct applies to everyone participating in the Rakta.js project, 
 As maintainers and contributors of Rakta.js, we pledge to keep the contribution environment open, respectful, and free from harassment.
 
 We want Rakta.js to be a safe place for:
-- developers opening their first Pull Request
-- developers learning open source
-- developers using Rakta.js for personal projects
-- developers using Rakta.js in production
-- maintainers protecting project quality
-- contributors from different backgrounds, languages, and experience levels
+- Developers opening their first Pull Request
+- Developers learning open source
+- Developers using Rakta.js for personal projects
+- Developers using Rakta.js in production
+- Maintainers protecting project quality
+- Contributors from different backgrounds, languages, and experience levels
 
 We value technical contributions, documentation, discussions, bug reports, feature requests, code reviews, and feedback that help Rakta.js become better.
 
@@ -255,11 +255,11 @@ Rakta.js is inspired by many frameworks and tools. Technical comparison is welco
 ### Maintainer Responsibilities
 
 Maintainers are responsible for:
-- clarifying the expected behavior
-- keeping discussions healthy
-- reviewing violation reports fairly
-- taking action when behavior harms the community
-- keeping the contribution process safe and productive
+- Clarifying the expected behavior
+- Keeping discussions healthy
+- Reviewing violation reports fairly
+- Taking action when behavior harms the community
+- Keeping the contribution process safe and productive
 
 Maintainers may remove, hide, or reject comments, issues, Pull Requests, commits, or other contributions that violate this Code of Conduct.
 
@@ -270,14 +270,14 @@ Maintainers may also limit access for contributors who repeatedly disrupt the pr
 ### Scope
 
 This Code of Conduct applies in all Rakta.js project spaces, including:
-- issues
+- Issues
 - Pull Requests
-- discussions
-- commit messages
-- review comments
-- documentation
-- official community channels
-- public conversations when someone is representing Rakta.js
+- Discussions
+- Commit messages
+- Review comments
+- Documentation
+- Official community channels
+- Public conversations when someone is representing Rakta.js
 
 This Code of Conduct also applies when someone uses the Rakta.js name, Rakta.js logo, or their position as a Rakta.js maintainer/contributor in public spaces.
 
@@ -288,12 +288,12 @@ This Code of Conduct also applies when someone uses the Rakta.js name, Rakta.js 
 If you see or experience behavior that violates this Code of Conduct, report it to the project maintainer.
 
 When reporting, include clear information when possible:
-- issue, Pull Request, or discussion link
-- screenshot if needed
-- time of the incident
-- usernames involved
-- short summary of the problem
-- impact of the incident
+- Issue, Pull Request, or discussion link
+- Screenshot if needed
+- Time of the incident
+- Usernames involved
+- Short summary of the problem
+- Impact of the incident
 
 Reports will be reviewed seriously and will not be used to attack the person who reported them.
 
@@ -306,13 +306,13 @@ Do not open a public issue for problems that contain sensitive information. Use 
 Maintainer action depends on the severity of the violation.
 
 Possible actions include:
-- giving a warning
-- asking for language or behavior changes
-- hiding comments
-- closing issues or Pull Requests
-- rejecting contributions
-- temporarily limiting participation
-- blocking a contributor from the project for serious or repeated violations
+- Giving a warning
+- Asking for language or behavior changes
+- Hiding comments
+- Closing issues or Pull Requests
+- Rejecting contributions
+- Temporarily limiting participation
+- Blocking a contributor from the project for serious or repeated violations
 
 The goal is not to shame people. The goal is to keep the project safe, healthy, and productive.
 

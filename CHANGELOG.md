@@ -42,16 +42,16 @@ Bagian ini berisi perubahan yang sudah masuk ke branch utama, tetapi belum diril
   - Indonesian documentation di `docs/id`
 
 - Menambahkan dokumentasi untuk topik utama:
-  - getting started
+  - Getting started
   - MendungWeave routing
-  - templates
+  - Templates
   - CarubanWire RPC
   - Rakta Store
   - PanturaFetch
   - ShrimpHarbor PWA
   - WaliSignal SEO
   - TrusmiThread auto import
-  - backend framework choices
+  - Backend framework choices
 
 - Menambahkan package-level README untuk:
   - `packages/rakta/README.md`
@@ -96,39 +96,39 @@ Rilis awal Rakta.js sebagai framework preview.
 - Menambahkan package core `rakta`.
 
 - Menambahkan MendungWeave file-based routing:
-  - route scanner
-  - route matcher
-  - route manifest
-  - dynamic route support
+  - Route scanner
+  - Route matcher
+  - Route manifest
+  - Dynamic route support
   - API route concept melalui KasepuhanGate
 
 - Menambahkan ShrimpStep navigation:
-  - custom `<click to="">`
-  - internal navigation behavior
-  - external link handling
+  - Custom `<click to="">`
+  - Internal navigation behavior
+  - External link handling
 
 - Menambahkan TrusmiFrame image component:
-  - custom `<picture path="">`
+  - Custom `<picture path="">`
   - `<picture><img /></picture>` output
-  - loading, title, alt, dan error handling dasar
+  - Loading, title, alt, dan error handling dasar
 
 - Menambahkan SunyaragiCrown metadata/head manager:
-  - title
-  - description
+  - Title
+  - Description
   - Open Graph
   - Twitter metadata
   - JSON-LD rendering tanpa `dangerouslySetInnerHTML`
 
 - Menambahkan WaliSignal SEO utilities:
-  - robots
-  - sitemap
-  - metadata signal helpers
+  - Robots
+  - Sitemap
+  - Metadata signal helpers
 
 - Menambahkan CarubanWire type-safe RPC:
-  - procedure
-  - router
-  - client
-  - error model
+  - Procedure
+  - Router
+  - Client
+  - Error model
   - JSON request/response flow
 
 - Menambahkan lightweight store:
@@ -139,26 +139,26 @@ Rilis awal Rakta.js sebagai framework preview.
   - React hook integration
 
 - Menambahkan PanturaFetch HTTP client:
-  - base URL
-  - query params
+  - Base URL
+  - Query params
   - JSON body
-  - typed response
-  - request and response lifecycle
+  - Typed response
+  - Request and response lifecycle
 
 - Menambahkan TrusmiThread auto import system:
-  - scanner
-  - generated auto import layer
-  - summary output
+  - Scanner
+  - Generated auto import layer
+  - Summary output
 
 - Menambahkan NorthCoastFlow runtime layer:
-  - runtime context
-  - response helpers
-  - render context
+  - Runtime context
+  - Response helpers
+  - Render context
 
 - Menambahkan CherbonsEngine tooling:
-  - development server
-  - build command
-  - route inspection foundation
+  - Development server
+  - Build command
+  - Route inspection foundation
 
 - Menambahkan CLI `rakta`:
   - `rakta dev`
@@ -170,20 +170,20 @@ Rilis awal Rakta.js sebagai framework preview.
   - `rakta doctor`
 
 - Menambahkan package `create-rakta-app`:
-  - interactive project generator
-  - frontend-only mode
-  - fullstack mode
+  - Interactive project generator
+  - Frontend-only mode
+  - Fullstack mode
   - CSS framework choices
-  - rendering mode choices
-  - backend framework choices
+  - Rendering mode choices
+  - Backend framework choices
 
 - Menambahkan template frontend-only:
   - React 19
   - Tailwind CSS v4
   - Rakta config
   - `rakta-env.d.ts`
-  - default app layout
-  - loading, error, and notFound pages
+  - Default app layout
+  - Loading, error, and notFound pages
   - ShrimpRun offline mini-game
   - Rakta shrimp mascot drawn without external image assets
 
@@ -231,7 +231,7 @@ This section contains changes that have landed in the main branch but have not b
   - Indonesian documentation in `docs/id`
 
 - Added documentation for core topics:
-  - getting started
+  - Getting started
   - MendungWeave routing
   - templates
   - CarubanWire RPC
@@ -240,7 +240,7 @@ This section contains changes that have landed in the main branch but have not b
   - ShrimpHarbor PWA
   - WaliSignal SEO
   - TrusmiThread auto import
-  - backend framework choices
+  - Backend framework choices
 
 - Added package-level README files for:
   - `packages/rakta/README.md`
@@ -285,39 +285,39 @@ Initial Rakta.js release as a framework preview.
 - Added the `rakta` core package.
 
 - Added MendungWeave file-based routing:
-  - route scanner
-  - route matcher
-  - route manifest
-  - dynamic route support
+  - Route scanner
+  - Route matcher
+  - Route manifest
+  - Dynamic route support
   - API route concept through KasepuhanGate
 
 - Added ShrimpStep navigation:
-  - custom `<click to="">`
-  - internal navigation behavior
-  - external link handling
+- Ccustom `<click to="">`
+  - Internal navigation behavior
+  - External link handling
 
 - Added TrusmiFrame image component:
-  - custom `<picture path="">`
+  - Custom `<picture path="">`
   - `<picture><img /></picture>` output
-  - loading, title, alt, and basic error handling
+  - Loading, title, alt, and basic error handling
 
 - Added SunyaragiCrown metadata/head manager:
-  - title
-  - description
+  - Title
+  - Description
   - Open Graph
   - Twitter metadata
   - JSON-LD rendering without `dangerouslySetInnerHTML`
 
 - Added WaliSignal SEO utilities:
-  - robots
-  - sitemap
-  - metadata signal helpers
+  - Robots
+  - Sitemap
+  - Metadata signal helpers
 
 - Added CarubanWire type-safe RPC:
-  - procedure
-  - router
-  - client
-  - error model
+  - Procedure
+  - Router
+  - Client
+  - Error model
   - JSON request/response flow
 
 - Added lightweight store:
@@ -328,26 +328,26 @@ Initial Rakta.js release as a framework preview.
   - React hook integration
 
 - Added PanturaFetch HTTP client:
-  - base URL
-  - query params
+  - Base URL
+  - Query params
   - JSON body
-  - typed response
-  - request and response lifecycle
+  - Typed response
+  - Request and response lifecycle
 
 - Added TrusmiThread auto import system:
-  - scanner
-  - generated auto import layer
-  - summary output
+  - Scanner
+  - Generated auto import layer
+  - Summary output
 
 - Added NorthCoastFlow runtime layer:
-  - runtime context
-  - response helpers
-  - render context
+  - Runtime context
+  - Response helpers
+  - Render context
 
 - Added CherbonsEngine tooling:
-  - development server
-  - build command
-  - route inspection foundation
+  - Development server
+  - Build command
+  - Route inspection foundation
 
 - Added the `rakta` CLI:
   - `rakta dev`
@@ -359,20 +359,20 @@ Initial Rakta.js release as a framework preview.
   - `rakta doctor`
 
 - Added the `create-rakta-app` package:
-  - interactive project generator
-  - frontend-only mode
-  - fullstack mode
+  - Interactive project generator
+  - Frontend-only mode
+  - Fullstack mode
   - CSS framework choices
-  - rendering mode choices
-  - backend framework choices
+  - Rendering mode choices
+  - Backend framework choices
 
 - Added the frontend-only template:
   - React 19
   - Tailwind CSS v4
   - Rakta config
   - `rakta-env.d.ts`
-  - default app layout
-  - loading, error, and notFound pages
+  - Default app layout
+  - Loading, error, and notFound pages
   - ShrimpRun offline mini-game
   - Rakta shrimp mascot drawn without external image assets
 

@@ -194,11 +194,11 @@ null
 ```
 
 `unknown` hanya boleh dipakai di batas luar sistem, misalnya:
-- hasil parsing JSON
+- Hasil parsing JSON
 - HTTP response
-- dynamic import
-- input filesystem
-- hasil prompt CLI
+- Dynamic import
+- Input filesystem
+- Hasil prompt CLI
 
 Setelah masuk ke fungsi, `unknown` harus langsung dicek dan dipersempit tipenya.
 
@@ -366,18 +366,18 @@ packages/create-rakta/src/generator.ts
 ```
 
 File ini besar karena berisi banyak generator dalam satu tempat:
-- root file generator
-- frontend-only generator
-- fullstack frontend generator
-- backend generator
+- Root file generator
+- Frontend-only generator
+- Fullstack frontend generator
+- Backend generator
 - Gaman.js generator
 - Express.js generator
 - Nest.js generator
 - Adonis.js generator
-- database helpers
+- Database helpers
 - CSS helpers
 - README generator
-- main `generateProjectFiles` export
+- Main `generateProjectFiles` export
 
 Jangan mengganti file ini dengan potongan kecil.
 
@@ -416,11 +416,11 @@ docs/
 Jangan membuat placeholder kosong hanya untuk memenuhi struktur folder.
 
 Ketika menambahkan halaman baru, pastikan:
-- route bisa discan
-- import valid
-- typecheck lolos
-- layout sesuai konteks
-- styling memakai Tailwind utilities
+- Route bisa discan
+- Import valid
+- Typecheck lolos
+- Layout sesuai konteks
+- Styling memakai Tailwind utilities
 - `globals.css` tetap minimal
 
 Public pages boleh memakai navbar, footer, dan CTA.
@@ -441,19 +441,19 @@ templates/frontendOnly/app/components/shrimpRunGame.tsx
 ```
 
 Kalau mengubah ShrimpRun, fitur ini harus tetap berjalan:
-- click or tap to jump
+- Click or tap to jump
 - Space key to jump
-- restart
-- score
-- high score
-- collision detection
-- obstacles
-- increasing speed
-- pause when the tab is inactive
-- mobile responsiveness
-- accessible labels
-- no game library
-- no external image assets
+- Restart
+- Rcore
+- High score
+- Collision detection
+- Obstacles
+- Increasing speed
+- Pause when the tab is inactive
+- Mobile responsiveness
+- Accessible labels
+- No game library
+- No external image assets
 
 Karakter udang harus tetap dibuat dengan JSX, SVG, atau CSS.
 
@@ -498,11 +498,11 @@ backend-frameworks.md
 ```
 
 Dokumentasi yang baik biasanya berisi:
-- penjelasan singkat
-- kapan digunakan
-- contoh kode
-- kesalahan umum
-- link ke topik terkait
+- Penjelasan singkat
+- Kapan digunakan
+- Contoh kode
+- Kesalahan umum
+- Link ke topik terkait
 
 ---
 
@@ -828,8 +828,8 @@ null
 `unknown` is only allowed at real external boundaries, such as:
 - JSON parsing
 - HTTP responses
-- dynamic imports
-- filesystem input
+- Dynamic imports
+- Filesystem input
 - CLI prompt results
 
 Once it enters your function, narrow it immediately.
@@ -998,18 +998,18 @@ packages/create-rakta/src/generator.ts
 ```
 
 This file is large because it contains many generators in one place:
-- root file generator
-- frontend-only generator
-- fullstack frontend generator
-- backend generator
+- Root file generator
+- Frontend-only generator
+- Fullstack frontend generator
+- Backend generator
 - Gaman.js generator
 - Express.js generator
 - Nest.js generator
 - Adonis.js generator
-- database helpers
+- Database helpers
 - CSS helpers
 - README generator
-- main `generateProjectFiles` export
+- Main `generateProjectFiles` export
 
 Do not replace this file with a small fragment.
 
@@ -1048,11 +1048,11 @@ docs/
 Do not add empty placeholders only to satisfy a folder structure.
 
 When adding a new page, make sure:
-- the route can be scanned
-- imports are valid
-- typecheck passes
-- the layout matches the page context
-- styling uses Tailwind utilities
+- The route can be scanned
+- Imports are valid
+- Typecheck passes
+- The layout matches the page context
+- Styling uses Tailwind utilities
 - `globals.css` stays minimal
 
 Public pages may use navbar, footer, and CTA.
@@ -1073,19 +1073,19 @@ templates/frontendOnly/app/components/shrimpRunGame.tsx
 ```
 
 If you touch ShrimpRun, these features must keep working:
-- click or tap to jump
+- Click or tap to jump
 - Space key to jump
-- restart
-- score
-- high score
-- collision detection
-- obstacles
-- increasing speed
-- pause when the tab is inactive
-- mobile responsiveness
-- accessible labels
-- no game library
-- no external image assets
+- Restart
+- Score
+- High score
+- Collision detection
+- Obstacles
+- Increasing speed
+- Pause when the tab is inactive
+- Mobile responsiveness
+- Accessible labels
+- node_moduleso game library
+- node_moduleso external image assets
 
 The shrimp character must stay drawn with JSX, SVG, or CSS.
 
@@ -1130,11 +1130,11 @@ backend-frameworks.md
 ```
 
 A good documentation page usually includes:
-- short overview
-- when to use it
-- code example
-- common mistakes
-- related links
+- Short overview
+- When to use it
+- Code example
+- Common mistakes
+- Related links
 
 ---
 
@@ -1207,12 +1207,12 @@ Use the issue templates in:
 A good bug report includes:
 - Rakta.js version
 - Bun version
-- operating system
-- reproduction steps
-- expected result
-- actual result
-- full error log
-- small reproduction project when possible
+- Operating system
+- Reproduction steps
+- Expected result
+- Actual result
+- Full error log
+- Small reproduction project when possible
 
 Do not only write “error” without logs and reproduction steps.
 
