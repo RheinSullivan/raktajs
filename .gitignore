@@ -1,6 +1,8 @@
 # Local history / editor backup
 .history/
 .history/**
+
+# VS Code
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
@@ -26,6 +28,8 @@ out/
 .output/
 .vercel/
 .netlify/
+packages/rakta/dist/
+packages/create-rakta/dist/
 
 # TypeScript
 *.tsbuildinfo
@@ -38,6 +42,11 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 bun-debug.log*
+biome-errors.txt
+
+# Documentation draft / generated architecture notes
+appArchitecture.md
+monorepoArchitecture.md
 
 # Environment files
 .env
@@ -83,15 +92,3 @@ temp/
 # Rakta generated output
 .rakta/
 **/.rakta/
-
-.history/
-node_modules/
-dist/
-coverage/
-.next/
-.git/
-packages/rakta/dist/
-packages/create-rakta/dist/
-biome-errors.txt
-appArchitecture.md
-monorepoArchitecture.md

@@ -1,2 +1,0 @@
-$ bunx @biomejs/biome check package.json tsconfig.base.json biome.json workspace.test.ts packages/create-rakta/package.json packages/create-rakta/tsconfig.json packages/create-rakta/src packages/rakta/package.json packages/rakta/tsconfig.json packages/rakta/src templates/frontendOnly/package.json templates/frontendOnly/tsconfig.json templates/frontendOnly/rakta-env.d.ts templates/frontendOnly/app templates/frontendOnly/styles "--max-diagnostics=2000"
-Checked 91 files in 84ms. No fixes applied.
