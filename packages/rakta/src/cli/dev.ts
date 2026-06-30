@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { loadConfig } from "../config/loadConfig";
-import { startDevServer } from "../forge/dev-server";
+import { startDevServer } from "../forge/devServer";
 
 export async function devCommand(cwd: string = process.cwd()): Promise<void> {
 	const config = await loadConfig(cwd);

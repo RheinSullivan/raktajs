@@ -1,5 +1,5 @@
 export { buildProject } from "./build";
-export { startDevServer } from "./dev-server";
+export { startDevServer } from "./devServer";
 export type { InspectOptions } from "./inspect";
 export { inspectBuild, printInspectReport } from "./inspect";
 export type {

@@ -9,7 +9,7 @@ import { doctorCommand } from "./doctor";
 import { importsGenerateCommand } from "./imports";
 import { makeCommand } from "./make";
 import { routesCommand } from "./routes";
-import { rpcTypesCommand } from "./rpc-types";
+import { rpcTypesCommand } from "./rpcTypes";
 import { seoGenerateCommand } from "./seo";
 import { startCommand } from "./start";
 
