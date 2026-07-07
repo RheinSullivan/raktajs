@@ -1,7 +1,7 @@
 {
 	"name": "rakta",
 	"version": "0.1.0",
-	"description": "Rakta.js core framework package for React, Bun, TypeScript, app routing, rendering, SEO, components, RPC, store, schema, HTTP, and auto imports.",
+	"description": "Rakta.js core framework package for React, Bun, TypeScript, app routing, rendering, SEO, components, RPC, store, schema, HTTP, PWA, and auto imports.",
 	"type": "module",
 	"license": "MIT",
 	"author": "Rhein Sullivan | Vyagra Nexus™",
@@ -33,6 +33,8 @@
 		"store",
 		"schema",
 		"http",
+		"pwa",
+		"offline",
 		"auto-import"
 	],
 	"main": "./dist/index.js",
@@ -97,12 +99,16 @@
 		"./auto-import": {
 			"types": "./dist/auto-import/index.d.ts",
 			"import": "./dist/auto-import/index.js"
+		},
+		"./pwa": {
+			"types": "./dist/pwa/index.d.ts",
+			"import": "./dist/pwa/index.js"
 		}
 	},
 	"scripts": {
 		"dev": "bun run ./src/cli/rakta.ts dev",
-		"build": "bun build ./src/index.ts --outdir ./dist --target bun --sourcemap=external && bun build ./src/cli/rakta.ts --outdir ./dist/cli --target bun --sourcemap=external",
-		"typecheck": "tsc -p ./tsconfig.json --noEmit",
+		"build": "bun run ./scripts/build.ts && tsc -p ./tsconfig.json --emitDeclarationOnly",
+		"typecheck": "tsc -p ./tsconfig.json --noEmit && tsc -p ./scripts/tsconfig.json --noEmit",
 		"prepublishOnly": "bun run build && bun run typecheck"
 	},
 	"peerDependencies": {

@@ -69,9 +69,9 @@ export function generateRobotsTxt(options: RobotsOptions): string {
 
 export function createRobotsHandler(options: RobotsOptions): () => Response {
 	return () => {
-		const robotsText = generateRobotsTxt(options);
+		const robotsTxt = generateRobotsTxt(options);
 
-		return new Response(robotsText, {
+		return new Response(robotsTxt, {
 			status: 200,
 			headers: {
 				"Content-Type": "text/plain; charset=utf-8",
