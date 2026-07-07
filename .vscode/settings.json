@@ -1,10 +1,12 @@
 {
 	"editor.defaultFormatter": "biomejs.biome",
 	"editor.formatOnSave": true,
+
 	"editor.codeActionsOnSave": {
 		"source.organizeImports.biome": "explicit",
 		"quickfix.biome": "explicit"
 	},
+
 	"[typescript]": {
 		"editor.defaultFormatter": "biomejs.biome"
 	},
@@ -23,8 +25,12 @@
 	"[jsonc]": {
 		"editor.defaultFormatter": "biomejs.biome"
 	},
-	"js/ts.tsdk.path": "node_modules/typescript/lib",
-	"js/ts.tsdk.promptToUseWorkspaceVersion": true,
+
+	// TypeScript workspace SDK
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"typescript.enablePromptUseWorkspaceTsdk": true,
+
+	// File & search hygiene
 	"files.exclude": {
 		"**/.history": true,
 		"**/dist": true,
@@ -36,9 +42,13 @@
 		"**/node_modules": true,
 		"**/bun.lock": true
 	},
+
+	// Editor behavior
 	"files.eol": "\n",
 	"editor.tabSize": 2,
 	"editor.insertSpaces": false,
+
+	// Tailwind class detection (React / JSX / TSX)
 	"tailwindCSS.experimental.classRegex": [
 		[
 			"className\\s*=\\s*\"([^\"]*)\"",

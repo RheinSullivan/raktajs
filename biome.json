@@ -14,7 +14,8 @@
 			"!**/.next",
 			"!**/coverage",
 			"!**/bun.lock",
-			"!**/bun.lockb"
+			"!**/bun.lockb",
+			"templates/fullstack/**"
 		]
 	},
 	"formatter": {
