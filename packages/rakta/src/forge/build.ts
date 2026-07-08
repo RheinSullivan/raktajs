@@ -1,6 +1,7 @@
-import { mkdirSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { generateManifest, writeManifest } from "../router/manifest";
+import { writeClientEntry } from "./clientEntry";
 import type {
 	ForgeBuildArtifact,
 	ForgeBuildOptions,
@@ -32,16 +33,25 @@ export async function buildProject(
 		kind: "manifest",
 	});
 
+	const entryPoint = existsSync(options.entryPoint)
+		? options.entryPoint
+		: writeClientEntry({
+				projectRoot: options.projectRoot,
+				appDir: options.appDir,
+				workDir: join(options.projectRoot, ".rakta"),
+				manifest,
+			});
+
 	// Build JavaScript bundle
 	const buildResult = await Bun.build({
-		entrypoints: [options.entryPoint],
+		entrypoints: [entryPoint],
 		outdir: options.outDir,
 		target: options.target,
 		minify: options.minify,
 		sourcemap: options.sourcemap ? "external" : "none",
 		splitting: options.splitting,
 		naming: {
-			entry: "[name].[ext]",
+			entry: "app.[ext]",
 			chunk: "chunks/[name]-[hash].[ext]",
 			asset: "assets/[name]-[hash].[ext]",
 		},

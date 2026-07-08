@@ -24,6 +24,7 @@ export async function buildCommand(cwd: string = process.cwd()): Promise<void> {
 	console.log("\n  Building Rakta.js application...\n");
 
 	const buildResult = await buildProject({
+		projectRoot: cwd,
 		entryPoint,
 		outDir,
 		appDir: join(cwd, appDirectory),

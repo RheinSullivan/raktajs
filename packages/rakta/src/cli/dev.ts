@@ -7,7 +7,8 @@ export async function devCommand(cwd: string = process.cwd()): Promise<void> {
 
 	console.log(`\n  Starting Rakta.js dev server...\n`);
 
-	startDevServer({
+	const server = await startDevServer({
+		projectRoot: cwd,
 		port: config.port,
 		host: config.server.hostname ?? "0.0.0.0",
 		appDir: join(cwd, config.appDir),
@@ -15,4 +16,6 @@ export async function devCommand(cwd: string = process.cwd()): Promise<void> {
 		appName: config.appName,
 		renderConfig: config.render,
 	});
+
+	console.log(`  Ready at ${server.url}\n`);
 }

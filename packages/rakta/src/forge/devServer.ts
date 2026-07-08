@@ -4,6 +4,7 @@ import { resolveRouteMode } from "../render/modes";
 import { render } from "../render/renderer";
 import { generateManifest } from "../router/manifest";
 import { matchRoute } from "../router/matcher";
+import { writeClientEntry } from "./clientEntry";
 import type { ForgeDevServerHandle, ForgeDevServerOptions } from "./types";
 
 const DEFAULT_DEV_PORT = 3000;
@@ -38,6 +39,42 @@ function isReadableFile(filePath: string): boolean {
 	return existsSync(filePath) && statSync(filePath).isFile();
 }
 
+async function buildDevClientBundle(
+	options: ForgeDevServerOptions,
+	manifest: ReturnType<typeof generateManifest>,
+): Promise<string> {
+	const workDir = join(options.projectRoot, ".rakta");
+	const clientOutDir = join(workDir, "dev");
+	const clientEntry = writeClientEntry({
+		projectRoot: options.projectRoot,
+		appDir: options.appDir,
+		workDir,
+		manifest,
+	});
+
+	const buildResult = await Bun.build({
+		entrypoints: [clientEntry],
+		outdir: clientOutDir,
+		target: "browser",
+		sourcemap: "external",
+		naming: {
+			entry: "app.[ext]",
+			chunk: "chunks/[name]-[hash].[ext]",
+			asset: "assets/[name]-[hash].[ext]",
+		},
+	});
+
+	if (!buildResult.success) {
+		const buildErrors = buildResult.logs
+			.map((buildLog) => buildLog.message)
+			.join("\n");
+
+		throw new Error(`Failed to build Rakta.js client bundle.\n${buildErrors}`);
+	}
+
+	return clientOutDir;
+}
+
 interface ApiRouteExports {
 	GET?: (request: Request) => Promise<Response>;
 	POST?: (request: Request) => Promise<Response>;
@@ -52,11 +89,12 @@ interface ApiRouteExports {
  * Starts the Rakta.js Forge development server.
  * Powered by Bun.serve. HMR is a roadmap feature (v0.2.0).
  */
-export function startDevServer(
+export async function startDevServer(
 	options: ForgeDevServerOptions,
-): ForgeDevServerHandle {
+): Promise<ForgeDevServerHandle> {
 	const manifest = generateManifest(options.appDir);
 	const resolvedPort = resolveDevPort(options.port);
+	const clientOutDir = await buildDevClientBundle(options, manifest);
 
 	const server = Bun.serve({
 		port: resolvedPort,
@@ -65,6 +103,16 @@ export function startDevServer(
 		async fetch(request: Request): Promise<Response> {
 			const url = new URL(request.url);
 			const { pathname } = url;
+
+			if (clientOutDir.length > 0) {
+				const clientBundlePath = join(clientOutDir, pathname);
+
+				if (isReadableFile(clientBundlePath)) {
+					return new Response(readFileSync(clientBundlePath), {
+						headers: { "Content-Type": resolveMime(clientBundlePath) },
+					});
+				}
+			}
 
 			// Serve static files from public dir
 			const publicPath = join(options.publicDir, pathname);
@@ -118,7 +166,7 @@ export function startDevServer(
 				{
 					appName: options.appName,
 					scriptPath: "/app.js",
-					cssPath: "/globals.css",
+					cssPath: "/app.css",
 					lang: "en",
 				},
 			);

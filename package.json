@@ -1,6 +1,6 @@
 {
 	"name": "rakta-js-monorepo",
-	"version": "0.1.0",
+	"version": "0.1.3",
 	"private": true,
 	"description": "Rakta.js monorepo - framework source, create app CLI, examples, and documentation.",
 	"author": "Rhein Sullivan | Vyagra Nexus™",
@@ -26,7 +26,7 @@
 		"dev:rakta": "bun run packages/rakta/src/cli/rakta.ts dev",
 		"dev:create-rakta": "bun run packages/create-rakta/src/index.ts",
 		"build:rakta": "cd packages/rakta && bun run build",
-		"build:create-rakta": "bun build packages/create-rakta/src/index.ts --outdir packages/create-rakta/dist --target bun --sourcemap=external",
+		"build:create-rakta": "cd packages/create-rakta && bun run build",
 		"test": "bun test --pass-with-no-tests",
 		"lint": "bun run lint:root && bun run lint:rakta && bun run lint:create-rakta && bun run lint:template",
 		"lint:root": "bunx biome check package.json tsconfig.base.json biome.json workspace.test.ts",
@@ -36,7 +36,7 @@
 		"format": "bun run format:root && bun run format:rakta && bun run format:create-rakta && bun run format:template",
 		"format:root": "bunx biome check --write package.json tsconfig.base.json biome.json workspace.test.ts",
 		"format:rakta": "bunx biome check --write packages/rakta/package.json packages/rakta/tsconfig.json packages/rakta/src packages/rakta/scripts",
-		"format:create-rakta": "bunx biome check --write packages/create-rakta/package.json packages-create-rakta/tsconfig.json packages/create-rakta/src",
+		"format:create-rakta": "bunx biome check --write packages/create-rakta/package.json packages/create-rakta/tsconfig.json packages/create-rakta/src",
 		"format:template": "bunx biome check --write templates/frontendOnly/package.json templates/frontendOnly/tsconfig.json templates/frontendOnly/rakta-env.d.ts templates/frontendOnly/app templates/frontendOnly/styles",
 		"check:workspace": "bun run typecheck && bun run lint"
 	},

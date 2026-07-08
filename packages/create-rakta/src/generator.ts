@@ -121,7 +121,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^0.1.0",
+						raktajs: "^0.1.2",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						...getCssDependencies(cssFramework),

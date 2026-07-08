@@ -185,7 +185,7 @@ export function createBunAdapter(
 			{
 				appName: adapterConfig.appName,
 				scriptPath: "/app.js",
-				cssPath: "/globals.css",
+				cssPath: "/app.css",
 				lang: "en",
 			},
 		);

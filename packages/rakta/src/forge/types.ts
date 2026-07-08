@@ -2,6 +2,7 @@ import type { RenderConfig, RenderMode } from "../render/types.js";
 import type { RouteManifest } from "../router/types.js";
 
 export interface ForgeDevServerOptions {
+	readonly projectRoot: string;
 	readonly port: number;
 	readonly host: string;
 	readonly appDir: string;
@@ -11,6 +12,7 @@ export interface ForgeDevServerOptions {
 }
 
 export interface ForgeBuildOptions {
+	readonly projectRoot: string;
 	readonly entryPoint: string;
 	readonly outDir: string;
 	readonly appDir: string;
