@@ -10,7 +10,10 @@ export interface ClientEntryOptions {
 }
 
 function toModuleSpecifier(fromFile: string, targetFile: string): string {
-	const relativePath = relative(dirname(fromFile), targetFile).replace(/\\/g, "/");
+	const relativePath = relative(dirname(fromFile), targetFile).replace(
+		/\\/g,
+		"/",
+	);
 
 	if (relativePath.startsWith(".")) {
 		return relativePath;
@@ -19,7 +22,10 @@ function toModuleSpecifier(fromFile: string, targetFile: string): string {
 	return `./${relativePath}`;
 }
 
-function toCssImportSpecifier(entryPath: string, projectRoot: string): string | null {
+function toCssImportSpecifier(
+	entryPath: string,
+	projectRoot: string,
+): string | null {
 	const candidates = [
 		join(projectRoot, "styles", "globals.css"),
 		join(projectRoot, "styles", "globals.scss"),
@@ -54,7 +60,9 @@ function buildRouteImports(
 	return `const routeModules = {\n${routeEntries}\n} as const;`;
 }
 
-function buildRouteTable(pageRoutes: ReadonlyArray<RouteManifestEntry>): string {
+function buildRouteTable(
+	pageRoutes: ReadonlyArray<RouteManifestEntry>,
+): string {
 	const routeEntries = pageRoutes
 		.map(
 			(route) =>
@@ -79,7 +87,9 @@ function buildStarterGlobalLoaders(entryPath: string, appDir: string): string {
 	const mascotPath = findExistingModule(
 		join(appDir, "components", "raktaShrimpMascot"),
 	);
-	const gamePath = findExistingModule(join(appDir, "components", "shrimpRunGame"));
+	const gamePath = findExistingModule(
+		join(appDir, "components", "shrimpRunGame"),
+	);
 	const loaders: string[] = [];
 
 	if (mascotPath !== undefined) {
@@ -103,11 +113,17 @@ ${loaders.join("\n\n")}
 }`;
 }
 
-function buildClientEntrySource(options: ClientEntryOptions, entryPath: string): string {
+function buildClientEntrySource(
+	options: ClientEntryOptions,
+	entryPath: string,
+): string {
 	const pageRoutes = getPageRoutes(options.manifest);
 	const routeModules = buildRouteImports(entryPath, options.appDir, pageRoutes);
 	const routeTable = buildRouteTable(pageRoutes);
-	const cssImportSpecifier = toCssImportSpecifier(entryPath, options.projectRoot);
+	const cssImportSpecifier = toCssImportSpecifier(
+		entryPath,
+		options.projectRoot,
+	);
 	const cssImport =
 		cssImportSpecifier !== null ? `import "${cssImportSpecifier}";\n` : "";
 	const starterGlobalLoaders = buildStarterGlobalLoaders(
