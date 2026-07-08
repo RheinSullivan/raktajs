@@ -121,7 +121,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						rakta: "^0.1.0",
+						raktajs: "^0.1.0",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						...getCssDependencies(cssFramework),
@@ -166,7 +166,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 		},
 		{
 			path: "rakta.config.ts",
-			content: `import { defineRaktaConfig } from "rakta";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  render: {\n    defaultMode: "csr",\n    routes: {},\n  },\n});\n`,
+			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  render: {\n    defaultMode: "csr",\n    routes: {},\n  },\n});\n`,
 		},
 		{
 			path: "app/layout.tsx",
@@ -275,7 +275,7 @@ function getFullstackFrontendFiles(
 		},
 		{
 			path: "frontend/rakta.config.ts",
-			content: `import { defineRaktaConfig } from "rakta";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  render: {\n    defaultMode: "csr",\n    routes: {\n      "/": "ssg",\n      "/about": "ssg",\n      "/blog": "csg",\n      "/blog/:slug": "csg",\n      "/dashboard": "csr"\n    }\n  }\n});\n`,
+			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  render: {\n    defaultMode: "csr",\n    routes: {\n      "/": "ssg",\n      "/about": "ssg",\n      "/blog": "csg",\n      "/blog/:slug": "csg",\n      "/dashboard": "csr"\n    }\n  }\n});\n`,
 		},
 		{
 			path: "frontend/app/layout.tsx",
@@ -327,11 +327,11 @@ function getFullstackFrontendFiles(
 		},
 		{
 			path: "frontend/stores/counter.store.ts",
-			content: `import { createRaktaStore } from "rakta";\n\ninterface CounterState {\n  readonly count: number;\n  readonly increment: () => void;\n  readonly decrement: () => void;\n}\n\nexport const useCounterStore = createRaktaStore<CounterState>((setState, getState) => ({\n  count: 0,\n  increment: () => setState({ count: getState().count + 1 }),\n  decrement: () => setState({ count: getState().count - 1 }),\n}));\n`,
+			content: `import { createRaktaStore } from "raktajs";\n\ninterface CounterState {\n  readonly count: number;\n  readonly increment: () => void;\n  readonly decrement: () => void;\n}\n\nexport const useCounterStore = createRaktaStore<CounterState>((setState, getState) => ({\n  count: 0,\n  increment: () => setState({ count: getState().count + 1 }),\n  decrement: () => setState({ count: getState().count - 1 }),\n}));\n`,
 		},
 		{
 			path: "frontend/schemas/user.schema.ts",
-			content: `import { object, string, number } from "rakta";\n\nexport const userSchema = object({\n  name: string().min(1),\n  email: string().min(5),\n  age: number().min(0).max(120),\n});\n\nexport type UserSchema = typeof userSchema;\n`,
+			content: `import { object, string, number } from "raktajs";\n\nexport const userSchema = object({\n  name: string().min(1),\n  email: string().min(5),\n  age: number().min(0).max(120),\n});\n\nexport type UserSchema = typeof userSchema;\n`,
 		},
 		{
 			path: `frontend/styles/${styleFileName}`,
