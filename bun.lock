@@ -15,7 +15,7 @@
     },
     "packages/create-rakta": {
       "name": "create-rakta-app",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "bin": {
         "create-rakta-app": "./dist/index.js",
       },
@@ -30,10 +30,10 @@
       },
     },
     "packages/rakta": {
-      "name": "rakta",
-      "version": "0.1.0",
+      "name": "raktajs",
+      "version": "0.1.1",
       "bin": {
-        "rakta": "./dist/cli/rakta.js",
+        "raktajs": "./dist/cli/rakta.js",
       },
       "devDependencies": {
         "@types/bun": "^1.3.14",

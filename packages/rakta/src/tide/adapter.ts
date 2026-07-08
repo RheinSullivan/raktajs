@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { type RenderConfig, render, resolveRouteMode } from "../render";
 import { generateManifest, matchRoute } from "../router";
@@ -56,6 +56,10 @@ function normalizeStaticPath(pathname: string): string {
 	}
 
 	return "index.html";
+}
+
+function isReadableFile(filePath: string): boolean {
+	return existsSync(filePath) && statSync(filePath).isFile();
 }
 
 function isApiRouteExports(value: unknown): value is ApiRouteExports {
@@ -122,7 +126,7 @@ export function createBunAdapter(
 		for (const searchDirectory of searchDirectories) {
 			const filePath = join(searchDirectory, staticPathname);
 
-			if (existsSync(filePath) && !filePath.endsWith("/")) {
+			if (isReadableFile(filePath)) {
 				return new Response(readFileSync(filePath), {
 					headers: {
 						"Content-Type": mimeForPath(filePath),

@@ -3,13 +3,13 @@ export {
 	printManifest,
 	readManifest,
 	writeManifest,
-} from "./manifest.js";
+} from "./manifest";
 export {
 	findLayoutsForPathname,
 	findSpecialRoute,
 	matchRoute,
-} from "./matcher.js";
-export { scanRoutes } from "./scanner.js";
+} from "./matcher";
+export { scanRoutes } from "./scanner";
 
 export type {
 	ApiMethod,
@@ -24,4 +24,4 @@ export type {
 	RouteManifest,
 	RouteManifestEntry,
 	RouteSegment,
-} from "./types.js";
+} from "./types";

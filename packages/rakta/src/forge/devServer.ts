@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { resolveRouteMode } from "../render/modes";
 import { render } from "../render/renderer";
@@ -34,6 +34,10 @@ function resolveDevPort(port: number): number {
 	return port > 0 ? port : DEFAULT_DEV_PORT;
 }
 
+function isReadableFile(filePath: string): boolean {
+	return existsSync(filePath) && statSync(filePath).isFile();
+}
+
 interface ApiRouteExports {
 	GET?: (request: Request) => Promise<Response>;
 	POST?: (request: Request) => Promise<Response>;
@@ -64,7 +68,7 @@ export function startDevServer(
 
 			// Serve static files from public dir
 			const publicPath = join(options.publicDir, pathname);
-			if (existsSync(publicPath) && !publicPath.endsWith("/")) {
+			if (isReadableFile(publicPath)) {
 				return new Response(readFileSync(publicPath), {
 					headers: { "Content-Type": resolveMime(pathname) },
 				});

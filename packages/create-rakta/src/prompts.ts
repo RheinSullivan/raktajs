@@ -211,10 +211,7 @@ export async function promptDatabase(): Promise<Database> {
 	return getPromptValue(promptResult);
 }
 
-export async function runPrompts(
-	suggestedName: string,
-): Promise<ProjectConfig> {
-	const projectName = await promptProjectName(suggestedName);
+export async function runPrompts(projectName: string): Promise<ProjectConfig> {
 	const projectMode = await promptProjectMode();
 	const cssFramework = await promptCssFramework();
 	const renderMode = await promptRenderMode();
