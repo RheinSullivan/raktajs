@@ -14,6 +14,7 @@ export async function devCommand(cwd: string = process.cwd()): Promise<void> {
 		appDir: join(cwd, config.appDir),
 		publicDir: join(cwd, config.publicDir),
 		appName: config.appName,
+		seo: config.seo,
 		renderConfig: config.render,
 	});
 

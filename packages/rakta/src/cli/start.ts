@@ -14,6 +14,7 @@ export async function startCommand(cwd: string = process.cwd()): Promise<void> {
 			port: projectConfig.port,
 			host: projectConfig.server.hostname ?? "0.0.0.0",
 			appName: projectConfig.appName,
+			seo: projectConfig.seo,
 			appDir: join(cwd, projectConfig.appDir),
 			publicDir: join(cwd, projectConfig.publicDir),
 			outDir: join(cwd, outputDirectory),

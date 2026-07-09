@@ -10,9 +10,12 @@ export function ensureDirectory(dirPath: string): void {
 	}
 }
 
-export function writeFile(absolutePath: string, fileContent: string): void {
+export function writeFile(
+	absolutePath: string,
+	fileContent: string | Uint8Array,
+): void {
 	ensureDirectory(dirname(absolutePath));
-	writeFileSync(absolutePath, fileContent, "utf-8");
+	writeFileSync(absolutePath, fileContent);
 }
 
 export function writeProjectFiles(

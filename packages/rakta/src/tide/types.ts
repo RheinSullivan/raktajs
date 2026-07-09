@@ -1,4 +1,5 @@
 import type { RenderMode } from "rakta/render";
+import type { SeoConfig } from "../config/defineConfig";
 
 export type TideAdapterKind = "bun" | "node" | "edge";
 
@@ -26,6 +27,7 @@ export interface TideAdapterConfig {
 	readonly port: number;
 	readonly host: string;
 	readonly appName: string;
+	readonly seo: SeoConfig;
 	readonly appDir: string;
 	readonly publicDir: string;
 	readonly outDir: string;

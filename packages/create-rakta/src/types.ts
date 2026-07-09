@@ -20,7 +20,7 @@ export type ProjectMode = "fullstack" | "frontend-only";
 
 export interface ProjectFile {
 	readonly path: string;
-	readonly content: string;
+	readonly content: string | Uint8Array;
 }
 
 export interface ProjectConfig {

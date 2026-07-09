@@ -9,21 +9,31 @@ import type {
 
 export interface RendererOptions {
 	readonly appName: string;
+	readonly title?: string | undefined;
+	readonly description?: string | undefined;
+	readonly faviconPath?: string | undefined;
 	readonly scriptPath: string;
 	readonly cssPath: string;
 	readonly lang: string;
 }
 
 function buildHtmlShell(options: RendererOptions): string {
+	const title = options.title ?? options.appName;
+	const faviconPath = options.faviconPath ?? "/favicon.ico";
+	const descriptionMeta =
+		options.description !== undefined
+			? `<meta name="description" content="${options.description}" />`
+			: "";
+
 	return `
   <!DOCTYPE html>
     <html lang="${options.lang}">
         <head>
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>
-                ${options.appName}
-            </title>
+            <title>${title}</title>
+            ${descriptionMeta}
+            <link rel="icon" href="${faviconPath}" sizes="any" />
             <link rel="stylesheet" href="${options.cssPath}" />
         </head>
         <body>

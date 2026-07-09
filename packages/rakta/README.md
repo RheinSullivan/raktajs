@@ -1,90 +1,124 @@
-# rakta
+# Rakta.js
 
-The core framework package of **Rakta.js** — a lightweight, composable
-frontend framework on Bun, React, and TypeScript.
+Rakta.js is a lightweight React framework for Bun and TypeScript.
 
-> Small in size. Fierce in speed. Alive in every route.
-> Bun in the engine. React at the core. Cirebon in the soul. Garuda in the heart.
+**Small in size. Fierce in speed. Alive in every route.**
 
-This package is rarely installed directly — most people get it through
-[`create-rakta-app`](https://www.npmjs.com/package/create-rakta-app). It is
-documented here for contributors and for people building custom tooling on
-top of Rakta.js.
+## Features
 
-## What's inside
+- File-based routing from the `app/` directory
+- Bun-powered dev server, production build, and start command
+- React 19 client rendering with generated client entrypoints
+- Route manifest generation and route inspection
+- Rendering mode configuration: `csr`, `spa`, `ssr`, `ssg`, `csg`, and `hybrid`
+- SEO config for default title and description
+- Public `favicon.ico` support through `public/favicon.ico`
+- Rakta navigation with `<click to="/path">`
+- Schema validation utilities
+- Type-safe RPC primitives
+- Lightweight store utilities
+- Typed HTTP client helpers
+- PWA helpers for manifest, cache, and service worker building blocks
+- Auto-import scanner and generator
 
-| Module | Import | Feature name | Purpose |
-| --- | --- | --- | --- |
-| Router | `rakta/router` | MendungWeave | File-based route scanning, matching, and manifest generation |
-| Components | `rakta/components` | ShrimpStep / TrusmiFrame | `<click to="">` navigation and `<picture path="">` images |
-| RPC | `rakta/rpc` | CarubanWire | Type-safe procedure router and client, inspired by tRPC |
-| Store | `rakta/store` | — | Lightweight, Zustand-inspired state store using `useSyncExternalStore` |
-| Schema | `rakta/schema` | — | Runtime validation with static type inference |
-| HTTP | `rakta/http` | PanturaFetch | A small, typed `fetch`-based HTTP client with interceptors |
-| SEO | `rakta/seo` | WaliSignal / SunyaragiCrown | Metadata, `<head>` rendering, sitemap, and robots.txt helpers |
-| Auto import | `rakta/auto-import` | TrusmiThread | Scans `app/`, `components/`, `lib/` and writes `.rakta/auto-imports.ts` |
-| Render | `rakta/render` | NorthCoastFlow | Render mode resolution (CSR / SSR / SSG / CSG / SPA / Hybrid) |
-| Forge | `rakta/forge` | CherbonsEngine | Dev server, build, and project inspection |
-| Tide | `rakta/tide` | — | Request/response runtime context helpers |
-| Config | `rakta/config` | — | `defineConfig` / `loadConfig` for `rakta.config.ts` |
-
-## Installation
+## Create A Project
 
 ```bash
-bun add rakta
+bun create rakta-app@latest my-app
+cd my-app
+bun install
+bun run dev
 ```
 
-`rakta` declares `react` and `react-dom` (`>=19.0.0`) as peer dependencies.
-
-## Quick example
-
-```ts
-import { defineConfig } from "rakta/config";
-
-export default defineConfig({
-  appName: "My App",
-  render: { defaultMode: "csr" },
-});
-```
-
-```tsx
-// app/page.tsx
-import { Click } from "rakta/components";
-
-export default function HomePage() {
-  return (
-    <main>
-      <h1>Welcome</h1>
-      <click to="/about">About</click>
-    </main>
-  );
-}
-```
+The default starter includes a Rakta welcome screen and ShrimpRun, an offline-browser-game-style starter built with React state and SVG animation.
 
 ## CLI
 
-The `rakta` package also exposes a CLI binary:
-
 ```bash
-bun rakta dev
-bun rakta build
-bun rakta start
-bun rakta routes
-bun rakta make page about
-bun rakta make layout dashboard
-bun rakta make api users
-bun rakta seo:generate
-bun rakta imports:generate
-bun rakta rpc:types
-bun rakta doctor
+rakta dev
+rakta build
+rakta start
+rakta routes
+rakta make page about
+rakta make layout dashboard
+rakta make api users
+rakta imports:generate
+rakta rpc:types
+rakta seo:generate
+rakta doctor
 ```
 
-## Documentation
+## Config
 
-Full documentation lives in the repository root under
-[`docs/en`](../../docs/en) (English) and [`docs/id`](../../docs/id)
-(Bahasa Indonesia).
+```ts
+import { defineRaktaConfig } from "raktajs";
+
+export default defineRaktaConfig({
+  appName: "My Rakta App",
+  seo: {
+    defaultTitle:
+      "Rakta.js | Small in size. Fierce in speed. Alive in every route",
+    defaultDescription:
+      "Built with Rakta.js - Small in size. Fierce in speed. Alive in every route.",
+  },
+  render: {
+    defaultMode: "csr",
+    routes: {
+      "/": "csr",
+      "/docs": "ssg",
+      "/dashboard": "csr",
+    },
+  },
+});
+```
+
+## App Routes
+
+```txt
+app/
+  layout.tsx
+  page.tsx
+  about/
+    page.tsx
+  api/
+    hello/
+      route.ts
+```
+
+## Public Assets
+
+Put static files in `public/`.
+
+```txt
+public/
+  favicon.ico
+```
+
+Rakta.js automatically emits:
+
+```html
+<link rel="icon" href="/favicon.ico" sizes="any" />
+```
+
+## Package Exports
+
+```txt
+raktajs
+raktajs/components
+raktajs/router
+raktajs/render
+raktajs/config
+raktajs/seo
+raktajs/pwa
+raktajs/rpc
+raktajs/schema
+raktajs/http
+raktajs/store
+raktajs/auto-import
+raktajs/forge
+raktajs/tide
+```
 
 ## License
 
-MIT — Rhein Sullivan | Vyagra Nexus™
+MIT - Rhein Sullivan | Vyagra Nexus

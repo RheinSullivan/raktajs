@@ -184,6 +184,8 @@ export function createBunAdapter(
 			},
 			{
 				appName: adapterConfig.appName,
+				title: adapterConfig.seo.defaultTitle,
+				description: adapterConfig.seo.defaultDescription,
 				scriptPath: "/app.js",
 				cssPath: "/app.css",
 				lang: "en",

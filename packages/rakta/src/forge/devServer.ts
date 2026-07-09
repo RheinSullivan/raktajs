@@ -165,6 +165,8 @@ export async function startDevServer(
 				},
 				{
 					appName: options.appName,
+					title: options.seo.defaultTitle,
+					description: options.seo.defaultDescription,
 					scriptPath: "/app.js",
 					cssPath: "/app.css",
 					lang: "en",

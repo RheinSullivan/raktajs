@@ -1,3 +1,4 @@
+import type { SeoConfig } from "../config/defineConfig.js";
 import type { RenderConfig, RenderMode } from "../render/types.js";
 import type { RouteManifest } from "../router/types.js";
 
@@ -8,6 +9,7 @@ export interface ForgeDevServerOptions {
 	readonly appDir: string;
 	readonly publicDir: string;
 	readonly appName: string;
+	readonly seo: SeoConfig;
 	readonly renderConfig: RenderConfig;
 }
 

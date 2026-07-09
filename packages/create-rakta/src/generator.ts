@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import type {
 	BackendFramework,
 	CssFramework,
@@ -6,6 +7,12 @@ import type {
 	ProjectFile,
 } from "./types";
 import { BACKEND_DISPLAY, CSS_DISPLAY, DATABASE_DISPLAY } from "./types";
+
+const DEFAULT_METADATA_TITLE =
+	"Rakta.js | Small in size. Fierce in speed. Alive in every route";
+const FAVICON_BYTES = readFileSync(
+	new URL("../assets/favicon.ico", import.meta.url),
+);
 
 // ─── Root files ─────────────────────────────────────────────────────────────
 
@@ -121,7 +128,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^0.1.2",
+						raktajs: "^0.1.5",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						...getCssDependencies(cssFramework),
@@ -166,7 +173,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 		},
 		{
 			path: "rakta.config.ts",
-			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  render: {\n    defaultMode: "csr",\n    routes: {},\n  },\n});\n`,
+			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js — Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {},\n  },\n});\n`,
 		},
 		{
 			path: "app/layout.tsx",
@@ -204,6 +211,10 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 			path: "public/.gitkeep",
 			content: "",
 		},
+		{
+			path: "public/favicon.ico",
+			content: FAVICON_BYTES,
+		},
 	];
 }
 
@@ -234,7 +245,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						rakta: "^0.1.0",
+						raktajs: "^0.1.5",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						...getCssDependencies(cssFramework),
@@ -275,7 +286,7 @@ function getFullstackFrontendFiles(
 		},
 		{
 			path: "frontend/rakta.config.ts",
-			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  render: {\n    defaultMode: "csr",\n    routes: {\n      "/": "ssg",\n      "/about": "ssg",\n      "/blog": "csg",\n      "/blog/:slug": "csg",\n      "/dashboard": "csr"\n    }\n  }\n});\n`,
+			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js — Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {\n      "/": "ssg",\n      "/about": "ssg",\n      "/blog": "csg",\n      "/blog/:slug": "csg",\n      "/dashboard": "csr"\n    }\n  }\n});\n`,
 		},
 		{
 			path: "frontend/app/layout.tsx",
@@ -340,6 +351,10 @@ function getFullstackFrontendFiles(
 		{
 			path: "frontend/public/.gitkeep",
 			content: "",
+		},
+		{
+			path: "frontend/public/favicon.ico",
+			content: FAVICON_BYTES,
 		},
 		{
 			path: "frontend/components/ui/.gitkeep",
@@ -701,6 +716,306 @@ body {
     transform: translateY(2px);
   }
 }
+
+#rakta-root {
+  min-height: 100vh;
+}
+
+main {
+  width: min(1120px, calc(100% - 32px));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 56px 0;
+}
+
+section {
+  margin: 0 0 24px;
+  border: 1px solid rgba(248, 113, 113, 0.18);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(220, 38, 38, 0.16), transparent 34%),
+    #0e111a;
+  box-shadow: 0 24px 80px rgba(127, 29, 29, 0.2);
+  padding: clamp(24px, 4vw, 44px);
+}
+
+p {
+  margin: 0 0 12px;
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+h1,
+h2 {
+  margin: 0 0 12px;
+  color: #ffffff;
+  line-height: 1;
+}
+
+h1 {
+  max-width: 760px;
+  font-size: clamp(42px, 8vw, 84px);
+  letter-spacing: 0;
+}
+
+h2 {
+  font-size: clamp(28px, 4vw, 44px);
+}
+
+click {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  margin: 16px 12px 0 0;
+  border: 1px solid rgba(248, 113, 113, 0.42);
+  border-radius: 12px;
+  padding: 0 16px;
+  color: #fecaca;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+click:hover {
+  border-color: #f87171;
+  background: rgba(220, 38, 38, 0.12);
+  transform: translateY(-1px);
+}
+
+button {
+  font: inherit;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.inset-0 {
+  inset: 0;
+}
+
+.bottom-0 {
+  bottom: 0;
+}
+
+.left-0 {
+  left: 0;
+}
+
+.top-2 {
+  top: 8px;
+}
+
+.right-3 {
+  right: 12px;
+}
+
+.block {
+  display: block;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+.gap-4 {
+  gap: 16px;
+}
+
+.gap-8 {
+  gap: 32px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.max-w-full {
+  max-width: 100%;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.select-none {
+  user-select: none;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-sm {
+  font-size: 14px;
+}
+
+.text-lg {
+  font-size: 18px;
+}
+
+.text-xl {
+  font-size: 20px;
+}
+
+.font-bold {
+  font-weight: 800;
+}
+
+.font-semibold {
+  font-weight: 700;
+}
+
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.text-white {
+  color: #fff;
+}
+
+.text-slate-400 {
+  color: #94a3b8;
+}
+
+.text-red-600 {
+  color: #dc2626;
+}
+
+.bg-red-600 {
+  background: #dc2626;
+}
+
+.bg-black\\/75 {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
+.rounded-sm {
+  border-radius: 2px;
+}
+
+.rounded-lg {
+  border-radius: 8px;
+}
+
+.min-h-5 {
+  min-height: 20px;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+button[aria-label^="ShrimpRun"] {
+  border: 2px solid rgba(248, 113, 113, 0.28);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(7, 10, 18, 0.98)),
+    radial-gradient(circle at 18% 22%, rgba(248, 113, 113, 0.16), transparent 30%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 20px 60px rgba(0, 0, 0, 0.28);
+}
+
+button[aria-label^="ShrimpRun"] > .bottom-0.left-0 {
+  background: linear-gradient(90deg, #7f1d1d, #dc2626, #fecaca);
+}
+
+button:not([aria-label]) {
+  border: 0;
+  border-radius: 10px;
+  background: #dc2626;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.shrimp-sprite {
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.32));
+}
+
+.shrimp-run-obstacle {
+  border-radius: 8px 8px 2px 2px;
+  background:
+    radial-gradient(circle at 50% 8px, #fecaca 0 4px, transparent 5px),
+    linear-gradient(135deg, #fb7185 0%, #dc2626 46%, #7f1d1d 100%);
+  box-shadow:
+    inset -6px -8px 0 rgba(69, 10, 10, 0.32),
+    0 0 0 2px rgba(254, 202, 202, 0.18);
+}
+
+.shrimp-run-obstacle::before,
+.shrimp-run-obstacle::after {
+  position: absolute;
+  bottom: 8px;
+  width: 10px;
+  height: 22px;
+  border-radius: 999px 999px 4px 4px;
+  background: #ef4444;
+  content: "";
+}
+
+.shrimp-run-obstacle::before {
+  left: -7px;
+  transform: rotate(-18deg);
+}
+
+.shrimp-run-obstacle::after {
+  right: -7px;
+  transform: rotate(18deg);
+}
+
+@media (max-width: 720px) {
+  main {
+    width: min(100% - 20px, 1120px);
+    padding: 24px 0;
+  }
+
+  section {
+    padding: 20px;
+  }
+}
 `;
 }
 
@@ -847,7 +1162,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
 }
 
 function generateFrontendOnlyPage(projectName: string): string {
-	return `export default function HomePage() {
+	return `import ShrimpRunGame from "./components/shrimpRunGame";
+
+export default function HomePage() {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col gap-6 px-4 py-16 sm:px-6 lg:px-8">
       <section className="rounded-3xl border border-white/10 bg-[#0e111a] p-8 shadow-2xl shadow-red-950/20">
@@ -1145,7 +1462,9 @@ export default function RaktaShrimpMascot({
 }
 
 function generateShrimpRunGameComponent(): string {
-	return `// ─── Types ────────────────────────────────────────────────────────────────────
+	return `import { useCallback, useEffect, useRef, useState } from "react";
+import RaktaShrimpMascot from "./raktaShrimpMascot";
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 type GameStatus = "idle" | "running" | "dead";
 
@@ -1450,12 +1769,18 @@ export default function ShrimpRunGame() {
         />
 
         <span
-          className="absolute"
+          className="absolute shrimp-sprite"
           style={{
             left: SHRIMP_START_X,
             bottom: shrimpBottomOffset,
             width: SHRIMP_WIDTH,
             height: SHRIMP_HEIGHT,
+            transform: isDead
+              ? "rotate(18deg) translateY(8px)"
+              : shrimp.isJumping
+                ? "rotate(-8deg) translateY(-4px)"
+                : "rotate(0deg)",
+            transition: "transform 120ms ease",
           }}
         >
           <RaktaShrimpMascot isJumping={shrimp.isJumping} isDead={isDead} />
@@ -1464,7 +1789,7 @@ export default function ShrimpRunGame() {
         {obstacles.map((obstacle) => (
           <span
             key={obstacle.id}
-            className="absolute rounded-t bg-red-600"
+            className="absolute shrimp-run-obstacle"
             style={{
               left: obstacle.xPosition,
               bottom: GROUND_STRIP_HEIGHT,
