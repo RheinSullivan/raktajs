@@ -18,6 +18,8 @@ export type RenderMode = "csr" | "ssr" | "ssg" | "csg" | "spa" | "hybrid";
 
 export type ProjectMode = "fullstack" | "frontend-only";
 
+export type ProjectLanguage = "typescript" | "javascript";
+
 export interface ProjectFile {
 	readonly path: string;
 	readonly content: string | Uint8Array;
@@ -26,6 +28,8 @@ export interface ProjectFile {
 export interface ProjectConfig {
 	readonly projectName: string;
 	readonly projectMode: ProjectMode;
+	readonly language: ProjectLanguage;
+	readonly useTypeScript: boolean;
 	readonly cssFramework: CssFramework;
 	readonly renderMode: RenderMode;
 	readonly backendFramework: BackendFramework;
@@ -71,4 +75,9 @@ export const RENDER_MODE_DISPLAY: Record<RenderMode, string> = {
 export const PROJECT_MODE_DISPLAY: Record<ProjectMode, string> = {
 	fullstack: "Fullstack app (frontend + backend + database)",
 	"frontend-only": "Frontend only (no backend, no database)",
+};
+
+export const PROJECT_LANGUAGE_DISPLAY: Record<ProjectLanguage, string> = {
+	typescript: "TypeScript / TSX",
+	javascript: "JavaScript / JSX",
 };

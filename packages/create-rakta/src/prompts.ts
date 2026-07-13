@@ -4,6 +4,7 @@ import type {
 	CssFramework,
 	Database,
 	ProjectConfig,
+	ProjectLanguage,
 	ProjectMode,
 	RenderMode,
 } from "./types";
@@ -11,6 +12,7 @@ import {
 	BACKEND_DISPLAY,
 	CSS_DISPLAY,
 	DATABASE_DISPLAY,
+	PROJECT_LANGUAGE_DISPLAY,
 	PROJECT_MODE_DISPLAY,
 	RENDER_MODE_DISPLAY,
 } from "./types";
@@ -90,6 +92,26 @@ export async function promptCssFramework(): Promise<CssFramework> {
 			},
 		],
 		initialValue: "tailwind",
+	});
+
+	return getPromptValue(promptResult);
+}
+
+export async function promptProjectLanguage(): Promise<ProjectLanguage> {
+	const promptResult = await clack.select<ProjectLanguage>({
+		message: "Choose a language:",
+		options: [
+			{
+				value: "typescript",
+				label: PROJECT_LANGUAGE_DISPLAY.typescript,
+				hint: "recommended",
+			},
+			{
+				value: "javascript",
+				label: PROJECT_LANGUAGE_DISPLAY.javascript,
+			},
+		],
+		initialValue: "typescript",
 	});
 
 	return getPromptValue(promptResult);
@@ -213,13 +235,17 @@ export async function promptDatabase(): Promise<Database> {
 
 export async function runPrompts(projectName: string): Promise<ProjectConfig> {
 	const projectMode = await promptProjectMode();
+	const language = await promptProjectLanguage();
 	const cssFramework = await promptCssFramework();
 	const renderMode = await promptRenderMode();
+	const useTypeScript = language === "typescript";
 
 	if (projectMode === "frontend-only") {
 		return {
 			projectName,
 			projectMode,
+			language,
+			useTypeScript,
 			cssFramework,
 			renderMode,
 			backendFramework: "gaman",
@@ -233,6 +259,8 @@ export async function runPrompts(projectName: string): Promise<ProjectConfig> {
 	return {
 		projectName,
 		projectMode,
+		language,
+		useTypeScript,
 		cssFramework,
 		renderMode,
 		backendFramework,

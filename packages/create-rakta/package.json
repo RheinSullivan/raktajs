@@ -1,6 +1,6 @@
 {
 	"name": "create-rakta-app",
-	"version": "0.1.5",
+	"version": "0.2.0",
 	"description": "Create a fullstack Rakta.js application with frontend, backend, database, rendering mode, and CSS framework choices.",
 	"type": "module",
 	"license": "MIT",
@@ -8,7 +8,7 @@
 	"homepage": "https://raktajs.dev",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/RheinSullivan/raktajs.git",
+		"url": "git+https://github.com/RheinSullivan/raktajs.git",
 		"directory": "packages/create-rakta"
 	},
 	"bugs": {
@@ -39,7 +39,7 @@
 		"access": "public"
 	},
 	"bin": {
-		"create-rakta-app": "./dist/index.js"
+		"create-rakta-app": "dist/index.js"
 	},
 	"files": [
 		"dist",

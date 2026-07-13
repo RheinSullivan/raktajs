@@ -1,4 +1,11 @@
-import { readFileSync } from "node:fs";
+﻿import { readFileSync } from "node:fs";
+import {
+	STARTER_AUDIO_CODE,
+	STARTER_CORAL_OBSTACLE_CODE,
+	STARTER_PAGE_CODE,
+	STARTER_SHRIMP_CHARACTER_CODE,
+	STARTER_TYPES_CODE,
+} from "./starter";
 import type {
 	BackendFramework,
 	CssFramework,
@@ -14,15 +21,15 @@ const FAVICON_BYTES = readFileSync(
 	new URL("../assets/favicon.ico", import.meta.url),
 );
 
-// ─── Root files ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ Root files â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	const { projectName, projectMode } = projectConfig;
+	const { projectName, projectMode, useTypeScript } = projectConfig;
 
 	const workspaces =
 		projectMode === "fullstack" ? ["frontend", "backend", "shared"] : [];
 
-	return [
+	const files: ProjectFile[] = [
 		{
 			path: "package.json",
 			content: JSON.stringify(
@@ -40,42 +47,20 @@ function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
 									"build:backend": "cd backend && bun run build",
 									build: "bun run build:frontend && bun run build:backend",
 									start: "cd backend && bun run start",
-									typecheck:
-										"cd frontend && bun run typecheck && cd ../backend && bun run typecheck",
+									...(useTypeScript
+										? {
+												typecheck:
+													"cd frontend && bun run typecheck && cd ../backend && bun run typecheck",
+											}
+										: {}),
 								}
 							: {
 									dev: "rakta dev",
 									build: "rakta build",
 									start: "rakta start",
-									typecheck: "tsc --noEmit",
+									...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 								},
-					description: `${projectName} — built with Rakta.js`,
-				},
-				null,
-				2,
-			),
-		},
-		{
-			path: "tsconfig.base.json",
-			content: JSON.stringify(
-				{
-					compilerOptions: {
-						target: "ESNext",
-						module: "ESNext",
-						moduleResolution: "Bundler",
-						jsx: "react-jsx",
-						lib: ["ESNext", "DOM", "DOM.Iterable"],
-						strict: true,
-						noUncheckedIndexedAccess: true,
-						exactOptionalPropertyTypes: true,
-						skipLibCheck: true,
-						esModuleInterop: true,
-						allowSyntheticDefaultImports: true,
-						resolveJsonModule: true,
-						verbatimModuleSyntax: true,
-						isolatedModules: true,
-					},
-					exclude: ["node_modules", "dist", "**/dist/**"],
+					description: `${projectName} â€” built with Rakta.js`,
 				},
 				null,
 				2,
@@ -102,16 +87,49 @@ function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
 			content: generateProjectReadme(projectConfig),
 		},
 	];
+
+	if (useTypeScript) {
+		files.splice(1, 0, {
+			path: "tsconfig.base.json",
+			content: JSON.stringify(
+				{
+					compilerOptions: {
+						target: "ESNext",
+						module: "ESNext",
+						moduleResolution: "Bundler",
+						jsx: "react-jsx",
+						lib: ["ESNext", "DOM", "DOM.Iterable"],
+						strict: true,
+						noUncheckedIndexedAccess: true,
+						exactOptionalPropertyTypes: true,
+						skipLibCheck: true,
+						esModuleInterop: true,
+						allowSyntheticDefaultImports: true,
+						resolveJsonModule: true,
+						verbatimModuleSyntax: true,
+						isolatedModules: true,
+					},
+					exclude: ["node_modules", "dist", "**/dist/**"],
+				},
+				null,
+				2,
+			),
+		});
+	}
+
+	return files;
 }
 
-// ─── Frontend-only starter (ShrimpRun game) ─────────────────────────────────
+// â”€â”€â”€ Frontend-only starter (ShrimpRun game) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	const { projectName, cssFramework } = projectConfig;
+	const { projectName, cssFramework, useTypeScript } = projectConfig;
 	const styleFileName =
 		cssFramework === "sass" ? "globals.scss" : "globals.css";
+	const pageExtension = useTypeScript ? "tsx" : "jsx";
+	const scriptExtension = useTypeScript ? "ts" : "js";
 
-	return [
+	const files: ProjectFile[] = [
 		{
 			path: "package.json",
 			content: JSON.stringify(
@@ -125,83 +143,69 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						build: "rakta build",
 						start: "rakta start",
 						routes: "rakta routes",
-						typecheck: "tsc --noEmit",
+						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^0.1.5",
+						raktajs: "^0.2.0",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
+						"react-icons": "^5.7.0",
 						...getCssDependencies(cssFramework),
 					},
-					devDependencies: {
-						"@types/react": "^19.2.17",
-						"@types/react-dom": "^19.2.3",
-						typescript: "^6.0.3",
-						...getCssDevDependencies(cssFramework),
-					},
+					devDependencies: useTypeScript
+						? {
+								"@types/react": "^19.2.17",
+								"@types/react-dom": "^19.2.3",
+								typescript: "^6.0.3",
+								...getCssDevDependencies(cssFramework),
+							}
+						: {
+								...getCssDevDependencies(cssFramework),
+							},
 				},
 				null,
 				2,
 			),
 		},
 		{
-			path: "tsconfig.json",
-			content: JSON.stringify(
-				{
-					extends: "./tsconfig.base.json",
-					compilerOptions: {
-						outDir: "./dist",
-						rootDir: "./",
-						types: ["react", "react-dom"],
-					},
-					include: [
-						"rakta-env.d.ts",
-						"app/**/*",
-						"components/**/*",
-						"styles/**/*",
-						"rakta.config.ts",
-					],
-					exclude: ["node_modules", "dist"],
-				},
-				null,
-				2,
-			),
-		},
-		{
-			path: "rakta-env.d.ts",
-			content: generateFrontendOnlyRaktaEnv(),
-		},
-		{
-			path: "rakta.config.ts",
+			path: `rakta.config.${scriptExtension}`,
 			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js — Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {},\n  },\n});\n`,
 		},
 		{
-			path: "app/layout.tsx",
+			path: `app/layout.${pageExtension}`,
 			content: generateFrontendOnlyLayout(),
 		},
 		{
-			path: "app/page.tsx",
+			path: `app/page.${pageExtension}`,
 			content: generateFrontendOnlyPage(projectName),
 		},
 		{
-			path: "app/loading.tsx",
+			path: `app/loading.${pageExtension}`,
 			content: generateFrontendOnlyLoading(),
 		},
 		{
-			path: "app/error.tsx",
+			path: `app/error.${pageExtension}`,
 			content: generateFrontendOnlyError(),
 		},
 		{
-			path: "app/notFound.tsx",
+			path: `app/notFound.${pageExtension}`,
 			content: generateFrontendOnlyNotFound(),
 		},
 		{
-			path: "app/components/raktaShrimpMascot.tsx",
-			content: generateShrimpMascotComponent(),
+			path: `app/components/CoralObstacle.${pageExtension}`,
+			content: STARTER_CORAL_OBSTACLE_CODE,
 		},
 		{
-			path: "app/components/shrimpRunGame.tsx",
-			content: generateShrimpRunGameComponent(),
+			path: `app/components/ShrimpCharacter.${pageExtension}`,
+			content: STARTER_SHRIMP_CHARACTER_CODE,
+		},
+		{
+			path: `app/utils/audio.${scriptExtension}`,
+			content: STARTER_AUDIO_CODE,
+		},
+		{
+			path: `app/types.${scriptExtension}`,
+			content: STARTER_TYPES_CODE,
 		},
 		{
 			path: `styles/${styleFileName}`,
@@ -216,9 +220,45 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 			content: FAVICON_BYTES,
 		},
 	];
+
+	if (useTypeScript) {
+		files.splice(
+			1,
+			0,
+			{
+				path: "tsconfig.json",
+				content: JSON.stringify(
+					{
+						extends: "./tsconfig.base.json",
+						compilerOptions: {
+							outDir: "./dist",
+							rootDir: "./",
+							types: ["react", "react-dom"],
+						},
+						include: [
+							"rakta-env.d.ts",
+							"app/**/*",
+							"components/**/*",
+							"styles/**/*",
+							"rakta.config.ts",
+						],
+						exclude: ["node_modules", "dist"],
+					},
+					null,
+					2,
+				),
+			},
+			{
+				path: "rakta-env.d.ts",
+				content: generateFrontendOnlyRaktaEnv(),
+			},
+		);
+	}
+
+	return processFilesForLanguage(files, useTypeScript);
 }
 
-// ─── Fullstack frontend files ────────────────────────────────────────────────
+// ─── Fullstack frontend files â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function getFullstackFrontendFiles(
 	projectConfig: ProjectConfig,
@@ -245,7 +285,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^0.1.5",
+						raktajs: "^0.2.0",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						...getCssDependencies(cssFramework),
@@ -286,7 +326,7 @@ function getFullstackFrontendFiles(
 		},
 		{
 			path: "frontend/rakta.config.ts",
-			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js — Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {\n      "/": "ssg",\n      "/about": "ssg",\n      "/blog": "csg",\n      "/blog/:slug": "csg",\n      "/dashboard": "csr"\n    }\n  }\n});\n`,
+			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {\n      "/": "ssg",\n      "/about": "ssg",\n      "/blog": "csg",\n      "/blog/:slug": "csg",\n      "/dashboard": "csr"\n    }\n  }\n});\n`,
 		},
 		{
 			path: "frontend/app/layout.tsx",
@@ -346,7 +386,7 @@ function getFullstackFrontendFiles(
 		},
 		{
 			path: `frontend/styles/${styleFileName}`,
-			content: getCssGlobals(cssFramework),
+			content: getFrontendOnlyCssGlobals(cssFramework),
 		},
 		{
 			path: "frontend/public/.gitkeep",
@@ -367,7 +407,62 @@ function getFullstackFrontendFiles(
 	];
 }
 
-// ─── Backend files ───────────────────────────────────────────────────────────
+// â”€â”€â”€ Backend files â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+function stripTypeScriptSyntax(code: string): string {
+	return code
+		.replace(/^import\s+type\s+.+;\r?\n/gm, "")
+		.replace(/^export\s+interface\s+\w+\s*\{[\s\S]*?\r?\n\}\r?\n/gm, "")
+		.replace(/^interface\s+\w+\s*\{[\s\S]*?\r?\n\}\r?\n/gm, "")
+		.replace(/^export\s+type\s+\w+\s*=[\s\S]*?;\r?\n/gm, "")
+		.replace(/^type\s+\w+\s*=[\s\S]*?;\r?\n/gm, "")
+		.replace(/<("[^"]+"|'[^']+'|\w+)(\s*\|\s*("[^"]+"|'[^']+'|\w+))*\s*>/g, "")
+		.replace(/\s+as\s+const/g, "")
+		.replace(/\s+as\s+[A-Za-z0-9_<>,[\]\s|&".']+/g, "")
+		.replace(/\breadonly\s+/g, "")
+		.replace(
+			/(\(|,)\s*([A-Za-z_$][\w$]*)\s*:\s*[A-Za-z_$][\w$]*(?:\[\])?(?:\s*\|\s*[A-Za-z_$][\w$]*(?:\[\])?)*/g,
+			"$1 $2",
+		)
+		.replace(
+			/\)\s*:\s*(?:void|string|number|boolean|Promise<[^>]+>|[A-Za-z_$][\w$]*(?:\[\])?)/g,
+			")",
+		)
+		.replace(/\)\s*:\s*[^({=>]+(?=\s*\{)/g, ")")
+		.replace(/\}\s*:\s*[A-Za-z_$][\w$]*(?=\s*\))/g, "}")
+		.replace(/(const|let)\s+([A-Za-z_$][\w$]*)\s*:\s*[^=;]+=/g, "$1 $2 =");
+}
+
+function processFilesForLanguage(
+	files: ProjectFile[],
+	useTypeScript: boolean,
+): ProjectFile[] {
+	if (useTypeScript) {
+		return files;
+	}
+
+	return files
+		.filter(
+			(file) =>
+				!file.path.endsWith(".d.ts") &&
+				!file.path.endsWith("types.ts") &&
+				!file.path.endsWith("types.js"),
+		)
+		.map((file) => {
+			if (typeof file.content !== "string") {
+				return file;
+			}
+
+			let path = file.path;
+			if (path.endsWith(".tsx")) path = path.replace(/\.tsx$/, ".jsx");
+			else if (path.endsWith(".ts")) path = path.replace(/\.ts$/, ".js");
+
+			return {
+				path,
+				content: stripTypeScriptSyntax(file.content),
+			};
+		});
+}
 
 function getBackendFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	return [
@@ -623,7 +718,7 @@ function getBackendPackageJson(
 	);
 }
 
-// ─── Shared files (fullstack only) ──────────────────────────────────────────
+// â”€â”€â”€ Shared files (fullstack only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function getSharedFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	return [
@@ -638,7 +733,7 @@ function getSharedFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	];
 }
 
-// ─── CSS helpers ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ CSS helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function getCssDependencies(
 	cssFramework: CssFramework,
@@ -668,428 +763,238 @@ function getCssDevDependencies(
 function getFrontendOnlyCssGlobals(cssFramework: CssFramework): string {
 	const cssImport =
 		cssFramework === "tailwind"
-			? `@import "tailwindcss";\n\n`
+			? `@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap");\n@import "tailwindcss";\n\n`
 			: cssFramework === "bootstrap"
 				? `@import url("https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css");\n\n`
 				: cssFramework === "sass"
-					? `$color-primary: #dc2626;\n$color-background: #050505;\n$color-foreground: #f8fafc;\n\n`
+					? `$color-primary: #e11d48;\n$color-background: #050505;\n$color-foreground: #fafafa;\n\n`
 					: "";
 
-	return `${cssImport}:root {
-  --color-primary: #dc2626;
-  --color-background: #050505;
-  --color-foreground: #f8fafc;
-  --color-surface: #0e111a;
-  --color-border: rgba(255, 255, 255, 0.1);
-  --color-muted: #94a3b8;
+	return `${cssImport}@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-brand-pink: #e11d48;
+  --color-brand-green: #00ff00;
+  --color-surface-bg: #000000;
+  --color-surface-card: #0d0d0d;
+  --color-surface-stroke: #1f1f1f;
+}
+
+:root {
   color-scheme: dark;
+  background: #050505;
+  color: #fafafa;
+  font-family: var(--font-sans);
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  color: var(--color-foreground);
-  background: var(--color-background);
-  font-family:
-    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
+  background: #050505;
+  color: #fafafa;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
+button, a { font: inherit; }
+a { color: inherit; text-decoration: none; }
+#rakta-root { min-height: 100vh; }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-@keyframes shrimpLegs {
-  0% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(2px);
-  }
-}
-
-#rakta-root {
+.rakta-welcome {
   min-height: 100vh;
+  background: #050505;
+  color: #fafafa;
 }
-
-main {
-  width: min(1120px, calc(100% - 32px));
-  min-height: 100vh;
+.rakta-shell {
+  width: min(100% - 32px, 1280px);
   margin: 0 auto;
-  padding: 56px 0;
+  padding: 32px 0;
 }
-
-section {
-  margin: 0 0 24px;
-  border: 1px solid rgba(248, 113, 113, 0.18);
-  border-radius: 18px;
-  background:
-    linear-gradient(135deg, rgba(220, 38, 38, 0.16), transparent 34%),
-    #0e111a;
-  box-shadow: 0 24px 80px rgba(127, 29, 29, 0.2);
-  padding: clamp(24px, 4vw, 44px);
-}
-
-p {
-  margin: 0 0 12px;
-  color: #cbd5e1;
-  line-height: 1.7;
-}
-
-h1,
-h2 {
-  margin: 0 0 12px;
-  color: #ffffff;
-  line-height: 1;
-}
-
-h1 {
-  max-width: 760px;
-  font-size: clamp(42px, 8vw, 84px);
-  letter-spacing: 0;
-}
-
-h2 {
-  font-size: clamp(28px, 4vw, 44px);
-}
-
-click {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 42px;
-  margin: 16px 12px 0 0;
-  border: 1px solid rgba(248, 113, 113, 0.42);
-  border-radius: 12px;
-  padding: 0 16px;
-  color: #fecaca;
-  font-weight: 700;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    transform 160ms ease,
-    border-color 160ms ease,
-    background 160ms ease;
-}
-
-click:hover {
-  border-color: #f87171;
-  background: rgba(220, 38, 38, 0.12);
-  transform: translateY(-1px);
-}
-
-button {
-  font: inherit;
-}
-
-.relative {
-  position: relative;
-}
-
-.absolute {
-  position: absolute;
-}
-
-.inset-0 {
-  inset: 0;
-}
-
-.bottom-0 {
-  bottom: 0;
-}
-
-.left-0 {
-  left: 0;
-}
-
-.top-2 {
-  top: 8px;
-}
-
-.right-3 {
-  right: 12px;
-}
-
-.block {
-  display: block;
-}
-
-.flex {
+.rakta-nav {
   display: flex;
-}
-
-.flex-col {
-  flex-direction: column;
-}
-
-.flex-wrap {
-  flex-wrap: wrap;
-}
-
-.items-center {
   align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1f1f1f;
+  padding-bottom: 20px;
 }
-
-.items-start {
-  align-items: flex-start;
+.rakta-hero {
+  display: grid;
+  min-height: 540px;
+  grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+  align-items: center;
+  gap: 40px;
+  border-bottom: 1px solid #1f1f1f;
+  padding: 48px 0;
 }
-
-.justify-center {
-  justify-content: center;
-}
-
-.gap-2 {
-  gap: 8px;
-}
-
-.gap-4 {
-  gap: 16px;
-}
-
-.gap-8 {
-  gap: 32px;
-}
-
-.w-full {
-  width: 100%;
-}
-
-.max-w-full {
-  max-width: 100%;
-}
-
-.overflow-hidden {
-  overflow: hidden;
-}
-
-.select-none {
-  user-select: none;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.text-left {
-  text-align: left;
-}
-
-.text-sm {
-  font-size: 14px;
-}
-
-.text-lg {
-  font-size: 18px;
-}
-
-.text-xl {
-  font-size: 20px;
-}
-
-.font-bold {
-  font-weight: 800;
-}
-
-.font-semibold {
-  font-weight: 700;
-}
-
-.font-mono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-.text-white {
-  color: #fff;
-}
-
-.text-slate-400 {
-  color: #94a3b8;
-}
-
-.text-red-600 {
-  color: #dc2626;
-}
-
-.bg-red-600 {
-  background: #dc2626;
-}
-
-.bg-black\\/75 {
-  background: rgba(0, 0, 0, 0.75);
-}
-
-.pointer-events-none {
-  pointer-events: none;
-}
-
-.rounded-sm {
-  border-radius: 2px;
-}
-
-.rounded-lg {
-  border-radius: 8px;
-}
-
-.min-h-5 {
-  min-height: 20px;
-}
-
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
-}
-
-button[aria-label^="ShrimpRun"] {
-  border: 2px solid rgba(248, 113, 113, 0.28);
-  border-radius: 16px;
-  background:
-    linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(7, 10, 18, 0.98)),
-    radial-gradient(circle at 18% 22%, rgba(248, 113, 113, 0.16), transparent 30%);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 20px 60px rgba(0, 0, 0, 0.28);
-}
-
-button[aria-label^="ShrimpRun"] > .bottom-0.left-0 {
-  background: linear-gradient(90deg, #7f1d1d, #dc2626, #fecaca);
-}
-
-button:not([aria-label]) {
-  border: 0;
-  border-radius: 10px;
-  background: #dc2626;
-  color: #fff;
-  cursor: pointer;
-  font-weight: 800;
-}
-
-.shrimp-sprite {
-  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.32));
-}
-
-.shrimp-run-obstacle {
-  border-radius: 8px 8px 2px 2px;
-  background:
-    radial-gradient(circle at 50% 8px, #fecaca 0 4px, transparent 5px),
-    linear-gradient(135deg, #fb7185 0%, #dc2626 46%, #7f1d1d 100%);
-  box-shadow:
-    inset -6px -8px 0 rgba(69, 10, 10, 0.32),
-    0 0 0 2px rgba(254, 202, 202, 0.18);
-}
-
-.shrimp-run-obstacle::before,
-.shrimp-run-obstacle::after {
-  position: absolute;
-  bottom: 8px;
-  width: 10px;
-  height: 22px;
-  border-radius: 999px 999px 4px 4px;
-  background: #ef4444;
-  content: "";
-}
-
-.shrimp-run-obstacle::before {
-  left: -7px;
-  transform: rotate(-18deg);
-}
-
-.shrimp-run-obstacle::after {
-  right: -7px;
-  transform: rotate(18deg);
-}
-
-@media (max-width: 720px) {
-  main {
-    width: min(100% - 20px, 1120px);
-    padding: 24px 0;
-  }
-
-  section {
-    padding: 20px;
-  }
-}
-`;
-}
-
-function getCssGlobals(cssFramework: CssFramework): string {
-	const sharedBase = `
-:root {
-  --color-primary: #dc2626;
-  --color-background: #050505;
-  --color-foreground: #f8fafc;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
+.rakta-hero h1 {
+  max-width: 900px;
   margin: 0;
-  color: var(--color-foreground);
-  background: var(--color-background);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-.page-shell {
-  width: min(100% - 2rem, 960px);
-  margin: 0 auto;
-  padding: 4rem 0;
-}
-
-.hero-card,
-.feature-card {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: #0e111a;
-  border-radius: 24px;
-  padding: 2rem;
-  margin-bottom: 1.5rem;
-}
-
-.eyebrow {
-  color: #dc2626;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  font-size: 0.75rem;
+  color: #fff;
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
-
-.button-row {
+.rakta-hero p,
+.rakta-start p {
+  color: #b5b5b5;
+}
+.rakta-actions {
   display: flex;
-  gap: 0.75rem;
   flex-wrap: wrap;
-  margin-top: 1rem;
+  gap: 12px;
+  margin-top: 32px;
 }
-
-a {
-  color: #dc2626;
+.rakta-actions a {
+  display: inline-flex;
+  height: 44px;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e11d48;
+  padding: 0 20px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
 }
-
-button {
+.rakta-actions a:first-child {
+  background: #e11d48;
+  color: #fff;
+}
+.rakta-status-grid,
+.rakta-feature-grid {
+  display: grid;
+  gap: 12px;
+  border: 1px solid #1f1f1f;
+  background: #0d0d0d;
+  padding: 20px;
+}
+.rakta-status-grid > div,
+.rakta-feature-grid > div {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #000;
+  padding: 16px;
+}
+.rakta-feature-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  padding: 0;
+}
+.rakta-feature-grid > div {
+  min-height: 220px;
+  border-color: #1f1f1f;
+  padding: 28px;
+}
+.rakta-game-section {
+  display: grid;
+  gap: 20px;
+}
+.rakta-game-section h2,
+.rakta-start h2 {
+  margin: 12px 0 0;
+  font-size: clamp(2.25rem, 6vw, 4rem);
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+.rakta-game-field {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  border: 2px solid #1f1f1f;
+  background: #000;
+  color: inherit;
   cursor: pointer;
 }
-`;
-
-	switch (cssFramework) {
-		case "tailwind":
-			return `@import "tailwindcss";\n${sharedBase}`;
-		case "bootstrap":
-			return `@import url("https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css");\n${sharedBase}`;
-		case "sass":
-			return `$color-primary: #dc2626;\n$color-background: #050505;\n$color-foreground: #f8fafc;\n${sharedBase}`;
-		case "none":
-			return sharedBase;
-	}
+.rakta-game-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #71717a;
+}
+.rakta-game-controls button {
+  border: 1px solid #1f1f1f;
+  padding: 4px 8px;
+  color: #a1a1aa;
+  cursor: pointer;
+}
+.rakta-start {
+  border-top: 1px solid #1f1f1f;
+  padding: 40px 0;
 }
 
-// ─── Inline template generators ──────────────────────────────────────────────
+@media (max-width: 768px) {
+  .rakta-hero,
+  .rakta-feature-grid {
+    grid-template-columns: 1fr;
+  }
+  .rakta-nav > div:last-child {
+    display: none;
+  }
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #000000; }
+::-webkit-scrollbar-thumb { background: #e11d48; border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: #be123c; }
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+.scanline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  width: 100%;
+  height: 120px;
+  pointer-events: none;
+  background: linear-gradient(0deg, rgba(225, 29, 72, 0.08) 0%, rgba(225, 29, 72, 0) 100%);
+  opacity: 0.8;
+  animation: scanline 8s linear infinite;
+}
+
+.bg-grid-glow {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+}
+
+@keyframes seaweed-wave-1 {
+  0% { transform: skewX(-14deg) rotate(-8deg) scaleY(0.96); }
+  50% { transform: skewX(0deg) rotate(0deg) scaleY(1.04); }
+  100% { transform: skewX(14deg) rotate(8deg) scaleY(0.96); }
+}
+@keyframes seaweed-wave-2 {
+  0% { transform: skewX(10deg) rotate(6deg) scaleY(1.04); }
+  50% { transform: skewX(-2deg) rotate(-2deg) scaleY(0.96); }
+  100% { transform: skewX(-10deg) rotate(-6deg) scaleY(1.04); }
+}
+.seaweed-waving-left-1,
+.seaweed-waving-right-1 {
+  transform-origin: bottom center !important;
+  animation: seaweed-wave-1 3.2s infinite ease-in-out alternate !important;
+}
+.seaweed-waving-left-2,
+.seaweed-waving-right-2 {
+  transform-origin: bottom center !important;
+  animation: seaweed-wave-2 3.8s infinite ease-in-out alternate !important;
+}
+`;
+}
+
+// ─── Inline template generators â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function generateFrontendOnlyRaktaEnv(): string {
 	return `declare module "*.css";
@@ -1109,14 +1014,6 @@ declare global {
       click: RaktaClickAttributes;
     }
   }
-
-  const useCallback: typeof import("react").useCallback;
-  const useEffect: typeof import("react").useEffect;
-  const useRef: typeof import("react").useRef;
-  const useState: typeof import("react").useState;
-
-  const ShrimpRunGame: typeof import("./app/components/shrimpRunGame").default;
-  const RaktaShrimpMascot: typeof import("./app/components/raktaShrimpMascot").default;
 }
 
 declare module "react/jsx-runtime" {
@@ -1161,54 +1058,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
 `;
 }
 
-function generateFrontendOnlyPage(projectName: string): string {
-	return `import ShrimpRunGame from "./components/shrimpRunGame";
-
-export default function HomePage() {
-  return (
-    <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col gap-6 px-4 py-16 sm:px-6 lg:px-8">
-      <section className="rounded-3xl border border-white/10 bg-[#0e111a] p-8 shadow-2xl shadow-red-950/20">
-        <p className="mb-2 text-xs font-bold uppercase tracking-[0.3em] text-red-600">
-          THE RED ROUTER FRAMEWORK
-        </p>
-        <h1 className="mb-3 text-4xl font-extrabold leading-tight text-white md:text-6xl">
-          Welcome to ${projectName}
-        </h1>
-        <p className="max-w-2xl text-base leading-7 text-slate-400">
-          Built with Rakta.js — Small in size. Fierce in speed. Alive in every route.
-        </p>
-
-        <div className="mt-6 flex flex-wrap gap-3">
-          <click
-            to="/offline"
-            className="rounded-xl border border-red-500/40 px-4 py-2 text-sm font-semibold text-red-400 transition hover:border-red-400 hover:text-red-300"
-          >
-            Open offline page
-          </click>
-          <click
-            to="/dashboard"
-            className="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
-          >
-            View dashboard
-          </click>
-        </div>
-      </section>
-
-      <section className="rounded-3xl border border-white/10 bg-[#0e111a] p-8 shadow-2xl shadow-red-950/20">
-        <p className="mb-2 text-xs font-bold uppercase tracking-[0.3em] text-red-600">
-          SHRIMPRUN
-        </p>
-        <h2 className="mb-1 text-2xl font-bold text-white">Play ShrimpRun</h2>
-        <p className="mb-6 text-sm leading-6 text-slate-400">
-          Press Space or click the game area to jump. Avoid the red obstacles!
-        </p>
-
-        <ShrimpRunGame />
-      </section>
-    </main>
-  );
-}
-`;
+function generateFrontendOnlyPage(_projectName: string): string {
+	return STARTER_PAGE_CODE;
 }
 
 function generateFrontendOnlyLoading(): string {
@@ -1282,7 +1133,7 @@ function generateFrontendOnlyNotFound(): string {
 `;
 }
 
-function generateShrimpMascotComponent(): string {
+function _generateShrimpMascotComponent(): string {
 	return `interface RaktaShrimpMascotProps {
   readonly isJumping: boolean;
   readonly isDead: boolean;
@@ -1290,7 +1141,7 @@ function generateShrimpMascotComponent(): string {
 }
 
 /**
- * RaktaShrimpMascot — The animated shrimp hero of ShrimpRun.
+ * RaktaShrimpMascot â€” The animated shrimp hero of ShrimpRun.
  * Drawn entirely with inline SVG. No external assets required.
  */
 export default function RaktaShrimpMascot({
@@ -1461,10 +1312,10 @@ export default function RaktaShrimpMascot({
 `;
 }
 
-function generateShrimpRunGameComponent(): string {
+function _generateShrimpRunGameComponent(): string {
 	return `import { useCallback, useEffect, useRef, useState } from "react";
 import RaktaShrimpMascot from "./raktaShrimpMascot";
-// ─── Types ────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 type GameStatus = "idle" | "running" | "dead";
 
@@ -1481,7 +1332,7 @@ interface ShrimpState {
   readonly isJumping: boolean;
 }
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const CANVAS_WIDTH = 640;
 const CANVAS_HEIGHT = 160;
@@ -1499,7 +1350,7 @@ const COLLISION_MARGIN = 8;
 const MAX_CONCURRENT_OBSTACLES = 3;
 const FRAME_SKIP_THRESHOLD_MS = 100;
 
-// ─── Physics helpers ──────────────────────────────────────────────────────────
+// â”€â”€â”€ Physics helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function getObstacleSpeed(currentScore: number): number {
   return INITIAL_OBSTACLE_SPEED + currentScore * SPEED_INCREMENT_PER_SCORE;
@@ -1532,16 +1383,16 @@ function checkCollision(
   );
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /**
- * ShrimpRun — Default Rakta.js interactive starter game.
+ * ShrimpRun â€” Default Rakta.js interactive starter game.
  *
  * Like the Chrome offline Dino game, but the dinosaur is an animated shrimp.
  * Press Space or click the game canvas to jump. Avoid the red obstacles!
  *
  * Features:
- * - React state only — no external game library
+ * - React state only â€” no external game library
  * - requestAnimationFrame game loop
  * - Physics: gravity + jump velocity
  * - Score that increases over time
@@ -1550,7 +1401,7 @@ function checkCollision(
  * - High score tracked in component state
  * - Keyboard (Space) and click/tap support
  * - Accessible button game canvas
- * - SVG shrimp mascot — no external assets
+ * - SVG shrimp mascot â€” no external assets
  */
 export default function ShrimpRunGame() {
   const [gameStatus, setGameStatus] = useState<GameStatus>("idle");
@@ -1822,8 +1673,8 @@ export default function ShrimpRunGame() {
       </button>
 
       <p className="min-h-5 text-sm text-slate-400">
-        {isIdle && "🦐 Click or press Space to make the shrimp jump!"}
-        {isRunning && "🦐 Don't hit the obstacles!"}
+        {isIdle && "ðŸ¦ Click or press Space to make the shrimp jump!"}
+        {isRunning && "ðŸ¦ Don't hit the obstacles!"}
         {isDead && "The shrimp got cooked. Try again!"}
       </p>
 
@@ -1852,7 +1703,7 @@ export default function HomePage() {
         <p className="eyebrow">THE RED ROUTER FRAMEWORK</p>
         <h1>Welcome to ${projectName}</h1>
         <p>
-          Built with Rakta.js — Small in size. Fierce in speed. Alive in every route.
+          Built with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.
         </p>
         <div className="button-row">
           <a href="/about">About</a>
@@ -1865,7 +1716,7 @@ export default function HomePage() {
 `;
 }
 
-// ─── Database helpers ─────────────────────────────────────────────────────────
+// â”€â”€â”€ Database helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function getDatabaseDependencies(
 	selectedDatabase: Database,
@@ -1963,19 +1814,19 @@ function getDatabaseEnvExample(selectedDatabase: Database): string {
 	}
 }
 
-// ─── README ──────────────────────────────────────────────────────────────────
+// â”€â”€â”€ README â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function generateProjectReadme(projectConfig: ProjectConfig): string {
 	const { projectName, projectMode } = projectConfig;
 
 	if (projectMode === "frontend-only") {
-		return `# ${projectName}\n\nBuilt with Rakta.js — Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\nbun run dev\n\`\`\`\n\n## ShrimpRun\n\nYour starter includes ShrimpRun — an interactive game where a shrimp dodges obstacles. Press Space or click to jump!\n`;
+		return `# ${projectName}\n\nBuilt with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\nbun run dev\n\`\`\`\n\n## ShrimpRun\n\nYour starter includes ShrimpRun â€” an interactive game where a shrimp dodges obstacles. Press Space or click to jump!\n`;
 	}
 
-	return `# ${projectName}\n\nBuilt with Rakta.js — Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Backend | ${BACKEND_DISPLAY[projectConfig.backendFramework]} |\n| Database | ${DATABASE_DISPLAY[projectConfig.database]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\n\n# Terminal 1\nbun run dev:frontend\n\n# Terminal 2\nbun run dev:backend\n\`\`\`\n\n## Endpoints\n\n- Frontend: http://localhost:3000\n- Backend: http://localhost:4000\n`;
+	return `# ${projectName}\n\nBuilt with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Backend | ${BACKEND_DISPLAY[projectConfig.backendFramework]} |\n| Database | ${DATABASE_DISPLAY[projectConfig.database]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\n\n# Terminal 1\nbun run dev:frontend\n\n# Terminal 2\nbun run dev:backend\n\`\`\`\n\n## Endpoints\n\n- Frontend: http://localhost:3000\n- Backend: http://localhost:4000\n`;
 }
 
-// ─── Main export ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ Main export â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function generateProjectFiles(
 	projectConfig: ProjectConfig,

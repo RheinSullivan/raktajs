@@ -33,7 +33,8 @@ function buildHtmlShell(options: RendererOptions): string {
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>${title}</title>
             ${descriptionMeta}
-            <link rel="icon" href="${faviconPath}" sizes="any" />
+            <link rel="icon" href="${faviconPath}" sizes="any" type="image/x-icon" />
+            <link rel="shortcut icon" href="${faviconPath}" type="image/x-icon" />
             <link rel="stylesheet" href="${options.cssPath}" />
         </head>
         <body>

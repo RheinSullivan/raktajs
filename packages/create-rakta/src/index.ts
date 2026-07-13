@@ -13,6 +13,7 @@ import {
 	BACKEND_DISPLAY,
 	CSS_DISPLAY,
 	DATABASE_DISPLAY,
+	PROJECT_LANGUAGE_DISPLAY,
 	PROJECT_MODE_DISPLAY,
 	RENDER_MODE_DISPLAY,
 } from "./types";
@@ -31,24 +32,29 @@ function getProjectNameFromArgs(
 
 function formatFullstackCommands(): string {
 	return [
-		`${pc.dim("# Terminal 1")}`,
-		"cd frontend",
-		"bun install",
-		"bun run dev",
+		pc.dim("# Terminal 1"),
+		pc.cyan("cd frontend"),
+		pc.cyan("bun install"),
+		pc.cyan("bun run dev"),
 		"",
-		`${pc.dim("# Terminal 2")}`,
-		"cd backend",
-		"bun install",
-		"bun run dev",
-	].join("\n  ");
+		pc.dim("# Terminal 2"),
+		pc.cyan("cd backend"),
+		pc.cyan("bun install"),
+		pc.cyan("bun run dev"),
+	]
+		.map((line) => (line.length === 0 ? "" : `        ${line}`))
+		.join("\n");
 }
 
 function formatFrontendOnlyCommands(projectName: string): string {
-	return [`cd ${projectName}`, "bun install", "bun run dev"].join("\n  ");
+	return [`cd ${projectName}`, "bun install", "bun run dev"]
+		.map((command) => `        ${pc.cyan(command)}`)
+		.join("\n");
 }
 
 function printSuccessMessage(projectConfig: ProjectConfig): void {
 	const modeLabel = PROJECT_MODE_DISPLAY[projectConfig.projectMode];
+	const languageLabel = PROJECT_LANGUAGE_DISPLAY[projectConfig.language];
 	const cssLabel = CSS_DISPLAY[projectConfig.cssFramework];
 	const renderLabel = RENDER_MODE_DISPLAY[projectConfig.renderMode];
 	const isFullstack = projectConfig.projectMode === "fullstack";
@@ -69,6 +75,7 @@ function printSuccessMessage(projectConfig: ProjectConfig): void {
       ${pc.bold(pc.green("Project created!"))}
 
       ${pc.dim("Mode:")}    ${modeLabel}
+      ${pc.dim("Lang:")}    ${languageLabel}
       ${pc.dim("CSS:")}     ${cssLabel}
       ${pc.dim("Render:")}  ${renderLabel}
       ${backendLine}
@@ -76,7 +83,7 @@ function printSuccessMessage(projectConfig: ProjectConfig): void {
 
       ${pc.bold("Next steps:")}
 
-        ${nextSteps}
+${nextSteps}
 
       ${pc.bold("Frontend:")} ${pc.cyan("http://localhost:3000")}
       ${

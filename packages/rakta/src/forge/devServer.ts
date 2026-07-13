@@ -1,5 +1,5 @@
-import { existsSync, readFileSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readFileSync, statSync, watch } from "node:fs";
+import { join, relative } from "node:path";
 import { resolveRouteMode } from "../render/modes";
 import { render } from "../render/renderer";
 import { generateManifest } from "../router/manifest";
@@ -94,17 +94,67 @@ export async function startDevServer(
 ): Promise<ForgeDevServerHandle> {
 	const manifest = generateManifest(options.appDir);
 	const resolvedPort = resolveDevPort(options.port);
-	const clientOutDir = await buildDevClientBundle(options, manifest);
+	let clientOutDir = await buildDevClientBundle(options, manifest);
+	let isClientBundleDirty = false;
+	let clientBundleRebuild: Promise<void> | null = null;
+
+	function shouldReloadForPath(changedPath: string | null): boolean {
+		if (changedPath === null) return true;
+
+		const relativePath = relative(options.projectRoot, changedPath).replace(
+			/\\/g,
+			"/",
+		);
+
+		return (
+			relativePath.length > 0 &&
+			!relativePath.startsWith("node_modules/") &&
+			!relativePath.startsWith(".rakta/") &&
+			!relativePath.startsWith("dist/")
+		);
+	}
+
+	async function ensureFreshClientBundle(): Promise<void> {
+		if (!isClientBundleDirty) return;
+
+		clientBundleRebuild ??= buildDevClientBundle(options, manifest).then(
+			(nextClientOutDir) => {
+				clientOutDir = nextClientOutDir;
+				isClientBundleDirty = false;
+				clientBundleRebuild = null;
+			},
+			(caughtError: unknown) => {
+				clientBundleRebuild = null;
+				throw caughtError;
+			},
+		);
+
+		await clientBundleRebuild;
+	}
 
 	const server = Bun.serve({
 		port: resolvedPort,
 		hostname: options.host,
+		websocket: {
+			open(ws) {
+				ws.subscribe("livereload");
+			},
+			message() {},
+		},
 
-		async fetch(request: Request): Promise<Response> {
+		async fetch(request: Request, server): Promise<Response> {
+			if (request.url.endsWith("/__livereload")) {
+				const upgraded = server.upgrade(request);
+				if (upgraded) {
+					return new Response(null);
+				}
+			}
+
 			const url = new URL(request.url);
 			const { pathname } = url;
 
 			if (clientOutDir.length > 0) {
+				await ensureFreshClientBundle();
 				const clientBundlePath = join(clientOutDir, pathname);
 
 				if (isReadableFile(clientBundlePath)) {
@@ -142,6 +192,7 @@ export async function startDevServer(
 			}
 
 			// Resolve render mode and serve HTML shell for page routes
+			await ensureFreshClientBundle();
 			const resolved = resolveRouteMode(pathname, options.renderConfig);
 
 			const searchParams: Record<string, string> = {};
@@ -177,7 +228,19 @@ export async function startDevServer(
 				return new Response(result.reason, { status: result.httpStatus });
 			}
 
-			return new Response(result.html, {
+			const liveReloadScript = `
+<script>
+  (function() {
+    const ws = new WebSocket("ws://" + location.host + "/__livereload");
+    ws.onmessage = () => location.reload();
+  })();
+</script>`;
+			const finalHtml = result.html.replace(
+				"</body>",
+				`${liveReloadScript}</body>`,
+			);
+
+			return new Response(finalHtml, {
 				status: result.httpStatus,
 				headers: result.responseHeaders,
 			});
@@ -187,10 +250,31 @@ export async function startDevServer(
 	const serverPort =
 		typeof server.port === "number" ? server.port : resolvedPort;
 
+	try {
+		watch(options.projectRoot, { recursive: true }, (_eventType, filename) => {
+			const changedPath =
+				typeof filename === "string"
+					? join(options.projectRoot, filename)
+					: null;
+
+			if (shouldReloadForPath(changedPath)) {
+				isClientBundleDirty = true;
+				server.publish("livereload", "reload");
+			}
+		});
+	} catch {
+		// Some filesystems do not support recursive watch. The dev server still runs.
+	}
+
+	const displayHost =
+		options.host === "0.0.0.0" || options.host === "::"
+			? "localhost"
+			: options.host;
+
 	return {
 		port: serverPort,
 		host: options.host,
-		url: `http://${options.host}:${serverPort}`,
+		url: `http://${displayHost}:${serverPort}`,
 		stop: () => server.stop(),
 	};
 }
