@@ -87,7 +87,7 @@ interface ApiRouteExports {
 
 /**
  * Starts the Rakta.js Forge development server.
- * Powered by Bun.serve. HMR is a roadmap feature (v0.2.0).
+ * Powered by Bun.serve. HMR is a roadmap feature (v0.2.3).
  */
 export async function startDevServer(
 	options: ForgeDevServerOptions,

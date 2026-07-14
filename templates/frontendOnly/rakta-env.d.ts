@@ -24,7 +24,4 @@ declare global {
 	const useEffect: typeof import("react").useEffect;
 	const useRef: typeof import("react").useRef;
 	const useState: typeof import("react").useState;
-
-	const ShrimpRunGame: typeof import("./app/components/shrimpRunGame").default;
-	const RaktaShrimpMascot: typeof import("./app/components/raktaShrimpMascot").default;
 }

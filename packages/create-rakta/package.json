@@ -1,6 +1,6 @@
 {
 	"name": "create-rakta-app",
-	"version": "0.2.0",
+	"version": "0.2.3",
 	"description": "Create a fullstack Rakta.js application with frontend, backend, database, rendering mode, and CSS framework choices.",
 	"type": "module",
 	"license": "MIT",

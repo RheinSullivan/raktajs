@@ -1,6 +1,6 @@
 {
 	"name": "my-rakta-app",
-	"version": "0.2.0",
+	"version": "0.2.3",
 	"private": true,
 	"type": "module",
 	"scripts": {
@@ -11,9 +11,11 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"raktajs": "^0.2.0",
+		"raktajs": "^0.2.3",
+		"motion": "^12.42.2",
 		"react": "^19.2.7",
 		"react-dom": "^19.2.7",
+		"react-icons": "^5.7.0",
 		"tailwindcss": "^4.3.1"
 	},
 	"devDependencies": {

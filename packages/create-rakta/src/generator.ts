@@ -1,7 +1,11 @@
 ﻿import { readFileSync } from "node:fs";
 import {
 	STARTER_AUDIO_CODE,
+	STARTER_COMPONENTS_MODAL_CODE,
 	STARTER_CORAL_OBSTACLE_CODE,
+	STARTER_CSS_CODE,
+	STARTER_DEPLOY_MODAL_CODE,
+	STARTER_DOCS_MODAL_CODE,
 	STARTER_PAGE_CODE,
 	STARTER_SHRIMP_CHARACTER_CODE,
 	STARTER_TYPES_CODE,
@@ -21,7 +25,7 @@ const FAVICON_BYTES = readFileSync(
 	new URL("../assets/favicon.ico", import.meta.url),
 );
 
-// â”€â”€â”€ Root files â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Root files
 
 function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	const { projectName, projectMode, useTypeScript } = projectConfig;
@@ -120,7 +124,7 @@ function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	return files;
 }
 
-// â”€â”€â”€ Frontend-only starter (ShrimpRun game) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Frontend-only starter (ShrimpRun game)
 
 function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	const { projectName, cssFramework, useTypeScript } = projectConfig;
@@ -146,7 +150,8 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^0.2.0",
+						raktajs: "^0.2.3",
+						motion: "^12.42.2",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						"react-icons": "^5.7.0",
@@ -192,8 +197,20 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 			content: generateFrontendOnlyNotFound(),
 		},
 		{
+			path: `app/components/ComponentsModal.${pageExtension}`,
+			content: STARTER_COMPONENTS_MODAL_CODE,
+		},
+		{
 			path: `app/components/CoralObstacle.${pageExtension}`,
 			content: STARTER_CORAL_OBSTACLE_CODE,
+		},
+		{
+			path: `app/components/DeployModal.${pageExtension}`,
+			content: STARTER_DEPLOY_MODAL_CODE,
+		},
+		{
+			path: `app/components/DocsModal.${pageExtension}`,
+			content: STARTER_DOCS_MODAL_CODE,
 		},
 		{
 			path: `app/components/ShrimpCharacter.${pageExtension}`,
@@ -209,7 +226,10 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 		},
 		{
 			path: `styles/${styleFileName}`,
-			content: getFrontendOnlyCssGlobals(cssFramework),
+			content:
+				cssFramework === "tailwind"
+					? STARTER_CSS_CODE
+					: getFrontendOnlyCssGlobals(cssFramework),
 		},
 		{
 			path: "public/.gitkeep",
@@ -258,7 +278,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	return processFilesForLanguage(files, useTypeScript);
 }
 
-// ─── Fullstack frontend files â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Fullstack frontend files
 
 function getFullstackFrontendFiles(
 	projectConfig: ProjectConfig,
@@ -285,7 +305,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^0.2.0",
+						raktajs: "^0.2.3",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						...getCssDependencies(cssFramework),
@@ -407,30 +427,12 @@ function getFullstackFrontendFiles(
 	];
 }
 
-// â”€â”€â”€ Backend files â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Backend files
 
 function stripTypeScriptSyntax(code: string): string {
-	return code
-		.replace(/^import\s+type\s+.+;\r?\n/gm, "")
-		.replace(/^export\s+interface\s+\w+\s*\{[\s\S]*?\r?\n\}\r?\n/gm, "")
-		.replace(/^interface\s+\w+\s*\{[\s\S]*?\r?\n\}\r?\n/gm, "")
-		.replace(/^export\s+type\s+\w+\s*=[\s\S]*?;\r?\n/gm, "")
-		.replace(/^type\s+\w+\s*=[\s\S]*?;\r?\n/gm, "")
-		.replace(/<("[^"]+"|'[^']+'|\w+)(\s*\|\s*("[^"]+"|'[^']+'|\w+))*\s*>/g, "")
-		.replace(/\s+as\s+const/g, "")
-		.replace(/\s+as\s+[A-Za-z0-9_<>,[\]\s|&".']+/g, "")
-		.replace(/\breadonly\s+/g, "")
-		.replace(
-			/(\(|,)\s*([A-Za-z_$][\w$]*)\s*:\s*[A-Za-z_$][\w$]*(?:\[\])?(?:\s*\|\s*[A-Za-z_$][\w$]*(?:\[\])?)*/g,
-			"$1 $2",
-		)
-		.replace(
-			/\)\s*:\s*(?:void|string|number|boolean|Promise<[^>]+>|[A-Za-z_$][\w$]*(?:\[\])?)/g,
-			")",
-		)
-		.replace(/\)\s*:\s*[^({=>]+(?=\s*\{)/g, ")")
-		.replace(/\}\s*:\s*[A-Za-z_$][\w$]*(?=\s*\))/g, "}")
-		.replace(/(const|let)\s+([A-Za-z_$][\w$]*)\s*:\s*[^=;]+=/g, "$1 $2 =");
+	return new Bun.Transpiler({ loader: "tsx", target: "browser" }).transformSync(
+		code,
+	);
 }
 
 function processFilesForLanguage(
@@ -600,7 +602,7 @@ function getNestFiles(projectConfig: ProjectConfig): ProjectFile[] {
 					"@nestjs/common": "^10.3.0",
 					"@nestjs/core": "^10.3.0",
 					"@nestjs/platform-express": "^10.3.0",
-					"reflect-metadata": "^0.2.2",
+					"reflect-metadata": "^0.2.3",
 					...getDatabaseDependencies(projectConfig.database),
 				},
 				devDependencies: {
@@ -718,7 +720,7 @@ function getBackendPackageJson(
 	);
 }
 
-// â”€â”€â”€ Shared files (fullstack only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Shared files (fullstack only)
 
 function getSharedFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	return [
@@ -733,7 +735,7 @@ function getSharedFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	];
 }
 
-// â”€â”€â”€ CSS helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  CSS helpers
 
 function getCssDependencies(
 	cssFramework: CssFramework,
@@ -931,11 +933,455 @@ a { color: inherit; text-decoration: none; }
   border-top: 1px solid #1f1f1f;
   padding: 40px 0;
 }
+.rakta-system-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid #1f1f1f;
+  background: rgba(9, 9, 11, 0.45);
+}
+.rakta-system-grid > div {
+  min-height: 126px;
+  border-right: 1px solid #1f1f1f;
+  padding: 28px;
+}
+.rakta-system-grid > div:last-child { border-right: 0; }
+.rakta-system-grid span {
+  display: block;
+  margin-bottom: 10px;
+  color: #71717a;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+.rakta-system-grid strong {
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 20px;
+}
+.rakta-system-grid i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #00ff00;
+  animation: pulse 1.25s infinite;
+}
+.rakta-action-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid #1f1f1f;
+}
+.rakta-action-grid button {
+  min-height: 300px;
+  border: 0;
+  border-right: 1px solid #1f1f1f;
+  border-bottom: 1px solid #1f1f1f;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  padding: 48px;
+  text-align: left;
+  transition: background 160ms ease, color 160ms ease;
+}
+.rakta-action-grid button:last-child { border-right: 0; }
+.rakta-action-grid button:hover {
+  background: #fff;
+  color: #000;
+}
+.rakta-action-grid span {
+  display: block;
+  margin-bottom: 40px;
+  color: #e11d48;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+.rakta-action-grid h3 {
+  margin: 0 0 16px;
+  font-size: 30px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.rakta-action-grid p {
+  min-height: 62px;
+  color: #71717a;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.rakta-action-grid button:hover p,
+.rakta-action-grid button:hover span { color: rgba(0, 0, 0, 0.72); }
+.rakta-action-grid b,
+.rakta-inline-action,
+.rakta-codebar button,
+.rakta-deploy-status button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.rakta-footer {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: #0d0e0f;
+  padding: 80px 24px 48px;
+}
+.rakta-footer > div {
+  display: flex;
+  width: min(100%, 1280px);
+  margin: 0 auto 64px;
+  justify-content: space-between;
+  gap: 64px;
+}
+.rakta-footer section {
+  max-width: 320px;
+}
+.rakta-footer h2 {
+  margin: 0 0 20px;
+  font-family: var(--font-mono);
+  font-size: 28px;
+}
+.rakta-footer p,
+.rakta-footer a {
+  color: rgba(181, 181, 181, 0.6);
+  font-size: 12px;
+  line-height: 1.8;
+}
+.rakta-footer nav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 36px;
+}
+.rakta-footer nav div {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.rakta-footer b {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+}
+.rakta-footer > p {
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 32px;
+  color: rgba(181, 181, 181, 0.3);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+.rakta-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.86);
+  backdrop-filter: blur(10px);
+}
+.rakta-modal-panel {
+  display: flex;
+  width: min(100%, 1040px);
+  max-height: 82vh;
+  flex-direction: column;
+  overflow: hidden;
+  border: 2px solid #fff;
+  background: #000;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7);
+}
+.rakta-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1f1f1f;
+  padding: 20px;
+}
+.rakta-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.rakta-modal-title p {
+  margin: 0 0 2px;
+  color: #e11d48;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+.rakta-modal-title h2 {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  text-transform: uppercase;
+}
+.rakta-icon-button {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid #1f1f1f;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+}
+.rakta-icon-button:hover {
+  background: #e11d48;
+}
+.rakta-modal-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #1f1f1f;
+  background: #0d0d0d;
+  padding: 12px 16px;
+  color: #71717a;
+}
+.rakta-modal-search input,
+.rakta-component-preview input {
+  width: 100%;
+  border: 1px solid #27272a;
+  background: #000;
+  color: #fff;
+  padding: 10px 12px;
+  outline: 0;
+}
+.rakta-modal-split {
+  display: grid;
+  min-height: 480px;
+  grid-template-columns: 280px minmax(0, 1fr);
+  overflow: hidden;
+}
+.rakta-modal-split aside {
+  overflow: auto;
+  border-right: 1px solid #1f1f1f;
+  background: #080808;
+}
+.rakta-modal-split aside button {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #1f1f1f;
+  background: transparent;
+  color: #a1a1aa;
+  cursor: pointer;
+  padding: 16px;
+  text-align: left;
+}
+.rakta-modal-split aside button.is-active {
+  background: #e11d48;
+  color: #fff;
+}
+.rakta-modal-split aside span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.rakta-modal-split aside small {
+  display: block;
+  margin-top: 4px;
+  color: currentColor;
+  opacity: 0.68;
+}
+.rakta-modal-split article {
+  overflow: auto;
+  padding: 32px;
+}
+.rakta-modal-split article h3 {
+  margin: 12px 0 18px;
+  font-size: 32px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.rakta-modal-split article p {
+  color: #d4d4d8;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.rakta-chip {
+  display: inline-flex;
+  border: 1px solid rgba(225, 29, 72, 0.35);
+  color: #e11d48;
+  padding: 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+.rakta-inline-action {
+  margin-top: 32px;
+  border: 1px solid #fff;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+  padding: 10px 14px;
+}
+.rakta-component-preview {
+  display: grid;
+  min-height: 160px;
+  place-items: center;
+  border: 1px solid #1f1f1f;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  margin: 24px 0;
+  padding: 32px;
+}
+.rakta-component-preview button:first-child,
+.rakta-deploy-status button {
+  border: 1px solid #e11d48;
+  background: #e11d48;
+  color: #fff;
+  cursor: pointer;
+  padding: 12px 18px;
+}
+.rakta-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.rakta-live-badge span {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 99px;
+  animation: pulse 1s infinite;
+}
+.rakta-toggle-preview {
+  width: 64px;
+  height: 32px;
+  border: 2px solid #fff !important;
+  background: #18181b !important;
+  padding: 2px !important;
+}
+.rakta-toggle-preview span {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: #fff;
+}
+.rakta-codebar,
+.rakta-deploy-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid #1f1f1f;
+  background: #0d0d0d;
+  padding: 12px 16px;
+}
+.rakta-codebar span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #71717a;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+.rakta-codebar button {
+  border: 0;
+  background: transparent;
+  color: #e11d48;
+  cursor: pointer;
+}
+.rakta-modal-panel pre {
+  overflow: auto;
+  margin: 0;
+  border: 1px solid #1f1f1f;
+  border-top: 0;
+  background: #0d0d0d;
+  color: #00ff00;
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.rakta-deploy-status span {
+  display: block;
+  color: #71717a;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+.rakta-deploy-status strong {
+  display: block;
+  margin-top: 4px;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+.rakta-terminal {
+  min-height: 420px;
+  overflow: auto;
+  padding: 24px;
+  background: #000;
+  color: #d4d4d8;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.rakta-terminal p {
+  margin: 0 0 10px;
+}
+.rakta-terminal p:first-child,
+.rakta-terminal p:last-child,
+.rakta-terminal strong {
+  color: #00ff00;
+}
+.rakta-terminal em {
+  display: block;
+  margin-top: 48px;
+  color: #52525b;
+  text-align: center;
+}
+.rakta-deploy-success {
+  display: flex;
+  gap: 12px;
+  border: 1px solid #00ff00;
+  background: rgba(16, 185, 129, 0.08);
+  color: #00ff00;
+  margin-top: 24px;
+  padding: 16px;
+}
+.rakta-deploy-success span {
+  display: block;
+  margin-top: 6px;
+  color: #fff;
+}
 
 @media (max-width: 768px) {
   .rakta-hero,
-  .rakta-feature-grid {
+  .rakta-feature-grid,
+  .rakta-system-grid,
+  .rakta-action-grid,
+  .rakta-modal-split {
     grid-template-columns: 1fr;
+  }
+  .rakta-system-grid > div,
+  .rakta-action-grid button,
+  .rakta-modal-split aside {
+    border-right: 0;
+  }
+  .rakta-footer > div,
+  .rakta-codebar,
+  .rakta-deploy-status {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .rakta-footer nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .rakta-nav > div:last-child {
     display: none;
@@ -950,6 +1396,10 @@ a { color: inherit; text-decoration: none; }
 @keyframes scanline {
   0% { transform: translateY(-100%); }
   100% { transform: translateY(100vh); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
 }
 .scanline {
   position: fixed;
@@ -994,7 +1444,7 @@ a { color: inherit; text-decoration: none; }
 `;
 }
 
-// ─── Inline template generators â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Inline template generators
 
 function generateFrontendOnlyRaktaEnv(): string {
 	return `declare module "*.css";
@@ -1047,7 +1497,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Rakta.js App</title>
+        <title>${DEFAULT_METADATA_TITLE}</title>
+        <link rel="icon" href="/favicon.ico" sizes="any" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
       </head>
       <body className="min-h-screen bg-[#050505] text-slate-50 antialiased">
         {children}
@@ -1315,7 +1767,7 @@ export default function RaktaShrimpMascot({
 function _generateShrimpRunGameComponent(): string {
 	return `import { useCallback, useEffect, useRef, useState } from "react";
 import RaktaShrimpMascot from "./raktaShrimpMascot";
-// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Types
 
 type GameStatus = "idle" | "running" | "dead";
 
@@ -1332,7 +1784,7 @@ interface ShrimpState {
   readonly isJumping: boolean;
 }
 
-// â”€â”€â”€ Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Constants
 
 const CANVAS_WIDTH = 640;
 const CANVAS_HEIGHT = 160;
@@ -1350,7 +1802,7 @@ const COLLISION_MARGIN = 8;
 const MAX_CONCURRENT_OBSTACLES = 3;
 const FRAME_SKIP_THRESHOLD_MS = 100;
 
-// â”€â”€â”€ Physics helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Physics helpers
 
 function getObstacleSpeed(currentScore: number): number {
   return INITIAL_OBSTACLE_SPEED + currentScore * SPEED_INCREMENT_PER_SCORE;
@@ -1383,7 +1835,7 @@ function checkCollision(
   );
 }
 
-// â”€â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Component
 
 /**
  * ShrimpRun â€” Default Rakta.js interactive starter game.
@@ -1716,7 +2168,7 @@ export default function HomePage() {
 `;
 }
 
-// â”€â”€â”€ Database helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Database helpers
 
 function getDatabaseDependencies(
 	selectedDatabase: Database,
@@ -1814,7 +2266,7 @@ function getDatabaseEnvExample(selectedDatabase: Database): string {
 	}
 }
 
-// â”€â”€â”€ README â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  README
 
 function generateProjectReadme(projectConfig: ProjectConfig): string {
 	const { projectName, projectMode } = projectConfig;
@@ -1826,7 +2278,7 @@ function generateProjectReadme(projectConfig: ProjectConfig): string {
 	return `# ${projectName}\n\nBuilt with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Backend | ${BACKEND_DISPLAY[projectConfig.backendFramework]} |\n| Database | ${DATABASE_DISPLAY[projectConfig.database]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\n\n# Terminal 1\nbun run dev:frontend\n\n# Terminal 2\nbun run dev:backend\n\`\`\`\n\n## Endpoints\n\n- Frontend: http://localhost:3000\n- Backend: http://localhost:4000\n`;
 }
 
-// â”€â”€â”€ Main export â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Main export
 
 export function generateProjectFiles(
 	projectConfig: ProjectConfig,
