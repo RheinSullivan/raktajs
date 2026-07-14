@@ -518,7 +518,7 @@ rakta/tide
 * Forge dev server layer
 * README, contributing, and license
 
-### v0.2.3
+### v0.2.4
 
 * HMR
 * Stable route manifest

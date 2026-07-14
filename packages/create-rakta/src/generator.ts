@@ -150,7 +150,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^0.2.3",
+						raktajs: "^0.2.4",
 						motion: "^12.42.2",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
@@ -305,7 +305,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^0.2.3",
+						raktajs: "^0.2.4",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						...getCssDependencies(cssFramework),
@@ -602,7 +602,7 @@ function getNestFiles(projectConfig: ProjectConfig): ProjectFile[] {
 					"@nestjs/common": "^10.3.0",
 					"@nestjs/core": "^10.3.0",
 					"@nestjs/platform-express": "^10.3.0",
-					"reflect-metadata": "^0.2.3",
+					"reflect-metadata": "^0.2.4",
 					...getDatabaseDependencies(projectConfig.database),
 				},
 				devDependencies: {

@@ -17,7 +17,12 @@ interface DeployModalProps {
 	onClose: () => void;
 }
 
-const DEPLOY_LOGS = [
+interface DeployLog {
+	readonly text: string;
+	readonly type: "system" | "info" | "success";
+}
+
+const DEPLOY_LOGS: readonly DeployLog[] = [
 	{ text: ":: RAKTA CORE PIPELINE INITIALIZED ::", type: "system" },
 	{
 		text: "[SYS] Resolving package.json manifest dependencies...",
@@ -91,7 +96,7 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 	const [status, setStatus] = useState<
 		"idle" | "building" | "success" | "error"
 	>("idle");
-	const [logs, setLogs] = useState<Array<{ text: string; type: string }>>([]);
+	const [logs, setLogs] = useState<DeployLog[]>([]);
 	const [progress, setProgress] = useState(0);
 	const terminalEndRef = useRef<HTMLDivElement>(null);
 
@@ -110,24 +115,35 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 
 		let currentLogIndex = 0;
 
-		const runStep = () => {
-			if (currentLogIndex < DEPLOY_LOGS.length) {
-				setLogs((prev) => [...prev, DEPLOY_LOGS[currentLogIndex]]);
-				setProgress(
-					Math.round(((currentLogIndex + 1) / DEPLOY_LOGS.length) * 100),
-				);
-				currentLogIndex++;
-
-				// Add varying delay between logs to feel realistic
-				const delay = Math.random() * 250 + 150;
-				setTimeout(runStep, delay);
-			} else {
+		const runStep = (): void => {
+			if (currentLogIndex >= DEPLOY_LOGS.length) {
 				playScoreSound();
 				setStatus("success");
+				return;
 			}
+
+			const nextLog = DEPLOY_LOGS.at(currentLogIndex);
+
+			if (nextLog === undefined) {
+				playScoreSound();
+				setStatus("error");
+				return;
+			}
+
+			setLogs((previousLogs) => [...previousLogs, nextLog]);
+
+			setProgress(
+				Math.round(((currentLogIndex + 1) / DEPLOY_LOGS.length) * 100),
+			);
+
+			currentLogIndex += 1;
+
+			const delay = Math.random() * 250 + 150;
+
+			window.setTimeout(runStep, delay);
 		};
 
-		setTimeout(runStep, 400);
+		window.setTimeout(runStep, 400);
 	};
 
 	const resetDeploy = () => {
