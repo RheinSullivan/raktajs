@@ -87,8 +87,10 @@ export async function render(
 	// Roadmap modes: fall back to CSR shell with a warning
 	if (isRoadmapMode(context.mode)) {
 		console.warn(
-			`[Rakta.js] Render mode "${context.mode}" is a roadmap feature (v0.2.7). ` +
-			`Falling back to CSR for: ${context.routePath}`,
+			[
+				`[Rakta.js] Render mode "${context.mode}" is a roadmap feature (v0.2.7).`,
+				`Falling back to CSR for: ${context.routePath}`,
+			].join(" "),
 		);
 		return makeSuccess(buildHtmlShell(options), "csr", Date.now() - startMs);
 	}

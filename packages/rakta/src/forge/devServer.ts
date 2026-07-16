@@ -139,7 +139,9 @@ export async function startDevServer(
 			open(ws) {
 				ws.subscribe("livereload");
 			},
-			message() { },
+			message() {
+				// no-op
+			},																															
 		},
 
 		async fetch(request: Request, server): Promise<Response> {
