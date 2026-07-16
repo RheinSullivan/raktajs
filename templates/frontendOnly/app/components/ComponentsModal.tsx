@@ -1,16 +1,6 @@
 // biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.
 // biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.
 // NOTE: React hooks (useState) are auto-imported by Rakta.js — no explicit import needed.
-import type { ReactNode } from "react";
-import { motion } from "motion/react";
-import {
-	LuCheck as Check,
-	LuCode as Code,
-	LuCopy as Copy,
-	LuCpu as Cpu,
-	LuX as X,
-} from "react-icons/lu";
-import { playJumpSound, playScoreSound } from "../utils/audio";
 
 interface ComponentsModalProps {
 	isOpen: boolean;
@@ -177,8 +167,8 @@ export default function ComponentsModal({
 
 	if (!isOpen) return null;
 
-	const activeComp =
-		(BRUTALIST_COMPONENTS.find((c) => c.id === activeCompId) ?? BRUTALIST_COMPONENTS[0])!;
+	const activeComp = (BRUTALIST_COMPONENTS.find((c) => c.id === activeCompId) ??
+		BRUTALIST_COMPONENTS[0])!;
 	const activeState = componentStates[activeCompId] || {};
 
 	const handleSetState = (newState: any) => {

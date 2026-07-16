@@ -1,13 +1,6 @@
 // biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.
 // biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.
 // NOTE: React hooks (useState) are auto-imported by Rakta.js.
-import { motion } from "motion/react";
-import {
-	LuArrowRight as ArrowRight,
-	LuBook as Book,
-	LuSearch as Search,
-	LuX as X,
-} from "react-icons/lu";
 
 interface DocsModalProps {
 	isOpen: boolean;
@@ -114,8 +107,8 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 			article.content.toLowerCase().includes(searchQuery.toLowerCase()),
 	);
 
-	const activeArticle =
-		(ARTICLES.find((a) => a.id === activeArticleId) ?? ARTICLES[0])!;
+	const activeArticle = (ARTICLES.find((a) => a.id === activeArticleId) ??
+		ARTICLES[0])!;
 
 	return (
 		<div

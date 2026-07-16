@@ -1,15 +1,6 @@
 // biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.
 // biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.
 // NOTE: React hooks (useState, useEffect, useRef) are auto-imported by Rakta.js.
-import { motion } from "motion/react";
-import {
-	LuCircleCheck as CheckCircle2,
-	LuCloud as Cloud,
-	LuPlay as Play,
-	LuRotateCcw as RotateCcw,
-	LuX as X,
-} from "react-icons/lu";
-import { playScoreSound } from "../utils/audio";
 
 interface DeployModalProps {
 	isOpen: boolean;

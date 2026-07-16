@@ -84,22 +84,44 @@ function findExistingModule(
 }
 
 function buildStarterGlobalLoaders(entryPath: string, appDir: string): string {
-	const mascotPath = findExistingModule(
-		join(appDir, "components", "raktaShrimpMascot"),
-	);
-	const gamePath = findExistingModule(
-		join(appDir, "components", "shrimpRunGame"),
-	);
 	const loaders: string[] = [];
+	const componentGlobals = [
+		"ComponentsModal",
+		"CoralObstacle",
+		"DeployModal",
+		"DocsModal",
+		"ShrimpCharacter",
+		"raktaShrimpMascot",
+		"shrimpRunGame",
+	];
 
-	if (mascotPath !== undefined) {
-		loaders.push(`  const mascotModule = await import("${toModuleSpecifier(entryPath, mascotPath)}");
-  (globalThis as typeof globalThis & Record<string, unknown>).RaktaShrimpMascot = mascotModule.default;`);
+	for (const componentName of componentGlobals) {
+		const componentPath = findExistingModule(
+			join(appDir, "components", componentName),
+		);
+
+		if (componentPath !== undefined) {
+			const globalName =
+				componentName === "raktaShrimpMascot"
+					? "RaktaShrimpMascot"
+					: componentName === "shrimpRunGame"
+						? "ShrimpRunGame"
+						: componentName;
+
+			loaders.push(`  const ${globalName}Module = await import("${toModuleSpecifier(entryPath, componentPath)}");
+  (globalThis as typeof globalThis & Record<string, unknown>).${globalName} = ${globalName}Module.default;`);
+		}
 	}
 
-	if (gamePath !== undefined) {
-		loaders.push(`  const gameModule = await import("${toModuleSpecifier(entryPath, gamePath)}");
-  (globalThis as typeof globalThis & Record<string, unknown>).ShrimpRunGame = gameModule.default;`);
+	const audioPath = findExistingModule(join(appDir, "utils", "audio"));
+
+	if (audioPath !== undefined) {
+		loaders.push(`  const audioModule = await import("${toModuleSpecifier(entryPath, audioPath)}");
+  (globalThis as typeof globalThis & Record<string, unknown>).getMuteState = audioModule.getMuteState;
+  (globalThis as typeof globalThis & Record<string, unknown>).playGameOverSound = audioModule.playGameOverSound;
+  (globalThis as typeof globalThis & Record<string, unknown>).playJumpSound = audioModule.playJumpSound;
+  (globalThis as typeof globalThis & Record<string, unknown>).playScoreSound = audioModule.playScoreSound;
+  (globalThis as typeof globalThis & Record<string, unknown>).setMute = audioModule.setMute;`);
 	}
 
 	if (loaders.length === 0) {
@@ -134,15 +156,121 @@ function buildClientEntrySource(
 	return `import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import * as ReactHooks from "react";
+import { motion } from "motion/react";
+import {
+	LuArrowRight as ArrowRight,
+	LuBook as Book,
+	LuCheck as Check,
+	LuCheckCircle2 as CheckCircle2,
+	LuCloud as Cloud,
+	LuCode as Code,
+	LuCopy as Copy,
+	LuCpu as Cpu,
+	LuGithub as Github,
+	LuInfo as Info,
+	LuPlay as Play,
+	LuRotateCcw as RotateCcw,
+	LuSearch as Search,
+	LuServer as Server,
+	LuTerminal as Terminal,
+	LuVolume2 as Volume2,
+  LuVolumeX as VolumeX,
+  LuX as X,
+} from "react-icons/lu";
 ${cssImport}
 (globalThis as typeof globalThis & Record<string, unknown>).useCallback = ReactHooks.useCallback;
 (globalThis as typeof globalThis & Record<string, unknown>).useEffect = ReactHooks.useEffect;
 (globalThis as typeof globalThis & Record<string, unknown>).useRef = ReactHooks.useRef;
 (globalThis as typeof globalThis & Record<string, unknown>).useState = ReactHooks.useState;
+(globalThis as typeof globalThis & Record<string, unknown>).motion = motion;
+(globalThis as typeof globalThis & Record<string, unknown>).ArrowRight = ArrowRight;
+(globalThis as typeof globalThis & Record<string, unknown>).Book = Book;
+(globalThis as typeof globalThis & Record<string, unknown>).Check = Check;
+(globalThis as typeof globalThis & Record<string, unknown>).CheckCircle2 = CheckCircle2;
+(globalThis as typeof globalThis & Record<string, unknown>).Cloud = Cloud;
+(globalThis as typeof globalThis & Record<string, unknown>).Code = Code;
+(globalThis as typeof globalThis & Record<string, unknown>).Copy = Copy;
+(globalThis as typeof globalThis & Record<string, unknown>).Cpu = Cpu;
+(globalThis as typeof globalThis & Record<string, unknown>).Github = Github;
+(globalThis as typeof globalThis & Record<string, unknown>).Info = Info;
+(globalThis as typeof globalThis & Record<string, unknown>).Play = Play;
+(globalThis as typeof globalThis & Record<string, unknown>).RotateCcw = RotateCcw;
+(globalThis as typeof globalThis & Record<string, unknown>).Search = Search;
+(globalThis as typeof globalThis & Record<string, unknown>).Server = Server;
+(globalThis as typeof globalThis & Record<string, unknown>).Terminal = Terminal;
+(globalThis as typeof globalThis & Record<string, unknown>).Volume2 = Volume2;
+(globalThis as typeof globalThis & Record<string, unknown>).VolumeX = VolumeX;
+(globalThis as typeof globalThis & Record<string, unknown>).X = X;
 
 ${starterGlobalLoaders}
 
 await loadRaktaGlobals();
+
+const raktaElementStyle = document.createElement("style");
+raktaElementStyle.textContent = \`
+click {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+photo {
+  display: inline-block;
+  line-height: 0;
+}
+
+photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+\`;
+document.head.appendChild(raktaElementStyle);
+
+class RaktaPhotoElement extends HTMLElement {
+  static observedAttributes = ["path", "alt", "title", "width", "height", "loading", "draggable"];
+
+  private readonly image = document.createElement("img");
+
+  connectedCallback(): void {
+    if (!this.contains(this.image)) {
+      this.appendChild(this.image);
+    }
+
+    this.syncImageAttributes();
+  }
+
+  attributeChangedCallback(): void {
+    this.syncImageAttributes();
+  }
+
+  private syncImageAttributes(): void {
+    const attributeMap = {
+      path: "src",
+      alt: "alt",
+      title: "title",
+      width: "width",
+      height: "height",
+      loading: "loading",
+      draggable: "draggable",
+    } as const;
+
+    for (const [sourceAttribute, imageAttribute] of Object.entries(attributeMap)) {
+      const value = this.getAttribute(sourceAttribute);
+
+      if (value === null) {
+        this.image.removeAttribute(imageAttribute);
+      } else {
+        this.image.setAttribute(imageAttribute, value);
+      }
+    }
+
+    this.image.decoding = this.getAttribute("priority") === "true" ? "sync" : "async";
+  }
+}
+
+if (!customElements.get("photo")) {
+  customElements.define("photo", RaktaPhotoElement);
+}
 
 ${routeModules}
 
@@ -166,8 +294,33 @@ function resolveRouteLoader(pathname: string): () => Promise<PageModule> {
 }
 
 function navigate(to: string): void {
+  if (to === "/shrimprun") {
+    document.getElementById("shrimprun")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.history.pushState({ source: "rakta-click", to }, "", to);
+    return;
+  }
+
   window.history.pushState({ source: "rakta-click", to }, "", to);
   window.dispatchEvent(new PopStateEvent("popstate", { state: { to } }));
+}
+
+function isExternalTo(to: string): boolean {
+  return (
+    to.startsWith("http://") ||
+    to.startsWith("https://") ||
+    to.startsWith("//") ||
+    to.startsWith("mailto:") ||
+    to.startsWith("tel:")
+  );
+}
+
+function openExternalTo(to: string, target: string | null): void {
+  if (target === null || target === "_blank") {
+    window.open(to, "_blank", "noopener,noreferrer");
+    return;
+  }
+
+  window.location.assign(to);
 }
 
 function App(): React.ReactElement {
@@ -194,21 +347,63 @@ function App(): React.ReactElement {
 
       const to = clickElement.getAttribute("to");
 
-      if (!to || to.startsWith("http://") || to.startsWith("https://")) {
+      if (!to) {
         return;
       }
 
       event.preventDefault();
+
+      if (isExternalTo(to)) {
+        openExternalTo(to, clickElement.getAttribute("target"));
+        return;
+      }
+
+      navigate(to);
+      setPathname(window.location.pathname);
+    }
+
+    function handleKeyDown(event: KeyboardEvent): void {
+      if (event.key !== "Enter") {
+        return;
+      }
+
+      const target = event.target;
+
+      if (!(target instanceof Element)) {
+        return;
+      }
+
+      const clickElement = target.closest("click");
+
+      if (!clickElement) {
+        return;
+      }
+
+      const to = clickElement.getAttribute("to");
+
+      if (!to) {
+        return;
+      }
+
+      event.preventDefault();
+
+      if (isExternalTo(to)) {
+        openExternalTo(to, clickElement.getAttribute("target"));
+        return;
+      }
+
       navigate(to);
       setPathname(window.location.pathname);
     }
 
     window.addEventListener("popstate", handlePopState);
     document.addEventListener("click", handleClick);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.removeEventListener("popstate", handlePopState);
       document.removeEventListener("click", handleClick);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 

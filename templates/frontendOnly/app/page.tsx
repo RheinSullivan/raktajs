@@ -1,27 +1,6 @@
 // biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.
 // biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.
 // NOTE: useState, useEffect, useRef are auto-imported by Rakta.js — no explicit import needed.
-import {
-	LuArrowRight as ArrowRight,
-	LuGithub as Github,
-	LuInfo as Info,
-	LuVolume2 as Volume2,
-	LuVolumeX as VolumeX,
-} from "react-icons/lu";
-import ComponentsModal from "./components/ComponentsModal";
-import CoralObstacle from "./components/CoralObstacle";
-import DeployModal from "./components/DeployModal";
-// Custom Modals
-import DocsModal from "./components/DocsModal";
-import ShrimpCharacter from "./components/ShrimpCharacter";
-import type { AestheticUnit } from "./types";
-import {
-	getMuteState,
-	playGameOverSound,
-	playJumpSound,
-	playScoreSound,
-	setMute,
-} from "./utils/audio";
 
 // Helper function to dynamically generate small, medium, and large coral sizes randomly
 const getRandomObstacleSize = (
@@ -325,17 +304,21 @@ export default function App() {
 			const shrimpLeft = playerLeftPx + 10;
 			const shrimpRight = playerLeftPx + 54;
 
-			// Obstacle bounds in pixels
+			// Obstacle visual bounds in pixels. The SVG has transparent side padding,
+			// so the hitbox follows the visible coral body instead of the wrapper.
 			const obstacleLeft = (obstacleXRef.current / 100) * width;
-			const obstacleRight = obstacleLeft + obstacleWidthRef.current;
+			const coralVisualInset = Math.max(4, obstacleWidthRef.current * 0.24);
+			const obstacleHitboxLeft = obstacleLeft + coralVisualInset;
+			const obstacleHitboxRight =
+				obstacleLeft + obstacleWidthRef.current - coralVisualInset;
 
 			// Small grazing buffer (3px) to allow minor visual overlaps without game-over
 			const horizontalBuffer = 3;
 
 			// Horizontal overlap check
 			const isWithinHitboxHorizontal =
-				shrimpRight - horizontalBuffer > obstacleLeft &&
-				shrimpLeft + horizontalBuffer < obstacleRight;
+				shrimpRight - horizontalBuffer > obstacleHitboxLeft &&
+				shrimpLeft + horizontalBuffer < obstacleHitboxRight;
 			let isCollided = false;
 
 			if (isWithinHitboxHorizontal) {
@@ -413,7 +396,6 @@ export default function App() {
 
 	return (
 		<div className="min-h-screen bg-black text-white relative font-sans selection:bg-brand-pink selection:text-white">
-
 			{/* Top Navigation Bar (Header) - PRESERVED */}
 			<header className="bg-[#0d0e0f]/60 backdrop-blur-xl fixed top-0 left-0 right-0 z-50 border-b border-white/5">
 				<nav className="grid grid-cols-2 md:grid-cols-3 items-center w-full px-6 md:px-10 py-5 max-w-7xl mx-auto">
@@ -426,7 +408,7 @@ export default function App() {
 						>
 							{/* Rakta.js <photo> component: replaces <img> with built-in lazy loading */}
 							<photo
-								src="/rakta-logo.svg"
+								path="/rakta-logo.svg"
 								alt="Rakta.js Logo"
 								className="w-6 h-6 md:w-7 md:h-7 shrink-0"
 								draggable={false}
@@ -435,29 +417,35 @@ export default function App() {
 						</click>
 					</div>
 
-					{/* Center navigation links — using Rakta.js <click to> for hash anchors */}
+					{/* Center navigation links using Rakta.js <click to> paths */}
 					<div className="hidden md:flex justify-center items-center gap-7">
 						<click
 							className="text-[#E11D48] font-bold border-b border-[#E11D48] pb-0.5 font-mono text-[11px] tracking-wider uppercase"
-							to="/"
+							to="https://raktajs.dev/showcase"
+							target="_blank"
+							rel="noopener noreferrer"
 						>
-							Home
+							Showcase
 						</click>
 						<click
 							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase"
-							to="https://github.com/RheinSullivan/raktajs/tree/main/docs"
+							to="https://raktajs.dev/docs"
+							target="_blank"
+							rel="noopener noreferrer"
 						>
 							Docs
 						</click>
 						<click
 							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase"
-							to="https://www.npmjs.com/package/raktajs"
+							to="/shrimprun"
 						>
-							Rakta.js
+							ShrimpRun
 						</click>
 						<click
 							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase"
 							to="https://www.npmjs.com/package/create-rakta-app"
+							target="_blank"
+							rel="noopener noreferrer"
 						>
 							Get Started
 						</click>
@@ -570,7 +558,7 @@ export default function App() {
 				</section>
 
 				{/* Shrimprun Simulation & Configurations (Section 2) */}
-				<section className="flex flex-col gap-4">
+				<section id="shrimprun" className="flex flex-col gap-4 scroll-mt-28">
 					<div className={containerBorderClass}>
 						<div
 							ref={containerRef}
@@ -818,24 +806,26 @@ export default function App() {
 									SCORE
 								</span>
 								<span
-									className={`font-mono text-3xl md:text-4xl tracking-widest font-extrabold ${aestheticUnit === "NEO-BRUTALIST"
-										? "text-black bg-white border-2 border-black px-3 py-0.5 shadow-[3px_3px_0px_#000000]"
-										: aestheticUnit === "RETRO-CYBER"
-											? "text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-500 drop-shadow-[0_0_8px_rgba(240,46,170,0.6)]"
-											: "text-white"
-										}`}
+									className={`font-mono text-3xl md:text-4xl tracking-widest font-extrabold ${
+										aestheticUnit === "NEO-BRUTALIST"
+											? "text-black bg-white border-2 border-black px-3 py-0.5 shadow-[3px_3px_0px_#000000]"
+											: aestheticUnit === "RETRO-CYBER"
+												? "text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-500 drop-shadow-[0_0_8px_rgba(240,46,170,0.6)]"
+												: "text-white"
+									}`}
 									id="live-score"
 								>
 									{score.toString().padStart(6, "0")}
 								</span>
 								{highScore > 0 && (
 									<span
-										className={`font-mono text-[10px] mt-1 ${aestheticUnit === "NEO-BRUTALIST"
-											? "text-black font-extrabold bg-[#ffff00] border border-black px-1.5 py-0.5 w-fit shadow-[1.5px_1.5px_0px_#000000]"
-											: aestheticUnit === "RETRO-CYBER"
-												? "text-fuchsia-400 drop-shadow-[0_0_4px_rgba(240,46,170,0.4)]"
-												: "text-cyan-400"
-											}`}
+										className={`font-mono text-[10px] mt-1 ${
+											aestheticUnit === "NEO-BRUTALIST"
+												? "text-black font-extrabold bg-[#ffff00] border border-black px-1.5 py-0.5 w-fit shadow-[1.5px_1.5px_0px_#000000]"
+												: aestheticUnit === "RETRO-CYBER"
+													? "text-fuchsia-400 drop-shadow-[0_0_4px_rgba(240,46,170,0.4)]"
+													: "text-cyan-400"
+										}`}
 									>
 										BEST: {highScore.toString().padStart(6, "0")}
 									</span>
@@ -849,12 +839,13 @@ export default function App() {
 									PERFORMANCE
 								</span>
 								<span
-									className={`font-mono text-lg md:text-xl font-bold ${aestheticUnit === "NEO-BRUTALIST"
-										? "text-black bg-[#E11D48] border-2 border-black px-2 py-0.5 shadow-[2px_2px_0px_#000000]"
-										: aestheticUnit === "RETRO-CYBER"
-											? "text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]"
-											: "text-brand-pink"
-										}`}
+									className={`font-mono text-lg md:text-xl font-bold ${
+										aestheticUnit === "NEO-BRUTALIST"
+											? "text-black bg-[#E11D48] border-2 border-black px-2 py-0.5 shadow-[2px_2px_0px_#000000]"
+											: aestheticUnit === "RETRO-CYBER"
+												? "text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]"
+												: "text-brand-pink"
+									}`}
 									id="live-fps"
 								>
 									{liveFps.toFixed(2)} FPS
@@ -864,23 +855,25 @@ export default function App() {
 							{/* Simulation Game Messages */}
 							{!isPlaying && !hasCollision && (
 								<div
-									className={`text-center z-20 pointer-events-none p-4 max-w-sm rounded backdrop-blur-sm ${aestheticUnit === "NEO-BRUTALIST"
-										? "bg-[#FFFBEB] border-4 border-black text-black shadow-[6px_6px_0px_#000000]"
-										: aestheticUnit === "RETRO-CYBER"
-											? "bg-[#1a0033]/80 border-2 border-fuchsia-500 text-pink-400 shadow-[0_0_15px_rgba(240,46,170,0.5)]"
-											: "bg-black/60 border border-cyan-500/30 text-white"
-										}`}
+									className={`text-center z-20 pointer-events-none p-4 max-w-sm rounded backdrop-blur-sm ${
+										aestheticUnit === "NEO-BRUTALIST"
+											? "bg-[#FFFBEB] border-4 border-black text-black shadow-[6px_6px_0px_#000000]"
+											: aestheticUnit === "RETRO-CYBER"
+												? "bg-[#1a0033]/80 border-2 border-fuchsia-500 text-pink-400 shadow-[0_0_15px_rgba(240,46,170,0.5)]"
+												: "bg-black/60 border border-cyan-500/30 text-white"
+									}`}
 								>
 									<p className="font-mono text-xs uppercase tracking-widest animate-pulse font-bold">
 										CLICK CONTAINER OR PRESS SPACE TO SWIM
 									</p>
 									<p
-										className={`font-mono text-[10px] mt-2 font-bold tracking-widest uppercase ${aestheticUnit === "NEO-BRUTALIST"
-											? "text-black"
-											: aestheticUnit === "RETRO-CYBER"
-												? "text-cyan-400"
-												: "text-cyan-400"
-											}`}
+										className={`font-mono text-[10px] mt-2 font-bold tracking-widest uppercase ${
+											aestheticUnit === "NEO-BRUTALIST"
+												? "text-black"
+												: aestheticUnit === "RETRO-CYBER"
+													? "text-cyan-400"
+													: "text-cyan-400"
+										}`}
 									>
 										SHRIMPRUN {aestheticUnit.replace("-", " ")} V2.0
 									</p>
@@ -889,18 +882,20 @@ export default function App() {
 
 							{hasCollision && (
 								<div
-									className={`text-center z-20 pointer-events-none p-6 max-w-sm rounded backdrop-blur-md ${aestheticUnit === "NEO-BRUTALIST"
-										? "bg-[#FFFBEB] border-4 border-black text-black shadow-[8px_8px_0px_#000000]"
-										: aestheticUnit === "RETRO-CYBER"
-											? "bg-[#0d0118]/95 border-2 border-pink-500 text-pink-400 shadow-[0_0_20px_rgba(244,63,94,0.6)]"
-											: "bg-black/90 border-2 border-brand-pink text-white"
-										}`}
+									className={`text-center z-20 pointer-events-none p-6 max-w-sm rounded backdrop-blur-md ${
+										aestheticUnit === "NEO-BRUTALIST"
+											? "bg-[#FFFBEB] border-4 border-black text-black shadow-[8px_8px_0px_#000000]"
+											: aestheticUnit === "RETRO-CYBER"
+												? "bg-[#0d0118]/95 border-2 border-pink-500 text-pink-400 shadow-[0_0_20px_rgba(244,63,94,0.6)]"
+												: "bg-black/90 border-2 border-brand-pink text-white"
+									}`}
 								>
 									<p
-										className={`font-mono text-sm uppercase tracking-widest font-extrabold ${aestheticUnit === "NEO-BRUTALIST"
-											? "text-red-600"
-											: "text-brand-pink"
-											}`}
+										className={`font-mono text-sm uppercase tracking-widest font-extrabold ${
+											aestheticUnit === "NEO-BRUTALIST"
+												? "text-red-600"
+												: "text-brand-pink"
+										}`}
 									>
 										SIMULATION HALTED
 									</p>
@@ -908,12 +903,13 @@ export default function App() {
 										SHRIMP COLLIDED WITH CORAL
 									</p>
 									<p
-										className={`font-mono text-xs mt-4 font-bold border px-3 py-1 animate-pulse ${aestheticUnit === "NEO-BRUTALIST"
-											? "bg-black text-white border-black"
-											: aestheticUnit === "RETRO-CYBER"
-												? "bg-fuchsia-950/20 text-fuchsia-400 border-fuchsia-500/50"
-												: "bg-brand-green/5 text-brand-green border-brand-green/30"
-											}`}
+										className={`font-mono text-xs mt-4 font-bold border px-3 py-1 animate-pulse ${
+											aestheticUnit === "NEO-BRUTALIST"
+												? "bg-black text-white border-black"
+												: aestheticUnit === "RETRO-CYBER"
+													? "bg-fuchsia-950/20 text-fuchsia-400 border-fuchsia-500/50"
+													: "bg-brand-green/5 text-brand-green border-brand-green/30"
+										}`}
 									>
 										CLICK TO RE-INITIALIZE
 									</p>
@@ -939,9 +935,9 @@ export default function App() {
 											: !isPlaying
 												? Math.sin(Date.now() / 150) * 5
 												: Math.max(
-													-28,
-													Math.min(28, velocityRef.current * -4.2),
-												)
+														-28,
+														Math.min(28, velocityRef.current * -4.2),
+													)
 									}
 								/>
 							</div>
@@ -971,12 +967,13 @@ export default function App() {
 							{/* Live interactive speed banner inside when playing */}
 							{isPlaying && (
 								<div
-									className={`absolute bottom-4 left-6 flex items-center gap-1.5 font-mono text-[9px] z-20 font-semibold uppercase tracking-wider ${aestheticUnit === "NEO-BRUTALIST"
-										? "text-black bg-white border border-black px-1.5 py-0.5 shadow-[1px_1px_0_#000]"
-										: aestheticUnit === "RETRO-CYBER"
-											? "text-fuchsia-400"
-											: "text-cyan-400"
-										}`}
+									className={`absolute bottom-4 left-6 flex items-center gap-1.5 font-mono text-[9px] z-20 font-semibold uppercase tracking-wider ${
+										aestheticUnit === "NEO-BRUTALIST"
+											? "text-black bg-white border border-black px-1.5 py-0.5 shadow-[1px_1px_0_#000]"
+											: aestheticUnit === "RETRO-CYBER"
+												? "text-fuchsia-400"
+												: "text-cyan-400"
+									}`}
 								>
 									<span
 										className={`w-1.5 h-1.5 rounded-full animate-ping ${aestheticUnit === "NEO-BRUTALIST" ? "bg-black" : "bg-cyan-400"}`}
@@ -988,12 +985,13 @@ export default function App() {
 							{/* Floating Settings/Config Toast */}
 							{configToast && (
 								<div
-									className={`absolute bottom-12 px-4 py-1.5 font-mono text-[10px] z-30 font-bold uppercase tracking-widest animate-bounce ${aestheticUnit === "NEO-BRUTALIST"
-										? "bg-[#ffff00] text-black border-2 border-black shadow-[4px_4px_0px_#000000]"
-										: aestheticUnit === "RETRO-CYBER"
-											? "bg-fuchsia-950/90 text-fuchsia-400 border border-fuchsia-500 shadow-[0_0_10px_rgba(240,46,170,0.6)] backdrop-blur-sm"
-											: "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 backdrop-blur-sm"
-										}`}
+									className={`absolute bottom-12 px-4 py-1.5 font-mono text-[10px] z-30 font-bold uppercase tracking-widest animate-bounce ${
+										aestheticUnit === "NEO-BRUTALIST"
+											? "bg-[#ffff00] text-black border-2 border-black shadow-[4px_4px_0px_#000000]"
+											: aestheticUnit === "RETRO-CYBER"
+												? "bg-fuchsia-950/90 text-fuchsia-400 border border-fuchsia-500 shadow-[0_0_10px_rgba(240,46,170,0.6)] backdrop-blur-sm"
+												: "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 backdrop-blur-sm"
+									}`}
 								>
 									{configToast}
 								</div>
@@ -1054,14 +1052,15 @@ export default function App() {
 							<div className="flex items-center gap-1.5">
 								<span>CORAL:</span>
 								<span
-									className={`px-2 py-0.5 font-bold text-[9px] tracking-wider rounded border ${aestheticUnit === "NEO-BRUTALIST"
-										? "text-black border-2 border-black bg-white shadow-[1px_1px_0px_#000000] rounded-none"
-										: obstacleSizeClass === "KECIL"
-											? "text-amber-400 border-amber-400/30 bg-amber-400/5"
-											: obstacleSizeClass === "SEDANG"
-												? "text-cyan-400 border-cyan-400/30 bg-cyan-400/5"
-												: "text-rose-400 border-rose-400/30 bg-rose-400/5"
-										}`}
+									className={`px-2 py-0.5 font-bold text-[9px] tracking-wider rounded border ${
+										aestheticUnit === "NEO-BRUTALIST"
+											? "text-black border-2 border-black bg-white shadow-[1px_1px_0px_#000000] rounded-none"
+											: obstacleSizeClass === "KECIL"
+												? "text-amber-400 border-amber-400/30 bg-amber-400/5"
+												: obstacleSizeClass === "SEDANG"
+													? "text-cyan-400 border-cyan-400/30 bg-cyan-400/5"
+													: "text-rose-400 border-rose-400/30 bg-rose-400/5"
+									}`}
 								>
 									{obstacleSizeClass}
 								</span>
@@ -1116,18 +1115,19 @@ export default function App() {
 											`LATENCY MODE: ${nextMode ? "LOW LATENCY" : "STANDARD"}`,
 										);
 									}}
-									className={`px-2 py-0.5 font-bold cursor-pointer transition-all ${aestheticUnit === "NEO-BRUTALIST"
-										? lowLatencyMode
-											? "bg-black text-[#ffff00] border-2 border-black px-2 py-0.5 font-extrabold shadow-[2px_2px_0px_#000000] rounded-none"
-											: "bg-white text-zinc-400 border border-zinc-300 px-2 py-0.5 font-medium rounded-none hover:border-black hover:text-black"
-										: aestheticUnit === "RETRO-CYBER"
+									className={`px-2 py-0.5 font-bold cursor-pointer transition-all ${
+										aestheticUnit === "NEO-BRUTALIST"
 											? lowLatencyMode
-												? "bg-pink-950/40 text-pink-400 border border-pink-500 shadow-[0_0_8px_rgba(244,63,94,0.6)] rounded"
-												: "bg-zinc-950 text-zinc-600 border border-zinc-800 rounded"
-											: lowLatencyMode
-												? "bg-brand-pink/10 text-brand-pink border border-brand-pink/30 rounded"
-												: "bg-zinc-900 text-zinc-500 border border-zinc-800 rounded"
-										}`}
+												? "bg-black text-[#ffff00] border-2 border-black px-2 py-0.5 font-extrabold shadow-[2px_2px_0px_#000000] rounded-none"
+												: "bg-white text-zinc-400 border border-zinc-300 px-2 py-0.5 font-medium rounded-none hover:border-black hover:text-black"
+											: aestheticUnit === "RETRO-CYBER"
+												? lowLatencyMode
+													? "bg-pink-950/40 text-pink-400 border border-pink-500 shadow-[0_0_8px_rgba(244,63,94,0.6)] rounded"
+													: "bg-zinc-950 text-zinc-600 border border-zinc-800 rounded"
+												: lowLatencyMode
+													? "bg-brand-pink/10 text-brand-pink border border-brand-pink/30 rounded"
+													: "bg-zinc-900 text-zinc-500 border border-zinc-800 rounded"
+									}`}
 								>
 									{lowLatencyMode ? "ON" : "OFF"}
 								</button>
@@ -1223,7 +1223,7 @@ export default function App() {
 						{/* Footer brand with logo + name — Rakta.js <click> + <photo> */}
 						<click to="/" className="flex items-center gap-2.5 group">
 							<photo
-								src="/rakta-logo.svg"
+								path="/rakta-logo.svg"
 								alt="Rakta.js Logo"
 								className="w-7 h-7 shrink-0 opacity-90 group-hover:opacity-100 transition-opacity"
 								draggable={false}
@@ -1244,15 +1244,17 @@ export default function App() {
 							</span>
 							<a
 								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
-								href="raktajs.dev/docs"
+								href="https://raktajs.dev/docs"
 								target="_blank"
+								rel="noopener noreferrer"
 							>
 								Documentation
 							</a>
 							<a
 								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
-								href="raktajs.dev/showcase"
+								href="https://raktajs.dev/showcase"
 								target="_blank"
+								rel="noopener noreferrer"
 							>
 								Showcase
 							</a>
@@ -1292,7 +1294,7 @@ export default function App() {
 							</a>
 							<click
 								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
-								to="#"
+								to="/"
 							>
 								Blog
 							</click>
@@ -1303,7 +1305,7 @@ export default function App() {
 							</span>
 							<click
 								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
-								to="#"
+								to="/"
 							>
 								Privacy
 							</click>
