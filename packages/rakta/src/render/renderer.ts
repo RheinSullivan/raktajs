@@ -20,6 +20,9 @@ export interface RendererOptions {
 function buildHtmlShell(options: RendererOptions): string {
 	const title = options.title ?? options.appName;
 	const faviconPath = options.faviconPath ?? "/favicon.ico";
+	const faviconHref = faviconPath.includes("?")
+		? faviconPath
+		: `${faviconPath}?v=rakta`;
 	const descriptionMeta =
 		options.description !== undefined
 			? `<meta name="description" content="${options.description}" />`
@@ -33,8 +36,9 @@ function buildHtmlShell(options: RendererOptions): string {
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>${title}</title>
             ${descriptionMeta}
-            <link rel="icon" href="${faviconPath}" sizes="any" type="image/x-icon" />
-            <link rel="shortcut icon" href="${faviconPath}" type="image/x-icon" />
+            <link rel="icon" href="${faviconHref}" sizes="any" type="image/x-icon" />
+            <link rel="shortcut icon" href="${faviconHref}" type="image/x-icon" />
+            <link rel="apple-touch-icon" href="${faviconHref}" />
             <link rel="stylesheet" href="${options.cssPath}" />
         </head>
         <body>
@@ -83,8 +87,8 @@ export async function render(
 	// Roadmap modes: fall back to CSR shell with a warning
 	if (isRoadmapMode(context.mode)) {
 		console.warn(
-			`[Rakta.js] Render mode "${context.mode}" is a roadmap feature (v0.2.6). ` +
-				`Falling back to CSR for: ${context.routePath}`,
+			`[Rakta.js] Render mode "${context.mode}" is a roadmap feature (v0.2.7). ` +
+			`Falling back to CSR for: ${context.routePath}`,
 		);
 		return makeSuccess(buildHtmlShell(options), "csr", Date.now() - startMs);
 	}

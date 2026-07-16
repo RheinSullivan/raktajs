@@ -161,7 +161,7 @@ import {
 	LuArrowRight as ArrowRight,
 	LuBook as Book,
 	LuCheck as Check,
-	LuCheckCircle2 as CheckCircle2,
+	LuCircleCheck as CheckCircle2,
 	LuCloud as Cloud,
 	LuCode as Code,
 	LuCopy as Copy,
@@ -209,8 +209,14 @@ await loadRaktaGlobals();
 const raktaElementStyle = document.createElement("style");
 raktaElementStyle.textContent = \`
 click {
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
   text-decoration: none;
+}
+
+click * {
+  cursor: pointer !important;
 }
 
 photo {
@@ -226,50 +232,40 @@ photo img {
 \`;
 document.head.appendChild(raktaElementStyle);
 
-class RaktaPhotoElement extends HTMLElement {
-  static observedAttributes = ["path", "alt", "title", "width", "height", "loading", "draggable"];
+const photoAttributeMap = {
+  path: "src",
+  alt: "alt",
+  title: "title",
+  width: "width",
+  height: "height",
+  loading: "loading",
+  draggable: "draggable",
+} as const;
 
-  private readonly image = document.createElement("img");
+function syncPhotoElement(photoElement: Element): void {
+  let imageElement = photoElement.querySelector<HTMLImageElement>("img[data-rakta-photo]");
 
-  connectedCallback(): void {
-    if (!this.contains(this.image)) {
-      this.appendChild(this.image);
+  if (!imageElement) {
+    imageElement = document.createElement("img");
+    imageElement.dataset.raktaPhoto = "true";
+    photoElement.replaceChildren(imageElement);
+  }
+
+  for (const [sourceAttribute, imageAttribute] of Object.entries(photoAttributeMap)) {
+    const value = photoElement.getAttribute(sourceAttribute);
+
+    if (value === null) {
+      imageElement.removeAttribute(imageAttribute);
+    } else {
+      imageElement.setAttribute(imageAttribute, value);
     }
-
-    this.syncImageAttributes();
   }
 
-  attributeChangedCallback(): void {
-    this.syncImageAttributes();
-  }
-
-  private syncImageAttributes(): void {
-    const attributeMap = {
-      path: "src",
-      alt: "alt",
-      title: "title",
-      width: "width",
-      height: "height",
-      loading: "loading",
-      draggable: "draggable",
-    } as const;
-
-    for (const [sourceAttribute, imageAttribute] of Object.entries(attributeMap)) {
-      const value = this.getAttribute(sourceAttribute);
-
-      if (value === null) {
-        this.image.removeAttribute(imageAttribute);
-      } else {
-        this.image.setAttribute(imageAttribute, value);
-      }
-    }
-
-    this.image.decoding = this.getAttribute("priority") === "true" ? "sync" : "async";
-  }
+  imageElement.decoding = photoElement.getAttribute("priority") === "true" ? "sync" : "async";
 }
 
-if (!customElements.get("photo")) {
-  customElements.define("photo", RaktaPhotoElement);
+function syncRaktaElements(): void {
+  document.querySelectorAll("photo").forEach(syncPhotoElement);
 }
 
 ${routeModules}
@@ -420,6 +416,14 @@ function App(): React.ReactElement {
       isCurrent = false;
     };
   }, [pathname]);
+
+  useEffect(() => {
+    const animationFrameId = window.requestAnimationFrame(syncRaktaElements);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrameId);
+    };
+  }, [Page, pathname]);
 
   if (!Page) {
     return React.createElement("main", {

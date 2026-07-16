@@ -108,6 +108,8 @@ export default function App() {
 	const scoreRef = useRef(0);
 
 	const containerRef = useRef<HTMLDivElement>(null);
+	const playerRef = useRef<HTMLDivElement>(null);
+	const obstacleRef = useRef<HTMLDivElement>(null);
 	const gameLoopId = useRef<number | null>(null);
 	const lastTimeRef = useRef<number>(0);
 
@@ -294,56 +296,35 @@ export default function App() {
 			}
 			setObstacleX(obstacleXRef.current);
 
-			// 3. Collision Detection (Pixel-perfect fair bounding boxes with small grazing buffers)
-			const width = containerRef.current?.clientWidth || 600;
-
-			// Position of shrimp container (64px wide, positioned at 18% of container width)
-			const playerLeftPx = 0.18 * width;
-
-			// Actual shrimp visual bounds inset inside its 64px container
-			const shrimpLeft = playerLeftPx + 10;
-			const shrimpRight = playerLeftPx + 54;
-
-			// Obstacle visual bounds in pixels. The SVG has transparent side padding,
-			// so the hitbox follows the visible coral body instead of the wrapper.
-			const obstacleLeft = (obstacleXRef.current / 100) * width;
-			const coralVisualInset = Math.max(4, obstacleWidthRef.current * 0.24);
-			const obstacleHitboxLeft = obstacleLeft + coralVisualInset;
-			const obstacleHitboxRight =
-				obstacleLeft + obstacleWidthRef.current - coralVisualInset;
-
-			// Small grazing buffer (3px) to allow minor visual overlaps without game-over
-			const horizontalBuffer = 3;
-
-			// Horizontal overlap check
-			const isWithinHitboxHorizontal =
-				shrimpRight - horizontalBuffer > obstacleHitboxLeft &&
-				shrimpLeft + horizontalBuffer < obstacleHitboxRight;
+			// 3. Collision Detection from real DOM boxes, so physics matches the visible SVG.
+			const playerRect = playerRef.current?.getBoundingClientRect();
+			const obstacleRect = obstacleRef.current?.getBoundingClientRect();
 			let isCollided = false;
 
-			if (isWithinHitboxHorizontal) {
-				// Vertical overlap check
-				// The shrimp SVG viewBox is 100x100 mapped into a 64px div.
-				// Body occupies approx y=22 to y=66 in viewBox → ~14px (top) to ~42px (bottom) from div top.
-				// Div's bottom edge is at `playerY` from container bottom.
-				// → Shrimp body top from ground   = playerY + (64 - 14) = playerY + 50
-				// → Shrimp body bottom from ground = playerY + (64 - 42) = playerY + 22
-				if (obstaclePosRef.current === "BOTTOM") {
-					// Bottom coral: grows from ground up to `obstacleHeight` px.
-					// Collision when shrimp body bottom dips into the coral.
-					// 4px forgiveness buffer for fair, satisfying gameplay.
-					if (playerYRef.current + 22 - 4 < obstacleHeightRef.current) {
-						isCollided = true;
-					}
-				} else {
-					// Top coral: hangs from ceiling, bottom edge at (containerHeight - obstacleHeight).
-					// Collision when shrimp body top rises into the coral.
-					// 4px forgiveness buffer for fair, satisfying gameplay.
-					const coralBottomLimit = containerHeight - obstacleHeightRef.current;
-					if (playerYRef.current + 50 + 4 > coralBottomLimit) {
-						isCollided = true;
-					}
-				}
+			if (playerRect && obstacleRect) {
+				const shrimpHitbox = {
+					left: playerRect.left + 12,
+					right: playerRect.right - 10,
+					top: playerRect.top + 15,
+					bottom: playerRect.bottom - 20,
+				};
+				const coralHorizontalInset = Math.max(3, obstacleRect.width * 0.18);
+				const coralVerticalInset =
+					obstaclePosRef.current === "BOTTOM"
+						? { top: obstacleRect.top + 5, bottom: obstacleRect.bottom }
+						: { top: obstacleRect.top, bottom: obstacleRect.bottom - 5 };
+				const coralHitbox = {
+					left: obstacleRect.left + coralHorizontalInset,
+					right: obstacleRect.right - coralHorizontalInset,
+					top: coralVerticalInset.top,
+					bottom: coralVerticalInset.bottom,
+				};
+
+				isCollided =
+					shrimpHitbox.left < coralHitbox.right &&
+					shrimpHitbox.right > coralHitbox.left &&
+					shrimpHitbox.top < coralHitbox.bottom &&
+					shrimpHitbox.bottom > coralHitbox.top;
 			}
 
 			if (isCollided) {
@@ -507,7 +488,7 @@ export default function App() {
 				{/* Hero Section */}
 				<section className="flex flex-col gap-6 items-start">
 					<span className="font-mono text-xs font-bold text-brand-pink border border-brand-pink px-3.5 py-1.5 tracking-wider uppercase bg-brand-pink/5">
-						V0.2.6
+						V0.2.7
 					</span>
 					<h1 className="font-sans font-extrabold text-white uppercase tracking-tighter leading-[0.85] text-[48px] sm:text-[72px] md:text-[110px]">
 						RAKTA IS READY
@@ -525,7 +506,7 @@ export default function App() {
 							ENGINE
 						</span>
 						<span className="font-mono text-xl text-white font-semibold">
-							0.2.6
+							0.2.7
 						</span>
 					</div>
 					<div className="p-6 md:p-8 flex flex-col gap-2 group hover:bg-white/5 transition-colors">
@@ -806,26 +787,24 @@ export default function App() {
 									SCORE
 								</span>
 								<span
-									className={`font-mono text-3xl md:text-4xl tracking-widest font-extrabold ${
-										aestheticUnit === "NEO-BRUTALIST"
-											? "text-black bg-white border-2 border-black px-3 py-0.5 shadow-[3px_3px_0px_#000000]"
-											: aestheticUnit === "RETRO-CYBER"
-												? "text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-500 drop-shadow-[0_0_8px_rgba(240,46,170,0.6)]"
-												: "text-white"
-									}`}
+									className={`font-mono text-3xl md:text-4xl tracking-widest font-extrabold ${aestheticUnit === "NEO-BRUTALIST"
+										? "text-black bg-white border-2 border-black px-3 py-0.5 shadow-[3px_3px_0px_#000000]"
+										: aestheticUnit === "RETRO-CYBER"
+											? "text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-500 drop-shadow-[0_0_8px_rgba(240,46,170,0.6)]"
+											: "text-white"
+										}`}
 									id="live-score"
 								>
 									{score.toString().padStart(6, "0")}
 								</span>
 								{highScore > 0 && (
 									<span
-										className={`font-mono text-[10px] mt-1 ${
-											aestheticUnit === "NEO-BRUTALIST"
-												? "text-black font-extrabold bg-[#ffff00] border border-black px-1.5 py-0.5 w-fit shadow-[1.5px_1.5px_0px_#000000]"
-												: aestheticUnit === "RETRO-CYBER"
-													? "text-fuchsia-400 drop-shadow-[0_0_4px_rgba(240,46,170,0.4)]"
-													: "text-cyan-400"
-										}`}
+										className={`font-mono text-[10px] mt-1 ${aestheticUnit === "NEO-BRUTALIST"
+											? "text-black font-extrabold bg-[#ffff00] border border-black px-1.5 py-0.5 w-fit shadow-[1.5px_1.5px_0px_#000000]"
+											: aestheticUnit === "RETRO-CYBER"
+												? "text-fuchsia-400 drop-shadow-[0_0_4px_rgba(240,46,170,0.4)]"
+												: "text-cyan-400"
+											}`}
 									>
 										BEST: {highScore.toString().padStart(6, "0")}
 									</span>
@@ -839,13 +818,12 @@ export default function App() {
 									PERFORMANCE
 								</span>
 								<span
-									className={`font-mono text-lg md:text-xl font-bold ${
-										aestheticUnit === "NEO-BRUTALIST"
-											? "text-black bg-[#E11D48] border-2 border-black px-2 py-0.5 shadow-[2px_2px_0px_#000000]"
-											: aestheticUnit === "RETRO-CYBER"
-												? "text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]"
-												: "text-brand-pink"
-									}`}
+									className={`font-mono text-lg md:text-xl font-bold ${aestheticUnit === "NEO-BRUTALIST"
+										? "text-black bg-[#E11D48] border-2 border-black px-2 py-0.5 shadow-[2px_2px_0px_#000000]"
+										: aestheticUnit === "RETRO-CYBER"
+											? "text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]"
+											: "text-brand-pink"
+										}`}
 									id="live-fps"
 								>
 									{liveFps.toFixed(2)} FPS
@@ -855,25 +833,23 @@ export default function App() {
 							{/* Simulation Game Messages */}
 							{!isPlaying && !hasCollision && (
 								<div
-									className={`text-center z-20 pointer-events-none p-4 max-w-sm rounded backdrop-blur-sm ${
-										aestheticUnit === "NEO-BRUTALIST"
-											? "bg-[#FFFBEB] border-4 border-black text-black shadow-[6px_6px_0px_#000000]"
-											: aestheticUnit === "RETRO-CYBER"
-												? "bg-[#1a0033]/80 border-2 border-fuchsia-500 text-pink-400 shadow-[0_0_15px_rgba(240,46,170,0.5)]"
-												: "bg-black/60 border border-cyan-500/30 text-white"
-									}`}
+									className={`text-center z-20 pointer-events-none p-4 max-w-sm rounded backdrop-blur-sm ${aestheticUnit === "NEO-BRUTALIST"
+										? "bg-[#FFFBEB] border-4 border-black text-black shadow-[6px_6px_0px_#000000]"
+										: aestheticUnit === "RETRO-CYBER"
+											? "bg-[#1a0033]/80 border-2 border-fuchsia-500 text-pink-400 shadow-[0_0_15px_rgba(240,46,170,0.5)]"
+											: "bg-black/60 border border-cyan-500/30 text-white"
+										}`}
 								>
 									<p className="font-mono text-xs uppercase tracking-widest animate-pulse font-bold">
 										CLICK CONTAINER OR PRESS SPACE TO SWIM
 									</p>
 									<p
-										className={`font-mono text-[10px] mt-2 font-bold tracking-widest uppercase ${
-											aestheticUnit === "NEO-BRUTALIST"
-												? "text-black"
-												: aestheticUnit === "RETRO-CYBER"
-													? "text-cyan-400"
-													: "text-cyan-400"
-										}`}
+										className={`font-mono text-[10px] mt-2 font-bold tracking-widest uppercase ${aestheticUnit === "NEO-BRUTALIST"
+											? "text-black"
+											: aestheticUnit === "RETRO-CYBER"
+												? "text-cyan-400"
+												: "text-cyan-400"
+											}`}
 									>
 										SHRIMPRUN {aestheticUnit.replace("-", " ")} V2.0
 									</p>
@@ -882,20 +858,18 @@ export default function App() {
 
 							{hasCollision && (
 								<div
-									className={`text-center z-20 pointer-events-none p-6 max-w-sm rounded backdrop-blur-md ${
-										aestheticUnit === "NEO-BRUTALIST"
-											? "bg-[#FFFBEB] border-4 border-black text-black shadow-[8px_8px_0px_#000000]"
-											: aestheticUnit === "RETRO-CYBER"
-												? "bg-[#0d0118]/95 border-2 border-pink-500 text-pink-400 shadow-[0_0_20px_rgba(244,63,94,0.6)]"
-												: "bg-black/90 border-2 border-brand-pink text-white"
-									}`}
+									className={`text-center z-20 pointer-events-none p-6 max-w-sm rounded backdrop-blur-md ${aestheticUnit === "NEO-BRUTALIST"
+										? "bg-[#FFFBEB] border-4 border-black text-black shadow-[8px_8px_0px_#000000]"
+										: aestheticUnit === "RETRO-CYBER"
+											? "bg-[#0d0118]/95 border-2 border-pink-500 text-pink-400 shadow-[0_0_20px_rgba(244,63,94,0.6)]"
+											: "bg-black/90 border-2 border-brand-pink text-white"
+										}`}
 								>
 									<p
-										className={`font-mono text-sm uppercase tracking-widest font-extrabold ${
-											aestheticUnit === "NEO-BRUTALIST"
-												? "text-red-600"
-												: "text-brand-pink"
-										}`}
+										className={`font-mono text-sm uppercase tracking-widest font-extrabold ${aestheticUnit === "NEO-BRUTALIST"
+											? "text-red-600"
+											: "text-brand-pink"
+											}`}
 									>
 										SIMULATION HALTED
 									</p>
@@ -903,13 +877,12 @@ export default function App() {
 										SHRIMP COLLIDED WITH CORAL
 									</p>
 									<p
-										className={`font-mono text-xs mt-4 font-bold border px-3 py-1 animate-pulse ${
-											aestheticUnit === "NEO-BRUTALIST"
-												? "bg-black text-white border-black"
-												: aestheticUnit === "RETRO-CYBER"
-													? "bg-fuchsia-950/20 text-fuchsia-400 border-fuchsia-500/50"
-													: "bg-brand-green/5 text-brand-green border-brand-green/30"
-										}`}
+										className={`font-mono text-xs mt-4 font-bold border px-3 py-1 animate-pulse ${aestheticUnit === "NEO-BRUTALIST"
+											? "bg-black text-white border-black"
+											: aestheticUnit === "RETRO-CYBER"
+												? "bg-fuchsia-950/20 text-fuchsia-400 border-fuchsia-500/50"
+												: "bg-brand-green/5 text-brand-green border-brand-green/30"
+											}`}
 									>
 										CLICK TO RE-INITIALIZE
 									</p>
@@ -918,6 +891,7 @@ export default function App() {
 
 							{/* Animated Shrimp Character */}
 							<div
+								ref={playerRef}
 								className="absolute left-[18%] z-20 flex items-center justify-center"
 								style={{
 									bottom: `${playerY}px`,
@@ -935,15 +909,16 @@ export default function App() {
 											: !isPlaying
 												? Math.sin(Date.now() / 150) * 5
 												: Math.max(
-														-28,
-														Math.min(28, velocityRef.current * -4.2),
-													)
+													-28,
+													Math.min(28, velocityRef.current * -4.2),
+												)
 									}
 								/>
 							</div>
 
 							{/* Coral Reef Obstacle */}
 							<div
+								ref={obstacleRef}
 								className="absolute z-20"
 								style={{
 									left: `${obstacleX}%`,
@@ -967,13 +942,12 @@ export default function App() {
 							{/* Live interactive speed banner inside when playing */}
 							{isPlaying && (
 								<div
-									className={`absolute bottom-4 left-6 flex items-center gap-1.5 font-mono text-[9px] z-20 font-semibold uppercase tracking-wider ${
-										aestheticUnit === "NEO-BRUTALIST"
-											? "text-black bg-white border border-black px-1.5 py-0.5 shadow-[1px_1px_0_#000]"
-											: aestheticUnit === "RETRO-CYBER"
-												? "text-fuchsia-400"
-												: "text-cyan-400"
-									}`}
+									className={`absolute bottom-4 left-6 flex items-center gap-1.5 font-mono text-[9px] z-20 font-semibold uppercase tracking-wider ${aestheticUnit === "NEO-BRUTALIST"
+										? "text-black bg-white border border-black px-1.5 py-0.5 shadow-[1px_1px_0_#000]"
+										: aestheticUnit === "RETRO-CYBER"
+											? "text-fuchsia-400"
+											: "text-cyan-400"
+										}`}
 								>
 									<span
 										className={`w-1.5 h-1.5 rounded-full animate-ping ${aestheticUnit === "NEO-BRUTALIST" ? "bg-black" : "bg-cyan-400"}`}
@@ -985,13 +959,12 @@ export default function App() {
 							{/* Floating Settings/Config Toast */}
 							{configToast && (
 								<div
-									className={`absolute bottom-12 px-4 py-1.5 font-mono text-[10px] z-30 font-bold uppercase tracking-widest animate-bounce ${
-										aestheticUnit === "NEO-BRUTALIST"
-											? "bg-[#ffff00] text-black border-2 border-black shadow-[4px_4px_0px_#000000]"
-											: aestheticUnit === "RETRO-CYBER"
-												? "bg-fuchsia-950/90 text-fuchsia-400 border border-fuchsia-500 shadow-[0_0_10px_rgba(240,46,170,0.6)] backdrop-blur-sm"
-												: "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 backdrop-blur-sm"
-									}`}
+									className={`absolute bottom-12 px-4 py-1.5 font-mono text-[10px] z-30 font-bold uppercase tracking-widest animate-bounce ${aestheticUnit === "NEO-BRUTALIST"
+										? "bg-[#ffff00] text-black border-2 border-black shadow-[4px_4px_0px_#000000]"
+										: aestheticUnit === "RETRO-CYBER"
+											? "bg-fuchsia-950/90 text-fuchsia-400 border border-fuchsia-500 shadow-[0_0_10px_rgba(240,46,170,0.6)] backdrop-blur-sm"
+											: "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 backdrop-blur-sm"
+										}`}
 								>
 									{configToast}
 								</div>
@@ -1052,15 +1025,14 @@ export default function App() {
 							<div className="flex items-center gap-1.5">
 								<span>CORAL:</span>
 								<span
-									className={`px-2 py-0.5 font-bold text-[9px] tracking-wider rounded border ${
-										aestheticUnit === "NEO-BRUTALIST"
-											? "text-black border-2 border-black bg-white shadow-[1px_1px_0px_#000000] rounded-none"
-											: obstacleSizeClass === "KECIL"
-												? "text-amber-400 border-amber-400/30 bg-amber-400/5"
-												: obstacleSizeClass === "SEDANG"
-													? "text-cyan-400 border-cyan-400/30 bg-cyan-400/5"
-													: "text-rose-400 border-rose-400/30 bg-rose-400/5"
-									}`}
+									className={`px-2 py-0.5 font-bold text-[9px] tracking-wider rounded border ${aestheticUnit === "NEO-BRUTALIST"
+										? "text-black border-2 border-black bg-white shadow-[1px_1px_0px_#000000] rounded-none"
+										: obstacleSizeClass === "KECIL"
+											? "text-amber-400 border-amber-400/30 bg-amber-400/5"
+											: obstacleSizeClass === "SEDANG"
+												? "text-cyan-400 border-cyan-400/30 bg-cyan-400/5"
+												: "text-rose-400 border-rose-400/30 bg-rose-400/5"
+										}`}
 								>
 									{obstacleSizeClass}
 								</span>
@@ -1115,19 +1087,18 @@ export default function App() {
 											`LATENCY MODE: ${nextMode ? "LOW LATENCY" : "STANDARD"}`,
 										);
 									}}
-									className={`px-2 py-0.5 font-bold cursor-pointer transition-all ${
-										aestheticUnit === "NEO-BRUTALIST"
+									className={`px-2 py-0.5 font-bold cursor-pointer transition-all ${aestheticUnit === "NEO-BRUTALIST"
+										? lowLatencyMode
+											? "bg-black text-[#ffff00] border-2 border-black px-2 py-0.5 font-extrabold shadow-[2px_2px_0px_#000000] rounded-none"
+											: "bg-white text-zinc-400 border border-zinc-300 px-2 py-0.5 font-medium rounded-none hover:border-black hover:text-black"
+										: aestheticUnit === "RETRO-CYBER"
 											? lowLatencyMode
-												? "bg-black text-[#ffff00] border-2 border-black px-2 py-0.5 font-extrabold shadow-[2px_2px_0px_#000000] rounded-none"
-												: "bg-white text-zinc-400 border border-zinc-300 px-2 py-0.5 font-medium rounded-none hover:border-black hover:text-black"
-											: aestheticUnit === "RETRO-CYBER"
-												? lowLatencyMode
-													? "bg-pink-950/40 text-pink-400 border border-pink-500 shadow-[0_0_8px_rgba(244,63,94,0.6)] rounded"
-													: "bg-zinc-950 text-zinc-600 border border-zinc-800 rounded"
-												: lowLatencyMode
-													? "bg-brand-pink/10 text-brand-pink border border-brand-pink/30 rounded"
-													: "bg-zinc-900 text-zinc-500 border border-zinc-800 rounded"
-									}`}
+												? "bg-pink-950/40 text-pink-400 border border-pink-500 shadow-[0_0_8px_rgba(244,63,94,0.6)] rounded"
+												: "bg-zinc-950 text-zinc-600 border border-zinc-800 rounded"
+											: lowLatencyMode
+												? "bg-brand-pink/10 text-brand-pink border border-brand-pink/30 rounded"
+												: "bg-zinc-900 text-zinc-500 border border-zinc-800 rounded"
+										}`}
 								>
 									{lowLatencyMode ? "ON" : "OFF"}
 								</button>

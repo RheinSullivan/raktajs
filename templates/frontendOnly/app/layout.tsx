@@ -15,8 +15,18 @@ export default function RootLayout({ children }: RootLayoutProps) {
 				<title>
 					Rakta.js | Small in size. Fierce in speed. Alive in every route
 				</title>
-				<link rel="icon" href="/favicon.ico" sizes="any" type="image/x-icon" />
-				<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+				<link
+					rel="icon"
+					href="/favicon.ico?v=rakta"
+					sizes="any"
+					type="image/x-icon"
+				/>
+				<link
+					rel="shortcut icon"
+					href="/favicon.ico?v=rakta"
+					type="image/x-icon"
+				/>
+				<link rel="apple-touch-icon" href="/favicon.ico?v=rakta" />
 			</head>
 			<body className="min-h-screen bg-[#050505] text-slate-50 antialiased">
 				{children}

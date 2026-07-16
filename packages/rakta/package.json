@@ -1,6 +1,6 @@
 {
 	"name": "raktajs",
-	"version": "0.2.6",
+	"version": "0.2.7",
 	"description": "Rakta.js core framework package for React, Bun, TypeScript, app routing, rendering, SEO, components, RPC, store, schema, HTTP, PWA, and auto imports.",
 	"type": "module",
 	"license": "MIT",
