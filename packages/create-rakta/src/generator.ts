@@ -1,778 +1,787 @@
-﻿import { readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import {
-	STARTER_AUDIO_CODE,
-	STARTER_COMPONENTS_MODAL_CODE,
-	STARTER_CORAL_OBSTACLE_CODE,
-	STARTER_CSS_CODE,
-	STARTER_DEPLOY_MODAL_CODE,
-	STARTER_DOCS_MODAL_CODE,
-	STARTER_PAGE_CODE,
-	STARTER_SHRIMP_CHARACTER_CODE,
-	STARTER_TYPES_CODE,
+  STARTER_AUDIO_CODE,
+  STARTER_COMPONENTS_MODAL_CODE,
+  STARTER_CORAL_OBSTACLE_CODE,
+  STARTER_CSS_CODE,
+  STARTER_DEPLOY_MODAL_CODE,
+  STARTER_DOCS_MODAL_CODE,
+  STARTER_PAGE_CODE,
+  STARTER_SHRIMP_CHARACTER_CODE,
+  STARTER_TYPES_CODE,
 } from "./starter";
 import type {
-	BackendFramework,
-	CssFramework,
-	Database,
-	ProjectConfig,
-	ProjectFile,
+  BackendFramework,
+  CssFramework,
+  Database,
+  ProjectConfig,
+  ProjectFile,
 } from "./types";
 import { BACKEND_DISPLAY, CSS_DISPLAY, DATABASE_DISPLAY } from "./types";
 
 const DEFAULT_METADATA_TITLE =
-	"Rakta.js | Small in size. Fierce in speed. Alive in every route";
+  "Rakta.js | Small in size. Fierce in speed. Alive in every route";
 const FAVICON_BYTES = readFileSync(
-	new URL("../assets/favicon.ico", import.meta.url),
+  new URL("../assets/favicon.ico", import.meta.url),
+);
+const RAKTA_LOGO_SVG = readFileSync(
+  new URL("../assets/rakta-logo.svg", import.meta.url),
+  "utf-8",
 );
 
 //  Root files
 
 function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	const { projectName, projectMode, useTypeScript } = projectConfig;
+  const { projectName, projectMode, useTypeScript } = projectConfig;
 
-	const workspaces =
-		projectMode === "fullstack" ? ["frontend", "backend", "shared"] : [];
+  const workspaces =
+    projectMode === "fullstack" ? ["frontend", "backend", "shared"] : [];
 
-	const files: ProjectFile[] = [
-		{
-			path: "package.json",
-			content: JSON.stringify(
-				{
-					name: projectName,
-					version: "0.1.0",
-					private: true,
-					...(projectMode === "fullstack" ? { workspaces } : {}),
-					scripts:
-						projectMode === "fullstack"
-							? {
-									"dev:frontend": "cd frontend && bun run dev",
-									"dev:backend": "cd backend && bun run dev",
-									"build:frontend": "cd frontend && bun run build",
-									"build:backend": "cd backend && bun run build",
-									build: "bun run build:frontend && bun run build:backend",
-									start: "cd backend && bun run start",
-									...(useTypeScript
-										? {
-												typecheck:
-													"cd frontend && bun run typecheck && cd ../backend && bun run typecheck",
-											}
-										: {}),
-								}
-							: {
-									dev: "rakta dev",
-									build: "rakta build",
-									start: "rakta start",
-									...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
-								},
-					description: `${projectName} â€” built with Rakta.js`,
-				},
-				null,
-				2,
-			),
-		},
-		{
-			path: "bunfig.toml",
-			content: `[install]\nauto = "fallback"\nexact = false\nregistry = "https://registry.npmjs.org/"\n\n[run]\nbun = true\n`,
-		},
-		{
-			path: ".npmrc",
-			content: `registry=https://registry.npmjs.org/\nstrict-ssl=true\nfetch-retries=5\nfetch-retry-mintimeout=20000\nfetch-retry-maxtimeout=120000\n`,
-		},
-		{
-			path: ".env.example",
-			content: `NODE_ENV=development\n`,
-		},
-		{
-			path: ".gitignore",
-			content: `node_modules/\ndist/\n.env\n.env.*\n!.env.example\n.DS_Store\n*.log\n.rakta/\n`,
-		},
-		{
-			path: "README.md",
-			content: generateProjectReadme(projectConfig),
-		},
-	];
+  const files: ProjectFile[] = [
+    {
+      path: "package.json",
+      content: JSON.stringify(
+        {
+          name: projectName,
+          version: "0.1.0",
+          private: true,
+          ...(projectMode === "fullstack" ? { workspaces } : {}),
+          scripts:
+            projectMode === "fullstack"
+              ? {
+                "dev:frontend": "cd frontend && bun run dev",
+                "dev:backend": "cd backend && bun run dev",
+                "build:frontend": "cd frontend && bun run build",
+                "build:backend": "cd backend && bun run build",
+                build: "bun run build:frontend && bun run build:backend",
+                start: "cd backend && bun run start",
+                ...(useTypeScript
+                  ? {
+                    typecheck:
+                      "cd frontend && bun run typecheck && cd ../backend && bun run typecheck",
+                  }
+                  : {}),
+              }
+              : {
+                dev: "rakta dev",
+                build: "rakta build",
+                start: "rakta start",
+                ...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
+              },
+          description: `${projectName} â€” built with Rakta.js`,
+        },
+        null,
+        2,
+      ),
+    },
+    {
+      path: "bunfig.toml",
+      content: `[install]\nauto = "fallback"\nexact = false\nregistry = "https://registry.npmjs.org/"\n\n[run]\nbun = true\n`,
+    },
+    {
+      path: ".npmrc",
+      content: `registry=https://registry.npmjs.org/\nstrict-ssl=true\nfetch-retries=5\nfetch-retry-mintimeout=20000\nfetch-retry-maxtimeout=120000\n`,
+    },
+    {
+      path: ".env.example",
+      content: `NODE_ENV=development\n`,
+    },
+    {
+      path: ".gitignore",
+      content: `node_modules/\ndist/\n.env\n.env.*\n!.env.example\n.DS_Store\n*.log\n.rakta/\n`,
+    },
+    {
+      path: "README.md",
+      content: generateProjectReadme(projectConfig),
+    },
+  ];
 
-	if (useTypeScript) {
-		files.splice(1, 0, {
-			path: "tsconfig.base.json",
-			content: JSON.stringify(
-				{
-					compilerOptions: {
-						target: "ESNext",
-						module: "ESNext",
-						moduleResolution: "Bundler",
-						jsx: "react-jsx",
-						lib: ["ESNext", "DOM", "DOM.Iterable"],
-						strict: true,
-						noUncheckedIndexedAccess: true,
-						exactOptionalPropertyTypes: true,
-						skipLibCheck: true,
-						esModuleInterop: true,
-						allowSyntheticDefaultImports: true,
-						resolveJsonModule: true,
-						verbatimModuleSyntax: true,
-						isolatedModules: true,
-					},
-					exclude: ["node_modules", "dist", "**/dist/**"],
-				},
-				null,
-				2,
-			),
-		});
-	}
+  if (useTypeScript) {
+    files.splice(1, 0, {
+      path: "tsconfig.base.json",
+      content: JSON.stringify(
+        {
+          compilerOptions: {
+            target: "ESNext",
+            module: "ESNext",
+            moduleResolution: "Bundler",
+            jsx: "react-jsx",
+            lib: ["ESNext", "DOM", "DOM.Iterable"],
+            strict: true,
+            noUncheckedIndexedAccess: true,
+            exactOptionalPropertyTypes: true,
+            skipLibCheck: true,
+            esModuleInterop: true,
+            allowSyntheticDefaultImports: true,
+            resolveJsonModule: true,
+            verbatimModuleSyntax: true,
+            isolatedModules: true,
+          },
+          exclude: ["node_modules", "dist", "**/dist/**"],
+        },
+        null,
+        2,
+      ),
+    });
+  }
 
-	return files;
+  return files;
 }
 
 //  Frontend-only starter (ShrimpRun game)
 
 function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	const { projectName, cssFramework, useTypeScript } = projectConfig;
-	const styleFileName =
-		cssFramework === "sass" ? "globals.scss" : "globals.css";
-	const pageExtension = useTypeScript ? "tsx" : "jsx";
-	const scriptExtension = useTypeScript ? "ts" : "js";
+  const { projectName, cssFramework, useTypeScript } = projectConfig;
+  const styleFileName =
+    cssFramework === "sass" ? "globals.scss" : "globals.css";
+  const pageExtension = useTypeScript ? "tsx" : "jsx";
+  const scriptExtension = useTypeScript ? "ts" : "js";
 
-	const files: ProjectFile[] = [
-		{
-			path: "package.json",
-			content: JSON.stringify(
-				{
-					name: projectName,
-					version: "0.1.0",
-					private: true,
-					type: "module",
-					scripts: {
-						dev: "rakta dev",
-						build: "rakta build",
-						start: "rakta start",
-						routes: "rakta routes",
-						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
-					},
-					dependencies: {
-						raktajs: "^0.2.4",
-						motion: "^12.42.2",
-						react: "^19.2.7",
-						"react-dom": "^19.2.7",
-						"react-icons": "^5.7.0",
-						...getCssDependencies(cssFramework),
-					},
-					devDependencies: useTypeScript
-						? {
-								"@types/react": "^19.2.17",
-								"@types/react-dom": "^19.2.3",
-								typescript: "^6.0.3",
-								...getCssDevDependencies(cssFramework),
-							}
-						: {
-								...getCssDevDependencies(cssFramework),
-							},
-				},
-				null,
-				2,
-			),
-		},
-		{
-			path: `rakta.config.${scriptExtension}`,
-			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js — Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {},\n  },\n});\n`,
-		},
-		{
-			path: `app/layout.${pageExtension}`,
-			content: generateFrontendOnlyLayout(),
-		},
-		{
-			path: `app/page.${pageExtension}`,
-			content: generateFrontendOnlyPage(projectName),
-		},
-		{
-			path: `app/loading.${pageExtension}`,
-			content: generateFrontendOnlyLoading(),
-		},
-		{
-			path: `app/error.${pageExtension}`,
-			content: generateFrontendOnlyError(),
-		},
-		{
-			path: `app/notFound.${pageExtension}`,
-			content: generateFrontendOnlyNotFound(),
-		},
-		{
-			path: `app/components/ComponentsModal.${pageExtension}`,
-			content: STARTER_COMPONENTS_MODAL_CODE,
-		},
-		{
-			path: `app/components/CoralObstacle.${pageExtension}`,
-			content: STARTER_CORAL_OBSTACLE_CODE,
-		},
-		{
-			path: `app/components/DeployModal.${pageExtension}`,
-			content: STARTER_DEPLOY_MODAL_CODE,
-		},
-		{
-			path: `app/components/DocsModal.${pageExtension}`,
-			content: STARTER_DOCS_MODAL_CODE,
-		},
-		{
-			path: `app/components/ShrimpCharacter.${pageExtension}`,
-			content: STARTER_SHRIMP_CHARACTER_CODE,
-		},
-		{
-			path: `app/utils/audio.${scriptExtension}`,
-			content: STARTER_AUDIO_CODE,
-		},
-		{
-			path: `app/types.${scriptExtension}`,
-			content: STARTER_TYPES_CODE,
-		},
-		{
-			path: `styles/${styleFileName}`,
-			content:
-				cssFramework === "tailwind"
-					? STARTER_CSS_CODE
-					: getFrontendOnlyCssGlobals(cssFramework),
-		},
-		{
-			path: "public/.gitkeep",
-			content: "",
-		},
-		{
-			path: "public/favicon.ico",
-			content: FAVICON_BYTES,
-		},
-	];
+  const files: ProjectFile[] = [
+    {
+      path: "package.json",
+      content: JSON.stringify(
+        {
+          name: projectName,
+          version: "0.1.0",
+          private: true,
+          type: "module",
+          scripts: {
+            dev: "rakta dev",
+            build: "rakta build",
+            start: "rakta start",
+            routes: "rakta routes",
+            ...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
+          },
+          dependencies: {
+            raktajs: "^0.2.6",
+            motion: "^12.42.2",
+            react: "^19.2.7",
+            "react-dom": "^19.2.7",
+            "react-icons": "^5.7.0",
+            ...getCssDependencies(cssFramework),
+          },
+          devDependencies: useTypeScript
+            ? {
+              "@types/react": "^19.2.17",
+              "@types/react-dom": "^19.2.3",
+              typescript: "^6.0.3",
+              ...getCssDevDependencies(cssFramework),
+            }
+            : {
+              ...getCssDevDependencies(cssFramework),
+            },
+        },
+        null,
+        2,
+      ),
+    },
+    {
+      path: `rakta.config.${scriptExtension}`,
+      content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js — Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {},\n  },\n});\n`,
+    },
+    {
+      path: `app/layout.${pageExtension}`,
+      content: generateFrontendOnlyLayout(),
+    },
+    {
+      path: `app/page.${pageExtension}`,
+      content: generateFrontendOnlyPage(projectName),
+    },
+    {
+      path: `app/loading.${pageExtension}`,
+      content: generateFrontendOnlyLoading(),
+    },
+    {
+      path: `app/error.${pageExtension}`,
+      content: generateFrontendOnlyError(),
+    },
+    {
+      path: `app/notFound.${pageExtension}`,
+      content: generateFrontendOnlyNotFound(),
+    },
+    {
+      path: `app/components/ComponentsModal.${pageExtension}`,
+      content: STARTER_COMPONENTS_MODAL_CODE,
+    },
+    {
+      path: `app/components/CoralObstacle.${pageExtension}`,
+      content: STARTER_CORAL_OBSTACLE_CODE,
+    },
+    {
+      path: `app/components/DeployModal.${pageExtension}`,
+      content: STARTER_DEPLOY_MODAL_CODE,
+    },
+    {
+      path: `app/components/DocsModal.${pageExtension}`,
+      content: STARTER_DOCS_MODAL_CODE,
+    },
+    {
+      path: `app/components/ShrimpCharacter.${pageExtension}`,
+      content: STARTER_SHRIMP_CHARACTER_CODE,
+    },
+    {
+      path: `app/utils/audio.${scriptExtension}`,
+      content: STARTER_AUDIO_CODE,
+    },
+    {
+      path: `app/types.${scriptExtension}`,
+      content: STARTER_TYPES_CODE,
+    },
+    {
+      path: `styles/${styleFileName}`,
+      content:
+        cssFramework === "tailwind"
+          ? STARTER_CSS_CODE
+          : getFrontendOnlyCssGlobals(cssFramework),
+    },
+    {
+      path: "public/.gitkeep",
+      content: "",
+    },
+    {
+      path: "public/favicon.ico",
+      content: FAVICON_BYTES,
+    },
+    {
+      // Rakta.js brand logo used in navbar and footer of the starter page
+      path: "public/rakta-logo.svg",
+      content: RAKTA_LOGO_SVG,
+    },
+  ];
 
-	if (useTypeScript) {
-		files.splice(
-			1,
-			0,
-			{
-				path: "tsconfig.json",
-				content: JSON.stringify(
-					{
-						extends: "./tsconfig.base.json",
-						compilerOptions: {
-							outDir: "./dist",
-							rootDir: "./",
-							types: ["react", "react-dom"],
-						},
-						include: [
-							"rakta-env.d.ts",
-							"app/**/*",
-							"components/**/*",
-							"styles/**/*",
-							"rakta.config.ts",
-						],
-						exclude: ["node_modules", "dist"],
-					},
-					null,
-					2,
-				),
-			},
-			{
-				path: "rakta-env.d.ts",
-				content: generateFrontendOnlyRaktaEnv(),
-			},
-		);
-	}
+  if (useTypeScript) {
+    files.splice(
+      1,
+      0,
+      {
+        path: "tsconfig.json",
+        content: JSON.stringify(
+          {
+            extends: "./tsconfig.base.json",
+            compilerOptions: {
+              outDir: "./dist",
+              rootDir: "./",
+              types: ["react", "react-dom"],
+            },
+            include: [
+              "rakta-env.d.ts",
+              "app/**/*",
+              "components/**/*",
+              "styles/**/*",
+              "rakta.config.ts",
+            ],
+            exclude: ["node_modules", "dist"],
+          },
+          null,
+          2,
+        ),
+      },
+      {
+        path: "rakta-env.d.ts",
+        content: generateFrontendOnlyRaktaEnv(),
+      },
+    );
+  }
 
-	return processFilesForLanguage(files, useTypeScript);
+  return processFilesForLanguage(files, useTypeScript);
 }
 
 // ─── Fullstack frontend files
 
 function getFullstackFrontendFiles(
-	projectConfig: ProjectConfig,
+  projectConfig: ProjectConfig,
 ): ProjectFile[] {
-	const { projectName, cssFramework } = projectConfig;
-	const styleFileName =
-		cssFramework === "sass" ? "globals.scss" : "globals.css";
+  const { projectName, cssFramework } = projectConfig;
+  const styleFileName =
+    cssFramework === "sass" ? "globals.scss" : "globals.css";
 
-	return [
-		{
-			path: "frontend/package.json",
-			content: JSON.stringify(
-				{
-					name: `${projectName}-frontend`,
-					version: "0.1.0",
-					private: true,
-					scripts: {
-						dev: "rakta dev",
-						build: "rakta build",
-						start: "rakta start",
-						routes: "rakta routes",
-						"imports:generate": "rakta imports:generate",
-						"rpc:types": "rakta rpc:types",
-						typecheck: "tsc --noEmit",
-					},
-					dependencies: {
-						raktajs: "^0.2.4",
-						react: "^19.2.7",
-						"react-dom": "^19.2.7",
-						...getCssDependencies(cssFramework),
-					},
-					devDependencies: {
-						"@types/react": "^19.2.17",
-						"@types/react-dom": "^19.2.3",
-						typescript: "^6.0.3",
-						...getCssDevDependencies(cssFramework),
-					},
-				},
-				null,
-				2,
-			),
-		},
-		{
-			path: "frontend/tsconfig.json",
-			content: JSON.stringify(
-				{
-					extends: "../tsconfig.base.json",
-					compilerOptions: {
-						outDir: "./dist",
-						rootDir: "./",
-					},
-					include: [
-						"app/**/*",
-						"components/**/*",
-						"lib/**/*",
-						"stores/**/*",
-						"schemas/**/*",
-						"rakta.config.ts",
-					],
-					exclude: ["node_modules", "dist"],
-				},
-				null,
-				2,
-			),
-		},
-		{
-			path: "frontend/rakta.config.ts",
-			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {\n      "/": "ssg",\n      "/about": "ssg",\n      "/blog": "csg",\n      "/blog/:slug": "csg",\n      "/dashboard": "csr"\n    }\n  }\n});\n`,
-		},
-		{
-			path: "frontend/app/layout.tsx",
-			content: `import React from "react";\nimport "../styles/${styleFileName}";\n\ninterface RootLayoutProps {\n  readonly children: React.ReactNode;\n}\n\nexport default function RootLayout({ children }: RootLayoutProps) {\n  return (\n    <html lang="en">\n      <body>{children}</body>\n    </html>\n  );\n}\n`,
-		},
-		{
-			path: "frontend/app/page.tsx",
-			content: generateFullstackHomePage(projectName),
-		},
-		{
-			path: "frontend/app/about/page.tsx",
-			content: `import React from "react";\n\nexport default function AboutPage() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">ABOUT</p>\n        <h1>About ${projectName}</h1>\n        <p>This project is built with Rakta.js, React, Bun, and TypeScript.</p>\n        <a href="/">Back to home</a>\n      </section>\n    </main>\n  );\n}\n`,
-		},
-		{
-			path: "frontend/app/blog/page.tsx",
-			content: `import React from "react";\n\nconst BLOG_POSTS = [\n  { slug: "getting-started", title: "Getting started with Rakta.js" },\n  { slug: "file-based-routing", title: "File-based routing explained" },\n  { slug: "type-safe-rpc", title: "Type-safe API with CarubanWire" },\n];\n\nexport default function BlogPage() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">BLOG</p>\n        <h1>Articles</h1>\n        <ul>\n          {BLOG_POSTS.map((post) => (\n            <li key={post.slug}>\n              <a href={\`/blog/\${post.slug}\`}>{post.title}</a>\n            </li>\n          ))}\n        </ul>\n      </section>\n    </main>\n  );\n}\n`,
-		},
-		{
-			path: "frontend/app/blog/[slug]/page.tsx",
-			content: `import React from "react";\n\ninterface BlogPostPageProps {\n  readonly params: {\n    readonly slug?: string;\n  };\n}\n\nexport default function BlogPostPage({ params }: BlogPostPageProps) {\n  const postTitle = params.slug?.replaceAll("-", " ") ?? "Article";\n\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">BLOG POST</p>\n        <h1>{postTitle}</h1>\n        <p>Slug: <code>{params.slug}</code></p>\n        <a href="/blog">Back to blog</a>\n      </section>\n    </main>\n  );\n}\n`,
-		},
-		{
-			path: "frontend/app/loading.tsx",
-			content: `import React from "react";\n\nexport default function Loading() {\n  return (\n    <main className="page-shell">\n      <p>Loading...</p>\n    </main>\n  );\n}\n`,
-		},
-		{
-			path: "frontend/app/error.tsx",
-			content: `import React from "react";\n\ninterface ErrorPageProps {\n  readonly error: Error;\n  readonly reset: () => void;\n}\n\nexport default function ErrorPage({ error, reset }: ErrorPageProps) {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <h1>Something went wrong</h1>\n        <p>{error.message}</p>\n        <button type="button" onClick={reset}>Try again</button>\n      </section>\n    </main>\n  );\n}\n`,
-		},
-		{
-			path: "frontend/app/not-found.tsx",
-			content: `import React from "react";\n\nexport default function NotFound() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <h1>404</h1>\n        <p>The page you are looking for does not exist.</p>\n        <a href="/">Return home</a>\n      </section>\n    </main>\n  );\n}\n`,
-		},
-		{
-			path: "frontend/app/api/hello/route.ts",
-			content: `export async function GET(request: Request): Promise<Response> {\n  const requestUrl = new URL(request.url);\n\n  return Response.json({\n    message: "Hello from Rakta.js API",\n    pathname: requestUrl.pathname,\n    timestamp: new Date().toISOString(),\n  });\n}\n\nexport async function POST(request: Request): Promise<Response> {\n  const requestBody = await request.json() as Record<string, unknown>;\n\n  return Response.json({\n    received: requestBody,\n    timestamp: new Date().toISOString(),\n  });\n}\n`,
-		},
-		{
-			path: "frontend/lib/http.ts",
-			content: `export const API_URL = process.env["API_URL"] ?? "http://localhost:4000";\n\nexport async function apiGet<TData>(path: string): Promise<TData> {\n  const response = await fetch(\`\${API_URL}\${path}\`);\n\n  if (!response.ok) {\n    throw new Error(\`Request failed with status \${response.status}\`);\n  }\n\n  return response.json() as Promise<TData>;\n}\n`,
-		},
-		{
-			path: "frontend/lib/routes.ts",
-			content: `export const ROUTES = {\n  home: "/",\n  about: "/about",\n  blog: "/blog",\n  blogPost: (slug: string) => \`/blog/\${slug}\`,\n  apiHello: "/api/hello",\n} as const;\n`,
-		},
-		{
-			path: "frontend/lib/utils.ts",
-			content: `export function cn(...classNames: Array<string | undefined | null | false>): string {\n  return classNames.filter(Boolean).join(" ");\n}\n\nexport function slugify(text: string): string {\n  return text\n    .toLowerCase()\n    .replace(/[^a-z0-9]+/g, "-")\n    .replace(/(^-|-$)/g, "");\n}\n`,
-		},
-		{
-			path: "frontend/stores/counter.store.ts",
-			content: `import { createRaktaStore } from "raktajs";\n\ninterface CounterState {\n  readonly count: number;\n  readonly increment: () => void;\n  readonly decrement: () => void;\n}\n\nexport const useCounterStore = createRaktaStore<CounterState>((setState, getState) => ({\n  count: 0,\n  increment: () => setState({ count: getState().count + 1 }),\n  decrement: () => setState({ count: getState().count - 1 }),\n}));\n`,
-		},
-		{
-			path: "frontend/schemas/user.schema.ts",
-			content: `import { object, string, number } from "raktajs";\n\nexport const userSchema = object({\n  name: string().min(1),\n  email: string().min(5),\n  age: number().min(0).max(120),\n});\n\nexport type UserSchema = typeof userSchema;\n`,
-		},
-		{
-			path: `frontend/styles/${styleFileName}`,
-			content: getFrontendOnlyCssGlobals(cssFramework),
-		},
-		{
-			path: "frontend/public/.gitkeep",
-			content: "",
-		},
-		{
-			path: "frontend/public/favicon.ico",
-			content: FAVICON_BYTES,
-		},
-		{
-			path: "frontend/components/ui/.gitkeep",
-			content: "",
-		},
-		{
-			path: "frontend/components/layout/.gitkeep",
-			content: "",
-		},
-	];
+  return [
+    {
+      path: "frontend/package.json",
+      content: JSON.stringify(
+        {
+          name: `${projectName}-frontend`,
+          version: "0.1.0",
+          private: true,
+          scripts: {
+            dev: "rakta dev",
+            build: "rakta build",
+            start: "rakta start",
+            routes: "rakta routes",
+            "imports:generate": "rakta imports:generate",
+            "rpc:types": "rakta rpc:types",
+            typecheck: "tsc --noEmit",
+          },
+          dependencies: {
+            raktajs: "^0.2.6",
+            react: "^19.2.7",
+            "react-dom": "^19.2.7",
+            ...getCssDependencies(cssFramework),
+          },
+          devDependencies: {
+            "@types/react": "^19.2.17",
+            "@types/react-dom": "^19.2.3",
+            typescript: "^6.0.3",
+            ...getCssDevDependencies(cssFramework),
+          },
+        },
+        null,
+        2,
+      ),
+    },
+    {
+      path: "frontend/tsconfig.json",
+      content: JSON.stringify(
+        {
+          extends: "../tsconfig.base.json",
+          compilerOptions: {
+            outDir: "./dist",
+            rootDir: "./",
+          },
+          include: [
+            "app/**/*",
+            "components/**/*",
+            "lib/**/*",
+            "stores/**/*",
+            "schemas/**/*",
+            "rakta.config.ts",
+          ],
+          exclude: ["node_modules", "dist"],
+        },
+        null,
+        2,
+      ),
+    },
+    {
+      path: "frontend/rakta.config.ts",
+      content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {\n      "/": "ssg",\n      "/about": "ssg",\n      "/blog": "csg",\n      "/blog/:slug": "csg",\n      "/dashboard": "csr"\n    }\n  }\n});\n`,
+    },
+    {
+      path: "frontend/app/layout.tsx",
+      content: `import React from "react";\nimport "../styles/${styleFileName}";\n\ninterface RootLayoutProps {\n  readonly children: React.ReactNode;\n}\n\nexport default function RootLayout({ children }: RootLayoutProps) {\n  return (\n    <html lang="en">\n      <body>{children}</body>\n    </html>\n  );\n}\n`,
+    },
+    {
+      path: "frontend/app/page.tsx",
+      content: generateFullstackHomePage(projectName),
+    },
+    {
+      path: "frontend/app/about/page.tsx",
+      content: `import React from "react";\n\nexport default function AboutPage() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">ABOUT</p>\n        <h1>About ${projectName}</h1>\n        <p>This project is built with Rakta.js, React, Bun, and TypeScript.</p>\n        <a href="/">Back to home</a>\n      </section>\n    </main>\n  );\n}\n`,
+    },
+    {
+      path: "frontend/app/blog/page.tsx",
+      content: `import React from "react";\n\nconst BLOG_POSTS = [\n  { slug: "getting-started", title: "Getting started with Rakta.js" },\n  { slug: "file-based-routing", title: "File-based routing explained" },\n  { slug: "type-safe-rpc", title: "Type-safe API with CarubanWire" },\n];\n\nexport default function BlogPage() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">BLOG</p>\n        <h1>Articles</h1>\n        <ul>\n          {BLOG_POSTS.map((post) => (\n            <li key={post.slug}>\n              <a href={\`/blog/\${post.slug}\`}>{post.title}</a>\n            </li>\n          ))}\n        </ul>\n      </section>\n    </main>\n  );\n}\n`,
+    },
+    {
+      path: "frontend/app/blog/[slug]/page.tsx",
+      content: `import React from "react";\n\ninterface BlogPostPageProps {\n  readonly params: {\n    readonly slug?: string;\n  };\n}\n\nexport default function BlogPostPage({ params }: BlogPostPageProps) {\n  const postTitle = params.slug?.replaceAll("-", " ") ?? "Article";\n\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">BLOG POST</p>\n        <h1>{postTitle}</h1>\n        <p>Slug: <code>{params.slug}</code></p>\n        <a href="/blog">Back to blog</a>\n      </section>\n    </main>\n  );\n}\n`,
+    },
+    {
+      path: "frontend/app/loading.tsx",
+      content: `import React from "react";\n\nexport default function Loading() {\n  return (\n    <main className="page-shell">\n      <p>Loading...</p>\n    </main>\n  );\n}\n`,
+    },
+    {
+      path: "frontend/app/error.tsx",
+      content: `import React from "react";\n\ninterface ErrorPageProps {\n  readonly error: Error;\n  readonly reset: () => void;\n}\n\nexport default function ErrorPage({ error, reset }: ErrorPageProps) {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <h1>Something went wrong</h1>\n        <p>{error.message}</p>\n        <button type="button" onClick={reset}>Try again</button>\n      </section>\n    </main>\n  );\n}\n`,
+    },
+    {
+      path: "frontend/app/not-found.tsx",
+      content: `import React from "react";\n\nexport default function NotFound() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <h1>404</h1>\n        <p>The page you are looking for does not exist.</p>\n        <a href="/">Return home</a>\n      </section>\n    </main>\n  );\n}\n`,
+    },
+    {
+      path: "frontend/app/api/hello/route.ts",
+      content: `export async function GET(request: Request): Promise<Response> {\n  const requestUrl = new URL(request.url);\n\n  return Response.json({\n    message: "Hello from Rakta.js API",\n    pathname: requestUrl.pathname,\n    timestamp: new Date().toISOString(),\n  });\n}\n\nexport async function POST(request: Request): Promise<Response> {\n  const requestBody = await request.json() as Record<string, unknown>;\n\n  return Response.json({\n    received: requestBody,\n    timestamp: new Date().toISOString(),\n  });\n}\n`,
+    },
+    {
+      path: "frontend/lib/http.ts",
+      content: `export const API_URL = process.env["API_URL"] ?? "http://localhost:4000";\n\nexport async function apiGet<TData>(path: string): Promise<TData> {\n  const response = await fetch(\`\${API_URL}\${path}\`);\n\n  if (!response.ok) {\n    throw new Error(\`Request failed with status \${response.status}\`);\n  }\n\n  return response.json() as Promise<TData>;\n}\n`,
+    },
+    {
+      path: "frontend/lib/routes.ts",
+      content: `export const ROUTES = {\n  home: "/",\n  about: "/about",\n  blog: "/blog",\n  blogPost: (slug: string) => \`/blog/\${slug}\`,\n  apiHello: "/api/hello",\n} as const;\n`,
+    },
+    {
+      path: "frontend/lib/utils.ts",
+      content: `export function cn(...classNames: Array<string | undefined | null | false>): string {\n  return classNames.filter(Boolean).join(" ");\n}\n\nexport function slugify(text: string): string {\n  return text\n    .toLowerCase()\n    .replace(/[^a-z0-9]+/g, "-")\n    .replace(/(^-|-$)/g, "");\n}\n`,
+    },
+    {
+      path: "frontend/stores/counter.store.ts",
+      content: `import { createRaktaStore } from "raktajs";\n\ninterface CounterState {\n  readonly count: number;\n  readonly increment: () => void;\n  readonly decrement: () => void;\n}\n\nexport const useCounterStore = createRaktaStore<CounterState>((setState, getState) => ({\n  count: 0,\n  increment: () => setState({ count: getState().count + 1 }),\n  decrement: () => setState({ count: getState().count - 1 }),\n}));\n`,
+    },
+    {
+      path: "frontend/schemas/user.schema.ts",
+      content: `import { object, string, number } from "raktajs";\n\nexport const userSchema = object({\n  name: string().min(1),\n  email: string().min(5),\n  age: number().min(0).max(120),\n});\n\nexport type UserSchema = typeof userSchema;\n`,
+    },
+    {
+      path: `frontend/styles/${styleFileName}`,
+      content: getFrontendOnlyCssGlobals(cssFramework),
+    },
+    {
+      path: "frontend/public/.gitkeep",
+      content: "",
+    },
+    {
+      path: "frontend/public/favicon.ico",
+      content: FAVICON_BYTES,
+    },
+    {
+      path: "frontend/components/ui/.gitkeep",
+      content: "",
+    },
+    {
+      path: "frontend/components/layout/.gitkeep",
+      content: "",
+    },
+  ];
 }
 
 //  Backend files
 
 function stripTypeScriptSyntax(code: string): string {
-	return new Bun.Transpiler({ loader: "tsx", target: "browser" }).transformSync(
-		code,
-	);
+  return new Bun.Transpiler({ loader: "tsx", target: "browser" }).transformSync(
+    code,
+  );
 }
 
 function processFilesForLanguage(
-	files: ProjectFile[],
-	useTypeScript: boolean,
+  files: ProjectFile[],
+  useTypeScript: boolean,
 ): ProjectFile[] {
-	if (useTypeScript) {
-		return files;
-	}
+  if (useTypeScript) {
+    return files;
+  }
 
-	return files
-		.filter(
-			(file) =>
-				!file.path.endsWith(".d.ts") &&
-				!file.path.endsWith("types.ts") &&
-				!file.path.endsWith("types.js"),
-		)
-		.map((file) => {
-			if (typeof file.content !== "string") {
-				return file;
-			}
+  return files
+    .filter(
+      (file) =>
+        !file.path.endsWith(".d.ts") &&
+        !file.path.endsWith("types.ts") &&
+        !file.path.endsWith("types.js"),
+    )
+    .map((file) => {
+      if (typeof file.content !== "string") {
+        return file;
+      }
 
-			let path = file.path;
-			if (path.endsWith(".tsx")) path = path.replace(/\.tsx$/, ".jsx");
-			else if (path.endsWith(".ts")) path = path.replace(/\.ts$/, ".js");
+      let path = file.path;
+      if (path.endsWith(".tsx")) path = path.replace(/\.tsx$/, ".jsx");
+      else if (path.endsWith(".ts")) path = path.replace(/\.ts$/, ".js");
 
-			return {
-				path,
-				content: stripTypeScriptSyntax(file.content),
-			};
-		});
+      return {
+        path,
+        content: stripTypeScriptSyntax(file.content),
+      };
+    });
 }
 
 function getBackendFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	return [
-		...getBackendCommonFiles(projectConfig),
-		...getBackendFrameworkFiles(projectConfig.backendFramework, projectConfig),
-	];
+  return [
+    ...getBackendCommonFiles(projectConfig),
+    ...getBackendFrameworkFiles(projectConfig.backendFramework, projectConfig),
+  ];
 }
 
 function getBackendCommonFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	return [
-		{
-			path: "backend/src/env.ts",
-			content: `function optionalEnv(envKey: string, fallbackValue: string): string {\n  return process.env[envKey] ?? fallbackValue;\n}\n\nexport const env = {\n  port: Number(optionalEnv("PORT", "4000")),\n  nodeEnv: optionalEnv("NODE_ENV", "development"),\n  corsOrigin: optionalEnv("CORS_ORIGIN", "http://localhost:3000"),\n  databaseUrl: optionalEnv("DATABASE_URL", ""),\n} as const;\n`,
-		},
-		{
-			path: "backend/src/config/app.config.ts",
-			content: `import { env } from "../env";\n\nexport const appConfig = {\n  name: "${projectConfig.projectName} API",\n  version: "0.1.0",\n  port: env.port,\n  nodeEnv: env.nodeEnv,\n  corsOrigin: env.corsOrigin,\n  isDev: env.nodeEnv === "development",\n} as const;\n`,
-		},
-		{
-			path: "backend/src/config/database.config.ts",
-			content: getDatabaseConfig(projectConfig.database),
-		},
-		{
-			path: "backend/src/database/client.ts",
-			content: getDatabaseClient(projectConfig.database),
-		},
-		{
-			path: "backend/src/controllers/hello.controller.ts",
-			content: `export interface HelloResponse {\n  readonly success: boolean;\n  readonly message: string;\n  readonly framework: string;\n  readonly version: string;\n  readonly timestamp: string;\n}\n\nexport function helloController(): HelloResponse {\n  return {\n    success: true,\n    message: "Hello from ${projectConfig.projectName} API",\n    framework: "${BACKEND_DISPLAY[projectConfig.backendFramework]}",\n    version: "0.1.0",\n    timestamp: new Date().toISOString(),\n  };\n}\n`,
-		},
-		{
-			path: "backend/.env.example",
-			content: getDatabaseEnvExample(projectConfig.database),
-		},
-		{
-			path: "backend/tsconfig.json",
-			content: JSON.stringify(
-				{
-					extends: "../tsconfig.base.json",
-					compilerOptions: {
-						outDir: "./dist",
-						rootDir: "./src",
-						types: ["node", "bun"],
-					},
-					include: ["src/**/*"],
-					exclude: ["node_modules", "dist"],
-				},
-				null,
-				2,
-			),
-		},
-		{
-			path: "backend/src/database/schema/.gitkeep",
-			content: "",
-		},
-	];
+  return [
+    {
+      path: "backend/src/env.ts",
+      content: `function optionalEnv(envKey: string, fallbackValue: string): string {\n  return process.env[envKey] ?? fallbackValue;\n}\n\nexport const env = {\n  port: Number(optionalEnv("PORT", "4000")),\n  nodeEnv: optionalEnv("NODE_ENV", "development"),\n  corsOrigin: optionalEnv("CORS_ORIGIN", "http://localhost:3000"),\n  databaseUrl: optionalEnv("DATABASE_URL", ""),\n} as const;\n`,
+    },
+    {
+      path: "backend/src/config/app.config.ts",
+      content: `import { env } from "../env";\n\nexport const appConfig = {\n  name: "${projectConfig.projectName} API",\n  version: "0.1.0",\n  port: env.port,\n  nodeEnv: env.nodeEnv,\n  corsOrigin: env.corsOrigin,\n  isDev: env.nodeEnv === "development",\n} as const;\n`,
+    },
+    {
+      path: "backend/src/config/database.config.ts",
+      content: getDatabaseConfig(projectConfig.database),
+    },
+    {
+      path: "backend/src/database/client.ts",
+      content: getDatabaseClient(projectConfig.database),
+    },
+    {
+      path: "backend/src/controllers/hello.controller.ts",
+      content: `export interface HelloResponse {\n  readonly success: boolean;\n  readonly message: string;\n  readonly framework: string;\n  readonly version: string;\n  readonly timestamp: string;\n}\n\nexport function helloController(): HelloResponse {\n  return {\n    success: true,\n    message: "Hello from ${projectConfig.projectName} API",\n    framework: "${BACKEND_DISPLAY[projectConfig.backendFramework]}",\n    version: "0.1.0",\n    timestamp: new Date().toISOString(),\n  };\n}\n`,
+    },
+    {
+      path: "backend/.env.example",
+      content: getDatabaseEnvExample(projectConfig.database),
+    },
+    {
+      path: "backend/tsconfig.json",
+      content: JSON.stringify(
+        {
+          extends: "../tsconfig.base.json",
+          compilerOptions: {
+            outDir: "./dist",
+            rootDir: "./src",
+            types: ["node", "bun"],
+          },
+          include: ["src/**/*"],
+          exclude: ["node_modules", "dist"],
+        },
+        null,
+        2,
+      ),
+    },
+    {
+      path: "backend/src/database/schema/.gitkeep",
+      content: "",
+    },
+  ];
 }
 
 function getBackendFrameworkFiles(
-	selectedFramework: BackendFramework,
-	projectConfig: ProjectConfig,
+  selectedFramework: BackendFramework,
+  projectConfig: ProjectConfig,
 ): ProjectFile[] {
-	switch (selectedFramework) {
-		case "gaman":
-			return getGamanFiles(projectConfig);
-		case "express":
-			return getExpressFiles(projectConfig);
-		case "nest":
-			return getNestFiles(projectConfig);
-		case "adonis":
-			return getAdonisFiles(projectConfig);
-		default:
-			return getGamanFiles(projectConfig);
-	}
+  switch (selectedFramework) {
+    case "gaman":
+      return getGamanFiles(projectConfig);
+    case "express":
+      return getExpressFiles(projectConfig);
+    case "nest":
+      return getNestFiles(projectConfig);
+    case "adonis":
+      return getAdonisFiles(projectConfig);
+    default:
+      return getGamanFiles(projectConfig);
+  }
 }
 
 function getGamanFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	return [
-		{
-			path: "backend/package.json",
-			content: getBackendPackageJson(projectConfig, {
-				dependencies: { ...getDatabaseDependencies(projectConfig.database) },
-				devDependencies: { "@types/bun": "^1.3.14" },
-			}),
-		},
-		{
-			path: "backend/src/app.ts",
-			content: `import { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\n\nconst corsHeaders = {\n  "Access-Control-Allow-Origin": appConfig.corsOrigin,\n  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",\n  "Access-Control-Allow-Headers": "Content-Type, Authorization",\n};\n\nconst server = Bun.serve({\n  port: appConfig.port,\n  fetch(request: Request): Response {\n    const requestUrl = new URL(request.url);\n\n    if (request.method === "OPTIONS") {\n      return new Response(null, { status: 204, headers: corsHeaders });\n    }\n\n    if (requestUrl.pathname === "/api/hello" && request.method === "GET") {\n      return Response.json(helloController(), { headers: corsHeaders });\n    }\n\n    return Response.json(\n      { success: false, error: "Not found" },\n      { status: 404, headers: corsHeaders }\n    );\n  },\n});\n\nconsole.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${server.port}\`);\n`,
-		},
-	];
+  return [
+    {
+      path: "backend/package.json",
+      content: getBackendPackageJson(projectConfig, {
+        dependencies: { ...getDatabaseDependencies(projectConfig.database) },
+        devDependencies: { "@types/bun": "^1.3.14" },
+      }),
+    },
+    {
+      path: "backend/src/app.ts",
+      content: `import { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\n\nconst corsHeaders = {\n  "Access-Control-Allow-Origin": appConfig.corsOrigin,\n  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",\n  "Access-Control-Allow-Headers": "Content-Type, Authorization",\n};\n\nconst server = Bun.serve({\n  port: appConfig.port,\n  fetch(request: Request): Response {\n    const requestUrl = new URL(request.url);\n\n    if (request.method === "OPTIONS") {\n      return new Response(null, { status: 204, headers: corsHeaders });\n    }\n\n    if (requestUrl.pathname === "/api/hello" && request.method === "GET") {\n      return Response.json(helloController(), { headers: corsHeaders });\n    }\n\n    return Response.json(\n      { success: false, error: "Not found" },\n      { status: 404, headers: corsHeaders }\n    );\n  },\n});\n\nconsole.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${server.port}\`);\n`,
+    },
+  ];
 }
 
 function getExpressFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	return [
-		{
-			path: "backend/package.json",
-			content: getBackendPackageJson(projectConfig, {
-				dependencies: {
-					express: "^4.19.2",
-					cors: "^2.8.5",
-					...getDatabaseDependencies(projectConfig.database),
-				},
-				devDependencies: {
-					"@types/express": "^4.17.21",
-					"@types/cors": "^2.8.17",
-					"@types/node": "^26.0.1",
-				},
-			}),
-		},
-		{
-			path: "backend/src/app.ts",
-			content: `import cors from "cors";\nimport express from "express";\nimport { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\n\nconst app = express();\n\napp.use(cors({ origin: appConfig.corsOrigin }));\napp.use(express.json());\n\napp.get("/api/hello", (_request, response) => {\n  response.json(helloController());\n});\n\napp.use((_request, response) => {\n  response.status(404).json({ success: false, error: "Not found" });\n});\n\napp.listen(appConfig.port, () => {\n  console.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${appConfig.port}\`);\n});\n`,
-		},
-		{
-			path: "backend/src/middlewares/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/src/routes/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/src/services/.gitkeep",
-			content: "",
-		},
-	];
+  return [
+    {
+      path: "backend/package.json",
+      content: getBackendPackageJson(projectConfig, {
+        dependencies: {
+          express: "^4.19.2",
+          cors: "^2.8.5",
+          ...getDatabaseDependencies(projectConfig.database),
+        },
+        devDependencies: {
+          "@types/express": "^4.17.21",
+          "@types/cors": "^2.8.17",
+          "@types/node": "^26.0.1",
+        },
+      }),
+    },
+    {
+      path: "backend/src/app.ts",
+      content: `import cors from "cors";\nimport express from "express";\nimport { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\n\nconst app = express();\n\napp.use(cors({ origin: appConfig.corsOrigin }));\napp.use(express.json());\n\napp.get("/api/hello", (_request, response) => {\n  response.json(helloController());\n});\n\napp.use((_request, response) => {\n  response.status(404).json({ success: false, error: "Not found" });\n});\n\napp.listen(appConfig.port, () => {\n  console.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${appConfig.port}\`);\n});\n`,
+    },
+    {
+      path: "backend/src/middlewares/.gitkeep",
+      content: "",
+    },
+    {
+      path: "backend/src/routes/.gitkeep",
+      content: "",
+    },
+    {
+      path: "backend/src/services/.gitkeep",
+      content: "",
+    },
+  ];
 }
 
 function getNestFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	return [
-		{
-			path: "backend/package.json",
-			content: getBackendPackageJson(projectConfig, {
-				dependencies: {
-					"@nestjs/common": "^10.3.0",
-					"@nestjs/core": "^10.3.0",
-					"@nestjs/platform-express": "^10.3.0",
-					"reflect-metadata": "^0.2.4",
-					...getDatabaseDependencies(projectConfig.database),
-				},
-				devDependencies: {
-					"@types/node": "^26.0.1",
-				},
-			}),
-		},
-		{
-			path: "backend/nest-cli.json",
-			content: JSON.stringify(
-				{
-					$schema: "https://json.schemastore.org/nest-cli",
-					collection: "@nestjs/schematics",
-					sourceRoot: "src",
-				},
-				null,
-				2,
-			),
-		},
-		{
-			path: "backend/src/app.module.ts",
-			content: `import { Module } from "@nestjs/common";\nimport { AppController } from "./app.controller";\n\n@Module({\n  controllers: [AppController],\n})\nexport class AppModule {}\n`,
-		},
-		{
-			path: "backend/src/app.controller.ts",
-			content: `import { Controller, Get } from "@nestjs/common";\nimport { helloController } from "./controllers/hello.controller";\n\n@Controller("api")\nexport class AppController {\n  @Get("hello")\n  hello() {\n    return helloController();\n  }\n}\n`,
-		},
-		{
-			path: "backend/src/main.ts",
-			content: `import "reflect-metadata";\nimport { NestFactory } from "@nestjs/core";\nimport { AppModule } from "./app.module";\nimport { appConfig } from "./config/app.config";\n\nasync function bootstrap(): Promise<void> {\n  const app = await NestFactory.create(AppModule);\n  app.enableCors({ origin: appConfig.corsOrigin });\n  await app.listen(appConfig.port);\n  console.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${appConfig.port}\`);\n}\n\nbootstrap().catch(console.error);\n`,
-		},
-		{
-			path: "backend/src/modules/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/src/common/.gitkeep",
-			content: "",
-		},
-	];
+  return [
+    {
+      path: "backend/package.json",
+      content: getBackendPackageJson(projectConfig, {
+        dependencies: {
+          "@nestjs/common": "^10.3.0",
+          "@nestjs/core": "^10.3.0",
+          "@nestjs/platform-express": "^10.3.0",
+          "reflect-metadata": "^0.2.6",
+          ...getDatabaseDependencies(projectConfig.database),
+        },
+        devDependencies: {
+          "@types/node": "^26.0.1",
+        },
+      }),
+    },
+    {
+      path: "backend/nest-cli.json",
+      content: JSON.stringify(
+        {
+          $schema: "https://json.schemastore.org/nest-cli",
+          collection: "@nestjs/schematics",
+          sourceRoot: "src",
+        },
+        null,
+        2,
+      ),
+    },
+    {
+      path: "backend/src/app.module.ts",
+      content: `import { Module } from "@nestjs/common";\nimport { AppController } from "./app.controller";\n\n@Module({\n  controllers: [AppController],\n})\nexport class AppModule {}\n`,
+    },
+    {
+      path: "backend/src/app.controller.ts",
+      content: `import { Controller, Get } from "@nestjs/common";\nimport { helloController } from "./controllers/hello.controller";\n\n@Controller("api")\nexport class AppController {\n  @Get("hello")\n  hello() {\n    return helloController();\n  }\n}\n`,
+    },
+    {
+      path: "backend/src/main.ts",
+      content: `import "reflect-metadata";\nimport { NestFactory } from "@nestjs/core";\nimport { AppModule } from "./app.module";\nimport { appConfig } from "./config/app.config";\n\nasync function bootstrap(): Promise<void> {\n  const app = await NestFactory.create(AppModule);\n  app.enableCors({ origin: appConfig.corsOrigin });\n  await app.listen(appConfig.port);\n  console.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${appConfig.port}\`);\n}\n\nbootstrap().catch(console.error);\n`,
+    },
+    {
+      path: "backend/src/modules/.gitkeep",
+      content: "",
+    },
+    {
+      path: "backend/src/common/.gitkeep",
+      content: "",
+    },
+  ];
 }
 
 function getAdonisFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	return [
-		{
-			path: "backend/package.json",
-			content: getBackendPackageJson(projectConfig, {
-				dependencies: {
-					"@adonisjs/core": "^6.9.0",
-					...getDatabaseDependencies(projectConfig.database),
-				},
-				devDependencies: {
-					"@adonisjs/assembler": "^7.7.0",
-					"@types/node": "^26.0.1",
-				},
-			}),
-		},
-		{
-			path: "backend/app/controllers/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/app/middleware/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/app/services/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/start/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/config/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/src/app.ts",
-			content: `import { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\n\nconst corsHeaders = {\n  "Access-Control-Allow-Origin": appConfig.corsOrigin,\n  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",\n  "Access-Control-Allow-Headers": "Content-Type, Authorization",\n};\n\nconst server = Bun.serve({\n  port: appConfig.port,\n  fetch(request: Request): Response {\n    const requestUrl = new URL(request.url);\n\n    if (request.method === "OPTIONS") {\n      return new Response(null, { status: 204, headers: corsHeaders });\n    }\n\n    if (requestUrl.pathname === "/api/hello" && request.method === "GET") {\n      return Response.json(helloController(), { headers: corsHeaders });\n    }\n\n    return Response.json(\n      { success: false, error: "Not found" },\n      { status: 404, headers: corsHeaders }\n    );\n  },\n});\n\nconsole.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${server.port}\`);\n`,
-		},
-	];
+  return [
+    {
+      path: "backend/package.json",
+      content: getBackendPackageJson(projectConfig, {
+        dependencies: {
+          "@adonisjs/core": "^6.9.0",
+          ...getDatabaseDependencies(projectConfig.database),
+        },
+        devDependencies: {
+          "@adonisjs/assembler": "^7.7.0",
+          "@types/node": "^26.0.1",
+        },
+      }),
+    },
+    {
+      path: "backend/app/controllers/.gitkeep",
+      content: "",
+    },
+    {
+      path: "backend/app/middleware/.gitkeep",
+      content: "",
+    },
+    {
+      path: "backend/app/services/.gitkeep",
+      content: "",
+    },
+    {
+      path: "backend/start/.gitkeep",
+      content: "",
+    },
+    {
+      path: "backend/config/.gitkeep",
+      content: "",
+    },
+    {
+      path: "backend/src/app.ts",
+      content: `import { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\n\nconst corsHeaders = {\n  "Access-Control-Allow-Origin": appConfig.corsOrigin,\n  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",\n  "Access-Control-Allow-Headers": "Content-Type, Authorization",\n};\n\nconst server = Bun.serve({\n  port: appConfig.port,\n  fetch(request: Request): Response {\n    const requestUrl = new URL(request.url);\n\n    if (request.method === "OPTIONS") {\n      return new Response(null, { status: 204, headers: corsHeaders });\n    }\n\n    if (requestUrl.pathname === "/api/hello" && request.method === "GET") {\n      return Response.json(helloController(), { headers: corsHeaders });\n    }\n\n    return Response.json(\n      { success: false, error: "Not found" },\n      { status: 404, headers: corsHeaders }\n    );\n  },\n});\n\nconsole.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${server.port}\`);\n`,
+    },
+  ];
 }
 
 function getBackendPackageJson(
-	projectConfig: ProjectConfig,
-	packageDeps: {
-		readonly dependencies: Record<string, string>;
-		readonly devDependencies: Record<string, string>;
-	},
+  projectConfig: ProjectConfig,
+  packageDeps: {
+    readonly dependencies: Record<string, string>;
+    readonly devDependencies: Record<string, string>;
+  },
 ): string {
-	return JSON.stringify(
-		{
-			name: `${projectConfig.projectName}-backend`,
-			version: "0.1.0",
-			private: true,
-			type: "module",
-			scripts: {
-				dev: "bun run --watch src/app.ts",
-				build: "bun build src/app.ts --outfile dist/app.js --target bun",
-				start: "bun run dist/app.js",
-				typecheck: "tsc --noEmit",
-			},
-			dependencies: {
-				...packageDeps.dependencies,
-			},
-			devDependencies: {
-				"@types/bun": "^1.3.14",
-				typescript: "^6.0.3",
-				...packageDeps.devDependencies,
-			},
-		},
-		null,
-		2,
-	);
+  return JSON.stringify(
+    {
+      name: `${projectConfig.projectName}-backend`,
+      version: "0.1.0",
+      private: true,
+      type: "module",
+      scripts: {
+        dev: "bun run --watch src/app.ts",
+        build: "bun build src/app.ts --outfile dist/app.js --target bun",
+        start: "bun run dist/app.js",
+        typecheck: "tsc --noEmit",
+      },
+      dependencies: {
+        ...packageDeps.dependencies,
+      },
+      devDependencies: {
+        "@types/bun": "^1.3.14",
+        typescript: "^6.0.3",
+        ...packageDeps.devDependencies,
+      },
+    },
+    null,
+    2,
+  );
 }
 
 //  Shared files (fullstack only)
 
 function getSharedFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	return [
-		{
-			path: "shared/types/index.ts",
-			content: `export interface ApiResponse<TData = unknown> {\n  readonly success: boolean;\n  readonly data?: TData;\n  readonly error?: string;\n  readonly message?: string;\n}\n\nexport interface User {\n  readonly id: string;\n  readonly name: string;\n  readonly email: string;\n  readonly createdAt: string;\n  readonly updatedAt: string;\n}\n`,
-		},
-		{
-			path: "shared/constants/index.ts",
-			content: `export const APP_NAME = "${projectConfig.projectName}";\nexport const API_VERSION = "v1";\nexport const DEFAULT_PAGE_SIZE = 20;\n`,
-		},
-	];
+  return [
+    {
+      path: "shared/types/index.ts",
+      content: `export interface ApiResponse<TData = unknown> {\n  readonly success: boolean;\n  readonly data?: TData;\n  readonly error?: string;\n  readonly message?: string;\n}\n\nexport interface User {\n  readonly id: string;\n  readonly name: string;\n  readonly email: string;\n  readonly createdAt: string;\n  readonly updatedAt: string;\n}\n`,
+    },
+    {
+      path: "shared/constants/index.ts",
+      content: `export const APP_NAME = "${projectConfig.projectName}";\nexport const API_VERSION = "v1";\nexport const DEFAULT_PAGE_SIZE = 20;\n`,
+    },
+  ];
 }
 
 //  CSS helpers
 
 function getCssDependencies(
-	cssFramework: CssFramework,
+  cssFramework: CssFramework,
 ): Record<string, string> {
-	switch (cssFramework) {
-		case "tailwind":
-			return { tailwindcss: "^4.3.1" };
-		case "bootstrap":
-			return { bootstrap: "^5.3.3" };
-		case "sass":
-		case "none":
-			return {};
-	}
+  switch (cssFramework) {
+    case "tailwind":
+      return { tailwindcss: "^4.3.1" };
+    case "bootstrap":
+      return { bootstrap: "^5.3.3" };
+    case "sass":
+    case "none":
+      return {};
+  }
 }
 
 function getCssDevDependencies(
-	cssFramework: CssFramework,
+  cssFramework: CssFramework,
 ): Record<string, string> {
-	switch (cssFramework) {
-		case "sass":
-			return { sass: "^1.77.0" };
-		default:
-			return {};
-	}
+  switch (cssFramework) {
+    case "sass":
+      return { sass: "^1.77.0" };
+    default:
+      return {};
+  }
 }
 
 function getFrontendOnlyCssGlobals(cssFramework: CssFramework): string {
-	const cssImport =
-		cssFramework === "tailwind"
-			? `@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap");\n@import "tailwindcss";\n\n`
-			: cssFramework === "bootstrap"
-				? `@import url("https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css");\n\n`
-				: cssFramework === "sass"
-					? `$color-primary: #e11d48;\n$color-background: #050505;\n$color-foreground: #fafafa;\n\n`
-					: "";
+  const cssImport =
+    cssFramework === "tailwind"
+      ? `@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap");\n@import "tailwindcss";\n\n`
+      : cssFramework === "bootstrap"
+        ? `@import url("https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css");\n\n`
+        : cssFramework === "sass"
+          ? `$color-primary: #e11d48;\n$color-background: #050505;\n$color-foreground: #fafafa;\n\n`
+          : "";
 
-	return `${cssImport}@theme {
+  return `${cssImport}@theme {
   --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --color-brand-pink: #e11d48;
@@ -1447,47 +1456,53 @@ a { color: inherit; text-decoration: none; }
 // ─── Inline template generators
 
 function generateFrontendOnlyRaktaEnv(): string {
-	return `declare module "*.css";
+  return `import "react";
+
+declare module "*.css";
 declare module "*.scss";
 declare module "*.sass";
 
+// Rakta.js built-in anchor component — use <click to="/path"> instead of <a href>
 type RaktaClickAttributes = Omit<
-  import("react").AnchorHTMLAttributes<HTMLAnchorElement>,
+  import("react").AnchorHTMLAttributes<HTMLElement>,
   "href"
 > & {
   readonly to: string;
 };
 
+// Rakta.js built-in image component — use <photo src="..."> instead of <img>
+type RaktaPhotoAttributes = Omit<
+  import("react").ImgHTMLAttributes<HTMLImageElement>,
+  "src"
+> & {
+  readonly src: string;
+};
+
+declare module "react" {
+  namespace JSX {
+    interface IntrinsicElements {
+      // Rakta.js SPA anchor: compiles to <a> with client-side routing
+      click: RaktaClickAttributes;
+      // Rakta.js image: compiles to <img> with built-in lazy loading & optimization
+      photo: RaktaPhotoAttributes;
+    }
+  }
+}
+
+// Rakta.js auto-imported React hooks — no explicit import needed in component files
 declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      click: RaktaClickAttributes;
-    }
-  }
+  const useCallback: typeof import("react").useCallback;
+  const useEffect: typeof import("react").useEffect;
+  const useMemo: typeof import("react").useMemo;
+  const useRef: typeof import("react").useRef;
+  const useState: typeof import("react").useState;
 }
-
-declare module "react/jsx-runtime" {
-  namespace JSX {
-    interface IntrinsicElements {
-      click: RaktaClickAttributes;
-    }
-  }
-}
-
-declare module "react/jsx-dev-runtime" {
-  namespace JSX {
-    interface IntrinsicElements {
-      click: RaktaClickAttributes;
-    }
-  }
-}
-
-export {};
 `;
 }
 
+
 function generateFrontendOnlyLayout(): string {
-	return `interface RootLayoutProps {
+  return `interface RootLayoutProps {
   readonly children: import("react").ReactNode;
 }
 
@@ -1497,6 +1512,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Built with Rakta.js — Small in size. Fierce in speed. Alive in every route." />
         <title>${DEFAULT_METADATA_TITLE}</title>
         <link rel="icon" href="/favicon.ico" sizes="any" type="image/x-icon" />
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
@@ -1511,11 +1527,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
 }
 
 function generateFrontendOnlyPage(_projectName: string): string {
-	return STARTER_PAGE_CODE;
+  return STARTER_PAGE_CODE;
 }
 
 function generateFrontendOnlyLoading(): string {
-	return `export default function Loading() {
+  return `export default function Loading() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#050505] px-4">
       <p className="text-sm font-medium text-slate-400">Loading...</p>
@@ -1526,7 +1542,7 @@ function generateFrontendOnlyLoading(): string {
 }
 
 function generateFrontendOnlyError(): string {
-	return `interface ErrorPageProps {
+  return `interface ErrorPageProps {
   readonly error: Error;
   readonly reset: () => void;
 }
@@ -1559,7 +1575,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 }
 
 function generateFrontendOnlyNotFound(): string {
-	return `export default function NotFound() {
+  return `export default function NotFound() {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-3xl items-center px-4 py-16">
       <section className="w-full rounded-3xl border border-white/10 bg-[#0e111a] p-8 shadow-2xl shadow-red-950/20">
@@ -1586,7 +1602,7 @@ function generateFrontendOnlyNotFound(): string {
 }
 
 function _generateShrimpMascotComponent(): string {
-	return `interface RaktaShrimpMascotProps {
+  return `interface RaktaShrimpMascotProps {
   readonly isJumping: boolean;
   readonly isDead: boolean;
   readonly style?: import("react").CSSProperties;
@@ -1765,7 +1781,7 @@ export default function RaktaShrimpMascot({
 }
 
 function _generateShrimpRunGameComponent(): string {
-	return `import { useCallback, useEffect, useRef, useState } from "react";
+  return `import { useCallback, useEffect, useRef, useState } from "react";
 import RaktaShrimpMascot from "./raktaShrimpMascot";
 //  Types
 
@@ -2146,7 +2162,7 @@ export default function ShrimpRunGame() {
 }
 
 function generateFullstackHomePage(projectName: string): string {
-	return `import React from "react";
+  return `import React from "react";
 
 export default function HomePage() {
   return (
@@ -2171,129 +2187,129 @@ export default function HomePage() {
 //  Database helpers
 
 function getDatabaseDependencies(
-	selectedDatabase: Database,
+  selectedDatabase: Database,
 ): Record<string, string> {
-	switch (selectedDatabase) {
-		case "postgresql":
-			return { postgres: "^3.4.4" };
-		case "mysql":
-		case "mariadb":
-			return { mysql2: "^3.9.8" };
-		case "mongodb":
-			return { mongodb: "^6.8.0" };
-		case "firebase":
-			return { "firebase-admin": "^12.7.0" };
-		case "sqlite":
-			return {};
-		case "redis":
-			return { ioredis: "^5.4.1" };
-		case "planetscale":
-			return { "@planetscale/database": "^1.18.0" };
-		case "neon":
-			return { "@neondatabase/serverless": "^0.9.4" };
-		case "turso":
-			return { "@libsql/client": "^0.6.2" };
-		default:
-			return {};
-	}
+  switch (selectedDatabase) {
+    case "postgresql":
+      return { postgres: "^3.4.4" };
+    case "mysql":
+    case "mariadb":
+      return { mysql2: "^3.9.8" };
+    case "mongodb":
+      return { mongodb: "^6.8.0" };
+    case "firebase":
+      return { "firebase-admin": "^12.7.0" };
+    case "sqlite":
+      return {};
+    case "redis":
+      return { ioredis: "^5.4.1" };
+    case "planetscale":
+      return { "@planetscale/database": "^1.18.0" };
+    case "neon":
+      return { "@neondatabase/serverless": "^0.9.4" };
+    case "turso":
+      return { "@libsql/client": "^0.6.2" };
+    default:
+      return {};
+  }
 }
 
 function getDatabaseConfig(selectedDatabase: Database): string {
-	switch (selectedDatabase) {
-		case "sqlite":
-			return `export const databaseConfig = {\n  path: process.env["DATABASE_PATH"] ?? "./database.sqlite",\n  provider: "sqlite" as const,\n} as const;\n`;
-		case "firebase":
-			return `export const databaseConfig = {\n  projectId: process.env["FIREBASE_PROJECT_ID"] ?? "",\n  clientEmail: process.env["FIREBASE_CLIENT_EMAIL"] ?? "",\n  privateKey: process.env["FIREBASE_PRIVATE_KEY"]?.replace(/\\\\\\\\n/g, "\\\\n") ?? "",\n  databaseUrl: process.env["FIREBASE_DATABASE_URL"] ?? "",\n  provider: "firebase" as const,\n} as const;\n`;
-		case "turso":
-			return `export const databaseConfig = {\n  url: process.env["TURSO_DATABASE_URL"] ?? "",\n  authToken: process.env["TURSO_AUTH_TOKEN"] ?? "",\n  provider: "turso" as const,\n} as const;\n`;
-		default:
-			return `import { env } from "../env";\n\nexport const databaseConfig = {\n  url: env.databaseUrl,\n  provider: "${selectedDatabase}" as const,\n} as const;\n`;
-	}
+  switch (selectedDatabase) {
+    case "sqlite":
+      return `export const databaseConfig = {\n  path: process.env["DATABASE_PATH"] ?? "./database.sqlite",\n  provider: "sqlite" as const,\n} as const;\n`;
+    case "firebase":
+      return `export const databaseConfig = {\n  projectId: process.env["FIREBASE_PROJECT_ID"] ?? "",\n  clientEmail: process.env["FIREBASE_CLIENT_EMAIL"] ?? "",\n  privateKey: process.env["FIREBASE_PRIVATE_KEY"]?.replace(/\\\\\\\\n/g, "\\\\n") ?? "",\n  databaseUrl: process.env["FIREBASE_DATABASE_URL"] ?? "",\n  provider: "firebase" as const,\n} as const;\n`;
+    case "turso":
+      return `export const databaseConfig = {\n  url: process.env["TURSO_DATABASE_URL"] ?? "",\n  authToken: process.env["TURSO_AUTH_TOKEN"] ?? "",\n  provider: "turso" as const,\n} as const;\n`;
+    default:
+      return `import { env } from "../env";\n\nexport const databaseConfig = {\n  url: env.databaseUrl,\n  provider: "${selectedDatabase}" as const,\n} as const;\n`;
+  }
 }
 
 function getDatabaseClient(selectedDatabase: Database): string {
-	switch (selectedDatabase) {
-		case "postgresql":
-			return `import postgres from "postgres";\nimport { databaseConfig } from "../config/database.config";\n\nexport const sql = databaseConfig.url ? postgres(databaseConfig.url) : null;\n`;
-		case "mysql":
-		case "mariadb":
-			return `import mysql from "mysql2/promise";\nimport { databaseConfig } from "../config/database.config";\n\nexport const pool = databaseConfig.url\n  ? mysql.createPool({ uri: databaseConfig.url, connectionLimit: 10 })\n  : null;\n`;
-		case "mongodb":
-			return `import { MongoClient } from "mongodb";\nimport { databaseConfig } from "../config/database.config";\n\nexport const mongoClient = databaseConfig.url\n  ? new MongoClient(databaseConfig.url)\n  : null;\n`;
-		case "firebase":
-			return `import { cert, getApps, initializeApp } from "firebase-admin/app";\nimport { getFirestore } from "firebase-admin/firestore";\nimport { databaseConfig } from "../config/database.config";\n\nconst credentialReady =\n  databaseConfig.projectId.length > 0 &&\n  databaseConfig.clientEmail.length > 0 &&\n  databaseConfig.privateKey.length > 0;\n\nexport const firebaseApp = getApps()[0] ?? initializeApp(\n  credentialReady\n    ? {\n        credential: cert({\n          projectId: databaseConfig.projectId,\n          clientEmail: databaseConfig.clientEmail,\n          privateKey: databaseConfig.privateKey,\n        }),\n        databaseURL: databaseConfig.databaseUrl || undefined,\n      }\n    : undefined\n);\n\nexport const firestore = getFirestore(firebaseApp);\n`;
-		case "sqlite":
-			return `import { Database } from "bun:sqlite";\nimport { databaseConfig } from "../config/database.config";\n\nexport const db = new Database(databaseConfig.path, { create: true });\n`;
-		case "redis":
-			return `import Redis from "ioredis";\nimport { databaseConfig } from "../config/database.config";\n\nexport const redis = databaseConfig.url ? new Redis(databaseConfig.url) : null;\n`;
-		case "planetscale":
-			return `import { connect } from "@planetscale/database";\nimport { databaseConfig } from "../config/database.config";\n\nexport const connection = databaseConfig.url\n  ? connect({ url: databaseConfig.url })\n  : null;\n`;
-		case "neon":
-			return `import { neon } from "@neondatabase/serverless";\nimport { databaseConfig } from "../config/database.config";\n\nexport const sql = databaseConfig.url ? neon(databaseConfig.url) : null;\n`;
-		case "turso":
-			return `import { createClient } from "@libsql/client";\nimport { databaseConfig } from "../config/database.config";\n\nexport const db =\n  databaseConfig.url && databaseConfig.authToken\n    ? createClient({ url: databaseConfig.url, authToken: databaseConfig.authToken })\n    : null;\n`;
-		default:
-			return `export const databaseClient = null;\n`;
-	}
+  switch (selectedDatabase) {
+    case "postgresql":
+      return `import postgres from "postgres";\nimport { databaseConfig } from "../config/database.config";\n\nexport const sql = databaseConfig.url ? postgres(databaseConfig.url) : null;\n`;
+    case "mysql":
+    case "mariadb":
+      return `import mysql from "mysql2/promise";\nimport { databaseConfig } from "../config/database.config";\n\nexport const pool = databaseConfig.url\n  ? mysql.createPool({ uri: databaseConfig.url, connectionLimit: 10 })\n  : null;\n`;
+    case "mongodb":
+      return `import { MongoClient } from "mongodb";\nimport { databaseConfig } from "../config/database.config";\n\nexport const mongoClient = databaseConfig.url\n  ? new MongoClient(databaseConfig.url)\n  : null;\n`;
+    case "firebase":
+      return `import { cert, getApps, initializeApp } from "firebase-admin/app";\nimport { getFirestore } from "firebase-admin/firestore";\nimport { databaseConfig } from "../config/database.config";\n\nconst credentialReady =\n  databaseConfig.projectId.length > 0 &&\n  databaseConfig.clientEmail.length > 0 &&\n  databaseConfig.privateKey.length > 0;\n\nexport const firebaseApp = getApps()[0] ?? initializeApp(\n  credentialReady\n    ? {\n        credential: cert({\n          projectId: databaseConfig.projectId,\n          clientEmail: databaseConfig.clientEmail,\n          privateKey: databaseConfig.privateKey,\n        }),\n        databaseURL: databaseConfig.databaseUrl || undefined,\n      }\n    : undefined\n);\n\nexport const firestore = getFirestore(firebaseApp);\n`;
+    case "sqlite":
+      return `import { Database } from "bun:sqlite";\nimport { databaseConfig } from "../config/database.config";\n\nexport const db = new Database(databaseConfig.path, { create: true });\n`;
+    case "redis":
+      return `import Redis from "ioredis";\nimport { databaseConfig } from "../config/database.config";\n\nexport const redis = databaseConfig.url ? new Redis(databaseConfig.url) : null;\n`;
+    case "planetscale":
+      return `import { connect } from "@planetscale/database";\nimport { databaseConfig } from "../config/database.config";\n\nexport const connection = databaseConfig.url\n  ? connect({ url: databaseConfig.url })\n  : null;\n`;
+    case "neon":
+      return `import { neon } from "@neondatabase/serverless";\nimport { databaseConfig } from "../config/database.config";\n\nexport const sql = databaseConfig.url ? neon(databaseConfig.url) : null;\n`;
+    case "turso":
+      return `import { createClient } from "@libsql/client";\nimport { databaseConfig } from "../config/database.config";\n\nexport const db =\n  databaseConfig.url && databaseConfig.authToken\n    ? createClient({ url: databaseConfig.url, authToken: databaseConfig.authToken })\n    : null;\n`;
+    default:
+      return `export const databaseClient = null;\n`;
+  }
 }
 
 function getDatabaseEnvExample(selectedDatabase: Database): string {
-	const baseEnv = `NODE_ENV=development\nPORT=4000\nCORS_ORIGIN=http://localhost:3000\n`;
+  const baseEnv = `NODE_ENV=development\nPORT=4000\nCORS_ORIGIN=http://localhost:3000\n`;
 
-	switch (selectedDatabase) {
-		case "postgresql":
-			return `${baseEnv}DATABASE_URL=postgresql://user:password@localhost:5432/dbname\n`;
-		case "mysql":
-			return `${baseEnv}DATABASE_URL=mysql://user:password@localhost:3306/dbname\n`;
-		case "mariadb":
-			return `${baseEnv}DATABASE_URL=mysql://user:password@localhost:3306/dbname\n`;
-		case "mongodb":
-			return `${baseEnv}DATABASE_URL=mongodb://localhost:27017/dbname\n`;
-		case "firebase":
-			return `${baseEnv}FIREBASE_PROJECT_ID=your-project-id\nFIREBASE_CLIENT_EMAIL=firebase-adminsdk@your-project.iam.gserviceaccount.com\nFIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\\nyour-key\\n-----END PRIVATE KEY-----\\n"\nFIREBASE_DATABASE_URL=https://your-project.firebaseio.com\n`;
-		case "sqlite":
-			return `${baseEnv}DATABASE_PATH=./database.sqlite\n`;
-		case "redis":
-			return `${baseEnv}DATABASE_URL=redis://localhost:6379\n`;
-		case "planetscale":
-			return `${baseEnv}DATABASE_URL=mysql://user:password@aws.connect.psdb.cloud/dbname\n`;
-		case "neon":
-			return `${baseEnv}DATABASE_URL=postgresql://user:password@ep-xxx.neon.tech/neondb?sslmode=require\n`;
-		case "turso":
-			return `${baseEnv}TURSO_DATABASE_URL=libsql://your-db.turso.io\nTURSO_AUTH_TOKEN=your-auth-token\n`;
-		default:
-			return `${baseEnv}DATABASE_URL=\n`;
-	}
+  switch (selectedDatabase) {
+    case "postgresql":
+      return `${baseEnv}DATABASE_URL=postgresql://user:password@localhost:5432/dbname\n`;
+    case "mysql":
+      return `${baseEnv}DATABASE_URL=mysql://user:password@localhost:3306/dbname\n`;
+    case "mariadb":
+      return `${baseEnv}DATABASE_URL=mysql://user:password@localhost:3306/dbname\n`;
+    case "mongodb":
+      return `${baseEnv}DATABASE_URL=mongodb://localhost:27017/dbname\n`;
+    case "firebase":
+      return `${baseEnv}FIREBASE_PROJECT_ID=your-project-id\nFIREBASE_CLIENT_EMAIL=firebase-adminsdk@your-project.iam.gserviceaccount.com\nFIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\\nyour-key\\n-----END PRIVATE KEY-----\\n"\nFIREBASE_DATABASE_URL=https://your-project.firebaseio.com\n`;
+    case "sqlite":
+      return `${baseEnv}DATABASE_PATH=./database.sqlite\n`;
+    case "redis":
+      return `${baseEnv}DATABASE_URL=redis://localhost:6379\n`;
+    case "planetscale":
+      return `${baseEnv}DATABASE_URL=mysql://user:password@aws.connect.psdb.cloud/dbname\n`;
+    case "neon":
+      return `${baseEnv}DATABASE_URL=postgresql://user:password@ep-xxx.neon.tech/neondb?sslmode=require\n`;
+    case "turso":
+      return `${baseEnv}TURSO_DATABASE_URL=libsql://your-db.turso.io\nTURSO_AUTH_TOKEN=your-auth-token\n`;
+    default:
+      return `${baseEnv}DATABASE_URL=\n`;
+  }
 }
 
 //  README
 
 function generateProjectReadme(projectConfig: ProjectConfig): string {
-	const { projectName, projectMode } = projectConfig;
+  const { projectName, projectMode } = projectConfig;
 
-	if (projectMode === "frontend-only") {
-		return `# ${projectName}\n\nBuilt with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\nbun run dev\n\`\`\`\n\n## ShrimpRun\n\nYour starter includes ShrimpRun â€” an interactive game where a shrimp dodges obstacles. Press Space or click to jump!\n`;
-	}
+  if (projectMode === "frontend-only") {
+    return `# ${projectName}\n\nBuilt with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\nbun run dev\n\`\`\`\n\n## ShrimpRun\n\nYour starter includes ShrimpRun â€” an interactive game where a shrimp dodges obstacles. Press Space or click to jump!\n`;
+  }
 
-	return `# ${projectName}\n\nBuilt with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Backend | ${BACKEND_DISPLAY[projectConfig.backendFramework]} |\n| Database | ${DATABASE_DISPLAY[projectConfig.database]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\n\n# Terminal 1\nbun run dev:frontend\n\n# Terminal 2\nbun run dev:backend\n\`\`\`\n\n## Endpoints\n\n- Frontend: http://localhost:3000\n- Backend: http://localhost:4000\n`;
+  return `# ${projectName}\n\nBuilt with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Backend | ${BACKEND_DISPLAY[projectConfig.backendFramework]} |\n| Database | ${DATABASE_DISPLAY[projectConfig.database]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\n\n# Terminal 1\nbun run dev:frontend\n\n# Terminal 2\nbun run dev:backend\n\`\`\`\n\n## Endpoints\n\n- Frontend: http://localhost:3000\n- Backend: http://localhost:4000\n`;
 }
 
 //  Main export
 
 export function generateProjectFiles(
-	projectConfig: ProjectConfig,
+  projectConfig: ProjectConfig,
 ): ProjectFile[] {
-	if (projectConfig.projectMode === "frontend-only") {
-		return [
-			...getRootFiles(projectConfig),
-			...getFrontendOnlyFiles(projectConfig),
-		];
-	}
+  if (projectConfig.projectMode === "frontend-only") {
+    return [
+      ...getRootFiles(projectConfig),
+      ...getFrontendOnlyFiles(projectConfig),
+    ];
+  }
 
-	return [
-		...getRootFiles(projectConfig),
-		...getFullstackFrontendFiles(projectConfig),
-		...getBackendFiles(projectConfig),
-		...getSharedFiles(projectConfig),
-	];
+  return [
+    ...getRootFiles(projectConfig),
+    ...getFullstackFrontendFiles(projectConfig),
+    ...getBackendFiles(projectConfig),
+    ...getSharedFiles(projectConfig),
+  ];
 }

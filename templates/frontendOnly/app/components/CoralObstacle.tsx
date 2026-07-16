@@ -1,6 +1,6 @@
 // biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.
 // biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.
-import React from "react";
+// NOTE: Rakta.js uses automatic JSX transform — no React import needed.
 
 interface CoralObstacleProps {
 	position: "TOP" | "BOTTOM";
@@ -58,7 +58,8 @@ export default function CoralObstacle({
 		}, // 4: Neon Emerald
 	];
 
-	const palette = palettes[paletteIndex % palettes.length];
+	// paletteIndex % palettes.length always yields a valid in-bounds index
+	const palette = palettes[paletteIndex % palettes.length]!;
 
 	return (
 		<div

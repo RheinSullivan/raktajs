@@ -1,8 +1,7 @@
 // biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.
 // biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.
-
+// NOTE: React hooks (useState) are auto-imported by Rakta.js.
 import { motion } from "motion/react";
-import React, { useState } from "react";
 import {
 	LuArrowRight as ArrowRight,
 	LuBook as Book,
@@ -116,7 +115,7 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 	);
 
 	const activeArticle =
-		ARTICLES.find((a) => a.id === activeArticleId) || ARTICLES[0];
+		(ARTICLES.find((a) => a.id === activeArticleId) ?? ARTICLES[0])!;
 
 	return (
 		<div
@@ -278,7 +277,7 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 											(a) => a.id === activeArticleId,
 										);
 										const nextIndex = (currentIndex + 1) % ARTICLES.length;
-										setActiveArticleId(ARTICLES[nextIndex].id);
+										setActiveArticleId(ARTICLES[nextIndex]!.id);
 									}}
 									className="flex items-center gap-2 border border-white hover:bg-white hover:text-black transition-colors px-4 py-2 font-mono text-xs uppercase cursor-pointer"
 								>

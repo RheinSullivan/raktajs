@@ -1,36 +1,26 @@
 {
-	"editor.defaultFormatter": "biomejs.biome",
-	"editor.formatOnSave": true,
-
-	"editor.codeActionsOnSave": {
-		"source.organizeImports.biome": "explicit",
-		"quickfix.biome": "explicit"
-	},
-
-	"[typescript]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	},
-	"[typescriptreact]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	},
-	"[javascript]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	},
-	"[javascriptreact]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	},
-	"[json]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	},
-	"[jsonc]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	},
-
-	// TypeScript workspace SDK
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"typescript.enablePromptUseWorkspaceTsdk": true,
-
-	// File & search hygiene
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "vscode.typescript-language-features",
+	"[typescript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
+	},
 	"files.exclude": {
 		"**/.history": true,
 		"**/dist": true,
@@ -42,13 +32,9 @@
 		"**/node_modules": true,
 		"**/bun.lock": true
 	},
-
-	// Editor behavior
 	"files.eol": "\n",
 	"editor.tabSize": 2,
 	"editor.insertSpaces": false,
-
-	// Tailwind class detection (React / JSX / TSX)
 	"tailwindCSS.experimental.classRegex": [
 		[
 			"className\\s*=\\s*\"([^\"]*)\"",

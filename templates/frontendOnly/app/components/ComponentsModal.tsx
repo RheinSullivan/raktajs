@@ -1,8 +1,8 @@
 // biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.
 // biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.
-
+// NOTE: React hooks (useState) are auto-imported by Rakta.js — no explicit import needed.
+import type { ReactNode } from "react";
 import { motion } from "motion/react";
-import React, { useState } from "react";
 import {
 	LuCheck as Check,
 	LuCode as Code,
@@ -21,7 +21,7 @@ interface ComponentItem {
 	id: string;
 	name: string;
 	description: string;
-	preview: (state: any, setState: any) => React.ReactNode;
+	preview: (state: any, setState: any) => ReactNode;
 	code: string;
 }
 
@@ -178,8 +178,7 @@ export default function ComponentsModal({
 	if (!isOpen) return null;
 
 	const activeComp =
-		BRUTALIST_COMPONENTS.find((c) => c.id === activeCompId) ||
-		BRUTALIST_COMPONENTS[0];
+		(BRUTALIST_COMPONENTS.find((c) => c.id === activeCompId) ?? BRUTALIST_COMPONENTS[0])!;
 	const activeState = componentStates[activeCompId] || {};
 
 	const handleSetState = (newState: any) => {

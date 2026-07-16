@@ -1,8 +1,7 @@
 // biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.
 // biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.
-
+// NOTE: React hooks (useState, useEffect, useRef) are auto-imported by Rakta.js.
 import { motion } from "motion/react";
-import React, { useEffect, useRef, useState } from "react";
 import {
 	LuCircleCheck as CheckCircle2,
 	LuCloud as Cloud,

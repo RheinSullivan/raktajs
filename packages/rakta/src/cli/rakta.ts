@@ -167,7 +167,7 @@ async function main(): Promise<void> {
 
 		case "tide:render":
 			console.log(
-				`${BOLD}${RED}Rakta.js${RESET} ${DIM}tide:render is planned for v0.2.4.${RESET}`,
+				`${BOLD}${RED}Rakta.js${RESET} ${DIM}tide:render is planned for v0.2.6.${RESET}`,
 			);
 			break;
 
