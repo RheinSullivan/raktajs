@@ -141,7 +141,7 @@ export async function startDevServer(
 			},
 			message() {
 				// no-op
-			},																															
+			},
 		},
 
 		async fetch(request: Request, server): Promise<Response> {
