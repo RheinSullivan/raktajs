@@ -57,6 +57,7 @@ function printSuccessMessage(projectConfig: ProjectConfig): void {
 	const languageLabel = PROJECT_LANGUAGE_DISPLAY[projectConfig.language];
 	const cssLabel = CSS_DISPLAY[projectConfig.cssFramework];
 	const renderLabel = RENDER_MODE_DISPLAY[projectConfig.renderMode];
+	const autoImportLabel = projectConfig.autoImport ? "Enabled" : "Disabled";
 	const isFullstack = projectConfig.projectMode === "fullstack";
 
 	const backendLine = isFullstack
@@ -78,6 +79,7 @@ function printSuccessMessage(projectConfig: ProjectConfig): void {
       ${pc.dim("Lang:")}    ${languageLabel}
       ${pc.dim("CSS:")}     ${cssLabel}
       ${pc.dim("Render:")}  ${renderLabel}
+      ${pc.dim("AutoImport:")} ${autoImportLabel}
       ${backendLine}
       ${databaseLine}
 

@@ -127,9 +127,53 @@ function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	return files;
 }
 
+function getAutoImportConfig(autoImport: boolean): string {
+	return `  autoImport: {\n    enabled: ${autoImport},\n    directories: ["app", "components", "lib", "stores", "schemas"],\n    outputDirectory: ".rakta",\n    dts: true,\n  },\n`;
+}
+
+function applyHookImportMode(sourceCode: string, autoImport: boolean): string {
+	if (autoImport) {
+		return sourceCode;
+	}
+
+	const hookImports = new Set<string>();
+	let transformedCode = sourceCode;
+
+	const replacements: ReadonlyArray<readonly [string, string, string]> = [
+		["useState", "raktaState", "raktaState"],
+		["useEffect", "raktaEffect", "raktaEffect"],
+		["useRef", "raktaRef", "raktaRef"],
+		["useMemo", "raktaMemo", "raktaMemo"],
+		["useCallback", "raktaCallback", "raktaCallback"],
+		["useReducer", "raktaReducer", "raktaReducer"],
+	];
+
+	for (const [reactHook, raktaHook, importName] of replacements) {
+		const hookPattern = new RegExp(`\\b${reactHook}\\b`, "g");
+
+		if (hookPattern.test(transformedCode)) {
+			hookImports.add(importName);
+			transformedCode = transformedCode.replace(hookPattern, raktaHook);
+		}
+	}
+
+	transformedCode = transformedCode.replace(
+		/^import\s+\{[^}]*rakta[A-Za-z0-9_,\s]*\}\s+from\s+"react";\n/m,
+		"",
+	);
+
+	if (hookImports.size === 0) {
+		return transformedCode;
+	}
+
+	const imports = Array.from(hookImports).sort().join(", ");
+	return `import { ${imports} } from "raktajs/hooks";\n${transformedCode}`;
+}
+
 //  Frontend-only starter (ShrimpRun game)
 function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	const { projectName, cssFramework, useTypeScript } = projectConfig;
+	const { projectName, cssFramework, useTypeScript, autoImport } =
+		projectConfig;
 	const styleFileName =
 		cssFramework === "sass" ? "globals.scss" : "globals.css";
 	const pageExtension = useTypeScript ? "tsx" : "jsx";
@@ -176,7 +220,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 		},
 		{
 			path: `rakta.config.${scriptExtension}`,
-			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js — Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {},\n  },\n});\n`,
+			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n${getAutoImportConfig(autoImport)}  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js — Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {},\n  },\n});\n`,
 		},
 		{
 			path: `app/layout.${pageExtension}`,
@@ -184,7 +228,10 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 		},
 		{
 			path: `app/page.${pageExtension}`,
-			content: generateFrontendOnlyPage(projectName),
+			content: applyHookImportMode(
+				generateFrontendOnlyPage(projectName),
+				autoImport,
+			),
 		},
 		{
 			path: `app/loading.${pageExtension}`,
@@ -200,7 +247,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 		},
 		{
 			path: `app/components/ComponentsModal.${pageExtension}`,
-			content: STARTER_COMPONENTS_MODAL_CODE,
+			content: applyHookImportMode(STARTER_COMPONENTS_MODAL_CODE, autoImport),
 		},
 		{
 			path: `app/components/CoralObstacle.${pageExtension}`,
@@ -208,11 +255,11 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 		},
 		{
 			path: `app/components/DeployModal.${pageExtension}`,
-			content: STARTER_DEPLOY_MODAL_CODE,
+			content: applyHookImportMode(STARTER_DEPLOY_MODAL_CODE, autoImport),
 		},
 		{
 			path: `app/components/DocsModal.${pageExtension}`,
-			content: STARTER_DOCS_MODAL_CODE,
+			content: applyHookImportMode(STARTER_DOCS_MODAL_CODE, autoImport),
 		},
 		{
 			path: `app/components/ShrimpCharacter.${pageExtension}`,
@@ -338,6 +385,7 @@ function getFullstackFrontendFiles(
 						rootDir: "./",
 					},
 					include: [
+						"rakta-env.d.ts",
 						"app/**/*",
 						"components/**/*",
 						"lib/**/*",
@@ -353,11 +401,15 @@ function getFullstackFrontendFiles(
 		},
 		{
 			path: "frontend/rakta.config.ts",
-			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {\n      "/": "ssg",\n      "/about": "ssg",\n      "/blog": "csg",\n      "/blog/:slug": "csg",\n      "/dashboard": "csr"\n    }\n  }\n});\n`,
+			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n${getAutoImportConfig(projectConfig.autoImport)}  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {\n      "/": "ssg",\n      "/about": "ssg",\n      "/blog": "csg",\n      "/blog/:slug": "csg",\n      "/dashboard": "csr"\n    }\n  }\n});\n`,
+		},
+		{
+			path: "frontend/rakta-env.d.ts",
+			content: generateFrontendOnlyRaktaEnv(),
 		},
 		{
 			path: "frontend/app/layout.tsx",
-			content: `import React from "react";\nimport "../styles/${styleFileName}";\n\ninterface RootLayoutProps {\n  readonly children: React.ReactNode;\n}\n\nexport default function RootLayout({ children }: RootLayoutProps) {\n  return (\n    <html lang="en">\n      <body>{children}</body>\n    </html>\n  );\n}\n`,
+			content: `import "../styles/${styleFileName}";\n\ninterface RootLayoutProps {\n  readonly children: React.ReactNode;\n}\n\nexport default function RootLayout({ children }: RootLayoutProps) {\n  return (\n    <html lang="en">\n      <body>{children}</body>\n    </html>\n  );\n}\n`,
 		},
 		{
 			path: "frontend/app/page.tsx",
@@ -365,27 +417,27 @@ function getFullstackFrontendFiles(
 		},
 		{
 			path: "frontend/app/about/page.tsx",
-			content: `import React from "react";\n\nexport default function AboutPage() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">ABOUT</p>\n        <h1>About ${projectName}</h1>\n        <p>This project is built with Rakta.js, React, Bun, and TypeScript.</p>\n        <a href="/">Back to home</a>\n      </section>\n    </main>\n  );\n}\n`,
+			content: `export default function AboutPage() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">ABOUT</p>\n        <h1>About ${projectName}</h1>\n        <p>This project is built with Rakta.js, React, Bun, and TypeScript.</p>\n        <click to="/">Back to home</click>\n      </section>\n    </main>\n  );\n}\n`,
 		},
 		{
 			path: "frontend/app/blog/page.tsx",
-			content: `import React from "react";\n\nconst BLOG_POSTS = [\n  { slug: "getting-started", title: "Getting started with Rakta.js" },\n  { slug: "file-based-routing", title: "File-based routing explained" },\n  { slug: "type-safe-rpc", title: "Type-safe API with CarubanWire" },\n];\n\nexport default function BlogPage() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">BLOG</p>\n        <h1>Articles</h1>\n        <ul>\n          {BLOG_POSTS.map((post) => (\n            <li key={post.slug}>\n              <a href={\`/blog/\${post.slug}\`}>{post.title}</a>\n            </li>\n          ))}\n        </ul>\n      </section>\n    </main>\n  );\n}\n`,
+			content: `const BLOG_POSTS = [\n  { slug: "getting-started", title: "Getting started with Rakta.js" },\n  { slug: "file-based-routing", title: "File-based routing explained" },\n  { slug: "type-safe-rpc", title: "Type-safe API with CarubanWire" },\n];\n\nexport default function BlogPage() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">BLOG</p>\n        <h1>Articles</h1>\n        <ul>\n          {BLOG_POSTS.map((post) => (\n            <li key={post.slug}>\n              <click to={\`/blog/\${post.slug}\`}>{post.title}</click>\n            </li>\n          ))}\n        </ul>\n      </section>\n    </main>\n  );\n}\n`,
 		},
 		{
 			path: "frontend/app/blog/[slug]/page.tsx",
-			content: `import React from "react";\n\ninterface BlogPostPageProps {\n  readonly params: {\n    readonly slug?: string;\n  };\n}\n\nexport default function BlogPostPage({ params }: BlogPostPageProps) {\n  const postTitle = params.slug?.replaceAll("-", " ") ?? "Article";\n\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">BLOG POST</p>\n        <h1>{postTitle}</h1>\n        <p>Slug: <code>{params.slug}</code></p>\n        <a href="/blog">Back to blog</a>\n      </section>\n    </main>\n  );\n}\n`,
+			content: `interface BlogPostPageProps {\n  readonly params: {\n    readonly slug?: string;\n  };\n}\n\nexport default function BlogPostPage({ params }: BlogPostPageProps) {\n  const postTitle = params.slug?.replaceAll("-", " ") ?? "Article";\n\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">BLOG POST</p>\n        <h1>{postTitle}</h1>\n        <p>Slug: <code>{params.slug}</code></p>\n        <click to="/blog">Back to blog</click>\n      </section>\n    </main>\n  );\n}\n`,
 		},
 		{
 			path: "frontend/app/loading.tsx",
-			content: `import React from "react";\n\nexport default function Loading() {\n  return (\n    <main className="page-shell">\n      <p>Loading...</p>\n    </main>\n  );\n}\n`,
+			content: `export default function Loading() {\n  return (\n    <main className="page-shell">\n      <p>Loading...</p>\n    </main>\n  );\n}\n`,
 		},
 		{
 			path: "frontend/app/error.tsx",
-			content: `import React from "react";\n\ninterface ErrorPageProps {\n  readonly error: Error;\n  readonly reset: () => void;\n}\n\nexport default function ErrorPage({ error, reset }: ErrorPageProps) {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <h1>Something went wrong</h1>\n        <p>{error.message}</p>\n        <button type="button" onClick={reset}>Try again</button>\n      </section>\n    </main>\n  );\n}\n`,
+			content: `interface ErrorPageProps {\n  readonly error: Error;\n  readonly reset: () => void;\n}\n\nexport default function ErrorPage({ error, reset }: ErrorPageProps) {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <h1>Something went wrong</h1>\n        <p>{error.message}</p>\n        <button type="button" onClick={reset}>Try again</button>\n      </section>\n    </main>\n  );\n}\n`,
 		},
 		{
 			path: "frontend/app/not-found.tsx",
-			content: `import React from "react";\n\nexport default function NotFound() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <h1>404</h1>\n        <p>The page you are looking for does not exist.</p>\n        <a href="/">Return home</a>\n      </section>\n    </main>\n  );\n}\n`,
+			content: `export default function NotFound() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <h1>404</h1>\n        <p>The page you are looking for does not exist.</p>\n        <click to="/">Return home</click>\n      </section>\n    </main>\n  );\n}\n`,
 		},
 		{
 			path: "frontend/app/api/hello/route.ts",
@@ -484,7 +536,7 @@ function getBackendCommonFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	return [
 		{
 			path: "backend/src/env.ts",
-			content: `function optionalEnv(envKey: string, fallbackValue: string): string {\n  return process.env[envKey] ?? fallbackValue;\n}\n\nexport const env = {\n  port: Number(optionalEnv("PORT", "4000")),\n  nodeEnv: optionalEnv("NODE_ENV", "development"),\n  corsOrigin: optionalEnv("CORS_ORIGIN", "http://localhost:3000"),\n  databaseUrl: optionalEnv("DATABASE_URL", ""),\n} as const;\n`,
+			content: `function optionalEnv(envKey: string, fallbackValue: string): string {\n  return process.env[envKey] ?? fallbackValue;\n}\n\nfunction requiredEnv(envKey: string, fallbackValue: string): string {\n  const value = process.env[envKey] ?? fallbackValue;\n\n  if (value.length < 32) {\n    throw new Error(\`\${envKey} must be at least 32 characters long.\`);\n  }\n\n  return value;\n}\n\nexport const env = {\n  port: Number(optionalEnv("PORT", "4000")),\n  nodeEnv: optionalEnv("NODE_ENV", "development"),\n  corsOrigin: optionalEnv("CORS_ORIGIN", "http://localhost:3000"),\n  databaseUrl: optionalEnv("DATABASE_URL", ""),\n  authSecret: requiredEnv("AUTH_SECRET", "change-this-development-secret-32-chars"),\n  sessionMode: optionalEnv("SESSION_MODE", "single"),\n} as const;\n`,
 		},
 		{
 			path: "backend/src/config/app.config.ts",
@@ -504,7 +556,7 @@ function getBackendCommonFiles(projectConfig: ProjectConfig): ProjectFile[] {
 		},
 		{
 			path: "backend/.env.example",
-			content: getDatabaseEnvExample(projectConfig.database),
+			content: `${getDatabaseEnvExample(projectConfig.database)}\nAUTH_SECRET=change-this-development-secret-32-chars\nSESSION_MODE=single\n`,
 		},
 		{
 			path: "backend/tsconfig.json",
@@ -526,6 +578,26 @@ function getBackendCommonFiles(projectConfig: ProjectConfig): ProjectFile[] {
 		{
 			path: "backend/src/database/schema/.gitkeep",
 			content: "",
+		},
+		{
+			path: "backend/src/security/jwt.ts",
+			content: `import { env } from "../env";\n\nexport interface JwtPayload {\n  readonly sub: string;\n  readonly email: string;\n  readonly sessionId: string;\n  readonly exp: number;\n}\n\nfunction base64UrlEncode(value: string | ArrayBuffer): string {\n  const bytes = typeof value === "string" ? new TextEncoder().encode(value) : new Uint8Array(value);\n  return btoa(String.fromCharCode(...bytes)).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");\n}\n\nfunction base64UrlDecode(value: string): string {\n  const normalized = value.replaceAll("-", "+").replaceAll("_", "/");\n  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");\n  return atob(padded);\n}\n\nasync function signingKey(): Promise<CryptoKey> {\n  return crypto.subtle.importKey(\n    "raw",\n    new TextEncoder().encode(env.authSecret),\n    { name: "HMAC", hash: "SHA-256" },\n    false,\n    ["sign", "verify"]\n  );\n}\n\nexport async function signJwt(payload: JwtPayload): Promise<string> {\n  const header = base64UrlEncode(JSON.stringify({ alg: "HS256", typ: "JWT" }));\n  const body = base64UrlEncode(JSON.stringify(payload));\n  const signature = await crypto.subtle.sign(\n    "HMAC",\n    await signingKey(),\n    new TextEncoder().encode(\`\${header}.\${body}\`)\n  );\n\n  return \`\${header}.\${body}.\${base64UrlEncode(signature)}\`;\n}\n\nexport async function verifyJwt(token: string): Promise<JwtPayload | undefined> {\n  const [header, body, signature] = token.split(".");\n\n  if (header === undefined || body === undefined || signature === undefined) {\n    return undefined;\n  }\n\n  const expectedSignature = await crypto.subtle.sign(\n    "HMAC",\n    await signingKey(),\n    new TextEncoder().encode(\`\${header}.\${body}\`)\n  );\n\n  if (base64UrlEncode(expectedSignature) !== signature) {\n    return undefined;\n  }\n\n  const payload = JSON.parse(base64UrlDecode(body)) as JwtPayload;\n\n  if (payload.exp <= Math.floor(Date.now() / 1000)) {\n    return undefined;\n  }\n\n  return payload;\n}\n`,
+		},
+		{
+			path: "backend/src/security/password.ts",
+			content: `export async function hashPassword(password: string): Promise<string> {\n  return Bun.password.hash(password, {\n    algorithm: "argon2id",\n    memoryCost: 19_456,\n    timeCost: 2,\n  });\n}\n\nexport async function verifyPassword(password: string, hash: string): Promise<boolean> {\n  return Bun.password.verify(password, hash);\n}\n`,
+		},
+		{
+			path: "backend/src/auth/session.store.ts",
+			content: `export interface SessionRecord {\n  readonly id: string;\n  readonly userId: string;\n  readonly email: string;\n  readonly createdAt: string;\n  readonly expiresAt: string;\n}\n\nconst sessions = new Map<string, SessionRecord>();\nconst userSessionIndex = new Map<string, string>();\n\nexport function createSession(userId: string, email: string, singleSession: boolean): SessionRecord {\n  if (singleSession) {\n    const existingSessionId = userSessionIndex.get(userId);\n\n    if (existingSessionId !== undefined) {\n      sessions.delete(existingSessionId);\n    }\n  }\n\n  const session: SessionRecord = {\n    id: crypto.randomUUID(),\n    userId,\n    email,\n    createdAt: new Date().toISOString(),\n    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7).toISOString(),\n  };\n\n  sessions.set(session.id, session);\n  userSessionIndex.set(userId, session.id);\n  return session;\n}\n\nexport function readSession(sessionId: string): SessionRecord | undefined {\n  const session = sessions.get(sessionId);\n\n  if (session === undefined) {\n    return undefined;\n  }\n\n  if (Date.parse(session.expiresAt) <= Date.now()) {\n    sessions.delete(sessionId);\n    return undefined;\n  }\n\n  return session;\n}\n\nexport function revokeSession(sessionId: string): void {\n  const session = sessions.get(sessionId);\n\n  if (session !== undefined) {\n    userSessionIndex.delete(session.userId);\n  }\n\n  sessions.delete(sessionId);\n}\n`,
+		},
+		{
+			path: "backend/src/auth/auth.service.ts",
+			content: `import { env } from "../env";\nimport { signJwt, verifyJwt } from "../security/jwt";\nimport { hashPassword, verifyPassword } from "../security/password";\nimport { createSession, readSession, revokeSession } from "./session.store";\n\nexport interface AuthUser {\n  readonly id: string;\n  readonly email: string;\n  readonly name: string;\n}\n\nexport interface LoginResult {\n  readonly user: AuthUser;\n  readonly token: string;\n  readonly sessionId: string;\n  readonly cookie: string;\n}\n\nconst demoUser: AuthUser = {\n  id: "user_demo",\n  email: "admin@rakta.local",\n  name: "Rakta Admin",\n};\n\nconst demoPasswordHash = await hashPassword("rakta-password");\n\nfunction isSingleSessionMode(): boolean {\n  return env.sessionMode === "single";\n}\n\nexport async function login(email: string, password: string): Promise<LoginResult | undefined> {\n  if (email !== demoUser.email || !(await verifyPassword(password, demoPasswordHash))) {\n    return undefined;\n  }\n\n  const session = createSession(demoUser.id, demoUser.email, isSingleSessionMode());\n  const token = await signJwt({\n    sub: demoUser.id,\n    email: demoUser.email,\n    sessionId: session.id,\n    exp: Math.floor(Date.now() / 1000) + 60 * 60,\n  });\n\n  return {\n    user: demoUser,\n    token,\n    sessionId: session.id,\n    cookie: \`rakta_session=\${session.id}; HttpOnly; SameSite=Lax; Path=/; Max-Age=604800\`,\n  };\n}\n\nexport async function authenticate(request: Request): Promise<AuthUser | undefined> {\n  const authorization = request.headers.get("authorization");\n  const bearerToken = authorization?.startsWith("Bearer ") ? authorization.slice(7) : undefined;\n  const cookieSessionId = request.headers\n    .get("cookie")\n    ?.split(";")\n    .map((cookie) => cookie.trim())\n    .find((cookie) => cookie.startsWith("rakta_session="))\n    ?.slice("rakta_session=".length);\n\n  if (bearerToken !== undefined) {\n    const payload = await verifyJwt(bearerToken);\n    const session = payload === undefined ? undefined : readSession(payload.sessionId);\n\n    if (session !== undefined) {\n      return { id: session.userId, email: session.email, name: demoUser.name };\n    }\n  }\n\n  if (cookieSessionId !== undefined) {\n    const session = readSession(cookieSessionId);\n\n    if (session !== undefined) {\n      return { id: session.userId, email: session.email, name: demoUser.name };\n    }\n  }\n\n  return undefined;\n}\n\nexport function logout(sessionId: string): void {\n  revokeSession(sessionId);\n}\n`,
+		},
+		{
+			path: "backend/src/middlewares/auth.middleware.ts",
+			content: `import { authenticate } from "../auth/auth.service";\n\nexport async function requireAuth(request: Request): Promise<Response | undefined> {\n  const user = await authenticate(request);\n\n  if (user === undefined) {\n    return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });\n  }\n\n  return undefined;\n}\n`,
 		},
 	];
 }
@@ -553,13 +625,16 @@ function getGamanFiles(projectConfig: ProjectConfig): ProjectFile[] {
 		{
 			path: "backend/package.json",
 			content: getBackendPackageJson(projectConfig, {
-				dependencies: { ...getDatabaseDependencies(projectConfig.database) },
+				dependencies: {
+					gaman: "^2.1.5",
+					...getDatabaseDependencies(projectConfig.database),
+				},
 				devDependencies: { "@types/bun": "^1.3.14" },
 			}),
 		},
 		{
 			path: "backend/src/app.ts",
-			content: `import { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\n\nconst corsHeaders = {\n  "Access-Control-Allow-Origin": appConfig.corsOrigin,\n  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",\n  "Access-Control-Allow-Headers": "Content-Type, Authorization",\n};\n\nconst server = Bun.serve({\n  port: appConfig.port,\n  fetch(request: Request): Response {\n    const requestUrl = new URL(request.url);\n\n    if (request.method === "OPTIONS") {\n      return new Response(null, { status: 204, headers: corsHeaders });\n    }\n\n    if (requestUrl.pathname === "/api/hello" && request.method === "GET") {\n      return Response.json(helloController(), { headers: corsHeaders });\n    }\n\n    return Response.json(\n      { success: false, error: "Not found" },\n      { status: 404, headers: corsHeaders }\n    );\n  },\n});\n\nconsole.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${server.port}\`);\n`,
+			content: `import { Gaman, type HTTP } from "gaman";\nimport { authenticate, login, logout } from "./auth/auth.service";\nimport { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\nimport { requireAuth } from "./middlewares/auth.middleware";\n\nconst app = Gaman<HTTP>();\n\nconst corsHeaders = {\n  "Access-Control-Allow-Origin": appConfig.corsOrigin,\n  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",\n  "Access-Control-Allow-Headers": "Content-Type, Authorization",\n  "Access-Control-Allow-Credentials": "true",\n};\n\nfunction withCors(response: Response): Response {\n  const headers = new Headers(response.headers);\n\n  for (const [key, value] of Object.entries(corsHeaders)) {\n    headers.set(key, value);\n  }\n\n  return new Response(response.body, { status: response.status, headers });\n}\n\nasync function readJsonBody(request: Request): Promise<Record<string, unknown>> {\n  return request.json() as Promise<Record<string, unknown>>;\n}\n\nfunction readSessionCookie(request: Request): string | undefined {\n  return request.headers\n    .get("cookie")\n    ?.split(";")\n    .map((cookie) => cookie.trim())\n    .find((cookie) => cookie.startsWith("rakta_session="))\n    ?.slice("rakta_session=".length);\n}\n\nasync function handle(request: Request): Promise<Response> {\n  const requestUrl = new URL(request.url);\n\n  if (requestUrl.pathname === "/api/hello" && request.method === "GET") {\n    return withCors(Response.json(helloController()));\n  }\n\n  if (requestUrl.pathname === "/api/auth/login" && request.method === "POST") {\n    const body = await readJsonBody(request);\n    const result = await login(String(body.email ?? ""), String(body.password ?? ""));\n\n    if (result === undefined) {\n      return withCors(Response.json({ success: false, error: "Invalid credentials" }, { status: 401 }));\n    }\n\n    return withCors(Response.json(\n      { success: true, data: { user: result.user, token: result.token, sessionId: result.sessionId } },\n      { headers: { "Set-Cookie": result.cookie } }\n    ));\n  }\n\n  if (requestUrl.pathname === "/api/auth/me" && request.method === "GET") {\n    const rejected = await requireAuth(request);\n\n    if (rejected !== undefined) {\n      return withCors(rejected);\n    }\n\n    return withCors(Response.json({ success: true, data: await authenticate(request) }));\n  }\n\n  if (requestUrl.pathname === "/api/auth/logout" && request.method === "POST") {\n    const sessionId = readSessionCookie(request);\n\n    if (sessionId !== undefined) logout(sessionId);\n\n    return withCors(Response.json(\n      { success: true },\n      { headers: { "Set-Cookie": "rakta_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0" } }\n    ));\n  }\n\n  return withCors(Response.json({ success: false, error: "Not found" }, { status: 404 }));\n}\n\napp.get("/api/hello", (ctx) => handle(ctx.req));\napp.post("/api/auth/login", (ctx) => handle(ctx.req));\napp.get("/api/auth/me", (ctx) => handle(ctx.req));\napp.post("/api/auth/logout", (ctx) => handle(ctx.req));\n\napp.mountServer({ http: appConfig.port });\n\nconsole.log(\`[${projectConfig.projectName}] Gaman.js backend running at http://localhost:\${appConfig.port}\`);\n`,
 		},
 	];
 }
@@ -583,7 +658,7 @@ function getExpressFiles(projectConfig: ProjectConfig): ProjectFile[] {
 		},
 		{
 			path: "backend/src/app.ts",
-			content: `import cors from "cors";\nimport express from "express";\nimport { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\n\nconst app = express();\n\napp.use(cors({ origin: appConfig.corsOrigin }));\napp.use(express.json());\n\napp.get("/api/hello", (_request, response) => {\n  response.json(helloController());\n});\n\napp.use((_request, response) => {\n  response.status(404).json({ success: false, error: "Not found" });\n});\n\napp.listen(appConfig.port, () => {\n  console.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${appConfig.port}\`);\n});\n`,
+			content: `import cors from "cors";\nimport express from "express";\nimport { authenticate, login, logout } from "./auth/auth.service";\nimport { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\n\nconst app = express();\n\napp.use(cors({ origin: appConfig.corsOrigin, credentials: true }));\napp.use(express.json());\n\nfunction readSessionCookie(cookieHeader: string | undefined): string | undefined {\n  return cookieHeader\n    ?.split(";")\n    .map((cookie) => cookie.trim())\n    .find((cookie) => cookie.startsWith("rakta_session="))\n    ?.slice("rakta_session=".length);\n}\n\napp.get("/api/hello", (_request, response) => {\n  response.json(helloController());\n});\n\napp.post("/api/auth/login", async (request, response) => {\n  const result = await login(String(request.body.email ?? ""), String(request.body.password ?? ""));\n\n  if (result === undefined) {\n    response.status(401).json({ success: false, error: "Invalid credentials" });\n    return;\n  }\n\n  response.setHeader("Set-Cookie", result.cookie);\n  response.json({ success: true, data: { user: result.user, token: result.token, sessionId: result.sessionId } });\n});\n\napp.get("/api/auth/me", async (request, response) => {\n  const user = await authenticate(new Request(\`\${request.protocol}://\${request.get("host")}\${request.originalUrl}\`, {\n    headers: request.headers as HeadersInit,\n  }));\n\n  if (user === undefined) {\n    response.status(401).json({ success: false, error: "Unauthorized" });\n    return;\n  }\n\n  response.json({ success: true, data: user });\n});\n\napp.post("/api/auth/logout", (request, response) => {\n  const sessionId = readSessionCookie(request.headers.cookie);\n\n  if (sessionId !== undefined) {\n    logout(sessionId);\n  }\n\n  response.setHeader("Set-Cookie", "rakta_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0");\n  response.json({ success: true });\n});\n\napp.use((_request, response) => {\n  response.status(404).json({ success: false, error: "Not found" });\n});\n\napp.listen(appConfig.port, () => {\n  console.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${appConfig.port}\`);\n});\n`,
 		},
 		{
 			path: "backend/src/middlewares/.gitkeep",
@@ -689,7 +764,7 @@ function getAdonisFiles(projectConfig: ProjectConfig): ProjectFile[] {
 		},
 		{
 			path: "backend/src/app.ts",
-			content: `import { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\n\nconst corsHeaders = {\n  "Access-Control-Allow-Origin": appConfig.corsOrigin,\n  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",\n  "Access-Control-Allow-Headers": "Content-Type, Authorization",\n};\n\nconst server = Bun.serve({\n  port: appConfig.port,\n  fetch(request: Request): Response {\n    const requestUrl = new URL(request.url);\n\n    if (request.method === "OPTIONS") {\n      return new Response(null, { status: 204, headers: corsHeaders });\n    }\n\n    if (requestUrl.pathname === "/api/hello" && request.method === "GET") {\n      return Response.json(helloController(), { headers: corsHeaders });\n    }\n\n    return Response.json(\n      { success: false, error: "Not found" },\n      { status: 404, headers: corsHeaders }\n    );\n  },\n});\n\nconsole.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${server.port}\`);\n`,
+			content: `import { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\n\nconst corsHeaders = {\n  "Access-Control-Allow-Origin": appConfig.corsOrigin,\n  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",\n  "Access-Control-Allow-Headers": "Content-Type, Authorization",\n};\n\nconst server = Bun.serve({\n  port: appConfig.port,\n  fetch(request: Request): Response {\n    const requestUrl = new URL(request.url);\n\n    if (request.method === "OPTIONS") {\n      return new Response(undefined, { status: 204, headers: corsHeaders });\n    }\n\n    if (requestUrl.pathname === "/api/hello" && request.method === "GET") {\n      return Response.json(helloController(), { headers: corsHeaders });\n    }\n\n    return Response.json(\n      { success: false, error: "Not found" },\n      { status: 404, headers: corsHeaders }\n    );\n  },\n});\n\nconsole.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${server.port}\`);\n`,
 		},
 	];
 }
@@ -2196,9 +2271,7 @@ export default function ShrimpRunGame() {
 }
 
 function generateFullstackHomePage(projectName: string): string {
-	return `import React from "react";
-
-export default function HomePage() {
+	return `export default function HomePage() {
   return (
     <main className="page-shell">
       <section className="hero-card">
@@ -2208,8 +2281,8 @@ export default function HomePage() {
           Built with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.
         </p>
         <div className="button-row">
-          <a href="/about">About</a>
-          <a href="/blog">Blog</a>
+          <click to="/about">About</click>
+          <click to="/blog">Blog</click>
         </div>
       </section>
     </main>

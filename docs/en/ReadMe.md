@@ -18,6 +18,23 @@ fetch-based HTTP client inspired by Axios's ergonomics. None of those tools
 are being replaced or criticized here — Rakta.js simply tries to package
 familiar ideas into one small, Bun-first toolkit with its own identity.
 
+## Documentation map
+
+- [`gettingStarted.md`](./gettingStarted.md) - install Rakta.js and create your first app
+- [`routing.md`](./routing.md) - file-based routing and route conventions
+- [`kernel.md`](./kernel.md) - service container, environment, and plugin lifecycle
+- [`middleware.md`](./middleware.md) - request pipeline, redirect, rewrite, and abort
+- [`authentication.md`](./authentication.md) - JWT, session, and single-session fullstack auth
+- [`deployment.md`](./deployment.md) - Vercel, Netlify, Cloudflare, Docker, and static deployment
+- [`docsSystem.md`](./docsSystem.md) - Markdown docs scanner and VitePress bridge
+- [`autoImport.md`](./autoImport.md) - framework-owned auto imports
+- [`hooks.md`](./hooks.md) - Rakta-named hooks for projects without auto import
+- [`rpc.md`](./rpc.md) - type-safe RPC
+- [`http.md`](./http.md) - PanturaFetch HTTP client
+- [`store.md`](./store.md) - state management
+- [`seo.md`](./seo.md) - metadata, sitemap, and robots helpers
+- [`templates.md`](./templates.md) - generated project structures
+
 ## What we expect from a contribution
 
 If you want to contribute, please include the materials you're adding —

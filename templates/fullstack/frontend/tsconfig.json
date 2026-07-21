@@ -1,0 +1,18 @@
+{
+	"extends": "../tsconfig.base.json",
+	"compilerOptions": {
+		"outDir": "./dist",
+		"rootDir": "./",
+		"types": ["node", "react", "react-dom"]
+	},
+	"include": [
+		"rakta-env.d.ts",
+		"rakta-local.d.ts",
+		"app/**/*",
+		"lib/**/*",
+		"stores/**/*",
+		"schemas/**/*",
+		"rakta.config.ts"
+	],
+	"exclude": ["node_modules", "dist"]
+}

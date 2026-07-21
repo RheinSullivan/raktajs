@@ -1,71 +1,77 @@
-# Auto import — TrusmiThread
+# Auto import - TrusmiThread
 
-## Overview
+## Gambaran umum
 
-**TrusmiThread** memindai folder `app/`, `components/`, dan `lib/` di
-project kalian, lalu menulis satu file barrel hasil generate,
-`.rakta/auto-imports.ts`, yang me-re-export semua yang ditemukannya.
+TrusmiThread adalah sistem auto import Rakta.js. Sistem ini menjaga app
+hasil generator tetap bersih dengan membuat primitive framework dan hooks
+starter tersedia tanpa import manual saat Auto Import aktif.
 
-## Kapan dipakai
+Generator project akan bertanya apakah Auto Import ingin diaktifkan.
+Default-nya adalah **aktif**.
 
-Jalankan setiap kali kalian menambah, mengganti nama, atau menghapus
-komponen atau utility, dan ingin satu permukaan import untuk
-me-re-export, dibanding menulis relative import path secara manual di
-semua tempat.
+## Perilaku generator
 
-## Perilaku saat ini (tolong dibaca sebelum mengandalkan ini)
+Saat Auto Import aktif, komponen starter yang dihasilkan bisa memakai
+global framework Rakta dan hooks yang kompatibel dengan React tanpa
+mengimpor semuanya di setiap file.
 
-TrusmiThread saat ini adalah **file barrel hasil generate**, bukan
-transform di level compiler. Ia menulis statement `export` sungguhan ke
-`.rakta/auto-imports.ts` — kalian tetap perlu `import` dari file hasil
-generate tersebut (atau dari module aslinya) di file yang memakai
-simbolnya. Saat ini belum ada build step yang mendeteksi
-`<ShrimpRunGame />` di JSX dan menyuntikkan import secara otomatis tanpa
-statement `import` apapun di source kalian.
+Saat Auto Import dimatikan, file yang dihasilkan akan mengimpor hooks
+bernama khas Rakta dari `raktajs/hooks`, bukan mengimpor hooks React
+secara langsung:
 
-Kalau template starter kalian terlihat memakai komponen tanpa `import`
-yang terlihat, periksa apakah file tersebut sebenarnya sudah punya
-import-nya, atau apakah ia mengimpor dari `.rakta/auto-imports.ts`. Kami
-sengaja belum mendokumentasikan pengalaman zero-import yang benar-benar
-implisit sampai transform compiler tersebut benar-benar ada — halaman ini
-akan diperbarui begitu itu tersedia.
+```tsx
+import { raktaEffect, raktaRef, raktaState } from "raktajs/hooks";
+```
 
-## Arsitektur
+Dengan begitu code tetap eksplisit, tetapi identitas Rakta.js tetap
+terasa.
 
-Scanner menyusuri folder yang dikonfigurasi, melewati `node_modules`,
-`.git`, `dist`, `.next`, `coverage`, dan `.rakta` itu sendiri, mengumpulkan
-setiap named dan default export, lalu menuliskannya ke file hasil
-generate dengan aliasing yang aman dari duplikat. Menjalankannya bersifat
-idempotent — dijalankan dua kali berturut-turut menghasilkan output yang
-sama.
+## Konfigurasi
 
-## Contoh kode
+```ts
+import { defineRaktaConfig } from "raktajs";
+
+export default defineRaktaConfig({
+  autoImport: {
+    enabled: true,
+    directories: ["app", "components", "lib", "stores", "schemas"],
+    outputDirectory: ".rakta",
+    dts: true,
+  },
+});
+```
+
+## CLI
+
+Generate manifest auto import secara manual:
 
 ```bash
 bun rakta imports:generate
 ```
 
+## Manifest hasil generate
+
+TrusmiThread juga menulis file barrel hasil generate di
+`.rakta/auto-imports.ts`. File ini berguna untuk import eksplisit,
+tooling editor, dan integrasi compiler/runtime berikutnya.
+
 ```ts
-// .rakta/auto-imports.ts (hasil generate — jangan edit manual)
+// .rakta/auto-imports.ts
 export { Click } from "../app/components/clickButton";
-export { useCounterStore } from "../lib/stores/counterStore";
+export { useCounterStore } from "../stores/counter.store";
 ```
 
-```ts
-// di mana saja di aplikasi kalian
-import { useCounterStore } from "../../.rakta/auto-imports";
-```
+## Praktik terbaik
 
-## Kesalahan umum
-
-- Mengedit `.rakta/auto-imports.ts` secara manual — file ini di-generate
-  ulang dan perubahan kalian akan hilang.
-- Lupa menjalankan ulang `bun rakta imports:generate` setelah menambah
-  simbol export baru, lalu bingung kenapa simbol itu "tidak ada" di file
-  hasil generate.
-- Mengasumsikan pemakaian JSX saja sudah memicu import — lihat "Perilaku
-  saat ini" di atas.
+- Biarkan Auto Import aktif untuk pengalaman starter Rakta.js paling
+  sederhana.
+- Matikan Auto Import hanya ketika tim kalian ingin semua dependency
+  terlihat eksplisit.
+- Gunakan `raktajs/hooks` ketika Auto Import dimatikan.
+- Jangan mengedit `.rakta/auto-imports.ts` secara manual.
 
 ## Dokumen terkait
 
-- [`templates.md`](./templates.md) — bagaimana aplikasi hasil generate menghubungkan `.rakta/`
+- [`hooks.md`](./hooks.md)
+- [`templates.md`](./templates.md)
+- [`mulai.md`](./mulai.md)

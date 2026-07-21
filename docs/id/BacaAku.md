@@ -20,6 +20,23 @@ tools tersebut sedang digantikan atau dikritik di sini — Rakta.js hanya
 mencoba mengemas ide-ide yang familiar ke dalam satu toolkit kecil
 berbasis Bun dengan identitasnya sendiri.
 
+## Peta dokumentasi
+
+- [`mulai.md`](./mulai.md) - instal Rakta.js dan buat aplikasi pertama
+- [`routing.md`](./routing.md) - routing berbasis file dan konvensi route
+- [`kernel.md`](./kernel.md) - service container, environment, dan lifecycle plugin
+- [`middleware.md`](./middleware.md) - pipeline request, redirect, rewrite, dan abort
+- [`authentication.md`](./authentication.md) - JWT, session, dan single-session auth fullstack
+- [`deployment.md`](./deployment.md) - deployment Vercel, Netlify, Cloudflare, Docker, dan static
+- [`docsSystem.md`](./docsSystem.md) - scanner docs Markdown dan bridge VitePress
+- [`autoImport.md`](./autoImport.md) - auto import milik framework
+- [`hooks.md`](./hooks.md) - hooks bernama khas Rakta untuk project tanpa auto import
+- [`rpc.md`](./rpc.md) - RPC type-safe
+- [`http.md`](./http.md) - HTTP client PanturaFetch
+- [`store.md`](./store.md) - manajemen state
+- [`seo.md`](./seo.md) - helper metadata, sitemap, dan robots
+- [`templates.md`](./templates.md) - struktur project hasil generator
+
 ## Yang kami harapkan dari sebuah kontribusi
 
 Nah, untuk temen-temen yang ingin kontribusi, tolong sertakan dokumen yang

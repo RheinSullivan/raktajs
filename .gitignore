@@ -45,6 +45,8 @@ bun-debug.log*
 biome-errors.txt
 
 # Documentation draft / generated architecture notes
+AGENTS.md
+.agents/
 appArchitecture.md
 monorepoArchitecture.md
 

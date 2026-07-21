@@ -30,6 +30,7 @@ export interface ProjectConfig {
 	readonly projectMode: ProjectMode;
 	readonly language: ProjectLanguage;
 	readonly useTypeScript: boolean;
+	readonly autoImport: boolean;
 	readonly cssFramework: CssFramework;
 	readonly renderMode: RenderMode;
 	readonly backendFramework: BackendFramework;

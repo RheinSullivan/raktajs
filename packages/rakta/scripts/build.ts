@@ -14,6 +14,10 @@ const SUBPATH_MODULES: readonly string[] = [
 	"http",
 	"auto-import",
 	"pwa",
+	"kernel",
+	"middleware",
+	"docs",
+	"hooks",
 ];
 
 const OUT_DIR = "./dist";

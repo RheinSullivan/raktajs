@@ -1,0 +1,20 @@
+{
+	"name": "rakta-fullstack-template",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"workspaces": [
+		"frontend",
+		"backend",
+		"shared"
+	],
+	"scripts": {
+		"dev:frontend": "cd frontend && bun run dev",
+		"dev:backend": "cd backend && bun run dev",
+		"build:frontend": "cd frontend && bun run build",
+		"build:backend": "cd backend && bun run build",
+		"build": "bun run build:frontend && bun run build:backend",
+		"start": "cd backend && bun run start",
+		"typecheck": "cd frontend && bun run typecheck && cd ../backend && bun run typecheck"
+	}
+}

@@ -153,6 +153,15 @@ export async function promptRenderMode(): Promise<RenderMode> {
 	return getPromptValue(promptResult);
 }
 
+export async function promptAutoImport(): Promise<boolean> {
+	const promptResult = await clack.confirm({
+		message: "Use Rakta.js Auto Import?",
+		initialValue: true,
+	});
+
+	return getPromptValue(promptResult);
+}
+
 export async function promptBackendFramework(): Promise<BackendFramework> {
 	const promptResult = await clack.select<BackendFramework>({
 		message: "Choose a backend framework:",
@@ -238,6 +247,7 @@ export async function runPrompts(projectName: string): Promise<ProjectConfig> {
 	const language = await promptProjectLanguage();
 	const cssFramework = await promptCssFramework();
 	const renderMode = await promptRenderMode();
+	const autoImport = await promptAutoImport();
 	const useTypeScript = language === "typescript";
 
 	if (projectMode === "frontend-only") {
@@ -246,6 +256,7 @@ export async function runPrompts(projectName: string): Promise<ProjectConfig> {
 			projectMode,
 			language,
 			useTypeScript,
+			autoImport,
 			cssFramework,
 			renderMode,
 			backendFramework: "gaman",
@@ -261,6 +272,7 @@ export async function runPrompts(projectName: string): Promise<ProjectConfig> {
 		projectMode,
 		language,
 		useTypeScript,
+		autoImport,
 		cssFramework,
 		renderMode,
 		backendFramework,

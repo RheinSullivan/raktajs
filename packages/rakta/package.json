@@ -35,7 +35,9 @@
 		"http",
 		"pwa",
 		"offline",
-		"auto-import"
+		"auto-import",
+		"plugin-system",
+		"service-container"
 	],
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -103,6 +105,22 @@
 		"./pwa": {
 			"types": "./dist/pwa/index.d.ts",
 			"import": "./dist/pwa/index.js"
+		},
+		"./kernel": {
+			"types": "./dist/kernel/index.d.ts",
+			"import": "./dist/kernel/index.js"
+		},
+		"./middleware": {
+			"types": "./dist/middleware/index.d.ts",
+			"import": "./dist/middleware/index.js"
+		},
+		"./docs": {
+			"types": "./dist/docs/index.d.ts",
+			"import": "./dist/docs/index.js"
+		},
+		"./hooks": {
+			"types": "./dist/hooks/index.d.ts",
+			"import": "./dist/hooks/index.js"
 		}
 	},
 	"scripts": {

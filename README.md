@@ -13,23 +13,41 @@
 </p>
 
 <p align="center">
-  <a href="./LICENSE">
-    <img src="https://img.shields.io/badge/License-MIT-red.svg" alt="MIT License" />
+  <a href="https://github.com/RheinSullivan/raktajs/stargazers">
+    <img src="https://img.shields.io/github/stars/RheinSullivan/raktajs?style=flat-square&logo=github&label=stars&color=111827&labelColor=0b0f14" alt="GitHub stars" />
+  </a>
+  <a href="https://github.com/RheinSullivan/raktajs/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/RheinSullivan/raktajs?style=flat-square&logo=github&label=contributors&color=111827&labelColor=0b0f14" alt="GitHub contributors" />
+  </a>
+  <a href="https://github.com/RheinSullivan/raktajs/commits/main">
+    <img src="https://img.shields.io/github/commit-activity/m/RheinSullivan/raktajs?style=flat-square&logo=git&label=commit%20activity&color=e11d48&labelColor=0b0f14" alt="Monthly commit activity" />
+  </a>
+  <a href="https://github.com/RheinSullivan/raktajs/commits/main">
+    <img src="https://img.shields.io/github/last-commit/RheinSullivan/raktajs?style=flat-square&logo=github&label=last%20commit&color=16a34a&labelColor=0b0f14" alt="Last commit" />
+  </a>
+  <a href="https://www.npmjs.com/package/raktajs">
+    <img src="https://img.shields.io/npm/v/raktajs?style=flat-square&logo=npm&label=raktajs&color=cb3837&labelColor=0b0f14" alt="raktajs npm version" />
   </a>
   <a href="https://www.npmjs.com/package/create-rakta-app">
-    <img src="https://img.shields.io/badge/create--rakta--app-CLI-red.svg" alt="create rakta app CLI" />
+    <img src="https://img.shields.io/npm/v/create-rakta-app?style=flat-square&logo=npm&label=create-rakta-app&color=cb3837&labelColor=0b0f14" alt="create-rakta-app npm version" />
+  </a>
+  <a href="https://www.npmjs.com/package/raktajs">
+    <img src="https://img.shields.io/npm/dm/raktajs?style=flat-square&logo=npm&label=raktajs%20downloads&color=0ea5e9&labelColor=0b0f14" alt="raktajs monthly downloads" />
+  </a>
+  <a href="https://www.npmjs.com/package/create-rakta-app">
+    <img src="https://img.shields.io/npm/dm/create-rakta-app?style=flat-square&logo=npm&label=cli%20downloads&color=0ea5e9&labelColor=0b0f14" alt="create-rakta-app monthly downloads" />
   </a>
   <a href="https://bun.sh">
-    <img src="https://img.shields.io/badge/runtime-Bun-ff69b4.svg" alt="Bun runtime" />
+    <img src="https://img.shields.io/badge/Bun-1.3.11-fbf0df?style=flat-square&logo=bun&logoColor=black&labelColor=0b0f14" alt="Bun 1.3.11" />
   </a>
   <a href="https://react.dev">
-    <img src="https://img.shields.io/badge/React-19-149ECA.svg?logo=react&logoColor=white" alt="React 19" />
+    <img src="https://img.shields.io/badge/React-19.2.7-149eca?style=flat-square&logo=react&logoColor=white&labelColor=0b0f14" alt="React 19.2.7" />
   </a>
   <a href="https://www.typescriptlang.org">
-    <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6.svg?logo=typescript&logoColor=white" alt="TypeScript 5.x" />
+    <img src="https://img.shields.io/badge/TypeScript-6.0.3-3178c6?style=flat-square&logo=typescript&logoColor=white&labelColor=0b0f14" alt="TypeScript 6.0.3" />
   </a>
-  <a href="https://github.com/RheinSullivan/raktajs">
-    <img src="https://img.shields.io/badge/GitHub%20Stars-0-black.svg?logo=github&logoColor=white" alt="GitHub stars" />
+  <a href="./LICENSE">
+    <img src="https://img.shields.io/github/license/RheinSullivan/raktajs?style=flat-square&label=license&color=22c55e&labelColor=0b0f14" alt="MIT License" />
   </a>
 </p>
 
@@ -66,6 +84,9 @@ Rakta.js is built for people who want speed without losing control, structure wi
 | Runtime strategy needs to stay flexible              | **NorthCoastFlow** handles request and rendering flow                         |
 | Type-safe RPC can require extra libraries            | **NagaLimanWire** is Rakta.js type-safe RPC concept                           |
 | Projects need diagnostics                            | **JatiLens** is the project health and diagnostics layer                      |
+| Framework integrations need a stable lifecycle       | **RaktaKernel** coordinates services, environment, and plugins                |
+| Apps need request control                            | **RaktaMiddleware** supports before, after, redirect, rewrite, and abort      |
+| Docs should stay Markdown-first                      | **RaktaDocs** generates sidebar, search, and VitePress-compatible config      |
 
 ---
 
@@ -88,6 +109,9 @@ Rakta.js uses its own framework language. The public naming avoids copying featu
 | **MegaSignal**     | SEO, sitemap, robots, and RSS layer          |
 | **ShrimpHarbor**   | PWA and offline layer                        |
 | **JatiLens**       | Diagnostics and project health               |
+| **RaktaKernel**    | Service container, environment, and plugins  |
+| **RaktaMiddleware** | Async request middleware pipeline            |
+| **RaktaDocs**      | Markdown docs manifest and VitePress bridge  |
 
 ---
 
@@ -322,6 +346,43 @@ const result = await api.hello.query({
 
 ---
 
+## Kernel and plugin system
+
+Rakta.js now includes a small production kernel for shared services,
+environment access, feature registration, and plugin lifecycle hooks.
+
+```ts
+import { createRaktaKernel } from "rakta/kernel";
+
+const kernel = createRaktaKernel({
+  environmentName: "production",
+  env: {
+    API_URL: "https://api.example.com",
+  },
+});
+
+kernel.services.singleton("apiUrl", () =>
+  kernel.environment.require("API_URL")
+);
+
+kernel.use({
+  name: "analytics",
+  configure(context) {
+    context.registerFeature({ name: "analytics" });
+  },
+});
+
+await kernel.start();
+```
+
+The kernel is useful for official integrations, application-level
+services, authentication modules, deployment adapters, and any plugin that
+needs predictable `configure`, `start`, `ready`, and `shutdown` phases.
+See [`docs/en/kernel.md`](./docs/en/kernel.md) and
+[`docs/id/kernel.md`](./docs/id/kernel.md).
+
+---
+
 ## SEO
 
 Rakta.js is designed to include SEO primitives through **MegaSignal** and metadata management through **SunyaragiCrown**.
@@ -498,6 +559,10 @@ rakta/schema
 rakta/http
 rakta/store
 rakta/auto-import
+rakta/kernel
+rakta/middleware
+rakta/docs
+rakta/hooks
 rakta/forge
 rakta/tide
 ```

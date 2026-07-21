@@ -35,10 +35,8 @@
 	"files.eol": "\n",
 	"editor.tabSize": 2,
 	"editor.insertSpaces": false,
+	"json.schemaDownload.enable": false,
 	"tailwindCSS.experimental.classRegex": [
-		[
-			"className\\s*=\\s*\"([^\"]*)\"",
-			"([a-zA-Z0-9\\-:/]+)"
-		]
+		["className\\s*=\\s*\"([^\"]*)\"", "([a-zA-Z0-9\\-:/]+)"]
 	]
 }
