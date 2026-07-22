@@ -30,9 +30,8 @@ const RAKTA_LOGO_SVG = readFileSync(
 	"utf-8",
 );
 const BACKEND_TEMPLATE_URLS = [
-	new URL("../templates/fullStack/backend/", import.meta.url),
-	new URL("../src/templates/fullStack/backend/", import.meta.url),
-	new URL("./templates/fullStack/backend/", import.meta.url),
+	new URL("../../../templates/fullStack/backend/", import.meta.url),
+	new URL("../../templates/fullStack/backend/", import.meta.url),
 ];
 
 //  Root files
@@ -202,7 +201,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^0.2.7",
+						raktajs: "^0.2.8",
 						motion: "^12.42.2",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
@@ -365,7 +364,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^0.2.7",
+						raktajs: "^0.2.8",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						...getCssDependencies(cssFramework),

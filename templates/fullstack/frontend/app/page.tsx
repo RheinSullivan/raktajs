@@ -506,7 +506,7 @@ export default function App() {
 							ENGINE
 						</span>
 						<span className="font-mono text-xl text-white font-semibold">
-							0.2.7
+							0.2.8
 						</span>
 					</div>
 					<div className="p-6 md:p-8 flex flex-col gap-2 group hover:bg-white/5 transition-colors">
