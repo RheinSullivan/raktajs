@@ -14,40 +14,51 @@
 
 <p align="center">
   <a href="https://github.com/RheinSullivan/raktajs/stargazers">
-    <img src="https://img.shields.io/github/stars/RheinSullivan/raktajs?style=flat&logo=github&label=stars&color=111827&labelColor=555" alt="GitHub stars" />
+    <img src="https://img.shields.io/github/stars/RheinSullivan/raktajs?style=for-the-badge&logo=github&logoColor=white&color=DC2626&labelColor=7F1D1D" />
   </a>
+
   <a href="https://github.com/RheinSullivan/raktajs/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/RheinSullivan/raktajs?style=flat&logo=github&label=contributors&color=111827&labelColor=555" alt="GitHub contributors" />
+    <img src="https://img.shields.io/github/contributors/RheinSullivan/raktajs?style=for-the-badge&logo=github&logoColor=white&color=DC2626&labelColor=7F1D1D" />
   </a>
+
   <a href="https://github.com/RheinSullivan/raktajs/commits/main">
-    <img src="https://img.shields.io/github/commit-activity/m/RheinSullivan/raktajs?style=flat&logo=git&label=commit%20activity&color=007ec6&labelColor=555" alt="Monthly commit activity" />
+    <img src="https://img.shields.io/github/commit-activity/m/RheinSullivan/raktajs?style=for-the-badge&logo=git&logoColor=white&color=EA580C&labelColor=7F1D1D" />
   </a>
+
   <a href="https://github.com/RheinSullivan/raktajs/commits/main">
-    <img src="https://img.shields.io/github/last-commit/RheinSullivan/raktajs?style=flat&logo=github&label=last%20commit&color=9aa022&labelColor=555" alt="Last commit" />
+    <img src="https://img.shields.io/github/last-commit/RheinSullivan/raktajs?style=for-the-badge&logo=github&logoColor=white&color=EA580C&labelColor=7F1D1D" />
   </a>
+
   <a href="https://www.npmjs.com/package/raktajs">
-    <img src="https://img.shields.io/npm/v/raktajs?style=flat&logo=npm&label=raktajs&color=007ec6&labelColor=555" alt="raktajs npm version" />
+    <img src="https://img.shields.io/npm/v/raktajs?style=for-the-badge&logo=npm&logoColor=white&color=CB3837&labelColor=7F1D1D" />
   </a>
+
   <a href="https://www.npmjs.com/package/create-rakta-app">
-    <img src="https://img.shields.io/npm/v/create-rakta-app?style=flat&logo=npm&label=create-rakta-app&color=007ec6&labelColor=555" alt="create-rakta-app npm version" />
+    <img src="https://img.shields.io/npm/v/create-rakta-app?style=for-the-badge&logo=npm&logoColor=white&color=CB3837&labelColor=7F1D1D" />
   </a>
+
   <a href="https://www.npmjs.com/package/raktajs">
-    <img src="https://img.shields.io/npm/dm/raktajs?style=flat&logo=npm&label=raktajs%20downloads&color=18a900&labelColor=555" alt="raktajs monthly downloads" />
+    <img src="https://img.shields.io/npm/dm/raktajs?style=for-the-badge&logo=npm&logoColor=white&color=16A34A&labelColor=14532D" />
   </a>
+
   <a href="https://www.npmjs.com/package/create-rakta-app">
-    <img src="https://img.shields.io/npm/dm/create-rakta-app?style=flat&logo=npm&label=cli%20downloads&color=18a900&labelColor=555" alt="create-rakta-app monthly downloads" />
+    <img src="https://img.shields.io/npm/dm/create-rakta-app?style=for-the-badge&logo=npm&logoColor=white&color=16A34A&labelColor=14532D" />
   </a>
+
   <a href="https://bun.sh">
-    <img src="https://img.shields.io/badge/Bun-1.3.11-fbf0df?style=flat&logo=bun&logoColor=white&labelColor=pink" alt="Bun 1.3.11" />
+    <img src="https://img.shields.io/badge/Bun-1.3.11-FBF0DF?style=for-the-badge&logo=bun&logoColor=000000&labelColor=EADFCB" />
   </a>
+
   <a href="https://react.dev">
-    <img src="https://img.shields.io/badge/React-19.2.7-149eca?style=flat&logo=react&logoColor=white&labelColor=555" alt="React 19.2.7" />
+    <img src="https://img.shields.io/badge/React-19.2.7-61DAFB?style=for-the-badge&logo=react&logoColor=20232A&labelColor=282C34" />
   </a>
+
   <a href="https://www.typescriptlang.org">
-    <img src="https://img.shields.io/badge/TypeScript-6.0.3-3178c6?style=flat&logo=typescript&logoColor=white&labelColor=555" alt="TypeScript 6.0.3" />
+    <img src="https://img.shields.io/badge/TypeScript-6.0.3-3178C6?style=for-the-badge&logo=typescript&logoColor=white&labelColor=1E3A8A" />
   </a>
+
   <a href="./LICENSE">
-    <img src="https://img.shields.io/github/license/RheinSullivan/raktajs?style=flat&label=license&color=18a900&labelColor=555" alt="MIT License" />
+    <img src="https://img.shields.io/github/license/RheinSullivan/raktajs?style=for-the-badge&color=DC2626&labelColor=7F1D1D" />
   </a>
 </p>
 
