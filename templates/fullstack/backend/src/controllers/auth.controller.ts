@@ -71,8 +71,8 @@ export async function forgotPasswordController(
 	request: Request,
 ): Promise<Response> {
 	const body = await readJson(request);
-	const otp = requestPasswordOtp(requireString(body, "email", 5));
-	return ok({ email: otp.email, otp: otp.code, expiresAt: otp.expiresAt });
+	const otp = await requestPasswordOtp(requireString(body, "email", 5));
+	return ok({ email: otp.email, expiresAt: otp.expiresAt });
 }
 
 export async function resetPasswordController(

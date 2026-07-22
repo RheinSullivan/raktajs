@@ -18,6 +18,15 @@ const SUBPATH_MODULES: readonly string[] = [
 	"middleware",
 	"docs",
 	"hooks",
+	"deployment",
+	"layout",
+	"data",
+	"dx",
+	"plugin",
+	"testing",
+	"performance",
+	"security",
+	"ops",
 ];
 
 const OUT_DIR = "./dist";

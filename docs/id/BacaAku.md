@@ -24,10 +24,22 @@ berbasis Bun dengan identitasnya sendiri.
 
 - [`mulai.md`](./mulai.md) - instal Rakta.js dan buat aplikasi pertama
 - [`routing.md`](./routing.md) - routing berbasis file dan konvensi route
+- [`layout.md`](./layout.md) - root, nested, special, grouped, dan parallel layout
+- [`data.md`](./data.md) - helper cache, revalidation, prefetch, streaming, dan strategi render
 - [`kernel.md`](./kernel.md) - service container, environment, dan lifecycle plugin
 - [`middleware.md`](./middleware.md) - pipeline request, redirect, rewrite, dan abort
 - [`authentication.md`](./authentication.md) - JWT, session, dan single-session auth fullstack
+- [`cli.md`](./cli.md) - command untuk generator, pengecekan, deployment, dan diagnostics
 - [`deployment.md`](./deployment.md) - deployment Vercel, Netlify, Cloudflare, Docker, dan static
+- [`dx.md`](./dx.md) - helper dependency graph, analisis route, dan analisis bundle
+- [`plugin.md`](./plugin.md) - manifest plugin, capability, adapter resmi, dan template
+- [`testing.md`](./testing.md) - helper unit, integration, component, e2e, snapshot, mock server, dan coverage
+- [`performance.md`](./performance.md) - benchmark, laporan bundle, dan cache build
+- [`security.md`](./security.md) - secure headers, CSP, CSRF, rate limiter, dan secrets
+- [`ops.md`](./ops.md) - request context, job, queue, cron, dan event bus
+- [`apiReference.md`](./apiReference.md) - subpath publik yang stabil
+- [`migrationGuide.md`](./migrationGuide.md) - catatan migrasi untuk project Rakta.js awal
+- [`compatibility.md`](./compatibility.md) - kebijakan kompatibilitas release
 - [`docsSystem.md`](./docsSystem.md) - scanner docs Markdown dan bridge VitePress
 - [`autoImport.md`](./autoImport.md) - auto import milik framework
 - [`hooks.md`](./hooks.md) - hooks bernama khas Rakta untuk project tanpa auto import

@@ -3,7 +3,7 @@ import type { PublicUser } from "../models/user.model";
 import { toPublicUser } from "../models/user.model";
 import { signJwt, verifyJwt } from "../security/jwt";
 import { verifyPassword } from "../security/password";
-import { createOtp, verifyOtp } from "../services/otp.service";
+import { sendPasswordResetOtp, verifyOtp } from "../services/otp.service";
 import {
 	findUserByEmail,
 	findUserById,
@@ -67,8 +67,8 @@ export function logout(sessionId: string): void {
 	revokeSession(sessionId);
 }
 
-export function requestPasswordOtp(email: string) {
-	return createOtp(email);
+export async function requestPasswordOtp(email: string) {
+	return sendPasswordResetOtp(email);
 }
 
 export async function resetPassword(

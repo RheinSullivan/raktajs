@@ -5,6 +5,7 @@ import {
 	deleteCmsPost,
 	listCmsPosts,
 	updateCmsPost,
+	uploadCmsMedia,
 } from "../services/cms.service";
 
 export function indexCmsPostsController(): Response {
@@ -58,4 +59,17 @@ export function destroyCmsPostController(postId: string): Response {
 	return deleteCmsPost(postId)
 		? ok({ deleted: true })
 		: fail("CMS post not found.", 404);
+}
+
+export async function uploadCmsMediaController(
+	request: Request,
+): Promise<Response> {
+	const body = await readJson(request);
+	const file = await uploadCmsMedia({
+		fileName: String(body.fileName ?? "upload.bin"),
+		body: new TextEncoder().encode(String(body.body ?? "")),
+		contentType: String(body.contentType ?? "application/octet-stream"),
+	});
+
+	return created(file);
 }

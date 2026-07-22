@@ -12,6 +12,18 @@ import { routesCommand } from "./routes";
 import { rpcTypesCommand } from "./rpcTypes";
 import { seoGenerateCommand } from "./seo";
 import { startCommand } from "./start";
+import {
+	analyzeCommand,
+	benchmarkCommand,
+	checkCommand,
+	formatCommand,
+	generateCommand,
+	inspectCommand,
+	lintCommand,
+	pluginCommand,
+	telemetryCommand,
+	upgradeCommand,
+} from "./system";
 
 const RED = "\x1b[31m";
 const BOLD = "\x1b[1m";
@@ -47,13 +59,28 @@ function printHelp(): void {
 	console.log(`${BOLD}Commands:${RESET}`);
 	console.log("  rakta dev");
 	console.log("  rakta build");
+	console.log("  rakta build --analyze");
 	console.log("  rakta start");
 	console.log("  rakta routes");
 	console.log("");
+	console.log("  rakta create <page|layout|component|api> <name>");
+	console.log("  rakta add <page|layout|component|api> <name>");
 	console.log("  rakta make:page <name>");
 	console.log("  rakta make:layout <name>");
 	console.log("  rakta make:component <name>");
 	console.log("  rakta make:api <name>");
+	console.log("");
+	console.log("  rakta analyze");
+	console.log("  rakta benchmark");
+	console.log("  rakta upgrade [version]");
+	console.log("  rakta check");
+	console.log("  rakta lint");
+	console.log("  rakta format");
+	console.log("  rakta generate deployment <target>");
+	console.log("  rakta inspect");
+	console.log("  rakta plugin list");
+	console.log("  rakta plugin create <name>");
+	console.log("  rakta telemetry on|off");
 	console.log("");
 	console.log("  rakta seo:generate");
 	console.log("  rakta imports:generate");
@@ -94,6 +121,8 @@ async function runForgeInspect(): Promise<void> {
 }
 
 async function main(): Promise<void> {
+	const secondArgument = cliArgs[2];
+
 	switch (selectedCommand) {
 		case "help":
 		case "--help":
@@ -107,6 +136,9 @@ async function main(): Promise<void> {
 
 		case "build":
 			await buildCommand(cwd);
+			if (firstArgument === "--analyze") {
+				await analyzeCommand(cwd);
+			}
 			break;
 
 		case "start":
@@ -116,6 +148,33 @@ async function main(): Promise<void> {
 		case "routes":
 			await routesCommand(cwd);
 			break;
+
+		case "create":
+		case "add": {
+			const target = firstArgument;
+			if (
+				target === "page" ||
+				target === "layout" ||
+				target === "component" ||
+				target === "api"
+			) {
+				await makeCommand(
+					target,
+					getRequiredArgument(`${selectedCommand} ${target}`, secondArgument),
+					cwd,
+				);
+				break;
+			}
+
+			console.error(
+				`${BOLD}${RED}Rakta.js${RESET} ${DIM}unknown generator target:${RESET} ${target ?? ""}`,
+			);
+			console.error(
+				`${DIM}Usage: rakta ${selectedCommand} <page|layout|component|api> <name>${RESET}`,
+			);
+			process.exit(1);
+			return;
+		}
 
 		case "make:page":
 			await makeCommand(
@@ -163,6 +222,46 @@ async function main(): Promise<void> {
 
 		case "forge:inspect":
 			await runForgeInspect();
+			break;
+
+		case "analyze":
+			await analyzeCommand(cwd);
+			break;
+
+		case "benchmark":
+			await benchmarkCommand(cwd);
+			break;
+
+		case "upgrade":
+			await upgradeCommand(firstArgument, cwd);
+			break;
+
+		case "check":
+			await checkCommand();
+			break;
+
+		case "lint":
+			await lintCommand();
+			break;
+
+		case "format":
+			await formatCommand();
+			break;
+
+		case "generate":
+			await generateCommand(firstArgument, secondArgument, cwd);
+			break;
+
+		case "inspect":
+			await inspectCommand(cwd);
+			break;
+
+		case "plugin":
+			await pluginCommand(firstArgument, secondArgument, cwd);
+			break;
+
+		case "telemetry":
+			await telemetryCommand(firstArgument, cwd);
 			break;
 
 		case "tide:render":

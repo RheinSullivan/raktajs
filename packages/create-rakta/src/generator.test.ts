@@ -27,6 +27,8 @@ describe("create-rakta fullstack generator", () => {
 		);
 
 		expect(fileByPath.has("frontend/rakta-env.d.ts")).toBe(true);
+		expect(fileByPath.has("backend/tsconfig.json")).toBe(true);
+		expect(fileByPath.has("backend/src/app.ts")).toBe(true);
 		expect(fileByPath.has("backend/src/auth/auth.service.ts")).toBe(true);
 		expect(fileByPath.has("backend/src/security/jwt.ts")).toBe(true);
 		expect(fileByPath.has("backend/src/controllers/user.controller.ts")).toBe(

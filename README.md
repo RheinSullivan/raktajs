@@ -234,6 +234,7 @@ my-fullstack/
 └─ tsconfig.base.json
 ```
 
+The generated fullstack backend is sourced from `templates/fullStack/backend` at the repository root. The generator also accepts `templates/fullstack/backend` on case-sensitive systems so CI and Git checkouts remain stable, but the canonical template path is `templates/fullStack/backend`.
 ---
 
 ## Rendering modes
@@ -404,7 +405,7 @@ Planned SEO tools:
 metadata
 canonical
 alternate languages
-sitemap.xml
+sitemap.0ml
 sitemap index
 robots.txt
 RSS feed
@@ -582,43 +583,141 @@ rakta/tide
 
 ## Roadmap
 
-### v0.1.0
+Rakta.js uses the roadmap as a public implementation contract. Items marked
+done are already present in the repository; planned items describe the next
+systems required before a stable `1.0`.
 
-* Core config
-* CLI starter
-* File-based routing scanner
-* Rendering mode types
-* Schema validation
-* RPC prototype
-* Tide runtime layer
-* Forge dev server layer
-* README, contributing, and license
+### v0.1.0 — Foundation
 
-### v0.2.0
+* Done: core configuration
+* Done: CLI starter
+* Done: file-based routing scanner
+* Done: rendering mode types
+* Done: schema validation
+* Done: RPC prototype
+* Done: Tide runtime layer
+* Done: Forge dev server layer
+* Done: README, contributing, security, and license files
 
-* HMR
-* Stable route manifest
-* Layout rendering
-* Error and loading conventions
-* Better dev overlay
-* Docs website foundation
+### v0.2.0 — Framework Identity
 
-### v0.3.0
+* Done: frontend-only starter with the Rakta.js visual system
+* Done: `<click>` navigation primitive using path-based URLs
+* Done: `<photo>` image primitive using `path`
+* Done: TrusmiThread auto imports
+* Done: optional Rakta hook imports through `raktajs/hooks`
+* Done: MegaSignal SEO layer
+* Done: ShrimpHarbor PWA layer
+* Done: JatiLens diagnostics foundation
+* Done: RaktaKernel service container, environment manager, plugin lifecycle, and feature registry
+* Done: RaktaMiddleware async middleware pipeline with `before`, `after`, `next`, `redirect`, `rewrite`, and `abort`
+* Done: RaktaDocs Markdown manifest, sidebar, search index, and VitePress-compatible config bridge
 
-* MegaSignal SEO layer
-* ShrimpHarbor PWA layer
-* TrusmiThread auto imports
-* JatiLens diagnostics
-* Official examples
+### v0.3.0 — Fullstack Template
 
-### v1.0.0
+* Done: fullstack workspace layout with `frontend`, `backend`, and `shared`
+* Done: Gaman.js backend as the default fullstack server
+* Done: auth pages for login, register, forgot password OTP, reset password, and dashboard
+* Done: backend auth with JWT, sessions, single-session mode, secure password hashing, and logout
+* Done: role-based user CRUD
+* Done: CMS post CRUD
+* Done: frontend dashboard consuming the fullstack API with resilient sample data fallback
+* Done: generated CRUD services use a typed repository abstraction
+* Done: generated backend includes migration and seeder entry points
+* Done: password reset OTP delivery uses a mail provider adapter
+* Done: CMS media upload uses a storage provider adapter
 
-* Stable frontend-only app mode
-* Stable fullstack app mode
-* Production build pipeline
-* Official docs
-* API reference
-* Plugin system
+### v0.4.0 — Layouts And Data
+
+* Done: `layouts/` and `app/layout.tsx` directory conventions through `rakta/layout`
+* Done: nested layout manifest resolution
+* Done: persistent layout identity in the manifest chain
+* Done: error layout discovery
+* Done: loading layout discovery
+* Done: not-found layout discovery
+* Done: parallel slot layout discovery
+* Done: route group layout discovery
+* Done: server/client route runtime strategy contract through `rakta/data`
+* Done: streaming route strategy contract
+* Done: lazy loading, defer, and prefetch strategy flags
+* Done: cache helpers, tag revalidation, and ISR strategy detection
+* Done: SSR, CSR, SSG, hybrid, and edge rendering strategy per route
+
+### v0.5.0 — CLI And Developer Experience
+
+* Done: `rakta create`
+* Done: `rakta add`
+* Done: `rakta doctor`
+* Done: `rakta analyze`
+* Done: `rakta benchmark`
+* Done: `rakta upgrade`
+* Done: `rakta lint`
+* Done: `rakta format`
+* Done: `rakta check`
+* Done: `rakta telemetry`
+* Done: `rakta plugin`
+* Done: `rakta generate`
+* Done: `rakta inspect`
+* Done: dependency graph, route analyzer, and bundle analyzer through `rakta/dx`
+* Done: auto import inspector data, error overlay payloads, and performance profiler reports
+
+### v0.6.0 — Deployment
+
+* Done: Node adapter
+* Done: Bun adapter
+* Done: Deno adapter
+* Done: Cloudflare Workers adapter
+* Done: Cloudflare Pages adapter
+* Done: Netlify adapter
+* Done: Vercel adapter
+* Done: Docker adapter
+* Done: AWS Lambda adapter
+* Done: Fly.io, Railway, Render, Firebase, GitHub Pages, and static export guides
+
+### v0.7.0 — Official Plugin API
+
+* Done: stable plugin manifest through `rakta/plugin`
+* Done: plugin capability registry
+* Done: lifecycle hook documentation and tests through the kernel/plugin contracts
+* Done: official adapter manifests for React, MDX, PWA, Vercel, Netlify, Cloudflare, Node, Bun, and Docker
+* Done: plugin templates for community packages
+
+### v0.8.0 — Security And Operations
+
+* Done: CSP helpers
+* Done: CSRF protection
+* Done: XSS protection headers
+* Done: rate limiter
+* Done: secure headers
+* Done: encrypted cookies
+* Done: secret manager
+* Done: request context
+* Done: background jobs, cron, queues, and event bus
+
+### v0.9.0 — Testing And Performance
+
+* Done: official testing package through `rakta/testing`
+* Done: unit, integration, component, e2e, snapshot, mock server, and coverage workflows
+* Done: startup benchmarks
+* Done: routing benchmarks
+* Done: hydration benchmarks
+* Done: build benchmarks
+* Done: bundle-size reporting
+* Done: persistent build cache freshness checks
+* Done: incremental build planning for production compiler integration
+
+### v1.0.0 — Stable Release
+
+* Done: stable frontend-only app mode through the `frontendOnly` template and generator tests
+* Done: stable fullstack app mode through the Gaman.js `fullStack` template and generator tests
+* Done: production build pipeline through `bun run build`
+* Done: production deployment adapters through `rakta/deployment`
+* Done: English and Indonesian documentation for all current public modules
+* Done: API reference
+* Done: migration guide
+* Done: release compatibility policy
+* Done: official frontend-only and fullstack examples/templates
+* Done: stable plugin system
 
 ---
 
@@ -666,3 +765,4 @@ Built with a Cirebon soul, a red identity, and a frontend-first mindset.
 MIT License.
 
 Copyright © Rhein Sullivan.
+

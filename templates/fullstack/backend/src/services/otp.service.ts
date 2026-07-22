@@ -1,3 +1,5 @@
+import { mailProvider } from "../mail/provider";
+
 interface OtpRecord {
 	readonly email: string;
 	readonly code: string;
@@ -17,6 +19,18 @@ export function createOtp(email: string): OtpRecord {
 	};
 
 	otps.set(email, record);
+	return record;
+}
+
+export async function sendPasswordResetOtp(email: string): Promise<OtpRecord> {
+	const record = createOtp(email);
+
+	await mailProvider.send({
+		to: email,
+		subject: "Your Rakta.js password reset code",
+		text: `Use this OTP to reset your password: ${record.code}`,
+	});
+
 	return record;
 }
 

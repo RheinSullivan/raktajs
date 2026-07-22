@@ -11,6 +11,7 @@ import {
 	indexCmsPostsController,
 	storeCmsPostController,
 	updateCmsPostController,
+	uploadCmsMediaController,
 } from "../controllers/cms.controller";
 import { helloController } from "../controllers/hello.controller";
 import {
@@ -89,6 +90,11 @@ export async function apiRouter(request: Request): Promise<Response> {
 	if (url.pathname === "/api/cms/posts" && request.method === "POST") {
 		const rejected = await requireAuth(request);
 		return rejected ?? storeCmsPostController(request);
+	}
+
+	if (url.pathname === "/api/cms/media" && request.method === "POST") {
+		const rejected = await requireAuth(request);
+		return rejected ?? uploadCmsMediaController(request);
 	}
 
 	if (cmsPostMatch?.[1] !== undefined && request.method === "PATCH") {

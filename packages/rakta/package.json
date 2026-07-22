@@ -121,6 +121,42 @@
 		"./hooks": {
 			"types": "./dist/hooks/index.d.ts",
 			"import": "./dist/hooks/index.js"
+		},
+		"./deployment": {
+			"types": "./dist/deployment/index.d.ts",
+			"import": "./dist/deployment/index.js"
+		},
+		"./layout": {
+			"types": "./dist/layout/index.d.ts",
+			"import": "./dist/layout/index.js"
+		},
+		"./data": {
+			"types": "./dist/data/index.d.ts",
+			"import": "./dist/data/index.js"
+		},
+		"./dx": {
+			"types": "./dist/dx/index.d.ts",
+			"import": "./dist/dx/index.js"
+		},
+		"./plugin": {
+			"types": "./dist/plugin/index.d.ts",
+			"import": "./dist/plugin/index.js"
+		},
+		"./testing": {
+			"types": "./dist/testing/index.d.ts",
+			"import": "./dist/testing/index.js"
+		},
+		"./performance": {
+			"types": "./dist/performance/index.d.ts",
+			"import": "./dist/performance/index.js"
+		},
+		"./security": {
+			"types": "./dist/security/index.d.ts",
+			"import": "./dist/security/index.js"
+		},
+		"./ops": {
+			"types": "./dist/ops/index.d.ts",
+			"import": "./dist/ops/index.js"
 		}
 	},
 	"scripts": {

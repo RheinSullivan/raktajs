@@ -49,6 +49,32 @@ export {
 	mergeConfig,
 } from "./config/index";
 export type {
+	RaktaCacheEntry,
+	RaktaCacheOptions,
+	RaktaRenderRuntime,
+	RaktaRouteDataStrategy,
+} from "./data/index";
+// Data
+export {
+	createDataCache,
+	defineRouteDataStrategy,
+	isIncrementalRoute,
+	RaktaDataCache,
+	shouldPrefetchRoute,
+	shouldStreamRoute,
+} from "./data/index";
+export type {
+	DeploymentAdapter,
+	DeploymentAdapterOptions,
+	DeploymentFile,
+	DeploymentTarget,
+} from "./deployment/index";
+// Deployment
+export {
+	createDeploymentAdapter,
+	listDeploymentTargets,
+} from "./deployment/index";
+export type {
 	RaktaDocsManifest,
 	RaktaDocsOptions,
 	RaktaDocsPage,
@@ -58,6 +84,22 @@ export type {
 } from "./docs/index";
 // Docs
 export { createVitePressConfig, scanMarkdownDocs } from "./docs/index";
+export type {
+	RaktaBundleAnalysis,
+	RaktaDependencyEdge,
+	RaktaDependencyGraph,
+	RaktaRouteAnalysis,
+	RaktaSourceModule,
+} from "./dx/index";
+// DX
+export {
+	analyzeBundle,
+	analyzeRoutes,
+	createDependencyGraph,
+	createErrorOverlay,
+	createProfilerReport,
+	inspectAutoImports,
+} from "./dx/index";
 export type {
 	ArtifactKind,
 	ForgeBuildArtifact,
@@ -132,13 +174,20 @@ export type {
 	RaktaServiceKey,
 	RaktaServiceRegistration,
 } from "./kernel/index";
-
 // Kernel
 export {
 	createRaktaEnvironment,
 	createRaktaKernel,
 	createServiceContainer,
 } from "./kernel/index";
+export type {
+	RaktaLayoutEntry,
+	RaktaLayoutFile,
+	RaktaLayoutKind,
+	RaktaLayoutManifest,
+} from "./layout/index";
+// Layout
+export { createLayoutManifest, matchLayouts } from "./layout/index";
 export type {
 	RaktaMiddleware,
 	RaktaMiddlewareContext,
@@ -149,7 +198,6 @@ export type {
 	RaktaMiddlewareStackOptions,
 	RaktaRewriteResult,
 } from "./middleware/index";
-
 // Middleware
 export {
 	abort,
@@ -161,13 +209,56 @@ export {
 	rewrite,
 } from "./middleware/index";
 export type {
+	RaktaCronTask,
+	RaktaEvent,
+	RaktaJob,
+	RaktaQueuedJob,
+	RaktaRequestContext,
+} from "./ops/index";
+// Operations
+export {
+	createRequestContext,
+	RaktaEventBus,
+	RaktaQueue,
+	runCronTask,
+} from "./ops/index";
+export type {
+	RaktaBenchmarkKind,
+	RaktaBenchmarkReport,
+	RaktaBenchmarkSample,
+	RaktaBuildCacheEntry,
+	RaktaBundleSizeReport,
+	RaktaIncrementalBuildPlan,
+} from "./performance/index";
+// Performance
+export {
+	benchmark,
+	createBenchmarkReport,
+	createBuildCache,
+	createBundleSizeReport,
+	createIncrementalBuildPlan,
+	RaktaBuildCache,
+} from "./performance/index";
+export type {
+	RaktaOfficialPlugin,
+	RaktaPluginCapability,
+	RaktaPluginManifest,
+	RaktaPluginTemplate,
+} from "./plugin/index";
+// Plugin
+export {
+	createOfficialPlugins,
+	createPluginRegistry,
+	createPluginTemplate,
+	RaktaPluginRegistry,
+} from "./plugin/index";
+export type {
 	CacheStrategyOptions,
 	ManifestDisplayMode,
 	ManifestIcon,
 	ManifestOptions,
 	ServiceWorkerOptions,
 } from "./pwa/index";
-
 // PWA — ShrimpHarbor
 export {
 	buildCacheName,
@@ -192,7 +283,6 @@ export type {
 	RouteRenderMap,
 	StaticEntry,
 } from "./render/index";
-
 // Render
 export {
 	getModeDescriptor,
@@ -219,7 +309,6 @@ export type {
 	RouteManifestEntry,
 	RouteSegment,
 } from "./router/index";
-
 // Router
 export {
 	findLayoutsForPathname,
@@ -244,7 +333,6 @@ export type {
 	RpcPayload,
 	RpcSuccessEnvelope,
 } from "./rpc/index";
-
 // RPC
 export {
 	createRaktaClient,
@@ -263,7 +351,6 @@ export type {
 	ShapeRecord,
 	ValidationError,
 } from "./schema/index";
-
 // Schema
 export {
 	ArrayType,
@@ -282,6 +369,21 @@ export {
 	string,
 } from "./schema/index";
 export type {
+	RateLimitState,
+	SecretRecord,
+	SecureHeadersOptions,
+} from "./security/index";
+// Security
+export {
+	createCsrfToken,
+	createSecureHeaders,
+	decryptCookieValue,
+	encryptCookieValue,
+	RateLimiter,
+	SecretManager,
+	verifyCsrfToken,
+} from "./security/index";
+export type {
 	AlternateLinks,
 	HeadProps,
 	JsonLd,
@@ -297,7 +399,6 @@ export type {
 	SitemapOptions,
 	TwitterCard,
 } from "./seo/index";
-
 // SEO
 export {
 	createRobotsHandler,
@@ -320,9 +421,22 @@ export type {
 	StoreApi,
 	UnsubscribeFn,
 } from "./store/index";
-
 // Store
 export { createRaktaStore } from "./store/index";
+export type {
+	RaktaCoverageReport,
+	RaktaMockRoute,
+	RaktaTestCase,
+	RaktaTestKind,
+	RaktaTestResult,
+} from "./testing/index";
+// Testing
+export {
+	createCoverageReport,
+	createMockServer,
+	createSnapshot,
+	runRaktaTests,
+} from "./testing/index";
 export type {
 	TideAdapter,
 	TideAdapterConfig,
@@ -332,7 +446,6 @@ export type {
 	TideResponseBlueprint,
 	TideRuntimeContext,
 } from "./tide/index";
-
 // Tide — NorthCoastFlow
 export {
 	buildErrorResponse,

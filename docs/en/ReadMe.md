@@ -22,10 +22,22 @@ familiar ideas into one small, Bun-first toolkit with its own identity.
 
 - [`gettingStarted.md`](./gettingStarted.md) - install Rakta.js and create your first app
 - [`routing.md`](./routing.md) - file-based routing and route conventions
+- [`layout.md`](./layout.md) - root, nested, special, grouped, and parallel layouts
+- [`data.md`](./data.md) - cache, revalidation, prefetch, streaming, and render strategy helpers
 - [`kernel.md`](./kernel.md) - service container, environment, and plugin lifecycle
 - [`middleware.md`](./middleware.md) - request pipeline, redirect, rewrite, and abort
 - [`authentication.md`](./authentication.md) - JWT, session, and single-session fullstack auth
+- [`cli.md`](./cli.md) - command surface for generators, checks, deployment, and diagnostics
 - [`deployment.md`](./deployment.md) - Vercel, Netlify, Cloudflare, Docker, and static deployment
+- [`dx.md`](./dx.md) - dependency graph, route analysis, and bundle analysis helpers
+- [`plugin.md`](./plugin.md) - plugin manifests, capabilities, official adapters, and templates
+- [`testing.md`](./testing.md) - unit, integration, component, e2e, snapshot, mock server, and coverage helpers
+- [`performance.md`](./performance.md) - benchmarks, bundle reports, and build cache
+- [`security.md`](./security.md) - secure headers, CSP, CSRF, rate limiter, and secrets
+- [`ops.md`](./ops.md) - request context, jobs, queues, cron, and event bus
+- [`apiReference.md`](./apiReference.md) - stable public subpaths
+- [`migrationGuide.md`](./migrationGuide.md) - migration notes for early Rakta.js projects
+- [`compatibility.md`](./compatibility.md) - release compatibility policy
 - [`docsSystem.md`](./docsSystem.md) - Markdown docs scanner and VitePress bridge
 - [`autoImport.md`](./autoImport.md) - framework-owned auto imports
 - [`hooks.md`](./hooks.md) - Rakta-named hooks for projects without auto import

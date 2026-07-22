@@ -31,8 +31,11 @@ const RAKTA_LOGO_SVG = readFileSync(
 );
 const BACKEND_TEMPLATE_URLS = [
 	pathToFileURL(`${process.cwd()}/templates/fullStack/backend/`),
+	pathToFileURL(`${process.cwd()}/templates/fullstack/backend/`),
 	new URL("../../../../templates/fullStack/backend/", import.meta.url),
+	new URL("../../../../templates/fullstack/backend/", import.meta.url),
 	new URL("../../../templates/fullStack/backend/", import.meta.url),
+	new URL("../../../templates/fullstack/backend/", import.meta.url),
 ];
 
 //  Root files
@@ -542,7 +545,7 @@ function getGamanTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
 
 	if (templateUrl === undefined) {
 		throw new Error(
-			"The bundled Gaman.js fullstack backend template is missing.",
+			"The Gaman.js fullstack backend template is missing. Expected templates/fullStack/backend or templates/fullstack/backend at the repository root.",
 		);
 	}
 

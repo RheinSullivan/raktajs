@@ -1,11 +1,10 @@
+import { database } from "../database/client";
 import type { PublicUser, User } from "../models/user.model";
 import { toPublicUser } from "../models/user.model";
 import { hashPassword } from "../security/password";
 
-const users = new Map<string, User>();
-
 export async function seedUsers(): Promise<void> {
-	if (users.size > 0) {
+	if (database.users.all().length > 0) {
 		return;
 	}
 
@@ -20,7 +19,7 @@ export async function seedUsers(): Promise<void> {
 		updatedAt: now,
 	};
 
-	users.set(admin.id, admin);
+	database.users.create(admin);
 
 	const editor: User = {
 		id: "user_editor",
@@ -32,19 +31,19 @@ export async function seedUsers(): Promise<void> {
 		updatedAt: now,
 	};
 
-	users.set(editor.id, editor);
+	database.users.create(editor);
 }
 
 export function listUsers(): PublicUser[] {
-	return Array.from(users.values(), toPublicUser);
+	return database.users.all().map(toPublicUser);
 }
 
 export function findUserById(userId: string): User | undefined {
-	return users.get(userId);
+	return database.users.find(userId);
 }
 
 export function findUserByEmail(email: string): User | undefined {
-	return Array.from(users.values()).find((user) => user.email === email);
+	return database.users.findBy((user) => user.email === email);
 }
 
 export async function createUser(input: {
@@ -68,7 +67,7 @@ export async function createUser(input: {
 		updatedAt: now,
 	};
 
-	users.set(user.id, user);
+	database.users.create(user);
 	return toPublicUser(user);
 }
 
@@ -81,7 +80,7 @@ export async function updateUser(
 		readonly role?: User["role"];
 	},
 ): Promise<PublicUser | undefined> {
-	const existingUser = users.get(userId);
+	const existingUser = database.users.find(userId);
 
 	if (existingUser === undefined) {
 		return undefined;
@@ -99,10 +98,10 @@ export async function updateUser(
 		updatedAt: new Date().toISOString(),
 	};
 
-	users.set(userId, updatedUser);
+	database.users.update(userId, updatedUser);
 	return toPublicUser(updatedUser);
 }
 
 export function deleteUser(userId: string): boolean {
-	return users.delete(userId);
+	return database.users.delete(userId);
 }

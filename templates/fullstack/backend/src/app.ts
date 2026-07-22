@@ -1,4 +1,5 @@
 import { Gaman, type HTTP } from "gaman";
+import { runMigrations } from "./database/migrations";
 import { env } from "./env";
 import { requestFromGamanContext, sendGamanResponse } from "./http/gaman";
 import { apiRouter } from "./routes/api";
@@ -13,6 +14,7 @@ const corsHeaders: Readonly<Record<string, string>> = {
 	"Access-Control-Allow-Credentials": "true",
 };
 
+await runMigrations();
 await seedUsers();
 seedCmsPosts();
 
@@ -60,6 +62,7 @@ app.patch("/api/users/:id", handle);
 app.delete("/api/users/:id", handle);
 app.get("/api/cms/posts", handle);
 app.post("/api/cms/posts", handle);
+app.post("/api/cms/media", handle);
 app.patch("/api/cms/posts/:id", handle);
 app.delete("/api/cms/posts/:id", handle);
 

@@ -1,9 +1,9 @@
+import { database } from "../database/client";
 import type { CmsPost } from "../models/cms-post.model";
-
-const posts = new Map<string, CmsPost>();
+import { type StoredFile, storageProvider } from "../storage/provider";
 
 export function seedCmsPosts(): void {
-	if (posts.size > 0) {
+	if (database.cmsPosts.all().length > 0) {
 		return;
 	}
 
@@ -19,11 +19,11 @@ export function seedCmsPosts(): void {
 		updatedAt: now,
 	};
 
-	posts.set(post.id, post);
+	database.cmsPosts.create(post);
 }
 
 export function listCmsPosts(): CmsPost[] {
-	return Array.from(posts.values());
+	return [...database.cmsPosts.all()];
 }
 
 export function createCmsPost(input: {
@@ -45,7 +45,7 @@ export function createCmsPost(input: {
 		updatedAt: now,
 	};
 
-	posts.set(post.id, post);
+	database.cmsPosts.create(post);
 	return post;
 }
 
@@ -58,7 +58,7 @@ export function updateCmsPost(
 		readonly status?: CmsPost["status"];
 	},
 ): CmsPost | undefined {
-	const post = posts.get(postId);
+	const post = database.cmsPosts.find(postId);
 
 	if (post === undefined) {
 		return undefined;
@@ -73,10 +73,22 @@ export function updateCmsPost(
 		updatedAt: new Date().toISOString(),
 	};
 
-	posts.set(postId, nextPost);
+	database.cmsPosts.update(postId, nextPost);
 	return nextPost;
 }
 
 export function deleteCmsPost(postId: string): boolean {
-	return posts.delete(postId);
+	return database.cmsPosts.delete(postId);
+}
+
+export async function uploadCmsMedia(input: {
+	readonly fileName: string;
+	readonly body: Uint8Array;
+	readonly contentType: string;
+}): Promise<StoredFile> {
+	return storageProvider.put({
+		key: `cms/${crypto.randomUUID()}-${input.fileName}`,
+		body: input.body,
+		contentType: input.contentType,
+	});
 }
