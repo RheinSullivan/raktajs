@@ -1,4 +1,4 @@
-# Security Policy
+﻿# Security Policy
 
 ---
 
@@ -14,9 +14,9 @@ Security policy ini berlaku untuk package utama Rakta.js, CLI generator, dan tem
 
 Untuk saat ini, security fix hanya diberikan ke versi `0.x` terbaru yang sudah dipublish.
 
-| Package | Dukungan |
-| --- | --- |
-| `rakta` | latest `0.x` |
+| Package            | Dukungan     |
+|--------------------|--------------|
+| `rakta`            | latest `0.x` |
 | `create-rakta-app` | latest `0.x` |
 
 Versi lama di bawah rilis terbaru tidak dijamin menerima patch terpisah selama Rakta.js masih berada di fase `0.x`.
@@ -182,9 +182,9 @@ This security policy applies to the main Rakta.js package, the CLI generator, an
 
 For now, security fixes are applied to the latest published `0.x` release.
 
-| Package | Supported |
-| --- | --- |
-| `rakta` | latest `0.x` |
+| Package            | Dukungan     |
+|--------------------|--------------|
+| `rakta`            | latest `0.x` |
 | `create-rakta-app` | latest `0.x` |
 
 Older versions below the latest release are not guaranteed to receive separate security patches while Rakta.js is still in `0.x`.

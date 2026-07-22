@@ -30,8 +30,9 @@ const RAKTA_LOGO_SVG = readFileSync(
 	"utf-8",
 );
 const BACKEND_TEMPLATE_URLS = [
+	pathToFileURL(`${process.cwd()}/templates/fullStack/backend/`),
+	new URL("../../../../templates/fullStack/backend/", import.meta.url),
 	new URL("../../../templates/fullStack/backend/", import.meta.url),
-	new URL("../../templates/fullStack/backend/", import.meta.url),
 ];
 
 //  Root files
