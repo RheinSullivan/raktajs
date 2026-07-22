@@ -29,8 +29,30 @@ describe("create-rakta fullstack generator", () => {
 		expect(fileByPath.has("frontend/rakta-env.d.ts")).toBe(true);
 		expect(fileByPath.has("backend/src/auth/auth.service.ts")).toBe(true);
 		expect(fileByPath.has("backend/src/security/jwt.ts")).toBe(true);
+		expect(fileByPath.has("backend/src/controllers/user.controller.ts")).toBe(
+			true,
+		);
+		expect(fileByPath.has("backend/src/controllers/cms.controller.ts")).toBe(
+			true,
+		);
+		expect(fileByPath.get("backend/package.json")).toContain('"gaman"');
+		expect(fileByPath.get("backend/src/app.ts")).toContain(
+			'import { Gaman, type HTTP } from "gaman"',
+		);
+		expect(fileByPath.get("backend/src/app.ts")).toContain("Gaman<HTTP>()");
+		expect(fileByPath.get("backend/src/app.ts")).toContain(
+			"/api/auth/register",
+		);
 		expect(fileByPath.get("backend/src/app.ts")).toContain("/api/auth/login");
 		expect(fileByPath.get("backend/src/app.ts")).toContain("/api/auth/me");
+		expect(fileByPath.get("backend/src/app.ts")).toContain(
+			"/api/auth/forgot-password",
+		);
+		expect(fileByPath.get("backend/src/app.ts")).toContain(
+			"/api/auth/reset-password",
+		);
+		expect(fileByPath.get("backend/src/app.ts")).toContain("/api/users");
+		expect(fileByPath.get("backend/src/app.ts")).toContain("/api/cms/posts");
 
 		for (const [path, content] of fileByPath) {
 			if (path.startsWith("frontend/app/") && path.endsWith(".tsx")) {

@@ -1,6 +1,6 @@
 export type CssFramework = "tailwind" | "bootstrap" | "sass" | "none";
 
-export type BackendFramework = "gaman" | "express" | "nest" | "adonis";
+export type BackendFramework = "gaman";
 
 export type Database =
 	| "postgresql"
@@ -46,9 +46,6 @@ export const CSS_DISPLAY: Record<CssFramework, string> = {
 
 export const BACKEND_DISPLAY: Record<BackendFramework, string> = {
 	gaman: "Gaman.js",
-	express: "Express.js",
-	nest: "Nest.js",
-	adonis: "Adonis.js",
 };
 
 export const DATABASE_DISPLAY: Record<Database, string> = {

@@ -30,10 +30,7 @@
 		"scaffold",
 		"generator",
 		"app-router",
-		"gaman",
-		"express",
-		"nestjs",
-		"adonisjs"
+		"gaman"
 	],
 	"publishConfig": {
 		"access": "public"
@@ -44,7 +41,7 @@
 	"files": [
 		"dist",
 		"assets",
-		"src/templates",
+		"templates",
 		"README.md",
 		"LICENSE"
 	],

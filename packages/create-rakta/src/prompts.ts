@@ -163,31 +163,12 @@ export async function promptAutoImport(): Promise<boolean> {
 }
 
 export async function promptBackendFramework(): Promise<BackendFramework> {
-	const promptResult = await clack.select<BackendFramework>({
-		message: "Choose a backend framework:",
-		options: [
-			{
-				value: "gaman",
-				label: BACKEND_DISPLAY.gaman,
-				hint: "recommended",
-			},
-			{
-				value: "express",
-				label: BACKEND_DISPLAY.express,
-			},
-			{
-				value: "nest",
-				label: BACKEND_DISPLAY.nest,
-			},
-			{
-				value: "adonis",
-				label: BACKEND_DISPLAY.adonis,
-			},
-		],
-		initialValue: "gaman",
-	});
+	clack.note(
+		`${BACKEND_DISPLAY.gaman} is used for fullstack Rakta.js projects.`,
+		"Backend",
+	);
 
-	return getPromptValue(promptResult);
+	return "gaman";
 }
 
 export async function promptDatabase(): Promise<Database> {

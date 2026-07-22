@@ -1,4 +1,6 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { relative } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import {
 	STARTER_AUDIO_CODE,
 	STARTER_COMPONENTS_MODAL_CODE,
@@ -11,7 +13,6 @@ import {
 	STARTER_TYPES_CODE,
 } from "./starter";
 import type {
-	BackendFramework,
 	CssFramework,
 	Database,
 	ProjectConfig,
@@ -28,6 +29,11 @@ const RAKTA_LOGO_SVG = readFileSync(
 	new URL("../assets/rakta-logo.svg", import.meta.url),
 	"utf-8",
 );
+const BACKEND_TEMPLATE_URLS = [
+	new URL("../templates/fullStack/backend/", import.meta.url),
+	new URL("../src/templates/fullStack/backend/", import.meta.url),
+	new URL("./templates/fullStack/backend/", import.meta.url),
+];
 
 //  Root files
 function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
@@ -526,280 +532,117 @@ function processFilesForLanguage(
 }
 
 function getBackendFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	return [
-		...getBackendCommonFiles(projectConfig),
-		...getBackendFrameworkFiles(projectConfig.backendFramework, projectConfig),
-	];
+	return getGamanTemplateFiles(projectConfig);
 }
 
-function getBackendCommonFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	return [
-		{
-			path: "backend/src/env.ts",
-			content: `function optionalEnv(envKey: string, fallbackValue: string): string {\n  return process.env[envKey] ?? fallbackValue;\n}\n\nfunction requiredEnv(envKey: string, fallbackValue: string): string {\n  const value = process.env[envKey] ?? fallbackValue;\n\n  if (value.length < 32) {\n    throw new Error(\`\${envKey} must be at least 32 characters long.\`);\n  }\n\n  return value;\n}\n\nexport const env = {\n  port: Number(optionalEnv("PORT", "4000")),\n  nodeEnv: optionalEnv("NODE_ENV", "development"),\n  corsOrigin: optionalEnv("CORS_ORIGIN", "http://localhost:3000"),\n  databaseUrl: optionalEnv("DATABASE_URL", ""),\n  authSecret: requiredEnv("AUTH_SECRET", "change-this-development-secret-32-chars"),\n  sessionMode: optionalEnv("SESSION_MODE", "single"),\n} as const;\n`,
-		},
-		{
-			path: "backend/src/config/app.config.ts",
-			content: `import { env } from "../env";\n\nexport const appConfig = {\n  name: "${projectConfig.projectName} API",\n  version: "0.1.0",\n  port: env.port,\n  nodeEnv: env.nodeEnv,\n  corsOrigin: env.corsOrigin,\n  isDev: env.nodeEnv === "development",\n} as const;\n`,
-		},
-		{
-			path: "backend/src/config/database.config.ts",
-			content: getDatabaseConfig(projectConfig.database),
-		},
-		{
-			path: "backend/src/database/client.ts",
-			content: getDatabaseClient(projectConfig.database),
-		},
-		{
-			path: "backend/src/controllers/hello.controller.ts",
-			content: `export interface HelloResponse {\n  readonly success: boolean;\n  readonly message: string;\n  readonly framework: string;\n  readonly version: string;\n  readonly timestamp: string;\n}\n\nexport function helloController(): HelloResponse {\n  return {\n    success: true,\n    message: "Hello from ${projectConfig.projectName} API",\n    framework: "${BACKEND_DISPLAY[projectConfig.backendFramework]}",\n    version: "0.1.0",\n    timestamp: new Date().toISOString(),\n  };\n}\n`,
-		},
-		{
-			path: "backend/.env.example",
-			content: `${getDatabaseEnvExample(projectConfig.database)}\nAUTH_SECRET=change-this-development-secret-32-chars\nSESSION_MODE=single\n`,
-		},
-		{
-			path: "backend/tsconfig.json",
-			content: JSON.stringify(
-				{
-					extends: "../tsconfig.base.json",
-					compilerOptions: {
-						outDir: "./dist",
-						rootDir: "./src",
-						types: ["node", "bun"],
-					},
-					include: ["src/**/*"],
-					exclude: ["node_modules", "dist"],
-				},
-				null,
-				2,
-			),
-		},
-		{
-			path: "backend/src/database/schema/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/src/security/jwt.ts",
-			content: `import { env } from "../env";\n\nexport interface JwtPayload {\n  readonly sub: string;\n  readonly email: string;\n  readonly sessionId: string;\n  readonly exp: number;\n}\n\nfunction base64UrlEncode(value: string | ArrayBuffer): string {\n  const bytes = typeof value === "string" ? new TextEncoder().encode(value) : new Uint8Array(value);\n  return btoa(String.fromCharCode(...bytes)).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");\n}\n\nfunction base64UrlDecode(value: string): string {\n  const normalized = value.replaceAll("-", "+").replaceAll("_", "/");\n  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");\n  return atob(padded);\n}\n\nasync function signingKey(): Promise<CryptoKey> {\n  return crypto.subtle.importKey(\n    "raw",\n    new TextEncoder().encode(env.authSecret),\n    { name: "HMAC", hash: "SHA-256" },\n    false,\n    ["sign", "verify"]\n  );\n}\n\nexport async function signJwt(payload: JwtPayload): Promise<string> {\n  const header = base64UrlEncode(JSON.stringify({ alg: "HS256", typ: "JWT" }));\n  const body = base64UrlEncode(JSON.stringify(payload));\n  const signature = await crypto.subtle.sign(\n    "HMAC",\n    await signingKey(),\n    new TextEncoder().encode(\`\${header}.\${body}\`)\n  );\n\n  return \`\${header}.\${body}.\${base64UrlEncode(signature)}\`;\n}\n\nexport async function verifyJwt(token: string): Promise<JwtPayload | undefined> {\n  const [header, body, signature] = token.split(".");\n\n  if (header === undefined || body === undefined || signature === undefined) {\n    return undefined;\n  }\n\n  const expectedSignature = await crypto.subtle.sign(\n    "HMAC",\n    await signingKey(),\n    new TextEncoder().encode(\`\${header}.\${body}\`)\n  );\n\n  if (base64UrlEncode(expectedSignature) !== signature) {\n    return undefined;\n  }\n\n  const payload = JSON.parse(base64UrlDecode(body)) as JwtPayload;\n\n  if (payload.exp <= Math.floor(Date.now() / 1000)) {\n    return undefined;\n  }\n\n  return payload;\n}\n`,
-		},
-		{
-			path: "backend/src/security/password.ts",
-			content: `export async function hashPassword(password: string): Promise<string> {\n  return Bun.password.hash(password, {\n    algorithm: "argon2id",\n    memoryCost: 19_456,\n    timeCost: 2,\n  });\n}\n\nexport async function verifyPassword(password: string, hash: string): Promise<boolean> {\n  return Bun.password.verify(password, hash);\n}\n`,
-		},
-		{
-			path: "backend/src/auth/session.store.ts",
-			content: `export interface SessionRecord {\n  readonly id: string;\n  readonly userId: string;\n  readonly email: string;\n  readonly createdAt: string;\n  readonly expiresAt: string;\n}\n\nconst sessions = new Map<string, SessionRecord>();\nconst userSessionIndex = new Map<string, string>();\n\nexport function createSession(userId: string, email: string, singleSession: boolean): SessionRecord {\n  if (singleSession) {\n    const existingSessionId = userSessionIndex.get(userId);\n\n    if (existingSessionId !== undefined) {\n      sessions.delete(existingSessionId);\n    }\n  }\n\n  const session: SessionRecord = {\n    id: crypto.randomUUID(),\n    userId,\n    email,\n    createdAt: new Date().toISOString(),\n    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7).toISOString(),\n  };\n\n  sessions.set(session.id, session);\n  userSessionIndex.set(userId, session.id);\n  return session;\n}\n\nexport function readSession(sessionId: string): SessionRecord | undefined {\n  const session = sessions.get(sessionId);\n\n  if (session === undefined) {\n    return undefined;\n  }\n\n  if (Date.parse(session.expiresAt) <= Date.now()) {\n    sessions.delete(sessionId);\n    return undefined;\n  }\n\n  return session;\n}\n\nexport function revokeSession(sessionId: string): void {\n  const session = sessions.get(sessionId);\n\n  if (session !== undefined) {\n    userSessionIndex.delete(session.userId);\n  }\n\n  sessions.delete(sessionId);\n}\n`,
-		},
-		{
-			path: "backend/src/auth/auth.service.ts",
-			content: `import { env } from "../env";\nimport { signJwt, verifyJwt } from "../security/jwt";\nimport { hashPassword, verifyPassword } from "../security/password";\nimport { createSession, readSession, revokeSession } from "./session.store";\n\nexport interface AuthUser {\n  readonly id: string;\n  readonly email: string;\n  readonly name: string;\n}\n\nexport interface LoginResult {\n  readonly user: AuthUser;\n  readonly token: string;\n  readonly sessionId: string;\n  readonly cookie: string;\n}\n\nconst demoUser: AuthUser = {\n  id: "user_demo",\n  email: "admin@rakta.local",\n  name: "Rakta Admin",\n};\n\nconst demoPasswordHash = await hashPassword("rakta-password");\n\nfunction isSingleSessionMode(): boolean {\n  return env.sessionMode === "single";\n}\n\nexport async function login(email: string, password: string): Promise<LoginResult | undefined> {\n  if (email !== demoUser.email || !(await verifyPassword(password, demoPasswordHash))) {\n    return undefined;\n  }\n\n  const session = createSession(demoUser.id, demoUser.email, isSingleSessionMode());\n  const token = await signJwt({\n    sub: demoUser.id,\n    email: demoUser.email,\n    sessionId: session.id,\n    exp: Math.floor(Date.now() / 1000) + 60 * 60,\n  });\n\n  return {\n    user: demoUser,\n    token,\n    sessionId: session.id,\n    cookie: \`rakta_session=\${session.id}; HttpOnly; SameSite=Lax; Path=/; Max-Age=604800\`,\n  };\n}\n\nexport async function authenticate(request: Request): Promise<AuthUser | undefined> {\n  const authorization = request.headers.get("authorization");\n  const bearerToken = authorization?.startsWith("Bearer ") ? authorization.slice(7) : undefined;\n  const cookieSessionId = request.headers\n    .get("cookie")\n    ?.split(";")\n    .map((cookie) => cookie.trim())\n    .find((cookie) => cookie.startsWith("rakta_session="))\n    ?.slice("rakta_session=".length);\n\n  if (bearerToken !== undefined) {\n    const payload = await verifyJwt(bearerToken);\n    const session = payload === undefined ? undefined : readSession(payload.sessionId);\n\n    if (session !== undefined) {\n      return { id: session.userId, email: session.email, name: demoUser.name };\n    }\n  }\n\n  if (cookieSessionId !== undefined) {\n    const session = readSession(cookieSessionId);\n\n    if (session !== undefined) {\n      return { id: session.userId, email: session.email, name: demoUser.name };\n    }\n  }\n\n  return undefined;\n}\n\nexport function logout(sessionId: string): void {\n  revokeSession(sessionId);\n}\n`,
-		},
-		{
-			path: "backend/src/middlewares/auth.middleware.ts",
-			content: `import { authenticate } from "../auth/auth.service";\n\nexport async function requireAuth(request: Request): Promise<Response | undefined> {\n  const user = await authenticate(request);\n\n  if (user === undefined) {\n    return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });\n  }\n\n  return undefined;\n}\n`,
-		},
-	];
-}
-
-function getBackendFrameworkFiles(
-	selectedFramework: BackendFramework,
-	projectConfig: ProjectConfig,
-): ProjectFile[] {
-	switch (selectedFramework) {
-		case "gaman":
-			return getGamanFiles(projectConfig);
-		case "express":
-			return getExpressFiles(projectConfig);
-		case "nest":
-			return getNestFiles(projectConfig);
-		case "adonis":
-			return getAdonisFiles(projectConfig);
-		default:
-			return getGamanFiles(projectConfig);
-	}
-}
-
-function getGamanFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	return [
-		{
-			path: "backend/package.json",
-			content: getBackendPackageJson(projectConfig, {
-				dependencies: {
-					gaman: "^2.1.5",
-					...getDatabaseDependencies(projectConfig.database),
-				},
-				devDependencies: { "@types/bun": "^1.3.14" },
-			}),
-		},
-		{
-			path: "backend/src/app.ts",
-			content: `import { Gaman, type HTTP } from "gaman";\nimport { authenticate, login, logout } from "./auth/auth.service";\nimport { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\nimport { requireAuth } from "./middlewares/auth.middleware";\n\nconst app = Gaman<HTTP>();\n\nconst corsHeaders = {\n  "Access-Control-Allow-Origin": appConfig.corsOrigin,\n  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",\n  "Access-Control-Allow-Headers": "Content-Type, Authorization",\n  "Access-Control-Allow-Credentials": "true",\n};\n\nfunction withCors(response: Response): Response {\n  const headers = new Headers(response.headers);\n\n  for (const [key, value] of Object.entries(corsHeaders)) {\n    headers.set(key, value);\n  }\n\n  return new Response(response.body, { status: response.status, headers });\n}\n\nasync function readJsonBody(request: Request): Promise<Record<string, unknown>> {\n  return request.json() as Promise<Record<string, unknown>>;\n}\n\nfunction readSessionCookie(request: Request): string | undefined {\n  return request.headers\n    .get("cookie")\n    ?.split(";")\n    .map((cookie) => cookie.trim())\n    .find((cookie) => cookie.startsWith("rakta_session="))\n    ?.slice("rakta_session=".length);\n}\n\nasync function handle(request: Request): Promise<Response> {\n  const requestUrl = new URL(request.url);\n\n  if (requestUrl.pathname === "/api/hello" && request.method === "GET") {\n    return withCors(Response.json(helloController()));\n  }\n\n  if (requestUrl.pathname === "/api/auth/login" && request.method === "POST") {\n    const body = await readJsonBody(request);\n    const result = await login(String(body.email ?? ""), String(body.password ?? ""));\n\n    if (result === undefined) {\n      return withCors(Response.json({ success: false, error: "Invalid credentials" }, { status: 401 }));\n    }\n\n    return withCors(Response.json(\n      { success: true, data: { user: result.user, token: result.token, sessionId: result.sessionId } },\n      { headers: { "Set-Cookie": result.cookie } }\n    ));\n  }\n\n  if (requestUrl.pathname === "/api/auth/me" && request.method === "GET") {\n    const rejected = await requireAuth(request);\n\n    if (rejected !== undefined) {\n      return withCors(rejected);\n    }\n\n    return withCors(Response.json({ success: true, data: await authenticate(request) }));\n  }\n\n  if (requestUrl.pathname === "/api/auth/logout" && request.method === "POST") {\n    const sessionId = readSessionCookie(request);\n\n    if (sessionId !== undefined) logout(sessionId);\n\n    return withCors(Response.json(\n      { success: true },\n      { headers: { "Set-Cookie": "rakta_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0" } }\n    ));\n  }\n\n  return withCors(Response.json({ success: false, error: "Not found" }, { status: 404 }));\n}\n\napp.get("/api/hello", (ctx) => handle(ctx.req));\napp.post("/api/auth/login", (ctx) => handle(ctx.req));\napp.get("/api/auth/me", (ctx) => handle(ctx.req));\napp.post("/api/auth/logout", (ctx) => handle(ctx.req));\n\napp.mountServer({ http: appConfig.port });\n\nconsole.log(\`[${projectConfig.projectName}] Gaman.js backend running at http://localhost:\${appConfig.port}\`);\n`,
-		},
-	];
-}
-
-function getExpressFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	return [
-		{
-			path: "backend/package.json",
-			content: getBackendPackageJson(projectConfig, {
-				dependencies: {
-					express: "^4.19.2",
-					cors: "^2.8.5",
-					...getDatabaseDependencies(projectConfig.database),
-				},
-				devDependencies: {
-					"@types/express": "^4.17.21",
-					"@types/cors": "^2.8.17",
-					"@types/node": "^26.0.1",
-				},
-			}),
-		},
-		{
-			path: "backend/src/app.ts",
-			content: `import cors from "cors";\nimport express from "express";\nimport { authenticate, login, logout } from "./auth/auth.service";\nimport { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\n\nconst app = express();\n\napp.use(cors({ origin: appConfig.corsOrigin, credentials: true }));\napp.use(express.json());\n\nfunction readSessionCookie(cookieHeader: string | undefined): string | undefined {\n  return cookieHeader\n    ?.split(";")\n    .map((cookie) => cookie.trim())\n    .find((cookie) => cookie.startsWith("rakta_session="))\n    ?.slice("rakta_session=".length);\n}\n\napp.get("/api/hello", (_request, response) => {\n  response.json(helloController());\n});\n\napp.post("/api/auth/login", async (request, response) => {\n  const result = await login(String(request.body.email ?? ""), String(request.body.password ?? ""));\n\n  if (result === undefined) {\n    response.status(401).json({ success: false, error: "Invalid credentials" });\n    return;\n  }\n\n  response.setHeader("Set-Cookie", result.cookie);\n  response.json({ success: true, data: { user: result.user, token: result.token, sessionId: result.sessionId } });\n});\n\napp.get("/api/auth/me", async (request, response) => {\n  const user = await authenticate(new Request(\`\${request.protocol}://\${request.get("host")}\${request.originalUrl}\`, {\n    headers: request.headers as HeadersInit,\n  }));\n\n  if (user === undefined) {\n    response.status(401).json({ success: false, error: "Unauthorized" });\n    return;\n  }\n\n  response.json({ success: true, data: user });\n});\n\napp.post("/api/auth/logout", (request, response) => {\n  const sessionId = readSessionCookie(request.headers.cookie);\n\n  if (sessionId !== undefined) {\n    logout(sessionId);\n  }\n\n  response.setHeader("Set-Cookie", "rakta_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0");\n  response.json({ success: true });\n});\n\napp.use((_request, response) => {\n  response.status(404).json({ success: false, error: "Not found" });\n});\n\napp.listen(appConfig.port, () => {\n  console.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${appConfig.port}\`);\n});\n`,
-		},
-		{
-			path: "backend/src/middlewares/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/src/routes/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/src/services/.gitkeep",
-			content: "",
-		},
-	];
-}
-
-function getNestFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	return [
-		{
-			path: "backend/package.json",
-			content: getBackendPackageJson(projectConfig, {
-				dependencies: {
-					"@nestjs/common": "^10.3.0",
-					"@nestjs/core": "^10.3.0",
-					"@nestjs/platform-express": "^10.3.0",
-					"reflect-metadata": "^0.2.7",
-					...getDatabaseDependencies(projectConfig.database),
-				},
-				devDependencies: {
-					"@types/node": "^26.0.1",
-				},
-			}),
-		},
-		{
-			path: "backend/nest-cli.json",
-			content: JSON.stringify(
-				{
-					$schema: "https://json.schemastore.org/nest-cli",
-					collection: "@nestjs/schematics",
-					sourceRoot: "src",
-				},
-				null,
-				2,
-			),
-		},
-		{
-			path: "backend/src/app.module.ts",
-			content: `import { Module } from "@nestjs/common";\nimport { AppController } from "./app.controller";\n\n@Module({\n  controllers: [AppController],\n})\nexport class AppModule {}\n`,
-		},
-		{
-			path: "backend/src/app.controller.ts",
-			content: `import { Controller, Get } from "@nestjs/common";\nimport { helloController } from "./controllers/hello.controller";\n\n@Controller("api")\nexport class AppController {\n  @Get("hello")\n  hello() {\n    return helloController();\n  }\n}\n`,
-		},
-		{
-			path: "backend/src/main.ts",
-			content: `import "reflect-metadata";\nimport { NestFactory } from "@nestjs/core";\nimport { AppModule } from "./app.module";\nimport { appConfig } from "./config/app.config";\n\nasync function bootstrap(): Promise<void> {\n  const app = await NestFactory.create(AppModule);\n  app.enableCors({ origin: appConfig.corsOrigin });\n  await app.listen(appConfig.port);\n  console.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${appConfig.port}\`);\n}\n\nbootstrap().catch(console.error);\n`,
-		},
-		{
-			path: "backend/src/modules/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/src/common/.gitkeep",
-			content: "",
-		},
-	];
-}
-
-function getAdonisFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	return [
-		{
-			path: "backend/package.json",
-			content: getBackendPackageJson(projectConfig, {
-				dependencies: {
-					"@adonisjs/core": "^6.9.0",
-					...getDatabaseDependencies(projectConfig.database),
-				},
-				devDependencies: {
-					"@adonisjs/assembler": "^7.7.0",
-					"@types/node": "^26.0.1",
-				},
-			}),
-		},
-		{
-			path: "backend/app/controllers/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/app/middleware/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/app/services/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/start/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/config/.gitkeep",
-			content: "",
-		},
-		{
-			path: "backend/src/app.ts",
-			content: `import { appConfig } from "./config/app.config";\nimport { helloController } from "./controllers/hello.controller";\n\nconst corsHeaders = {\n  "Access-Control-Allow-Origin": appConfig.corsOrigin,\n  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",\n  "Access-Control-Allow-Headers": "Content-Type, Authorization",\n};\n\nconst server = Bun.serve({\n  port: appConfig.port,\n  fetch(request: Request): Response {\n    const requestUrl = new URL(request.url);\n\n    if (request.method === "OPTIONS") {\n      return new Response(undefined, { status: 204, headers: corsHeaders });\n    }\n\n    if (requestUrl.pathname === "/api/hello" && request.method === "GET") {\n      return Response.json(helloController(), { headers: corsHeaders });\n    }\n\n    return Response.json(\n      { success: false, error: "Not found" },\n      { status: 404, headers: corsHeaders }\n    );\n  },\n});\n\nconsole.log(\`[${projectConfig.projectName}] Backend running at http://localhost:\${server.port}\`);\n`,
-		},
-	];
-}
-
-function getBackendPackageJson(
-	projectConfig: ProjectConfig,
-	packageDeps: {
-		readonly dependencies: Record<string, string>;
-		readonly devDependencies: Record<string, string>;
-	},
-): string {
-	return JSON.stringify(
-		{
-			name: `${projectConfig.projectName}-backend`,
-			version: "0.1.0",
-			private: true,
-			type: "module",
-			scripts: {
-				dev: "bun run --watch src/app.ts",
-				build: "bun build src/app.ts --outfile dist/app.js --target bun",
-				start: "bun run dist/app.js",
-				typecheck: "tsc --noEmit",
-			},
-			dependencies: {
-				...packageDeps.dependencies,
-			},
-			devDependencies: {
-				"@types/bun": "^1.3.14",
-				typescript: "^6.0.3",
-				...packageDeps.devDependencies,
-			},
-		},
-		null,
-		2,
+function getGamanTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+	const templateUrl = BACKEND_TEMPLATE_URLS.find((candidateUrl) =>
+		existsSync(candidateUrl),
 	);
+
+	if (templateUrl === undefined) {
+		throw new Error(
+			"The bundled Gaman.js fullstack backend template is missing.",
+		);
+	}
+
+	const templateRootPath = fileURLToPath(templateUrl);
+	const templateFiles = readTemplateFiles(
+		templateRootPath,
+		templateRootPath,
+		"backend",
+	);
+
+	return templateFiles.map((file) => {
+		if (typeof file.content !== "string") {
+			return file;
+		}
+
+		return {
+			...file,
+			content: personalizeGamanTemplate(file.path, file.content, projectConfig),
+		};
+	});
+}
+
+function readTemplateFiles(
+	baseRootPath: string,
+	templateRootPath: string,
+	outputRoot: string,
+): ProjectFile[] {
+	const files: ProjectFile[] = [];
+	const entries = readdirSync(templateRootPath, { withFileTypes: true });
+
+	for (const entry of entries) {
+		const entryPath = fileURLToPath(
+			new URL(entry.name, `${pathToFileURL(templateRootPath)}/`),
+		);
+
+		if (entry.isDirectory()) {
+			files.push(...readTemplateFiles(baseRootPath, entryPath, outputRoot));
+			continue;
+		}
+
+		if (!entry.isFile()) {
+			continue;
+		}
+
+		const relativePath = relative(baseRootPath, entryPath).replaceAll(
+			"\\",
+			"/",
+		);
+
+		files.push({
+			path: `${outputRoot}/${relativePath}`,
+			content: readFileSync(entryPath, "utf-8"),
+		});
+	}
+
+	return files;
+}
+
+function personalizeGamanTemplate(
+	filePath: string,
+	content: string,
+	projectConfig: ProjectConfig,
+): string {
+	if (filePath === "backend/package.json") {
+		const packageJson = JSON.parse(content) as {
+			name: string;
+			dependencies?: Record<string, string>;
+		};
+
+		return JSON.stringify(
+			{
+				...packageJson,
+				name: `${projectConfig.projectName}-backend`,
+				dependencies: {
+					...(packageJson.dependencies ?? {}),
+					...getDatabaseDependencies(projectConfig.database),
+				},
+			},
+			null,
+			2,
+		);
+	}
+
+	if (filePath === "backend/src/controllers/hello.controller.ts") {
+		return content
+			.replace(
+				"Hello from Rakta fullstack backend.",
+				`Hello from ${projectConfig.projectName} Gaman.js backend.`,
+			)
+			.replace('framework: "Rakta.js"', 'framework: "Gaman.js"');
+	}
+
+	if (filePath === "backend/src/app.ts") {
+		return content.replace(
+			"Rakta Gaman.js backend running",
+			`${projectConfig.projectName} Gaman.js backend running`,
+		);
+	}
+
+	return content;
 }
 
 //  Shared files (fullstack only)
@@ -2318,74 +2161,6 @@ function getDatabaseDependencies(
 			return { "@libsql/client": "^0.6.2" };
 		default:
 			return {};
-	}
-}
-
-function getDatabaseConfig(selectedDatabase: Database): string {
-	switch (selectedDatabase) {
-		case "sqlite":
-			return `export const databaseConfig = {\n  path: process.env["DATABASE_PATH"] ?? "./database.sqlite",\n  provider: "sqlite" as const,\n} as const;\n`;
-		case "firebase":
-			return `export const databaseConfig = {\n  projectId: process.env["FIREBASE_PROJECT_ID"] ?? "",\n  clientEmail: process.env["FIREBASE_CLIENT_EMAIL"] ?? "",\n  privateKey: process.env["FIREBASE_PRIVATE_KEY"]?.replace(/\\\\\\\\n/g, "\\\\n") ?? "",\n  databaseUrl: process.env["FIREBASE_DATABASE_URL"] ?? "",\n  provider: "firebase" as const,\n} as const;\n`;
-		case "turso":
-			return `export const databaseConfig = {\n  url: process.env["TURSO_DATABASE_URL"] ?? "",\n  authToken: process.env["TURSO_AUTH_TOKEN"] ?? "",\n  provider: "turso" as const,\n} as const;\n`;
-		default:
-			return `import { env } from "../env";\n\nexport const databaseConfig = {\n  url: env.databaseUrl,\n  provider: "${selectedDatabase}" as const,\n} as const;\n`;
-	}
-}
-
-function getDatabaseClient(selectedDatabase: Database): string {
-	switch (selectedDatabase) {
-		case "postgresql":
-			return `import postgres from "postgres";\nimport { databaseConfig } from "../config/database.config";\n\nexport const sql = databaseConfig.url ? postgres(databaseConfig.url) : null;\n`;
-		case "mysql":
-		case "mariadb":
-			return `import mysql from "mysql2/promise";\nimport { databaseConfig } from "../config/database.config";\n\nexport const pool = databaseConfig.url\n  ? mysql.createPool({ uri: databaseConfig.url, connectionLimit: 10 })\n  : null;\n`;
-		case "mongodb":
-			return `import { MongoClient } from "mongodb";\nimport { databaseConfig } from "../config/database.config";\n\nexport const mongoClient = databaseConfig.url\n  ? new MongoClient(databaseConfig.url)\n  : null;\n`;
-		case "firebase":
-			return `import { cert, getApps, initializeApp } from "firebase-admin/app";\nimport { getFirestore } from "firebase-admin/firestore";\nimport { databaseConfig } from "../config/database.config";\n\nconst credentialReady =\n  databaseConfig.projectId.length > 0 &&\n  databaseConfig.clientEmail.length > 0 &&\n  databaseConfig.privateKey.length > 0;\n\nexport const firebaseApp = getApps()[0] ?? initializeApp(\n  credentialReady\n    ? {\n        credential: cert({\n          projectId: databaseConfig.projectId,\n          clientEmail: databaseConfig.clientEmail,\n          privateKey: databaseConfig.privateKey,\n        }),\n        databaseURL: databaseConfig.databaseUrl || undefined,\n      }\n    : undefined\n);\n\nexport const firestore = getFirestore(firebaseApp);\n`;
-		case "sqlite":
-			return `import { Database } from "bun:sqlite";\nimport { databaseConfig } from "../config/database.config";\n\nexport const db = new Database(databaseConfig.path, { create: true });\n`;
-		case "redis":
-			return `import Redis from "ioredis";\nimport { databaseConfig } from "../config/database.config";\n\nexport const redis = databaseConfig.url ? new Redis(databaseConfig.url) : null;\n`;
-		case "planetscale":
-			return `import { connect } from "@planetscale/database";\nimport { databaseConfig } from "../config/database.config";\n\nexport const connection = databaseConfig.url\n  ? connect({ url: databaseConfig.url })\n  : null;\n`;
-		case "neon":
-			return `import { neon } from "@neondatabase/serverless";\nimport { databaseConfig } from "../config/database.config";\n\nexport const sql = databaseConfig.url ? neon(databaseConfig.url) : null;\n`;
-		case "turso":
-			return `import { createClient } from "@libsql/client";\nimport { databaseConfig } from "../config/database.config";\n\nexport const db =\n  databaseConfig.url && databaseConfig.authToken\n    ? createClient({ url: databaseConfig.url, authToken: databaseConfig.authToken })\n    : null;\n`;
-		default:
-			return `export const databaseClient = null;\n`;
-	}
-}
-
-function getDatabaseEnvExample(selectedDatabase: Database): string {
-	const baseEnv = `NODE_ENV=development\nPORT=4000\nCORS_ORIGIN=http://localhost:3000\n`;
-
-	switch (selectedDatabase) {
-		case "postgresql":
-			return `${baseEnv}DATABASE_URL=postgresql://user:password@localhost:5432/dbname\n`;
-		case "mysql":
-			return `${baseEnv}DATABASE_URL=mysql://user:password@localhost:3306/dbname\n`;
-		case "mariadb":
-			return `${baseEnv}DATABASE_URL=mysql://user:password@localhost:3306/dbname\n`;
-		case "mongodb":
-			return `${baseEnv}DATABASE_URL=mongodb://localhost:27017/dbname\n`;
-		case "firebase":
-			return `${baseEnv}FIREBASE_PROJECT_ID=your-project-id\nFIREBASE_CLIENT_EMAIL=firebase-adminsdk@your-project.iam.gserviceaccount.com\nFIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\\nyour-key\\n-----END PRIVATE KEY-----\\n"\nFIREBASE_DATABASE_URL=https://your-project.firebaseio.com\n`;
-		case "sqlite":
-			return `${baseEnv}DATABASE_PATH=./database.sqlite\n`;
-		case "redis":
-			return `${baseEnv}DATABASE_URL=redis://localhost:6379\n`;
-		case "planetscale":
-			return `${baseEnv}DATABASE_URL=mysql://user:password@aws.connect.psdb.cloud/dbname\n`;
-		case "neon":
-			return `${baseEnv}DATABASE_URL=postgresql://user:password@ep-xxx.neon.tech/neondb?sslmode=require\n`;
-		case "turso":
-			return `${baseEnv}TURSO_DATABASE_URL=libsql://your-db.turso.io\nTURSO_AUTH_TOKEN=your-auth-token\n`;
-		default:
-			return `${baseEnv}DATABASE_URL=\n`;
 	}
 }
 

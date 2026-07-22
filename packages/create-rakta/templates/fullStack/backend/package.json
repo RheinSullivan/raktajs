@@ -1,0 +1,19 @@
+{
+	"name": "rakta-fullstack-template-backend",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "bun run --watch src/app.ts",
+		"build": "bun build src/app.ts --outfile dist/app.js --target bun",
+		"start": "bun run dist/app.js",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"gaman": "^2.1.5"
+	},
+	"devDependencies": {
+		"@types/bun": "^1.3.14",
+		"typescript": "^6.0.3"
+	}
+}

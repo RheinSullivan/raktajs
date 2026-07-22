@@ -487,8 +487,8 @@ export default function App() {
 
 				{/* Hero Section */}
 				<section className="flex flex-col gap-6 items-start">
-					<span className="font-mono text-xs font-bold text-brand-pink border border-brand-pink px-3.5 py-1.5 tracking-wider uppercase bg-brand-pink/5">
-						V0.2.7
+					<span className="font-mono text-xs font-bold text-brand-pink border border-brand-pink px-3.5 py-1.5 tracking-wider uppercase">
+						V0.2.6
 					</span>
 					<h1 className="font-sans font-extrabold text-white uppercase tracking-tighter leading-[0.85] text-[48px] sm:text-[72px] md:text-[110px]">
 						RAKTA IS READY
