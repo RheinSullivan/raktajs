@@ -711,7 +711,7 @@ track describes the next release targets without blocking the stable generator.
 * Done: persistent build cache freshness checks
 * Done: incremental build planning for production compiler integration
 
-### v1.0.0 — Stable Release
+### v1.0.1 — Stable Release
 
 * Done: stable frontend-only app mode through the `frontendOnly` template and generator tests
 * Done: stable fullstack app mode through the Gaman.js `fullStack` template and generator tests

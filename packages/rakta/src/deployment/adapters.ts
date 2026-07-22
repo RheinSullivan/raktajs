@@ -79,14 +79,14 @@ export function createDeploymentAdapter(
 					{
 						path: "netlify.toml",
 						content: `[build]
-command = "bun run build"
-publish = "${resolved.outDir}"
+							command = "bun run build"
+							publish = "${resolved.outDir}"
 
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
-`,
+							[[redirects]]
+							from = "/*"
+							to = "/index.html"
+							status = 200
+						`,
 					},
 				],
 			};
