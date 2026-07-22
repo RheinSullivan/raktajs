@@ -86,6 +86,8 @@ desktop.ini
 tmp/
 temp/
 *.tmp
+*.tmp-npm-cache
+*.kilo
 *.bak
 
 # Generated package artifacts

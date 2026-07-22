@@ -88,7 +88,7 @@ export async function render(
 	if (isRoadmapMode(context.mode)) {
 		console.warn(
 			[
-				`[Rakta.js] Render mode "${context.mode}" is a roadmap feature (v0.2.8).`,
+				`[Rakta.js] Render mode "${context.mode}" is a roadmap feature (v1.0.0).`,
 				`Falling back to CSR for: ${context.routePath}`,
 			].join(" "),
 		);

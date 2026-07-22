@@ -29,6 +29,7 @@ familiar ideas into one small, Bun-first toolkit with its own identity.
 - [`authentication.md`](./authentication.md) - JWT, session, and single-session fullstack auth
 - [`cli.md`](./cli.md) - command surface for generators, checks, deployment, and diagnostics
 - [`deployment.md`](./deployment.md) - Vercel, Netlify, Cloudflare, Docker, and static deployment
+- [`publishing.md`](./publishing.md) - npm provenance and GitHub Actions publishing
 - [`dx.md`](./dx.md) - dependency graph, route analysis, and bundle analysis helpers
 - [`plugin.md`](./plugin.md) - plugin manifests, capabilities, official adapters, and templates
 - [`testing.md`](./testing.md) - unit, integration, component, e2e, snapshot, mock server, and coverage helpers

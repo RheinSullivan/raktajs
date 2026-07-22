@@ -234,7 +234,12 @@ my-fullstack/
 └─ tsconfig.base.json
 ```
 
-The generated fullstack backend is sourced from `templates/fullStack/backend` at the repository root. The generator also accepts `templates/fullstack/backend` on case-sensitive systems so CI and Git checkouts remain stable, but the canonical template path is `templates/fullStack/backend`.
+Template source:
+
+- Backend: `templates/fullStack/backend`
+- Published CLI bundle: `dist/templates/fullStack/backend`
+- npm GitHub Actions workflow filename: `publish.yml`
+
 ---
 
 ## Rendering modes
@@ -583,9 +588,9 @@ rakta/tide
 
 ## Roadmap
 
-Rakta.js uses the roadmap as a public implementation contract. Items marked
-done are already present in the repository; planned items describe the next
-systems required before a stable `1.0`.
+Rakta.js uses the roadmap as a public implementation contract. The `1.0`
+track below lists systems already present in this repository. The post-`1.0`
+track describes the next release targets without blocking the stable generator.
 
 ### v0.1.0 — Foundation
 
@@ -718,6 +723,30 @@ systems required before a stable `1.0`.
 * Done: release compatibility policy
 * Done: official frontend-only and fullstack examples/templates
 * Done: stable plugin system
+
+### Publish Checklist
+
+* npm package: `raktajs`
+* create-app package: `create-rakta-app`
+* GitHub Actions provider: GitHub Actions
+* Organization or user: `RheinSullivan`
+* Repository: `raktajs`
+* Workflow filename: `publish.yml`
+* Environment name: `npm`
+
+For npm provenance, enter only the workflow filename. Use `publish.yml`, not a
+URL and not `.github/workflows/publish.yml`.
+
+### Post-1.0 Roadmap
+
+| Release | Focus | Target |
+| --- | --- | --- |
+| `1.1` | Database adapters | SQLite, PostgreSQL, MySQL, and edge KV adapters for generated repositories |
+| `1.2` | Auth providers | OAuth, email verification, refresh tokens, and stricter session rotation |
+| `1.3` | Devtools UI | Auto import inspector, route analyzer, bundle analyzer, profiler, and overlay panels |
+| `1.4` | Build compiler | Incremental compilation, persistent cache storage, chunk optimizer, and prefetch manifest |
+| `1.5` | Content layer | Markdown collections, MDX plugin bridge, typed content schema, and docs playground |
+| `2.0` | Ecosystem split | Official packages for auth, database, storage, image, forms, analytics, and testing |
 
 ---
 

@@ -1,0 +1,80 @@
+name: Publish Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "npm dist-tag"
+        required: true
+        default: latest
+        type: choice
+        options:
+          - latest
+          - next
+          - beta
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: Publish raktajs and create-rakta-app
+    runs-on: ubuntu-latest
+    environment: npm
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.11
+
+      - name: Ensure npm supports trusted publishing
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Build
+        run: bun run build
+
+      - name: Test
+        run: bun run test
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Pack raktajs
+        run: npm pack --dry-run --json
+        working-directory: packages/rakta
+
+      - name: Pack create-rakta-app
+        run: npm pack --dry-run --json
+        working-directory: packages/create-rakta
+
+      - name: Publish raktajs
+        run: npm publish --access public --tag "${NPM_TAG}"
+        working-directory: packages/rakta
+        env:
+          NPM_TAG: ${{ github.event.inputs.tag || 'latest' }}
+
+      - name: Publish create-rakta-app
+        run: npm publish --access public --tag "${NPM_TAG}"
+        working-directory: packages/create-rakta
+        env:
+          NPM_TAG: ${{ github.event.inputs.tag || 'latest' }}

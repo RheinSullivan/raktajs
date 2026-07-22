@@ -30,12 +30,16 @@ const RAKTA_LOGO_SVG = readFileSync(
 	"utf-8",
 );
 const BACKEND_TEMPLATE_URLS = [
-	pathToFileURL(`${process.cwd()}/templates/fullStack/backend/`),
-	pathToFileURL(`${process.cwd()}/templates/fullstack/backend/`),
+	new URL("../templates/fullStack/backend/", import.meta.url),
+	new URL("../templates/fullstack/backend/", import.meta.url),
+	new URL("./templates/fullStack/backend/", import.meta.url),
+	new URL("./templates/fullstack/backend/", import.meta.url),
 	new URL("../../../../templates/fullStack/backend/", import.meta.url),
 	new URL("../../../../templates/fullstack/backend/", import.meta.url),
 	new URL("../../../templates/fullStack/backend/", import.meta.url),
 	new URL("../../../templates/fullstack/backend/", import.meta.url),
+	pathToFileURL(`${process.cwd()}/templates/fullStack/backend/`),
+	pathToFileURL(`${process.cwd()}/templates/fullstack/backend/`),
 ];
 
 //  Root files
@@ -205,7 +209,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^0.2.8",
+						raktajs: "^1.0.0",
 						motion: "^12.42.2",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
@@ -368,7 +372,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^0.2.8",
+						raktajs: "^1.0.0",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						...getCssDependencies(cssFramework),
@@ -545,7 +549,7 @@ function getGamanTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
 
 	if (templateUrl === undefined) {
 		throw new Error(
-			"The Gaman.js fullstack backend template is missing. Expected templates/fullStack/backend or templates/fullstack/backend at the repository root.",
+			"The Gaman.js fullstack backend template is missing. Expected a bundled dist/templates/fullStack/backend template or the repository templates/fullStack/backend source.",
 		);
 	}
 

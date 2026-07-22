@@ -31,6 +31,7 @@ berbasis Bun dengan identitasnya sendiri.
 - [`authentication.md`](./authentication.md) - JWT, session, dan single-session auth fullstack
 - [`cli.md`](./cli.md) - command untuk generator, pengecekan, deployment, dan diagnostics
 - [`deployment.md`](./deployment.md) - deployment Vercel, Netlify, Cloudflare, Docker, dan static
+- [`publishing.md`](./publishing.md) - npm provenance dan publishing lewat GitHub Actions
 - [`dx.md`](./dx.md) - helper dependency graph, analisis route, dan analisis bundle
 - [`plugin.md`](./plugin.md) - manifest plugin, capability, adapter resmi, dan template
 - [`testing.md`](./testing.md) - helper unit, integration, component, e2e, snapshot, mock server, dan coverage

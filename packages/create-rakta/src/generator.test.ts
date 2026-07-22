@@ -1,6 +1,7 @@
 /// <reference types="bun" />
 
 import { describe, expect, test } from "bun:test";
+import { existsSync } from "node:fs";
 import { generateProjectFiles } from "./generator";
 import type { ProjectConfig } from "./types";
 
@@ -82,5 +83,13 @@ describe("create-rakta fullstack generator", () => {
 		expect(page?.content).toContain("raktaRef");
 		expect(page?.content).not.toContain('from "react"');
 		expect(config?.content).toContain("enabled: false");
+	});
+
+	test("ships the Gaman.js backend template in the built package", () => {
+		expect(
+			existsSync(
+				"packages/create-rakta/dist/templates/fullStack/backend/src/app.ts",
+			),
+		).toBe(true);
 	});
 });
