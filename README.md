@@ -38,7 +38,7 @@
     <img src="https://img.shields.io/npm/dm/create-rakta-app?style=flat&logo=npm&label=cli%20downloads&color=18a900&labelColor=555" alt="create-rakta-app monthly downloads" />
   </a>
   <a href="https://bun.sh">
-    <img src="https://img.shields.io/badge/Bun-1.3.11-fbf0df?style=flat&logo=bun&logoColor=black&labelColor=555" alt="Bun 1.3.11" />
+    <img src="https://img.shields.io/badge/Bun-1.3.11-fbf0df?style=flat&logo=bun&logoColor=white&labelColor=pink" alt="Bun 1.3.11" />
   </a>
   <a href="https://react.dev">
     <img src="https://img.shields.io/badge/React-19.2.7-149eca?style=flat&logo=react&logoColor=white&labelColor=555" alt="React 19.2.7" />
