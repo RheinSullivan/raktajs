@@ -56,7 +56,7 @@ Telemetry adalah status opt-in lokal yang disimpan di
 
 ```bash
 rakta upgrade
-rakta upgrade ^1.0.1
+rakta upgrade ^1.0.2
 ```
 
 Tanpa versi, `upgrade` mengubah dependency Rakta.js ke `latest`. Setelah

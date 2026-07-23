@@ -500,7 +500,7 @@ export default function App() {
 				<section className="flex flex-col gap-6 items-start">
 					<div className="flex flex-wrap items-center gap-3">
 						<span className="font-mono text-xs font-bold text-brand-pink border border-brand-pink px-3.5 py-1.5 tracking-wider uppercase">
-							V1.0.1
+							V1.0.2
 						</span>
 						<span className="font-mono text-xs font-bold text-emerald-400 border border-emerald-500/50 bg-emerald-950/30 px-3.5 py-1.5 tracking-wider uppercase flex items-center gap-1.5">
 							🇵🇸 FREE PALESTINE - DUKUNGAN KEMANUSIAAN
@@ -522,7 +522,7 @@ export default function App() {
 							ENGINE
 						</span>
 						<span className="font-mono text-xl text-white font-semibold">
-							1.0.1
+							1.0.2
 						</span>
 					</div>
 					<div className="p-6 md:p-8 flex flex-col gap-2 group hover:bg-white/5 transition-colors">
@@ -1126,10 +1126,10 @@ export default function App() {
 				{/* Support & Solidarity Section (Theme-Harmonized & Bilingual) */}
 				<section
 					className={`p-6 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 relative overflow-hidden my-6 transition-all duration-300 ${aestheticUnit === "NEO-BRUTALIST"
-							? "border-4 border-black bg-white text-black shadow-[8px_8px_0px_0px_#000000]"
-							: aestheticUnit === "RETRO-CYBER"
-								? "border-2 border-pink-500/60 bg-zinc-950/95 text-zinc-100 shadow-[0_0_25px_rgba(244,63,94,0.25)]"
-								: "border-2 border-emerald-500/40 bg-gradient-to-r from-emerald-950/40 via-zinc-950 to-rose-950/30 text-white shadow-xl"
+						? "border-4 border-black bg-white text-black shadow-[8px_8px_0px_0px_#000000]"
+						: aestheticUnit === "RETRO-CYBER"
+							? "border-2 border-pink-500/60 bg-zinc-950/95 text-zinc-100 shadow-[0_0_25px_rgba(244,63,94,0.25)]"
+							: "border-2 border-emerald-500/40 bg-gradient-to-r from-emerald-950/40 via-zinc-950 to-rose-950/30 text-white shadow-xl"
 						}`}
 				>
 					<div className="flex flex-col gap-3 max-w-2xl relative z-10">
@@ -1137,8 +1137,8 @@ export default function App() {
 							<span className="text-xl">🇵🇸</span>
 							<span
 								className={`font-mono text-xs font-extrabold tracking-widest uppercase ${aestheticUnit === "NEO-BRUTALIST"
-										? "text-black bg-yellow-300 px-2 py-0.5 border border-black"
-										: "text-emerald-400"
+									? "text-black bg-yellow-300 px-2 py-0.5 border border-black"
+									: "text-emerald-400"
 									}`}
 							>
 								{lang === "ID"
@@ -1148,8 +1148,8 @@ export default function App() {
 						</div>
 						<h2
 							className={`font-sans text-2xl md:text-3xl font-extrabold uppercase tracking-tight ${aestheticUnit === "NEO-BRUTALIST"
-									? "text-black"
-									: "text-white"
+								? "text-black"
+								: "text-white"
 								}`}
 						>
 							{lang === "ID"
@@ -1158,8 +1158,8 @@ export default function App() {
 						</h2>
 						<p
 							className={`font-sans text-xs md:text-sm leading-relaxed ${aestheticUnit === "NEO-BRUTALIST"
-									? "text-zinc-800"
-									: "text-zinc-300"
+								? "text-zinc-800"
+								: "text-zinc-300"
 								}`}
 						>
 							{lang === "ID"
@@ -1173,10 +1173,10 @@ export default function App() {
 							target="_blank"
 							rel="noopener noreferrer"
 							className={`font-mono text-xs font-extrabold uppercase px-6 py-3.5 flex items-center justify-center gap-2 transition-all duration-150 active:scale-95 text-center ${aestheticUnit === "NEO-BRUTALIST"
-									? "bg-black text-white hover:bg-rose-600 border-2 border-black shadow-[4px_4px_0px_0px_#000000]"
-									: aestheticUnit === "RETRO-CYBER"
-										? "bg-pink-600 hover:bg-pink-500 text-white border border-pink-400 shadow-[0_0_12px_rgba(244,63,94,0.6)]"
-										: "bg-emerald-500 hover:bg-emerald-400 text-black shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)]"
+								? "bg-black text-white hover:bg-rose-600 border-2 border-black shadow-[4px_4px_0px_0px_#000000]"
+								: aestheticUnit === "RETRO-CYBER"
+									? "bg-pink-600 hover:bg-pink-500 text-white border border-pink-400 shadow-[0_0_12px_rgba(244,63,94,0.6)]"
+									: "bg-emerald-500 hover:bg-emerald-400 text-black shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)]"
 								}`}
 						>
 							<span className="flex items-center gap-2">

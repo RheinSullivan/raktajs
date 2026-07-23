@@ -508,7 +508,7 @@ export default function App() {
 				<section className="flex flex-col gap-6 items-start">
 					<div className="flex flex-wrap items-center gap-3">
 						<span className="font-mono text-xs font-bold text-brand-pink border border-brand-pink px-3.5 py-1.5 tracking-wider uppercase">
-							V1.0.1
+							V1.0.2
 						</span>
 						<span className="font-mono text-xs font-bold text-emerald-400 border border-emerald-500/50 bg-emerald-950/30 px-3.5 py-1.5 tracking-wider uppercase flex items-center gap-1.5">
 							🇵🇸 FREE PALESTINE - DUKUNGAN KEMANUSIAAN
@@ -530,7 +530,7 @@ export default function App() {
 							ENGINE
 						</span>
 						<span className="font-mono text-xl text-white font-semibold">
-							1.0.1
+							1.0.2
 						</span>
 					</div>
 					<div className="p-6 md:p-8 flex flex-col gap-2 group hover:bg-white/5 transition-colors">
@@ -811,26 +811,24 @@ export default function App() {
 									SCORE
 								</span>
 								<span
-									className={`font-mono text-3xl md:text-4xl tracking-widest font-extrabold ${
-										aestheticUnit === "NEO-BRUTALIST"
+									className={`font-mono text-3xl md:text-4xl tracking-widest font-extrabold ${aestheticUnit === "NEO-BRUTALIST"
 											? "text-black bg-white border-2 border-black px-3 py-0.5 shadow-[3px_3px_0px_#000000]"
 											: aestheticUnit === "RETRO-CYBER"
 												? "text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-500 drop-shadow-[0_0_8px_rgba(240,46,170,0.6)]"
 												: "text-white"
-									}`}
+										}`}
 									id="live-score"
 								>
 									{score.toString().padStart(6, "0")}
 								</span>
 								{highScore > 0 && (
 									<span
-										className={`font-mono text-[10px] mt-1 ${
-											aestheticUnit === "NEO-BRUTALIST"
+										className={`font-mono text-[10px] mt-1 ${aestheticUnit === "NEO-BRUTALIST"
 												? "text-black font-extrabold bg-[#ffff00] border border-black px-1.5 py-0.5 w-fit shadow-[1.5px_1.5px_0px_#000000]"
 												: aestheticUnit === "RETRO-CYBER"
 													? "text-fuchsia-400 drop-shadow-[0_0_4px_rgba(240,46,170,0.4)]"
 													: "text-cyan-400"
-										}`}
+											}`}
 									>
 										BEST: {highScore.toString().padStart(6, "0")}
 									</span>
@@ -844,13 +842,12 @@ export default function App() {
 									PERFORMANCE
 								</span>
 								<span
-									className={`font-mono text-lg md:text-xl font-bold ${
-										aestheticUnit === "NEO-BRUTALIST"
+									className={`font-mono text-lg md:text-xl font-bold ${aestheticUnit === "NEO-BRUTALIST"
 											? "text-black bg-[#E11D48] border-2 border-black px-2 py-0.5 shadow-[2px_2px_0px_#000000]"
 											: aestheticUnit === "RETRO-CYBER"
 												? "text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]"
 												: "text-brand-pink"
-									}`}
+										}`}
 									id="live-fps"
 								>
 									{liveFps.toFixed(2)} FPS
@@ -860,25 +857,23 @@ export default function App() {
 							{/* Simulation Game Messages */}
 							{!isPlaying && !hasCollision && (
 								<div
-									className={`text-center z-20 pointer-events-none p-4 max-w-sm rounded backdrop-blur-sm ${
-										aestheticUnit === "NEO-BRUTALIST"
+									className={`text-center z-20 pointer-events-none p-4 max-w-sm rounded backdrop-blur-sm ${aestheticUnit === "NEO-BRUTALIST"
 											? "bg-[#FFFBEB] border-4 border-black text-black shadow-[6px_6px_0px_#000000]"
 											: aestheticUnit === "RETRO-CYBER"
 												? "bg-[#1a0033]/80 border-2 border-fuchsia-500 text-pink-400 shadow-[0_0_15px_rgba(240,46,170,0.5)]"
 												: "bg-black/60 border border-cyan-500/30 text-white"
-									}`}
+										}`}
 								>
 									<p className="font-mono text-xs uppercase tracking-widest animate-pulse font-bold">
 										CLICK CONTAINER OR PRESS SPACE TO SWIM
 									</p>
 									<p
-										className={`font-mono text-[10px] mt-2 font-bold tracking-widest uppercase ${
-											aestheticUnit === "NEO-BRUTALIST"
+										className={`font-mono text-[10px] mt-2 font-bold tracking-widest uppercase ${aestheticUnit === "NEO-BRUTALIST"
 												? "text-black"
 												: aestheticUnit === "RETRO-CYBER"
 													? "text-cyan-400"
 													: "text-cyan-400"
-										}`}
+											}`}
 									>
 										SHRIMPRUN {aestheticUnit.replace("-", " ")} V2.0
 									</p>
@@ -887,20 +882,18 @@ export default function App() {
 
 							{hasCollision && (
 								<div
-									className={`text-center z-20 pointer-events-none p-6 max-w-sm rounded backdrop-blur-md ${
-										aestheticUnit === "NEO-BRUTALIST"
+									className={`text-center z-20 pointer-events-none p-6 max-w-sm rounded backdrop-blur-md ${aestheticUnit === "NEO-BRUTALIST"
 											? "bg-[#FFFBEB] border-4 border-black text-black shadow-[8px_8px_0px_#000000]"
 											: aestheticUnit === "RETRO-CYBER"
 												? "bg-[#0d0118]/95 border-2 border-pink-500 text-pink-400 shadow-[0_0_20px_rgba(244,63,94,0.6)]"
 												: "bg-black/90 border-2 border-brand-pink text-white"
-									}`}
+										}`}
 								>
 									<p
-										className={`font-mono text-sm uppercase tracking-widest font-extrabold ${
-											aestheticUnit === "NEO-BRUTALIST"
+										className={`font-mono text-sm uppercase tracking-widest font-extrabold ${aestheticUnit === "NEO-BRUTALIST"
 												? "text-red-600"
 												: "text-brand-pink"
-										}`}
+											}`}
 									>
 										SIMULATION HALTED
 									</p>
@@ -908,13 +901,12 @@ export default function App() {
 										SHRIMP COLLIDED WITH CORAL
 									</p>
 									<p
-										className={`font-mono text-xs mt-4 font-bold border px-3 py-1 animate-pulse ${
-											aestheticUnit === "NEO-BRUTALIST"
+										className={`font-mono text-xs mt-4 font-bold border px-3 py-1 animate-pulse ${aestheticUnit === "NEO-BRUTALIST"
 												? "bg-black text-white border-black"
 												: aestheticUnit === "RETRO-CYBER"
 													? "bg-fuchsia-950/20 text-fuchsia-400 border-fuchsia-500/50"
 													: "bg-brand-green/5 text-brand-green border-brand-green/30"
-										}`}
+											}`}
 									>
 										CLICK TO RE-INITIALIZE
 									</p>
@@ -941,9 +933,9 @@ export default function App() {
 											: !isPlaying
 												? Math.sin(Date.now() / 150) * 5
 												: Math.max(
-														-28,
-														Math.min(28, velocityRef.current * -4.2),
-													)
+													-28,
+													Math.min(28, velocityRef.current * -4.2),
+												)
 									}
 								/>
 							</div>
@@ -974,13 +966,12 @@ export default function App() {
 							{/* Live interactive speed banner inside when playing */}
 							{isPlaying && (
 								<div
-									className={`absolute bottom-4 left-6 flex items-center gap-1.5 font-mono text-[9px] z-20 font-semibold uppercase tracking-wider ${
-										aestheticUnit === "NEO-BRUTALIST"
+									className={`absolute bottom-4 left-6 flex items-center gap-1.5 font-mono text-[9px] z-20 font-semibold uppercase tracking-wider ${aestheticUnit === "NEO-BRUTALIST"
 											? "text-black bg-white border border-black px-1.5 py-0.5 shadow-[1px_1px_0_#000]"
 											: aestheticUnit === "RETRO-CYBER"
 												? "text-fuchsia-400"
 												: "text-cyan-400"
-									}`}
+										}`}
 								>
 									<span
 										className={`w-1.5 h-1.5 rounded-full animate-ping ${aestheticUnit === "NEO-BRUTALIST" ? "bg-black" : "bg-cyan-400"}`}
@@ -992,13 +983,12 @@ export default function App() {
 							{/* Floating Settings/Config Toast */}
 							{configToast && (
 								<div
-									className={`absolute bottom-12 px-4 py-1.5 font-mono text-[10px] z-30 font-bold uppercase tracking-widest animate-bounce ${
-										aestheticUnit === "NEO-BRUTALIST"
+									className={`absolute bottom-12 px-4 py-1.5 font-mono text-[10px] z-30 font-bold uppercase tracking-widest animate-bounce ${aestheticUnit === "NEO-BRUTALIST"
 											? "bg-[#ffff00] text-black border-2 border-black shadow-[4px_4px_0px_#000000]"
 											: aestheticUnit === "RETRO-CYBER"
 												? "bg-fuchsia-950/90 text-fuchsia-400 border border-fuchsia-500 shadow-[0_0_10px_rgba(240,46,170,0.6)] backdrop-blur-sm"
 												: "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 backdrop-blur-sm"
-									}`}
+										}`}
 								>
 									{configToast}
 								</div>
@@ -1059,15 +1049,14 @@ export default function App() {
 							<div className="flex items-center gap-1.5">
 								<span>CORAL:</span>
 								<span
-									className={`px-2 py-0.5 font-bold text-[9px] tracking-wider rounded border ${
-										aestheticUnit === "NEO-BRUTALIST"
+									className={`px-2 py-0.5 font-bold text-[9px] tracking-wider rounded border ${aestheticUnit === "NEO-BRUTALIST"
 											? "text-black border-2 border-black bg-white shadow-[1px_1px_0px_#000000] rounded-none"
 											: obstacleSizeClass === "KECIL"
 												? "text-amber-400 border-amber-400/30 bg-amber-400/5"
 												: obstacleSizeClass === "SEDANG"
 													? "text-cyan-400 border-cyan-400/30 bg-cyan-400/5"
 													: "text-rose-400 border-rose-400/30 bg-rose-400/5"
-									}`}
+										}`}
 								>
 									{obstacleSizeClass}
 								</span>
@@ -1122,8 +1111,7 @@ export default function App() {
 											`LATENCY MODE: ${nextMode ? "LOW LATENCY" : "STANDARD"}`,
 										);
 									}}
-									className={`px-2 py-0.5 font-bold cursor-pointer transition-all ${
-										aestheticUnit === "NEO-BRUTALIST"
+									className={`px-2 py-0.5 font-bold cursor-pointer transition-all ${aestheticUnit === "NEO-BRUTALIST"
 											? lowLatencyMode
 												? "bg-black text-[#ffff00] border-2 border-black px-2 py-0.5 font-extrabold shadow-[2px_2px_0px_#000000] rounded-none"
 												: "bg-white text-zinc-400 border border-zinc-300 px-2 py-0.5 font-medium rounded-none hover:border-black hover:text-black"
@@ -1134,7 +1122,7 @@ export default function App() {
 												: lowLatencyMode
 													? "bg-brand-pink/10 text-brand-pink border border-brand-pink/30 rounded"
 													: "bg-zinc-900 text-zinc-500 border border-zinc-800 rounded"
-									}`}
+										}`}
 								>
 									{lowLatencyMode ? "ON" : "OFF"}
 								</button>
@@ -1145,23 +1133,21 @@ export default function App() {
 
 				{/* Support & Solidarity Section (Theme-Harmonized & Bilingual) */}
 				<section
-					className={`p-6 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 relative overflow-hidden my-6 transition-all duration-300 ${
-						aestheticUnit === "NEO-BRUTALIST"
+					className={`p-6 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 relative overflow-hidden my-6 transition-all duration-300 ${aestheticUnit === "NEO-BRUTALIST"
 							? "border-4 border-black bg-white text-black shadow-[8px_8px_0px_0px_#000000]"
 							: aestheticUnit === "RETRO-CYBER"
 								? "border-2 border-pink-500/60 bg-zinc-950/95 text-zinc-100 shadow-[0_0_25px_rgba(244,63,94,0.25)]"
 								: "border-2 border-emerald-500/40 bg-gradient-to-r from-emerald-950/40 via-zinc-950 to-rose-950/30 text-white shadow-xl"
-					}`}
+						}`}
 				>
 					<div className="flex flex-col gap-3 max-w-2xl relative z-10">
 						<div className="flex items-center gap-2">
 							<span className="text-xl">🇵🇸</span>
 							<span
-								className={`font-mono text-xs font-extrabold tracking-widest uppercase ${
-									aestheticUnit === "NEO-BRUTALIST"
+								className={`font-mono text-xs font-extrabold tracking-widest uppercase ${aestheticUnit === "NEO-BRUTALIST"
 										? "text-black bg-yellow-300 px-2 py-0.5 border border-black"
 										: "text-emerald-400"
-								}`}
+									}`}
 							>
 								{lang === "ID"
 									? "SOLIDARITAS & KEPEDULIAN KEMANUSIAAN"
@@ -1169,20 +1155,18 @@ export default function App() {
 							</span>
 						</div>
 						<h2
-							className={`font-sans text-2xl md:text-3xl font-extrabold uppercase tracking-tight ${
-								aestheticUnit === "NEO-BRUTALIST" ? "text-black" : "text-white"
-							}`}
+							className={`font-sans text-2xl md:text-3xl font-extrabold uppercase tracking-tight ${aestheticUnit === "NEO-BRUTALIST" ? "text-black" : "text-white"
+								}`}
 						>
 							{lang === "ID"
 								? "Dukung Rakta.js & Aksi Kemanusiaan"
 								: "Support Rakta.js & Humanitarian Causes"}
 						</h2>
 						<p
-							className={`font-sans text-xs md:text-sm leading-relaxed ${
-								aestheticUnit === "NEO-BRUTALIST"
+							className={`font-sans text-xs md:text-sm leading-relaxed ${aestheticUnit === "NEO-BRUTALIST"
 									? "text-zinc-800"
 									: "text-zinc-300"
-							}`}
+								}`}
 						>
 							{lang === "ID"
 								? "Donasi Anda digunakan untuk pemeliharaan server, domain, dan infrastruktur, serta disalurkan kepada kaum dhuafa, anak yatim/piatu, panti asuhan, panti jompo, dan bantuan kemanusiaan 🇵🇸 Free Palestine. Bagi lembaga penyalur resmi yang ingin bekerja sama, silakan hubungi pengembang."
@@ -1194,13 +1178,12 @@ export default function App() {
 							href="https://buymeacoffee.com/rheinsullivan"
 							target="_blank"
 							rel="noopener noreferrer"
-							className={`font-mono text-xs font-extrabold uppercase px-6 py-3.5 flex items-center justify-center gap-2 transition-all duration-150 active:scale-95 text-center ${
-								aestheticUnit === "NEO-BRUTALIST"
+							className={`font-mono text-xs font-extrabold uppercase px-6 py-3.5 flex items-center justify-center gap-2 transition-all duration-150 active:scale-95 text-center ${aestheticUnit === "NEO-BRUTALIST"
 									? "bg-black text-white hover:bg-rose-600 border-2 border-black shadow-[4px_4px_0px_0px_#000000]"
 									: aestheticUnit === "RETRO-CYBER"
 										? "bg-pink-600 hover:bg-pink-500 text-white border border-pink-400 shadow-[0_0_12px_rgba(244,63,94,0.6)]"
 										: "bg-emerald-500 hover:bg-emerald-400 text-black shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)]"
-							}`}
+								}`}
 						>
 							<span className="flex items-center gap-2">
 								<Coffee className="w-4 h-4" />

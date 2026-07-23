@@ -1,12 +1,12 @@
 # Changelog
 
 Semua perubahan penting pada Rakta.js dicatat di file ini.
-Format changelog ini mengikuti semangat [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Rakta.js akan mengikuti [Semantic Versioning](https://semver.org/) setelah mencapai versi `1.0.1`.
-Sebelum `1.0.1`, breaking changes masih bisa terjadi di minor release karena public API framework masih distabilkan.
+Format changelog ini mengikuti semangat [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Rakta.js akan mengikuti [Semantic Versioning](https://semver.org/) setelah mencapai versi `1.0.2`.
+Sebelum `1.0.2`, breaking changes masih bisa terjadi di minor release karena public API framework masih distabilkan.
 
 All notable changes to Rakta.js are documented in this file.
-This changelog follows the spirit of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Rakta.js intends to follow [Semantic Versioning](https://semver.org/) once it reaches `1.0.1`.
-Before `1.0.1`, breaking changes may still happen in minor releases while the framework public API is being stabilized.
+This changelog follows the spirit of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Rakta.js intends to follow [Semantic Versioning](https://semver.org/) once it reaches `1.0.2`.
+Before `1.0.2`, breaking changes may still happen in minor releases while the framework public API is being stabilized.
 
 ---
 
@@ -80,8 +80,8 @@ Bagian ini berisi perubahan yang sudah masuk ke branch utama, tetapi belum diril
 #### Notes
 
 - Rakta.js masih berada di fase `0.x`.
-- Public API masih bisa berubah sebelum `1.0.1`.
-- Breaking changes harus tetap dijelaskan di changelog meskipun terjadi sebelum `1.0.1`.
+- Public API masih bisa berubah sebelum `1.0.2`.
+- Breaking changes harus tetap dijelaskan di changelog meskipun terjadi sebelum `1.0.2`.
 
 ---
 
@@ -269,8 +269,8 @@ This section contains changes that have landed in the main branch but have not b
 #### Notes
 
 - Rakta.js is still in `0.x`.
-- Public APIs may still change before `1.0.1`.
-- Breaking changes should still be documented in the changelog even before `1.0.1`.
+- Public APIs may still change before `1.0.2`.
+- Breaking changes should still be documented in the changelog even before `1.0.2`.
 
 ---
 

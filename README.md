@@ -581,7 +581,7 @@ rakta/tide
 
 Rakta.js uses the roadmap as a public implementation contract.
 
-### Released - v0.1.0 through v1.0.1
+### Released - v0.1.0 through v1.0.2
 
 All of the following systems are present in this repository and the published packages:
 | System | Module |

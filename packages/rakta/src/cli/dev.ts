@@ -35,7 +35,7 @@ export async function devCommand(cwd: string = process.cwd()): Promise<void> {
 	const port = server.port ?? config.port;
 
 	console.log(
-		`\n  \x1b[31m</>\x1b[0m \x1b[1mRakta.js 1.0.1\x1b[0m \x1b[2m(CherbonsEngine)\x1b[0m`,
+		`\n  \x1b[31m</>\x1b[0m \x1b[1mRakta.js 1.0.2\x1b[0m \x1b[2m(CherbonsEngine)\x1b[0m`,
 	);
 	console.log(
 		`  \x1b[2m-\x1b[0m Local:         \x1b[36mhttp://localhost:${port}\x1b[0m`,
