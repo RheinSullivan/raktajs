@@ -1,6 +1,6 @@
 # Catatan dari developer utama
 
-Buat temen-temen yang udah mau kontribusi di project ini — sebelumnya saya
+Buat temen-temen yang udah mau kontribusi di project ini - sebelumnya saya
 selaku developer utama mengucapkan banyak terimakasih sudah mau bergabung
 untuk mengembangkan framework Rakta.js. Membangun framework dari nol,
 apalagi yang berakar dari identitas budaya tertentu seperti Cirebon, bukan
@@ -11,12 +11,12 @@ datang untuk membantu membentuknya membuat project ini jadi lebih kuat.
 
 Rakta.js dibuat untuk memberikan developer yang sudah berpikir dalam React
 dan JSX sebuah framework yang langsung terasa familiar, sambil diam-diam
-meminjam ide-ide terbaik dari ekosistem yang lebih luas — routing berbasis
+meminjam ide-ide terbaik dari ekosistem yang lebih luas - routing berbasis
 file yang terinspirasi dari app router modern, auto import berbasis
 konvensi yang terinspirasi dari Nuxt, layer RPC type-safe yang terinspirasi
 dari tRPC, state store kecil yang terinspirasi dari Zustand, dan HTTP
 client berbasis fetch dengan kemudahan pakai ala Axios. Tidak satu pun
-tools tersebut sedang digantikan atau dikritik di sini — Rakta.js hanya
+tools tersebut sedang digantikan atau dikritik di sini - Rakta.js hanya
 mencoba mengemas ide-ide yang familiar ke dalam satu toolkit kecil
 berbasis Bun dengan identitasnya sendiri.
 
@@ -67,7 +67,7 @@ Secara konkret, itu berarti:
   deskripsi pull request, dan tambahkan pengecekan regresi kalau
   memungkinkan.
 - **Kalau menambahkan example atau template**, pastikan benar-benar bisa
-  jalan — `bun install && bun run dev` harus berhasil tanpa langkah
+  jalan - `bun install && bun run dev` harus berhasil tanpa langkah
   manual tambahan.
 
 ## Cara menambahkan example
@@ -75,7 +75,7 @@ Secara konkret, itu berarti:
 Example dan template ada di `templates/`. Jaga konsistensi struktur output
 template baru dengan struktur `frontendOnly` dan `fullstack` yang sudah
 ada, sesuai dokumentasi di `docs/id/templates.md`. Kalau example butuh
-data contoh, buat tetap mandiri — tidak perlu layanan eksternal untuk
+data contoh, buat tetap mandiri - tidak perlu layanan eksternal untuk
 melihatnya berjalan.
 
 ## Cara menambahkan dokumentasi
@@ -85,18 +85,18 @@ Halaman dokumentasi menggunakan nama file camelCase (`mulai.md`, bukan
 `docs/id/` untuk Bahasa Indonesia. Setiap halaman sebaiknya punya:
 overview, kapan fitur ini dipakai, catatan arsitektur singkat kalau
 relevan, contoh kode yang benar-benar jalan, kesalahan umum, dan tautan ke
-halaman terkait. Tulis untuk seseorang yang belum pernah pakai Rakta.js —
+halaman terkait. Tulis untuk seseorang yang belum pernah pakai Rakta.js -
 anggap dia paham React, tapi belum familiar dengan nama-nama layer khas
 kita (MendungWeave, ShrimpStep, TrusmiFrame, CarubanWire, PanturaFetch,
 dan seterusnya).
 
 ## Cara menambahkan kode
 
-Ikuti aturan TypeScript yang strict di `CONTRIBUTING.md` — tidak ada
+Ikuti aturan TypeScript yang strict di `CONTRIBUTING.md` - tidak ada
 `any`, tidak ada `null`, tidak ada error yang dibungkam, nama yang jelas,
 dan return type eksplisit di setiap fungsi yang di-export. Kalau kalian
 menyentuh `packages/create-rakta/src/generator.ts`, baca dulu bagian
-"Generator safety" di `CONTRIBUTING.md` — file itu besar memang karena
+"Generator safety" di `CONTRIBUTING.md` - file itu besar memang karena
 desain, dan jangan sampai mengecil tanpa sengaja.
 
 ## Cara menambahkan test
@@ -104,7 +104,7 @@ desain, dan jangan sampai mengecil tanpa sengaja.
 Test yang spesifik untuk satu package atau fitur sebaiknya ditaruh
 bersebelahan dengan kode yang diuji, dengan suffix `*.test.ts`, dan
 dijalankan lewat `bun test`. Tolong jangan membuat file workspace test
-kedua di root — hanya ada satu, `workspace.test.ts`, di root repository.
+kedua di root - hanya ada satu, `workspace.test.ts`, di root repository.
 
 ## Menghindari import yang rusak
 
@@ -126,7 +126,7 @@ Aturan sederhananya: kalau kalian harus mencari sesuatu untuk menulis
 kode, tuliskan apa yang kalian pelajari di dokumentasi, dengan bahasa yang
 sederhana. Orang yang membacanya nanti bisa jadi pemula total, mahasiswa,
 atau developer berpengalaman yang sedang mengevaluasi Rakta.js untuk
-project nyata — tulis untuk ketiganya.
+project nyata - tulis untuk ketiganya.
 
 ## Mencantumkan GitHub profile atau portfolio
 
@@ -149,11 +149,11 @@ git commit -m "docs(id): terjemahkan panduan routing"
 ## Membuka pull request
 
 1. Fork repository, buat branch dari `main`.
-2. Jaga perubahan tetap fokus — satu concern per pull request kalau bisa.
+2. Jaga perubahan tetap fokus - satu concern per pull request kalau bisa.
 3. Jalankan validasi lengkap (`bun run typecheck`, `bun run build`,
    `bun test`, `bun run lint`, `bun run check:workspace`).
 4. Isi template pull request secara lengkap.
-5. Siap untuk satu atau dua ronde review — itu bagian normal dan sehat
+5. Siap untuk satu atau dua ronde review - itu bagian normal dan sehat
    dari membangun sesuatu yang akan dipakai orang lain.
 
 ## Melaporkan issue
@@ -171,7 +171,7 @@ menangani optional property di bawah `exactOptionalPropertyTypes`.
 ## Mendokumentasikan fitur baru
 
 Kalau kalian memperkenalkan kapabilitas baru, beri tempat di tabel fitur
-di `README.md` root, dan tulis halaman dokumentasi lengkap untuknya —
+di `README.md` root, dan tulis halaman dokumentasi lengkap untuknya -
 sekecil apapun, itu lebih baik daripada tidak ada sama sekali. Kalau
 fitur tersebut layak punya nama identitas Rakta.js sendiri seperti
 MendungWeave, ShrimpStep, atau CarubanWire, usulkan di deskripsi pull
@@ -181,7 +181,7 @@ request supaya kita bisa sepakat soal penamaan sebelum merge.
 
 Sekali lagi, terimakasih banyak sudah mau meluangkan waktu dan
 kemampuannya untuk membantu project ini bertumbuh. Seberapapun ukuran
-kontribusi kalian — satu perbaikan typo atau satu module baru — itu
+kontribusi kalian - satu perbaikan typo atau satu module baru - itu
 berarti, dan sangat dihargai.
 
 Rhein Sullivan

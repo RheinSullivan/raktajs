@@ -1,11 +1,23 @@
+import { networkInterfaces } from "node:os";
 import { join } from "node:path";
 import { loadConfig } from "../config/loadConfig";
 import { startDevServer } from "../forge/devServer";
 
-export async function devCommand(cwd: string = process.cwd()): Promise<void> {
-	const config = await loadConfig(cwd);
+function getLocalIpAddress(): string {
+	const interfaces = networkInterfaces();
+	for (const name of Object.keys(interfaces)) {
+		for (const iface of interfaces[name] ?? []) {
+			if (iface.family === "IPv4" && !iface.internal) {
+				return iface.address;
+			}
+		}
+	}
+	return "127.0.0.1";
+}
 
-	console.log(`\n  Starting Rakta.js dev server...\n`);
+export async function devCommand(cwd: string = process.cwd()): Promise<void> {
+	const startTime = Date.now();
+	const config = await loadConfig(cwd);
 
 	const server = await startDevServer({
 		projectRoot: cwd,
@@ -18,5 +30,19 @@ export async function devCommand(cwd: string = process.cwd()): Promise<void> {
 		renderConfig: config.render,
 	});
 
-	console.log(`  Ready at ${server.url}\n`);
+	const durationMs = Date.now() - startTime;
+	const localIp = getLocalIpAddress();
+	const port = server.port ?? config.port;
+
+	console.log(
+		`\n  \x1b[31m</>\x1b[0m \x1b[1mRakta.js 1.0.1\x1b[0m \x1b[2m(CherbonsEngine)\x1b[0m`,
+	);
+	console.log(
+		`  \x1b[2m-\x1b[0m Local:         \x1b[36mhttp://localhost:${port}\x1b[0m`,
+	);
+	console.log(
+		`  \x1b[2m-\x1b[0m Network:       \x1b[36mhttp://${localIp}:${port}\x1b[0m`,
+	);
+	console.log(`  \x1b[2m-\x1b[0m Environments: \x1b[2m.env.local\x1b[0m`);
+	console.log(`  \x1b[32m✓\x1b[0m Ready in ${durationMs}ms\n`);
 }

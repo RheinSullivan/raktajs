@@ -1,88 +1,106 @@
-# Mulai cepat
+# Memulai Aplikasi - Panduan Cepat
 
-## Overview
+## Gambaran Umum
 
-Halaman ini membantu kalian dari nol sampai punya aplikasi Rakta.js yang
-berjalan dalam beberapa menit, menggunakan generator resmi,
-`create-rakta-app`.
+Halaman ini akan membimbing Anda membuat dan menjalankan aplikasi Rakta.js dari awal hanya dalam beberapa menit menggunakan perkakas pembuat resmi, `create-rakta-app`.
 
-## Kapan dipakai
+## Kapan Membaca Panduan Ini
 
-Baca ini duluan kalau belum pernah menjalankan Rakta.js sama sekali. Kalau
-sudah punya project dan ingin paham struktur foldernya, baca
-[`templates.md`](./templates.md) saja.
+Baca panduan ini apabila Anda baru pertama kali menggunakan Rakta.js. Apabila Anda sudah memiliki proyek dan ingin memahami struktur foldernya, silakan membaca [`templates.md`](./templates.md).
 
-## Kebutuhan
+## Prasyarat System
 
-- [Bun](https://bun.sh) versi 1.3 atau lebih baru
-- Node.js tidak diperlukan — Rakta.js berjalan sepenuhnya di atas Bun
+- [Bun](https://bun.sh) versi 1.3 atau yang lebih baru.
+- Node.js tidak diperlukan - Rakta.js berjalan sepenuhnya dan optimal di atas Bun.
 
-## Membuat project
+## Membuat Proyek Baru
+
+Jalankan perintah berikut pada terminal Anda:
 
 ```bash
-bun create rakta-app@latest my-app
+bun create rakta-app@latest proyek-saya
 ```
 
-Kalian akan ditanya:
-1. Nama project
-2. Mode project — **Frontend only** atau **Fullstack**
-3. CSS framework — Tailwind CSS v4 (default), Bootstrap, SASS, atau tanpa CSS framework
-4. Mode rendering — CSR, SSR, SSG, CSG, SPA, atau Hybrid
-5. *(Khusus Fullstack)* Backend framework — Gaman.js, Express.js, Nest.js, atau Adonis.js
-6. *(Khusus Fullstack)* Database — PostgreSQL, MySQL, MongoDB, Firebase, SQLite, MariaDB, Redis, PlanetScale, atau Turso
+Anda akan diajukan beberapa pertanyaan interaktif:
+1. **Nama proyek** (Project Name)
+2. **Mode proyek** - **Frontend saja** (Frontend only) atau **Fullstack**
+3. **Kerangka kerja CSS** - Tailwind CSS v4 (baku), Bootstrap, SASS, atau Tanpa CSS
+4. **Mode rendering** - CSR, SSR, SSG, CSG, SPA, atau Hybrid
+5. *(Khusus Fullstack)* **Kerangka kerja Backend** - Gaman.js, Express.js, Nest.js, atau Adonis.js
+6. *(Khusus Fullstack)* **Basis Data** - PostgreSQL, MySQL, MongoDB, Firebase, SQLite, MariaDB, Redis, PlanetScale, atau Turso
 
-Package manager lain juga bisa:
+Anda juga dapat menggunakan manajer paket lainnya:
 ```bash
-bunx create-rakta-app@latest my-app
-npm create rakta-app@latest my-app
-pnpm create rakta-app@latest my-app
+bunx create-rakta-app@latest proyek-saya
+npm create rakta-app@latest proyek-saya
+pnpm create rakta-app@latest proyek-saya
 ```
 
-## Jalankan dev server
+## Menjalankan Server Pengembangan
 
 ```bash
-cd my-app
+cd proyek-saya
 bun install
 bun run dev
 ```
 
-Buka `http://localhost:3000`. Starter frontend-only menampilkan halaman
-selamat datang Rakta.js dengan mini-game **ShrimpRun** — klik, tap, atau
-tekan Space untuk lompat.
+Buka peramban (browser) dan akses `http://localhost:3000`. Proyek awal mode frontend akan menampilkan halaman selamat datang Rakta.js lengkap dengan gim interaktif **ShrimpRun** - tekan tombol Spasi atau ketuk layar untuk melompat!
 
-## Route pertama kalian
+## Membuat Rute Pertama Anda
 
-Setiap file di `app/<path>/page.tsx` otomatis jadi route. Buat
-`app/about/page.tsx`:
+Setiap berkas yang diletakkan di `app/<jalur>/page.tsx` secara otomatis menjadi rute halaman. Buatlah berkas `app/about/page.tsx`:
+
 ```tsx
-import { Click } from "rakta/components";
-
-export default function AboutPage() {
+export default function HalamanTentang() {
   return (
     <main>
-      <h1>Tentang</h1>
-      <click to="/">Kembali ke beranda</click>
+      <h1>Tentang Saya</h1>
+      <p>Proyek ini dibuat menggunakan Rakta.js tanpa impor manual!</p>
+      <click to="/">Kembali ke Beranda</click>
     </main>
   );
 }
 ```
 
-Kunjungi `/about` — tidak perlu registrasi route manual. Ini adalah
-**MendungWeave**, router berbasis file. Lihat [`routing.md`](./routing.md)
-untuk panduan lengkapnya.
+Buka rute `/about` pada peramban - rute langsung aktif tanpa perlu mendaftarkannya secara manual. Fitur ini ditenagai oleh **MendungWeave**, sistem routing berbasis berkas Rakta.js. Lihat [`routing.md`](./routing.md) untuk panduan lengkapnya.
 
-## Kesalahan umum
+## Menggunakan Komponen Tanpa Impor (Auto Import)
 
-- Menjalankan `bun dev` padahal seharusnya `bun run dev` — `package.json`
-  yang di-generate mendefinisikan `dev` sebagai script, bukan subcommand
-  Bun langsung.
-- Mencoba `npm create-rakta-app@latest my-app` — ini bukan syntax npm yang
-  valid. Gunakan `npm create rakta-app@latest my-app` (dengan spasi).
-- Mengharapkan folder `backend/` di mode frontend-only — secara desain,
-  memang tidak ada.
+Buat komponen di `components/Navbar.tsx`:
 
-## Dokumen terkait
+```tsx
+export default function Navbar() {
+  return (
+    <nav className="p-4 bg-slate-900 text-white flex justify-between">
+      <span className="font-bold">Portofolio Saya</span>
+      <click to="/about">Tentang</click>
+    </nav>
+  );
+}
+```
 
-- [`routing.md`](./routing.md) — routing berbasis file MendungWeave
-- [`templates.md`](./templates.md) — isi setiap template yang di-generate
-- [`backendFrameworks.md`](./backendFrameworks.md) — pilihan backend untuk fullstack
+Gunakan `<Navbar />` langsung di dalam `app/page.tsx` tanpa menambahkan baris `import Navbar from ...`:
+
+```tsx
+export default function HalamanBeranda() {
+  return (
+    <main>
+      <Navbar />
+      <h1>Selamat Datang</h1>
+    </main>
+  );
+}
+```
+
+## Kekeliruan Umum yang Sering Terjadi
+
+- Menjalankan `bun dev` alih-alih `bun run dev` - skrip `package.json` membutuhkan subperintah `run`.
+- Menggunakan sintaksis `npm create-rakta-app@latest` - sintaksis npm yang benar adalah `npm create rakta-app@latest` (dengan spasi).
+- Mencari folder `backend/` pada mode frontend saja - mode frontend secara sengaja tidak membuat direktori backend agar proyek tetap ringan.
+
+## Dokumen Terkait
+
+- [`autoImport.md`](./autoImport.md) - Panduan pengimporan otomatis (Auto Import) komponen & helper
+- [`routing.md`](./routing.md) - Routing berbasis berkas MendungWeave
+- [`templates.md`](./templates.md) - Penjelasan struktur templat proyek
+- [`backendFrameworks.md`](./backendFrameworks.md) - Pilihan backend untuk proyek fullstack

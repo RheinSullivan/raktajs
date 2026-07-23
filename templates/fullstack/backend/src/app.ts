@@ -6,7 +6,7 @@ import { apiRouter } from "./routes/api";
 import { seedCmsPosts } from "./services/cms.service";
 import { seedUsers } from "./services/user.service";
 
-const app = Gaman<HTTP>();
+const app = new Gaman<HTTP>();
 const corsHeaders: Readonly<Record<string, string>> = {
 	"Access-Control-Allow-Origin": env.corsOrigin,
 	"Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",

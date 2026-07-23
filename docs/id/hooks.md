@@ -1,22 +1,21 @@
-# Hooks Rakta
+# Hooks Rakta - Ciri Khas Budaya, Kuliner & Warisan 🏛️
 
-## Gambaran umum
+## Gambaran Umum
 
-Hooks Rakta adalah alias bernama khas framework untuk hooks React. Hooks
-ini berguna ketika Auto Import dimatikan dan kalian tetap ingin code yang
-terasa seperti Rakta.js, bukan mengimpor `useState`, `useEffect`, atau
-`useRef` langsung dari React.
+Hooks Rakta diinspirasi oleh ciri khas warisan budaya, kuliner, dan sejarah (seperti Jawa, Sunda, Sega Lengko, Empal Gentong, Batik Megamendung, Keraton Kasepuhan, Keraton Kanoman, Sunan Gunung Jati, Musik Tarling, Tari Sintren, dll.).
 
-## Mulai cepat
+Hooks ini sangat berguna ketika Auto Import dimatikan dan Anda tetap ingin menulis kode dengan identitas Rakta.js yang kaya akan kearifan lokal.
+
+## Mulai Cepat
 
 ```tsx
-import { raktaEffect, raktaRef, raktaState } from "raktajs/hooks";
+import { empalEffect, lengkoState, megamendungRef } from "raktajs/hooks";
 
 export default function Counter() {
-  const [count, setCount] = raktaState(0);
-  const buttonRef = raktaRef<HTMLButtonElement>(null);
+  const [count, setCount] = lengkoState(0);
+  const buttonRef = megamendungRef<HTMLButtonElement>(null);
 
-  raktaEffect(() => {
+  empalEffect(() => {
     buttonRef.current?.focus();
   }, []);
 
@@ -28,35 +27,36 @@ export default function Counter() {
 }
 ```
 
-## Referensi API
+## Referensi API Hooks & Warisan Budaya
 
-| Hook Rakta | Padanan React |
-| --- | --- |
-| `raktaState` | `useState` |
-| `raktaEffect` | `useEffect` |
-| `raktaRef` | `useRef` |
-| `raktaMemo` | `useMemo` |
-| `raktaCallback` | `useCallback` |
-| `raktaReducer` | `useReducer` |
-| `raktaContext` | `useContext` |
-| `raktaId` | `useId` |
-| `raktaTransition` | `useTransition` |
-| `raktaDeferredValue` | `useDeferredValue` |
-| `raktaSyncExternalStore` | `useSyncExternalStore` |
-| `raktaLayoutEffect` | `useLayoutEffect` |
-| `raktaInsertionEffect` | `useInsertionEffect` |
-| `raktaImperativeHandle` | `useImperativeHandle` |
-| `raktaOptimistic` | `useOptimistic` |
-| `raktaActionState` | `useActionState` |
-| `raktaDebugValue` | `useDebugValue` |
+| Nama Hook Rakta | Ciri Khas / Warisan Budaya | Padanan React |
+| --- | --- | --- |
+| `lengkoState` / `segaLengkoState` | Sega Lengko (Kuliner) | `useState` |
+| `jawaState` / `sundaState` | Akulturasi 2 Suku (Jawa & Sunda) | `useState` |
+| `empalEffect` / `empalGentongEffect` | Empal Gentong (Kuliner) | `useEffect` |
+| `topengEffect` | Tari Topeng | `useEffect` |
+| `megamendungRef` | Batik Megamendung (Motif Iconic) | `useRef` |
+| `tarlingRef` / `grageRef` | Tarling / Kota Udang | `useRef` |
+| `kanomanMemo` | Keraton Kanoman | `useMemo` |
+| `kasepuhanCallback` | Keraton Kasepuhan | `useCallback` |
+| `sunanContext` | Sunan Gunung Jati | `useContext` |
+| `tarlingReducer` | Seni Musik Tarling | `useReducer` |
+| `sintrenTransition` | Seni Tari Sintren | `useTransition` |
+| `tahuGejrotOptimistic` | Tahu Gejrot (Kuliner Khas) | `useOptimistic` |
+| `grageId` / `rebonId` | Grage / Rebon | `useId` |
+| `tajugLayoutEffect` | Tajug (Masjid Sang Cipta Rasa) | `useLayoutEffect` |
+| `genjringActionState` | Genjring Akrobat | `useActionState` |
+| `kejawananDebugValue` | Pelabuhan Kejawanan | `useDebugValue` |
+| `jamblangDeferredValue` | Nasi Jamblang | `useDeferredValue` |
+| `muludanImperativeHandle` | Tradisi Pelungan Muludan | `useImperativeHandle` |
+| `batuLawangInsertionEffect` | Wisata Batu Lawang | `useInsertionEffect` |
+| `plumbonSyncExternalStore` | Sentra Kerajinan Plumbon | `useSyncExternalStore` |
 
-## Perilaku generator
+## Perilaku Generator CLI
 
-`create-rakta-app` sekarang bertanya apakah Auto Import ingin diaktifkan.
-Jika dimatikan, file starter yang dihasilkan akan mengimpor hooks dari
-`raktajs/hooks` dengan nama khas Rakta.
+Saat menjalankan CLI `create-rakta-app`, jika opsi Auto Import dimatikan (`autoImport: false`), berkas starter yang dihasilkan akan mengimpor hooks secara otomatis menggunakan penamaan ciri khas budaya (`lengkoState`, `empalEffect`, `megamendungRef`, dll.) dari `raktajs/hooks`.
 
-## Dokumen terkait
+## Dokumen Terkait
 
-- [`autoImport.md`](./autoImport.md)
-- [`mulai.md`](./mulai.md)
+- [Auto Import](./autoImport.md)
+- [Framework Core](./core.md)

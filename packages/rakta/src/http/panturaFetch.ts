@@ -54,7 +54,7 @@ function createRequestInit(
 }
 
 /**
- * PanturaFetch — Rakta.js built-in type-safe HTTP client.
+ * PanturaFetch - Rakta.js built-in type-safe HTTP client.
  *
  * Named after the Pantura (Pantai Utara) highway: fast, reliable, coastal.
  *

@@ -1,6 +1,6 @@
 # A note from the lead developer
 
-To everyone who's ready to contribute to this project — as the lead
+To everyone who's ready to contribute to this project - as the lead
 developer, I'd like to express my sincere gratitude for joining us in
 developing the Rakta.js framework. Building a framework from scratch,
 especially one rooted in a specific cultural identity like Cirebon's, is
@@ -11,11 +11,11 @@ shows up to help shape it makes the project stronger.
 
 Rakta.js exists to give developers who already think in React and JSX a
 framework that feels familiar on day one, while quietly borrowing the best
-ideas from the wider ecosystem — file-based routing inspired by modern app
+ideas from the wider ecosystem - file-based routing inspired by modern app
 routers, convention-driven auto imports inspired by Nuxt, a type-safe RPC
 layer inspired by tRPC, a small state store inspired by Zustand, and a
 fetch-based HTTP client inspired by Axios's ergonomics. None of those tools
-are being replaced or criticized here — Rakta.js simply tries to package
+are being replaced or criticized here - Rakta.js simply tries to package
 familiar ideas into one small, Bun-first toolkit with its own identity.
 
 ## Documentation map
@@ -50,7 +50,7 @@ familiar ideas into one small, Bun-first toolkit with its own identity.
 
 ## What we expect from a contribution
 
-If you want to contribute, please include the materials you're adding —
+If you want to contribute, please include the materials you're adding -
 whether that's sample code, a documentation page, or a fundamental
 explanation of how a piece of the framework works. A pull request that
 only says "fixed it" without showing what changed and why is much harder
@@ -63,7 +63,7 @@ Concretely, that means:
   is welcome).
 - **If you fix a bug**, describe the bug and the fix in the pull request
   description, and add a regression check if practical.
-- **If you add an example or template**, make sure it actually runs —
+- **If you add an example or template**, make sure it actually runs -
   `bun install && bun run dev` should work without extra manual steps.
 
 ## How to add examples
@@ -71,7 +71,7 @@ Concretely, that means:
 Examples and templates live in `templates/`. Keep new template output
 consistent with the existing `frontendOnly` and `fullstack` structure
 documented in `docs/en/templates.md`. If your example needs sample data,
-keep it self-contained — no external services required to see it work.
+keep it self-contained - no external services required to see it work.
 
 ## How to add documentation
 
@@ -80,13 +80,13 @@ Documentation pages use camelCase filenames (`gettingStarted.md`, not
 for Bahasa Indonesia. Every page should have: an overview, when to use the
 feature, a short architecture note when relevant, a working code example,
 common mistakes, and links to related pages. Please write for someone who
-has never used Rakta.js before — assume React knowledge, but not
+has never used Rakta.js before - assume React knowledge, but not
 familiarity with our specific layer names (MendungWeave, ShrimpStep,
 TrusmiFrame, CarubanWire, PanturaFetch, and so on).
 
 ## How to add code
 
-Follow the strict TypeScript rules in `CONTRIBUTING.md` — no `any`, no
+Follow the strict TypeScript rules in `CONTRIBUTING.md` - no `any`, no
 `null`, no silenced errors, descriptive names, and explicit return types
 on exported functions. If you're touching `packages/create-rakta/src/generator.ts`,
 read the "Generator safety" section in `CONTRIBUTING.md` first; it is a
@@ -96,7 +96,7 @@ large file by design and should not shrink unexpectedly.
 
 Package- or feature-specific tests should sit next to the code they
 cover, using the `*.test.ts` suffix, and run through `bun test`. Please do
-not create a second root-level workspace test file — there is exactly one,
+not create a second root-level workspace test file - there is exactly one,
 `workspace.test.ts`, at the repository root.
 
 ## Avoiding broken imports
@@ -118,7 +118,7 @@ internal path).
 A good rule of thumb: if you had to look something up to write the code,
 write down what you learned in the documentation, in plain language. The
 person reading it next might be a complete beginner, a student, or an
-experienced developer evaluating Rakta.js for a real project — write for
+experienced developer evaluating Rakta.js for a real project - write for
 all three.
 
 ## Including your GitHub profile or portfolio
@@ -141,11 +141,11 @@ git commit -m "docs(id): translate the routing guide"
 ## Opening pull requests
 
 1. Fork the repository, branch from `main`.
-2. Keep the change focused — one concern per pull request when possible.
+2. Keep the change focused - one concern per pull request when possible.
 3. Run the full validation suite (`bun run typecheck`, `bun run build`,
    `bun test`, `bun run lint`, `bun run check:workspace`).
 4. Fill in the pull request template completely.
-5. Be ready for a round or two of review — that's a normal, healthy part
+5. Be ready for a round or two of review - that's a normal, healthy part
    of building something other people will rely on.
 
 ## Reporting issues
@@ -163,7 +163,7 @@ properties under `exactOptionalPropertyTypes`.
 ## Documenting new features
 
 If you introduce a new capability, give it a place in the feature table in
-the root `README.md`, and write a full documentation page for it — even a
+the root `README.md`, and write a full documentation page for it - even a
 short one is better than none. If the feature deserves its own Rakta.js
 identity name in the spirit of MendungWeave, ShrimpStep, or CarubanWire,
 propose it in your pull request description so we can agree on naming
@@ -172,8 +172,8 @@ before merge.
 ## Closing thank you
 
 Once again, thank you very much for being willing to spend your time and
-skill helping this project grow. Whatever size your contribution is — one
-typo fix or one entire new module — it matters, and it's appreciated.
+skill helping this project grow. Whatever size your contribution is - one
+typo fix or one entire new module - it matters, and it's appreciated.
 
 Rhein Sullivan
 Lead of Vyagra Nexus™ <3

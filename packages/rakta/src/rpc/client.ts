@@ -73,7 +73,7 @@ async function callProcedure<TInput, TOutput>(
 }
 
 /**
- * CarubanWire — Creates a type-safe RPC client.
+ * CarubanWire - Creates a type-safe RPC client.
  *
  * Usage:
  *   const api = createRaktaClient<AppRouter>({ baseUrl: "http://localhost:4000/rpc" });

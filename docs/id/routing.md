@@ -1,9 +1,9 @@
-# Routing — MendungWeave
+# Routing - MendungWeave
 
 ## Overview
 
 **MendungWeave** adalah layer routing berbasis file di Rakta.js. Struktur
-folder di bawah `app/` itulah router-nya — tidak ada file konfigurasi
+folder di bawah `app/` itulah router-nya - tidak ada file konfigurasi
 route terpusat yang harus dijaga sinkron.
 
 ## Kapan dipakai
@@ -19,7 +19,7 @@ state, atau error boundary di aplikasi Rakta.js.
 | `app/about/page.tsx` | `/about` |
 | `app/blog/[slug]/page.tsx` | `/blog/:slug` (segmen dinamis) |
 | `app/blog/[...slug]/page.tsx` | `/blog/*` (catch-all) |
-| `app/(auth)/login/page.tsx` | `/login` — segmen `(auth)` adalah route group dan tidak muncul di URL |
+| `app/(auth)/login/page.tsx` | `/login` - segmen `(auth)` adalah route group dan tidak muncul di URL |
 | `app/layout.tsx` | Layout yang membungkus semua route di bawahnya |
 | `app/loading.tsx` | Ditampilkan saat segmen route sedang loading |
 | `app/error.tsx` | Error boundary untuk segmen route |
@@ -57,7 +57,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 ```
 
 ```ts
-// app/api/users/route.ts — endpoint KasepuhanGate
+// app/api/users/route.ts - endpoint KasepuhanGate
 export async function GET(): Promise<Response> {
   return Response.json({ users: [] });
 }
@@ -86,7 +86,7 @@ app/
 ```
 
 Begini cara template fullstack menyusun halaman marketing publik, halaman
-auth, dan dashboard — lihat [`templates.md`](./templates.md).
+auth, dan dashboard - lihat [`templates.md`](./templates.md).
 
 ## Navigasi dengan ShrimpStep
 
@@ -105,15 +105,15 @@ aktivasi via keyboard, dan menandai route aktif dengan
 
 ## Kesalahan umum
 
-- Menamai file `Page.tsx` padahal seharusnya `page.tsx` — scanner mencocokkan
+- Menamai file `Page.tsx` padahal seharusnya `page.tsx` - scanner mencocokkan
   nama file lowercase secara persis.
-- Lupa bahwa folder `(group)` tidak menambah segmen URL — `app/(auth)/login/page.tsx`
+- Lupa bahwa folder `(group)` tidak menambah segmen URL - `app/(auth)/login/page.tsx`
   adalah `/login`, bukan `/auth/login`.
 - Memakai `<a href="">` untuk navigasi internal, yang menyebabkan full
   page reload bukan transisi client-side.
 
 ## Dokumen terkait
 
-- [`templates.md`](./templates.md) — bagaimana routing disusun di aplikasi yang di-generate
-- [`seo.md`](./seo.md) — metadata per-route dengan SunyaragiCrown
-- [`rpc.md`](./rpc.md) — CarubanWire, untuk panggilan typed dibanding handler `route.ts` mentah
+- [`templates.md`](./templates.md) - bagaimana routing disusun di aplikasi yang di-generate
+- [`seo.md`](./seo.md) - metadata per-route dengan SunyaragiCrown
+- [`rpc.md`](./rpc.md) - CarubanWire, untuk panggilan typed dibanding handler `route.ts` mentah

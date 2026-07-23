@@ -1,6 +1,6 @@
 // biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.
 // biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.
-// NOTE: React hooks (useState) are auto-imported by Rakta.js — no explicit import needed.
+// NOTE: React hooks (useState) are auto-imported by Rakta.js - no explicit import needed.
 
 interface ComponentsModalProps {
 	isOpen: boolean;
@@ -223,11 +223,10 @@ export default function ComponentsModal({
 								<button
 									key={comp.id}
 									onClick={() => setActiveCompId(comp.id)}
-									className={`w-full text-left p-4 transition-colors font-mono text-xs uppercase cursor-pointer ${
-										isSelected
+									className={`w-full text-left p-4 transition-colors font-mono text-xs uppercase cursor-pointer ${isSelected
 											? "bg-brand-pink text-white font-bold"
 											: "text-gray-400 hover:bg-white/5 hover:text-white"
-									}`}
+										}`}
 								>
 									{comp.name}
 								</button>

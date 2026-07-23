@@ -1,9 +1,9 @@
-# Routing — MendungWeave
+# Routing - MendungWeave
 
 ## Overview
 
 **MendungWeave** is the file-based routing layer of Rakta.js. The folder
-structure under `app/` is the router — there is no central route config
+structure under `app/` is the router - there is no central route config
 file to keep in sync.
 
 ## When to use this
@@ -19,7 +19,7 @@ boundary in a Rakta.js app.
 | `app/about/page.tsx` | `/about` |
 | `app/blog/[slug]/page.tsx` | `/blog/:slug` (dynamic segment) |
 | `app/blog/[...slug]/page.tsx` | `/blog/*` (catch-all) |
-| `app/(auth)/login/page.tsx` | `/login` — the `(auth)` segment is a route group and does not appear in the URL |
+| `app/(auth)/login/page.tsx` | `/login` - the `(auth)` segment is a route group and does not appear in the URL |
 | `app/layout.tsx` | Layout wrapping every route below it |
 | `app/loading.tsx` | Shown while a route segment is loading |
 | `app/error.tsx` | Error boundary for a route segment |
@@ -57,7 +57,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 ```
 
 ```ts
-// app/api/users/route.ts — KasepuhanGate endpoint
+// app/api/users/route.ts - KasepuhanGate endpoint
 export async function GET(): Promise<Response> {
   return Response.json({ users: [] });
 }
@@ -86,7 +86,7 @@ app/
 ```
 
 This is exactly how the fullstack template structures public marketing
-pages, auth pages, and the dashboard — see
+pages, auth pages, and the dashboard - see
 [`templates.md`](./templates.md).
 
 ## Navigation with ShrimpStep
@@ -106,15 +106,15 @@ supports keyboard activation, and marks the active route with
 
 ## Common mistakes
 
-- Naming a file `Page.tsx` instead of `page.tsx` — the scanner matches
+- Naming a file `Page.tsx` instead of `page.tsx` - the scanner matches
   exact lowercase filenames.
-- Forgetting that `(group)` folders do not add a URL segment — `app/(auth)/login/page.tsx`
+- Forgetting that `(group)` folders do not add a URL segment - `app/(auth)/login/page.tsx`
   is `/login`, not `/auth/login`.
 - Using `<a href="">` for internal navigation, which causes a full page
   reload instead of a client-side transition.
 
 ## Related docs
 
-- [`templates.md`](./templates.md) — how routing is laid out in generated apps
-- [`seo.md`](./seo.md) — per-route metadata with SunyaragiCrown
-- [`rpc.md`](./rpc.md) — CarubanWire, for typed calls instead of raw `route.ts` handlers
+- [`templates.md`](./templates.md) - how routing is laid out in generated apps
+- [`seo.md`](./seo.md) - per-route metadata with SunyaragiCrown
+- [`rpc.md`](./rpc.md) - CarubanWire, for typed calls instead of raw `route.ts` handlers

@@ -70,7 +70,7 @@ export type UseStore<TState> = {
 } & StoreApi<TState>;
 
 /**
- * WaliSignal-powered Rakta Store — creates a reactive state store with React hooks.
+ * WaliSignal-powered Rakta Store - creates a reactive state store with React hooks.
  *
  * Usage:
  *   const useCounterStore = createRaktaStore<CounterState>((set, get) => ({

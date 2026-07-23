@@ -92,7 +92,7 @@ function pathMatchesPattern(pathname: string, pattern: string): boolean {
 		const pp = patternParts[i];
 		const path = pathParts[i];
 		if (pp === undefined || path === undefined) return false;
-		if (pp.startsWith(":")) continue; // dynamic segment — always matches
+		if (pp.startsWith(":")) continue; // dynamic segment - always matches
 		if (pp !== path) return false;
 	}
 

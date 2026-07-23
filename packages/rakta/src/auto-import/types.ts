@@ -8,6 +8,7 @@ export type AutoImportKind =
 
 export interface DiscoveredExport {
 	readonly name: string;
+	readonly simpleName?: string;
 	readonly filePath: string;
 	readonly importPath: string;
 	readonly kind: AutoImportKind;

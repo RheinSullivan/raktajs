@@ -56,7 +56,7 @@ function tick(timestamp: number) {
 		id: "styling",
 		title: "3. Brutalist Aesthetic styling",
 		category: "Design & Style",
-		content: `The Rakta ecosystem uses a design philosophy called **Neo-Brutalism**—high-contrast, razor-sharp borders, zero rounded corners, and raw typographic hierarchies.
+		content: `The Rakta ecosystem uses a design philosophy called **Neo-Brutalism**-high-contrast, razor-sharp borders, zero rounded corners, and raw typographic hierarchies.
 
 ### Aesthetic Principles
 1. **Desktop-First Integrity**: Design for precision monitor grids, then collapse cleanly into mobile stacks.

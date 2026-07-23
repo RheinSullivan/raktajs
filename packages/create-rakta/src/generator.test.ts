@@ -30,6 +30,7 @@ describe("create-rakta fullstack generator", () => {
 		expect(fileByPath.has("frontend/rakta-env.d.ts")).toBe(true);
 		expect(fileByPath.has("backend/tsconfig.json")).toBe(true);
 		expect(fileByPath.has("backend/src/app.ts")).toBe(true);
+		expect(fileByPath.has("shared/package.json")).toBe(true);
 		expect(fileByPath.has("backend/src/auth/auth.service.ts")).toBe(true);
 		expect(fileByPath.has("backend/src/security/jwt.ts")).toBe(true);
 		expect(fileByPath.has("backend/src/controllers/user.controller.ts")).toBe(
@@ -43,6 +44,9 @@ describe("create-rakta fullstack generator", () => {
 			'import { Gaman, type HTTP } from "gaman"',
 		);
 		expect(fileByPath.get("backend/src/app.ts")).toContain("Gaman<HTTP>()");
+		expect(fileByPath.get("backend/src/app.ts")).toContain("new Gaman<HTTP>()");
+		expect(fileByPath.get("frontend/package.json")).toContain('"motion"');
+		expect(fileByPath.get("frontend/package.json")).toContain('"react-icons"');
 		expect(fileByPath.get("backend/src/app.ts")).toContain(
 			"/api/auth/register",
 		);
@@ -78,9 +82,9 @@ describe("create-rakta fullstack generator", () => {
 
 		expect(typeof page?.content).toBe("string");
 		expect(page?.content).toContain('from "raktajs/hooks"');
-		expect(page?.content).toContain("raktaState");
-		expect(page?.content).toContain("raktaEffect");
-		expect(page?.content).toContain("raktaRef");
+		expect(page?.content).toContain("lengkoState");
+		expect(page?.content).toContain("empalEffect");
+		expect(page?.content).toContain("megamendungRef");
 		expect(page?.content).not.toContain('from "react"');
 		expect(config?.content).toContain("enabled: false");
 	});

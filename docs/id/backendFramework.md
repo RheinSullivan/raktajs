@@ -3,7 +3,7 @@
 ## Overview
 
 Di mode fullstack, `create-rakta-app` menghasilkan struktur folder
-`backend/` yang berbeda tergantung framework yang dipilih — tidak ada
+`backend/` yang berbeda tergantung framework yang dipilih - tidak ada
 satu bentuk generik yang dipaksakan ke semua empat pilihan.
 
 ## Kapan dipakai
@@ -62,7 +62,7 @@ backend/
 └─ tsconfig.json
 ```
 
-Nest.js punya konvensinya sendiri — `AppModule` di root, file bootstrap
+Nest.js punya konvensinya sendiri - `AppModule` di root, file bootstrap
 `main.ts`, `modules/` untuk fitur, dan `common/` untuk decorator, guard,
 dan pipe yang dipakai bersama, plus `nest-cli.json` yang dibutuhkan Nest
 CLI itu sendiri.
@@ -81,7 +81,7 @@ backend/
 └─ tsconfig.json
 ```
 
-Adonis.js mengikuti layout khasnya sendiri — `app/` untuk kode aplikasi,
+Adonis.js mengikuti layout khasnya sendiri - `app/` untuk kode aplikasi,
 `start/` untuk registrasi route/middleware saat boot, dan `config/`
 untuk konfigurasi framework, sesuai yang sudah diharapkan developer
 Adonis.js.
@@ -89,14 +89,14 @@ Adonis.js.
 ## Kesalahan umum
 
 - Mengasumsikan keempat backend berbagi `src/app.ts` sebagai entry point
-  — hanya Gaman.js yang begitu; Express.js memakai `server.ts`, Nest.js
+  - hanya Gaman.js yang begitu; Express.js memakai `server.ts`, Nest.js
   memakai `main.ts`, dan Adonis.js tidak punya satu file entry dalam arti
   yang sama.
 - Lupa bahwa Nest.js butuh `nest-cli.json` untuk memakai tooling Nest CLI
   sendiri (`nest build`, `nest start`) berdampingan dengan atau sebagai
   pengganti pipeline build Bun.
 - Menghubungkan handler HTTP CarubanWire ke signature middleware
-  spesifik-framework secara salah — setiap framework punya tipe
+  spesifik-framework secara salah - setiap framework punya tipe
   request/response sendiri, jadi kode adapter-nya berbeda meskipun
   definisi router-nya sendiri tidak berubah.
 

@@ -1,6 +1,6 @@
 // biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.
 // biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.
-// NOTE: Rakta.js uses automatic JSX transform — no React import needed.
+// NOTE: Rakta.js uses automatic JSX transform - no React import needed.
 
 interface ShrimpCharacterProps {
 	status: "IDLE" | "SWIMMING" | "JUMPING" | "DEAD";

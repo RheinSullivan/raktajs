@@ -588,165 +588,59 @@ rakta/tide
 
 ## Roadmap
 
-Rakta.js uses the roadmap as a public implementation contract. The `1.0`
-track below lists systems already present in this repository. The post-`1.0`
-track describes the next release targets without blocking the stable generator.
+Rakta.js uses the roadmap as a public implementation contract.
 
-### v0.1.0 — Foundation
+### Released - v0.1.0 through v1.0.1
 
-* Done: core configuration
-* Done: CLI starter
-* Done: file-based routing scanner
-* Done: rendering mode types
-* Done: schema validation
-* Done: RPC prototype
-* Done: Tide runtime layer
-* Done: Forge dev server layer
-* Done: README, contributing, security, and license files
+All of the following systems are present in this repository and the published packages:
 
-### v0.2.0 — Framework Identity
+| System | Module |
+| --- | --- |
+| Core configuration | `raktajs/config` |
+| CLI starter + generator | `create-rakta-app` |
+| File-based routing scanner | `raktajs/router` |
+| Rendering mode types (CSR, SPA, SSR, SSG, CSG, Hybrid) | `raktajs/render` |
+| Schema validation | `raktajs/schema` |
+| Type-safe RPC | `raktajs/rpc` |
+| Tide runtime layer | `raktajs/tide` |
+| Forge dev server + build | `raktajs/forge` |
+| SEO, sitemap, robots, JSON-LD | `raktajs/seo` |
+| PWA and service worker | `raktajs/pwa` |
+| Auto imports - TrusmiThread | `raktajs/auto-import` |
+| HTTP client - PanturaFetch | `raktajs/http` |
+| State management - store | `raktajs/store` |
+| Kernel, services, plugins | `raktajs/kernel` |
+| Middleware pipeline | `raktajs/middleware` |
+| Layout manifest + matcher | `raktajs/layout` |
+| Data strategy contracts | `raktajs/data` |
+| DX tools - bundle/route analyzer | `raktajs/dx` |
+| Performance benchmarks | `raktajs/performance` |
+| Security - CSP, CSRF, rate limiter | `raktajs/security` |
+| Operations - cron, queue, event bus | `raktajs/ops` |
+| Testing package | `raktajs/testing` |
+| Deployment adapters | `raktajs/deployment` |
+| Plugin registry | `raktajs/plugin` |
+| Docs manifest - VitePress bridge | `raktajs/docs` |
+| Frontend-only starter (ShrimpRun) | `create-rakta-app` template |
+| Fullstack starter (Gaman.js + auth + CMS) | `create-rakta-app` fullstack template |
+| English + Indonesian documentation | `docs/en/` and `docs/id/` |
 
-* Done: frontend-only starter with the Rakta.js visual system
-* Done: `<click>` navigation primitive using path-based URLs
-* Done: `<photo>` image primitive using `path`
-* Done: TrusmiThread auto imports
-* Done: optional Rakta hook imports through `raktajs/hooks`
-* Done: MegaSignal SEO layer
-* Done: ShrimpHarbor PWA layer
-* Done: JatiLens diagnostics foundation
-* Done: RaktaKernel service container, environment manager, plugin lifecycle, and feature registry
-* Done: RaktaMiddleware async middleware pipeline with `before`, `after`, `next`, `redirect`, `rewrite`, and `abort`
-* Done: RaktaDocs Markdown manifest, sidebar, search index, and VitePress-compatible config bridge
+---
 
-### v0.3.0 — Fullstack Template
+### Version Planning
 
-* Done: fullstack workspace layout with `frontend`, `backend`, and `shared`
-* Done: Gaman.js backend as the default fullstack server
-* Done: auth pages for login, register, forgot password OTP, reset password, and dashboard
-* Done: backend auth with JWT, sessions, single-session mode, secure password hashing, and logout
-* Done: role-based user CRUD
-* Done: CMS post CRUD
-* Done: frontend dashboard consuming the fullstack API with resilient sample data fallback
-* Done: generated CRUD services use a typed repository abstraction
-* Done: generated backend includes migration and seeder entry points
-* Done: password reset OTP delivery uses a mail provider adapter
-* Done: CMS media upload uses a storage provider adapter
-
-### v0.4.0 — Layouts And Data
-
-* Done: `layouts/` and `app/layout.tsx` directory conventions through `rakta/layout`
-* Done: nested layout manifest resolution
-* Done: persistent layout identity in the manifest chain
-* Done: error layout discovery
-* Done: loading layout discovery
-* Done: not-found layout discovery
-* Done: parallel slot layout discovery
-* Done: route group layout discovery
-* Done: server/client route runtime strategy contract through `rakta/data`
-* Done: streaming route strategy contract
-* Done: lazy loading, defer, and prefetch strategy flags
-* Done: cache helpers, tag revalidation, and ISR strategy detection
-* Done: SSR, CSR, SSG, hybrid, and edge rendering strategy per route
-
-### v0.5.0 — CLI And Developer Experience
-
-* Done: `rakta create`
-* Done: `rakta add`
-* Done: `rakta doctor`
-* Done: `rakta analyze`
-* Done: `rakta benchmark`
-* Done: `rakta upgrade`
-* Done: `rakta lint`
-* Done: `rakta format`
-* Done: `rakta check`
-* Done: `rakta telemetry`
-* Done: `rakta plugin`
-* Done: `rakta generate`
-* Done: `rakta inspect`
-* Done: dependency graph, route analyzer, and bundle analyzer through `rakta/dx`
-* Done: auto import inspector data, error overlay payloads, and performance profiler reports
-
-### v0.6.0 — Deployment
-
-* Done: Node adapter
-* Done: Bun adapter
-* Done: Deno adapter
-* Done: Cloudflare Workers adapter
-* Done: Cloudflare Pages adapter
-* Done: Netlify adapter
-* Done: Vercel adapter
-* Done: Docker adapter
-* Done: AWS Lambda adapter
-* Done: Fly.io, Railway, Render, Firebase, GitHub Pages, and static export guides
-
-### v0.7.0 — Official Plugin API
-
-* Done: stable plugin manifest through `rakta/plugin`
-* Done: plugin capability registry
-* Done: lifecycle hook documentation and tests through the kernel/plugin contracts
-* Done: official adapter manifests for React, MDX, PWA, Vercel, Netlify, Cloudflare, Node, Bun, and Docker
-* Done: plugin templates for community packages
-
-### v0.8.0 — Security And Operations
-
-* Done: CSP helpers
-* Done: CSRF protection
-* Done: XSS protection headers
-* Done: rate limiter
-* Done: secure headers
-* Done: encrypted cookies
-* Done: secret manager
-* Done: request context
-* Done: background jobs, cron, queues, and event bus
-
-### v0.9.0 — Testing And Performance
-
-* Done: official testing package through `rakta/testing`
-* Done: unit, integration, component, e2e, snapshot, mock server, and coverage workflows
-* Done: startup benchmarks
-* Done: routing benchmarks
-* Done: hydration benchmarks
-* Done: build benchmarks
-* Done: bundle-size reporting
-* Done: persistent build cache freshness checks
-* Done: incremental build planning for production compiler integration
-
-### v1.0.1 — Stable Release
-
-* Done: stable frontend-only app mode through the `frontendOnly` template and generator tests
-* Done: stable fullstack app mode through the Gaman.js `fullStack` template and generator tests
-* Done: production build pipeline through `bun run build`
-* Done: production deployment adapters through `rakta/deployment`
-* Done: English and Indonesian documentation for all current public modules
-* Done: API reference
-* Done: migration guide
-* Done: release compatibility policy
-* Done: official frontend-only and fullstack examples/templates
-* Done: stable plugin system
-
-### Publish Checklist
-
-* npm package: `raktajs`
-* create-app package: `create-rakta-app`
-* GitHub Actions provider: GitHub Actions
-* Organization or user: `RheinSullivan`
-* Repository: `raktajs`
-* Workflow filename: `publish.yml`
-* Environment name: `npm`
-
-For npm provenance, enter only the workflow filename. Use `publish.yml`, not a
-URL and not `.github/workflows/publish.yml`.
-
-### Post-1.0 Roadmap
-
-| Release | Focus | Target |
+| Version | Focus area | Key deliverables |
 | --- | --- | --- |
-| `1.1` | Database adapters | SQLite, PostgreSQL, MySQL, and edge KV adapters for generated repositories |
-| `1.2` | Auth providers | OAuth, email verification, refresh tokens, and stricter session rotation |
-| `1.3` | Devtools UI | Auto import inspector, route analyzer, bundle analyzer, profiler, and overlay panels |
-| `1.4` | Build compiler | Incremental compilation, persistent cache storage, chunk optimizer, and prefetch manifest |
-| `1.5` | Content layer | Markdown collections, MDX plugin bridge, typed content schema, and docs playground |
-| `2.0` | Ecosystem split | Official packages for auth, database, storage, image, forms, analytics, and testing |
+| **v1.1** | Database adapters | SQLite, PostgreSQL, MySQL, and edge KV adapters with a typed repository abstraction; ORM adapter contracts |
+| **v1.2** | Auth providers | OAuth, email verification, refresh tokens, stricter session rotation, magic link support |
+| **v1.3** | Devtools UI | Browser-based auto import inspector, route analyzer, bundle analyzer, performance profiler, and overlay panels |
+| **v1.4** | Build compiler | Incremental compilation, persistent cache storage, chunk optimizer, prefetch manifest, parallel compilation |
+| **v1.5** | Content layer | Markdown collections, MDX plugin bridge, typed content schema, and live docs playground |
+| **v2.0** | Ecosystem split | Official packages: `@rakta/auth`, `@rakta/database`, `@rakta/storage`, `@rakta/image`, `@rakta/forms`, `@rakta/analytics`, `@rakta/testing` |
+| **v2.1** | Edge first | Cloudflare Workers / Deno Deploy first-class streaming SSR; edge middleware; edge KV cache |
+| **v2.2** | React Server Components | Server component rendering, server actions, and streaming with Suspense boundaries |
+| **v2.3** | i18n | Built-in internationalization routing, locale detection, and message catalog |
+| **v3.0** | Multi-runtime | Support React, Preact, Solid, and Vue as interchangeable rendering runtimes via the plugin API |
 
 ---
 
@@ -781,6 +675,28 @@ chore(repo): update repository structure
 
 ---
 
+## Support & Donasi Kemanusiaan 🇵🇸
+
+Dukungan dan donasi Anda sangat berarti untuk biaya pemeliharaan server, domain, infrastruktur, serta disalurkan untuk aksi sosial kemanusiaan: **kaum dhuafa, anak yatim & piatu, panti asuhan, panti jompo, dan bantuan kemanusiaan Palestina 🇵🇸 (Free Palestine)**.
+
+<p align="center">
+  <a href="https://buymeacoffee.com/rheinsullivan" target="_blank">
+    <img src="https://img.shields.io/badge/Support-Buy%20Me%20A%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee" />
+  </a>
+</p>
+
+- **Tautan Donasi Resmi:** [buymeacoffee.com/rheinsullivan](https://buymeacoffee.com/rheinsullivan)
+- 🇵🇸 **Free Palestine** - *Bebaskan Palestina, tegakkan keadilan & kemanusiaan.*
+
+### Kemitraan Lembaga Penyalur Donasi
+
+Bagi yayasan panti asuhan, panti jompo, lembaga zakat/infaq, atau organisasi kemanusiaan resmi yang ingin bekerja sama sebagai **lembaga penampung dan penyalur dana hasil pengumpulan donasi ini**, Anda dapat mengajukan kemitraan resmi melalui:
+
+- Panduan Kemitraan: [`docs/id/donasi.md`](./docs/id/donasi.md) / [`docs/en/donations.md`](./docs/en/donations.md)
+- Kontak Kemitraan & Verifikasi: Pembukaan Issue di GitHub Repository atau Email Pengembang (Rhein Sullivan).
+
+---
+
 ## Author
 
 Created by **Rhein Sullivan**.
@@ -793,5 +709,4 @@ Built with a Cirebon soul, a red identity, and a frontend-first mindset.
 
 MIT License.
 
-Copyright © Rhein Sullivan.
-
+Copyright © 2026 Rakta.js | Vyagra Nexus™.

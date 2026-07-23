@@ -1,15 +1,15 @@
-# HTTP client — PanturaFetch
+# HTTP client - PanturaFetch
 
 ## Overview
 
-**PanturaFetch** is Rakta.js's built-in, fetch-based HTTP client — typed,
+**PanturaFetch** is Rakta.js's built-in, fetch-based HTTP client - typed,
 small, and with the request/response ergonomics people expect from Axios,
 without adding a dependency.
 
 ## When to use this
 
 Use PanturaFetch for any REST call to a backend that doesn't speak
-CarubanWire — third-party APIs, a non-Rakta.js backend, or simple fetches
+CarubanWire - third-party APIs, a non-Rakta.js backend, or simple fetches
 where setting up a full RPC router isn't worth it.
 
 ## Architecture
@@ -27,7 +27,7 @@ expected response type. Internally:
   `HttpResponseError` with the original `Response` attached.
 - `addRequestInterceptor` / `addResponseInterceptor` let you transform the
   outgoing URL/`RequestInit` or the parsed response before it reaches your
-  code — useful for attaching auth tokens or unwrapping an envelope shape.
+  code - useful for attaching auth tokens or unwrapping an envelope shape.
 
 ## Code example
 
@@ -70,16 +70,16 @@ http.addRequestInterceptor((url, requestInit) => {
 
 ## Common mistakes
 
-- Not catching `HttpResponseError` separately from `HttpNetworkError` —
+- Not catching `HttpResponseError` separately from `HttpNetworkError` -
   the former means the server responded (e.g. a 404 or 500), the latter
   means the request never completed.
-- Setting an extremely short `timeout` globally instead of per-request —
+- Setting an extremely short `timeout` globally instead of per-request -
   pass `{ timeout: ... }` on the specific call that needs it.
-- Forgetting that PanturaFetch is for plain REST — if both ends of the
+- Forgetting that PanturaFetch is for plain REST - if both ends of the
   call are Rakta.js, [CarubanWire](./rpc.md) gives you full type
   inference instead.
 
 ## Related docs
 
-- [`rpc.md`](./rpc.md) — CarubanWire, when both sides are Rakta.js
-- [`schema.md`](./rpc.md) — validating responses with Rakta Schema before trusting them
+- [`rpc.md`](./rpc.md) - CarubanWire, when both sides are Rakta.js
+- [`schema.md`](./rpc.md) - validating responses with Rakta Schema before trusting them

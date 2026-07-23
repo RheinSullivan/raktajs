@@ -6,7 +6,7 @@ function toJsStringArray(values: readonly string[]): string {
 }
 
 /**
- * ShrimpHarbor — generates the source text of a service worker file
+ * ShrimpHarbor - generates the source text of a service worker file
  * implementing a cache-first strategy with an offline fallback page.
  *
  * Write the returned string to public/sw.js in the generated app.

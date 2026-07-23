@@ -8,6 +8,11 @@
 	--color-surface-bg: #000000;
 	--color-surface-card: #0d0d0d;
 	--color-surface-stroke: #1f1f1f;
+
+	--color-rakta-dark: #0d0e0f;
+	--color-rakta-white: #fafafa;
+	--color-rakta-muted: #b5b5b5;
+	--color-rakta-red: #e11d48;
 }
 
 body {
@@ -1532,4 +1537,39 @@ svg {
 	[class~="md:divide-x"] > :not([hidden]) ~ :not([hidden]) {
 		border-left: 1px solid var(--color-surface-stroke);
 	}
+}
+
+/* Custom Rakta Color Utilities */
+[class~="bg-rakta-dark"] {
+	background-color: var(--color-rakta-dark);
+}
+[class~="bg-rakta-dark/90"] {
+	background-color: rgba(13, 14, 15, 0.9);
+}
+[class~="bg-rakta-red"] {
+	background-color: var(--color-rakta-red);
+}
+[class~="text-rakta-white"] {
+	color: var(--color-rakta-white);
+}
+[class~="text-rakta-muted"] {
+	color: var(--color-rakta-muted);
+}
+[class~="text-rakta-muted/30"] {
+	color: rgba(181, 181, 181, 0.3);
+}
+[class~="text-rakta-muted/50"] {
+	color: rgba(181, 181, 181, 0.5);
+}
+[class~="text-rakta-muted/60"] {
+	color: rgba(181, 181, 181, 0.6);
+}
+[class~="text-rakta-red"] {
+	color: var(--color-rakta-red);
+}
+[class~="border-rakta-red/30"] {
+	border-color: rgba(225, 29, 72, 0.3);
+}
+[class~="hover:text-rakta-red"]:hover {
+	color: var(--color-rakta-red);
 }

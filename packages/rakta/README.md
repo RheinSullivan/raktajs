@@ -119,6 +119,13 @@ raktajs/forge
 raktajs/tide
 ```
 
+## Support & Donasi Kemanusiaan 🇵🇸
+
+Dukungan Anda membantu pemeliharaan server, domain, infrastruktur, serta disalurkan untuk **kaum dhuafa, anak yatim/piatu, panti asuhan, panti jompo, dan bantuan kemanusiaan 🇵🇸 Free Palestine**.
+
+- **Donasi Resmi:** [buymeacoffee.com/rheinsullivan](https://buymeacoffee.com/rheinsullivan)
+- **Panduan Kemitraan Lembaga Penyalur:** Terbuka bagi yayasan/panti asuhan resmi untuk bermitra sebagai penyalur.
+
 ## License
 
 MIT - Rhein Sullivan | Vyagra Nexus

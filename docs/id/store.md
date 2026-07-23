@@ -9,7 +9,7 @@ dependency state management eksternal yang dibutuhkan.
 ## Kapan dipakai
 
 Pakai store untuk state UI yang dipakai bersama oleh beberapa komponen
-dan tidak cocok disimpan di URL atau data server — toggle tema, visibility
+dan tidak cocok disimpan di URL atau data server - toggle tema, visibility
 modal, state form multi-step, keranjang belanja, dan sejenisnya. Untuk
 data server, lebih baik fetch langsung di tempat yang membutuhkannya
 dengan [PanturaFetch](./http.md) atau [CarubanWire](./rpc.md), bukan
@@ -20,7 +20,7 @@ menduplikasinya ke dalam store.
 `createRaktaStore` menerima fungsi creator `(set, get) => initialState`
 dan mengembalikan sebuah hook. Hook ini bisa dipanggil tanpa argumen untuk
 subscribe ke seluruh state, atau dengan fungsi selector untuk subscribe ke
-bagian tertentu saja — React hanya re-render kalau nilai yang dipilih
+bagian tertentu saja - React hanya re-render kalau nilai yang dipilih
 benar-benar berubah, karena subscription-nya dihubungkan lewat
 `useSyncExternalStore`.
 
@@ -66,15 +66,15 @@ useCounterStore.setState({ count: 0 });
 
 ## Kesalahan umum
 
-- Memanggil hook store secara kondisional (di dalam `if`) — seperti hook
+- Memanggil hook store secara kondisional (di dalam `if`) - seperti hook
   React lainnya, harus dipanggil tanpa kondisi di bagian atas komponen.
 - Menyimpan payload response server yang besar langsung ke store, bukan
-  fetch di tempat yang dibutuhkan — ini cenderung membuat store jadi
+  fetch di tempat yang dibutuhkan - ini cenderung membuat store jadi
   sumber kebenaran untuk data yang seharusnya bukan tanggung jawabnya.
-- Lupa bahwa `set({ ... })` melakukan merge dangkal ke state yang ada —
+- Lupa bahwa `set({ ... })` melakukan merge dangkal ke state yang ada -
   bukan mengganti seluruh object state.
 
 ## Dokumen terkait
 
-- [`http.md`](./http.md) — fetch data yang mungkin akan dimasukkan ke store
-- [`rpc.md`](./rpc.md) — CarubanWire, sumber data umum lainnya
+- [`http.md`](./http.md) - fetch data yang mungkin akan dimasukkan ke store
+- [`rpc.md`](./rpc.md) - CarubanWire, sumber data umum lainnya

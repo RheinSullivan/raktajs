@@ -2,7 +2,7 @@ import type { RaktaType } from "../schema/types";
 import type { ProcedureDefinition, ProcedureKind } from "./types";
 
 /**
- * CarubanWire — Fluent builder for a single type-safe RPC procedure.
+ * CarubanWire - Fluent builder for a single type-safe RPC procedure.
  *
  * Usage:
  *   publicProcedure

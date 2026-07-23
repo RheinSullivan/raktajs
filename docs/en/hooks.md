@@ -1,22 +1,21 @@
-# Rakta hooks
+# Rakta Hooks - Cultural & Heritage Signature Naming 🏛️
 
 ## Overview
 
-Rakta hooks are framework-named aliases for React hooks. They are useful
-when Auto Import is disabled and you still want code that looks and feels
-like Rakta.js instead of importing `useState`, `useEffect`, or `useRef`
-directly from React.
+Rakta Hooks draw inspiration from Cirebon's rich culture, cuisine, and history (including Sega Lengko, Empal Gentong, Batik Megamendung, Keraton Kasepuhan, Keraton Kanoman, Sunan Gunung Jati, Tarling Music, Sintren Dance, etc.).
 
-## Quick start
+These hooks provide expressive, culturally rich aliases when Auto Import is turned off while avoiding standard generic naming.
+
+## Quick Start
 
 ```tsx
-import { raktaEffect, raktaRef, raktaState } from "raktajs/hooks";
+import { empalEffect, lengkoState, megamendungRef } from "raktajs/hooks";
 
 export default function Counter() {
-  const [count, setCount] = raktaState(0);
-  const buttonRef = raktaRef<HTMLButtonElement>(null);
+  const [count, setCount] = lengkoState(0);
+  const buttonRef = megamendungRef<HTMLButtonElement>(null);
 
-  raktaEffect(() => {
+  empalEffect(() => {
     buttonRef.current?.focus();
   }, []);
 
@@ -28,35 +27,36 @@ export default function Counter() {
 }
 ```
 
-## API reference
+## API Reference & Cultural Heritage Names
 
-| Rakta hook | React equivalent |
-| --- | --- |
-| `raktaState` | `useState` |
-| `raktaEffect` | `useEffect` |
-| `raktaRef` | `useRef` |
-| `raktaMemo` | `useMemo` |
-| `raktaCallback` | `useCallback` |
-| `raktaReducer` | `useReducer` |
-| `raktaContext` | `useContext` |
-| `raktaId` | `useId` |
-| `raktaTransition` | `useTransition` |
-| `raktaDeferredValue` | `useDeferredValue` |
-| `raktaSyncExternalStore` | `useSyncExternalStore` |
-| `raktaLayoutEffect` | `useLayoutEffect` |
-| `raktaInsertionEffect` | `useInsertionEffect` |
-| `raktaImperativeHandle` | `useImperativeHandle` |
-| `raktaOptimistic` | `useOptimistic` |
-| `raktaActionState` | `useActionState` |
-| `raktaDebugValue` | `useDebugValue` |
+| Rakta Hook Name | Cultural Signature / Heritage Origin | React Equivalent |
+| --- | --- | --- |
+| `lengkoState` / `segaLengkoState` | Sega Lengko (Iconic Culinary) | `useState` |
+| `jawaState` / `sundaState` | Javanese & Sundanese Cultural Dualism | `useState` |
+| `empalEffect` / `empalGentongEffect` | Empal Gentong (Iconic Culinary) | `useEffect` |
+| `topengEffect` | Mask Dance (Tari Topeng) | `useEffect` |
+| `megamendungRef` | Batik Megamendung (Iconic Cloud Motif) | `useRef` |
+| `tarlingRef` / `grageRef` | Tarling Music / Grage | `useRef` |
+| `kanomanMemo` | Kanoman Palace (Keraton Kanoman) | `useMemo` |
+| `kasepuhanCallback` | Kasepuhan Palace (Keraton Kasepuhan) | `useCallback` |
+| `sunanContext` | Sunan Gunung Jati (Historical Legacy) | `useContext` |
+| `tarlingReducer` | Tarling Folk Music | `useReducer` |
+| `sintrenTransition` | Sintren Traditional Dance | `useTransition` |
+| `tahuGejrotOptimistic` | Tahu Gejrot (Culinary Signature) | `useOptimistic` |
+| `grageId` / `rebonId` | Grage / Rebon | `useId` |
+| `tajugLayoutEffect` | Tajug Architecture (Sang Cipta Rasa) | `useLayoutEffect` |
+| `genjringActionState` | Genjring Performative Arts | `useActionState` |
+| `kejawananDebugValue` | Kejawanan Maritime Harbor | `useDebugValue` |
+| `jamblangDeferredValue` | Nasi Jamblang Culinary | `useDeferredValue` |
+| `muludanImperativeHandle` | Muludan Heritage Festival | `useImperativeHandle` |
+| `batuLawangInsertionEffect` | Batu Lawang Landmark | `useInsertionEffect` |
+| `plumbonSyncExternalStore` | Plumbon Crafts Center | `useSyncExternalStore` |
 
-## Generator behavior
+## Generator Behavior
 
-`create-rakta-app` asks whether Auto Import should be enabled. If you
-disable it, generated starter files import hooks from `raktajs/hooks`
-using Rakta names.
+When using `create-rakta-app`, if Auto Import is disabled (`autoImport: false`), the generated project starter automatically imports hooks using cultural signature naming (`lengkoState`, `empalEffect`, `megamendungRef`, etc.) from `raktajs/hooks`.
 
-## Related docs
+## Related Documents
 
-- [`autoImport.md`](./autoImport.md)
-- [`gettingStarted.md`](./gettingStarted.md)
+- [Auto Import](./autoImport.md)
+- [Framework Core](./core.md)

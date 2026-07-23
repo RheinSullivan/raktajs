@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         Thanks for suggesting an improvement to Rakta.js. Please describe
-        the problem before jumping to the solution — it helps us evaluate
+        the problem before jumping to the solution - it helps us evaluate
         whether the feature fits the framework's frontend-first, Bun-first
         philosophy.
 

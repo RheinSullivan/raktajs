@@ -3,7 +3,7 @@
 ## Overview
 
 In fullstack mode, `create-rakta-app` generates a different `backend/`
-folder structure depending on which framework you choose — there is no
+folder structure depending on which framework you choose - there is no
 single generic shape forced onto all four.
 
 ## When to use this
@@ -61,7 +61,7 @@ backend/
 └─ tsconfig.json
 ```
 
-Nest.js gets its own conventions — a root `AppModule`, a `main.ts`
+Nest.js gets its own conventions - a root `AppModule`, a `main.ts`
 bootstrap file, feature `modules/`, and `common/` for shared decorators,
 guards, and pipes, plus the `nest-cli.json` the Nest CLI itself expects.
 
@@ -79,21 +79,21 @@ backend/
 └─ tsconfig.json
 ```
 
-Adonis.js follows its own idiomatic layout — `app/` for application code,
+Adonis.js follows its own idiomatic layout - `app/` for application code,
 `start/` for boot-time route/middleware registration, and `config/` for
 framework configuration, matching what an Adonis.js developer already
 expects.
 
 ## Common mistakes
 
-- Assuming all four backends share `src/app.ts` as the entry point — only
+- Assuming all four backends share `src/app.ts` as the entry point - only
   Gaman.js does; Express.js uses `server.ts`, Nest.js uses `main.ts`, and
   Adonis.js has no single entry file in the same sense.
 - Forgetting that Nest.js needs `nest-cli.json` to use the Nest CLI's own
   tooling (`nest build`, `nest start`) alongside or instead of Bun's
   build pipeline.
 - Wiring CarubanWire's HTTP handler into a framework-specific middleware
-  signature incorrectly — each framework has its own request/response
+  signature incorrectly - each framework has its own request/response
   types, so the adapter code differs even though the router definition
   itself does not.
 

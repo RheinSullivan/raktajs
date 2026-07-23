@@ -62,12 +62,12 @@ export const DATABASE_DISPLAY: Record<Database, string> = {
 };
 
 export const RENDER_MODE_DISPLAY: Record<RenderMode, string> = {
-	csr: "CSR — Client-Side Rendering",
-	ssr: "SSR — Server-Side Rendering",
-	ssg: "SSG — Static Site Generation",
-	csg: "CSG — Configurable Static Generation",
-	spa: "SPA — Single Page Application",
-	hybrid: "Hybrid — Mixed per-route",
+	csr: "CSR - Client-Side Rendering",
+	ssr: "SSR - Server-Side Rendering",
+	ssg: "SSG - Static Site Generation",
+	csg: "CSG - Configurable Static Generation",
+	spa: "SPA - Single Page Application",
+	hybrid: "Hybrid - Mixed per-route",
 };
 
 export const PROJECT_MODE_DISPLAY: Record<ProjectMode, string> = {

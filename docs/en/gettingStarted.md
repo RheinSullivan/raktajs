@@ -14,7 +14,7 @@ have a project and want to understand the folder structure, see
 ## Requirements
 
 - [Bun](https://bun.sh) 1.3 or newer
-- Node.js is not required — Rakta.js runs entirely on Bun
+- Node.js is not required - Rakta.js runs entirely on Bun
 
 ## Create a project
 
@@ -24,11 +24,11 @@ bun create rakta-app@latest my-app
 
 You will be asked:
 1. Project name
-2. Project mode — **Frontend only** or **Fullstack**
-3. CSS framework — Tailwind CSS v4 (default), Bootstrap, SASS, or none
-4. Rendering mode — CSR, SSR, SSG, CSG, SPA, or Hybrid
-5. *(Fullstack only)* Backend framework — Gaman.js, Express.js, Nest.js, or Adonis.js
-6. *(Fullstack only)* Database — PostgreSQL, MySQL, MongoDB, Firebase, SQLite, MariaDB, Redis, PlanetScale, Neon, or Turso
+2. Project mode - **Frontend only** or **Fullstack**
+3. CSS framework - Tailwind CSS v4 (default), Bootstrap, SASS, or none
+4. Rendering mode - CSR, SSR, SSG, CSG, SPA, or Hybrid
+5. *(Fullstack only)* Backend framework - Gaman.js, Express.js, Nest.js, or Adonis.js
+6. *(Fullstack only)* Database - PostgreSQL, MySQL, MongoDB, Firebase, SQLite, MariaDB, Redis, PlanetScale, Neon, or Turso
 
 Other package managers work too:
 ```bash
@@ -46,7 +46,7 @@ bun run dev
 ```
 
 Open `http://localhost:3000`. The frontend-only starter shows the Rakta.js
-welcome screen with the **ShrimpRun** mini-game — click, tap, or press
+welcome screen with the **ShrimpRun** mini-game - click, tap, or press
 Space to jump.
 
 ## Your first route
@@ -66,21 +66,21 @@ export default function AboutPage() {
 }
 ```
 
-Visit `/about` — no manual route registration needed. This is
+Visit `/about` - no manual route registration needed. This is
 **MendungWeave**, the file-based router. See [`routing.md`](./routing.md)
 for the full guide.
 
 ## Common mistakes
 
-- Running `bun dev` instead of `bun run dev` — the generated `package.json`
+- Running `bun dev` instead of `bun run dev` - the generated `package.json`
   defines `dev` as a script, not a direct Bun subcommand.
-- Trying `npm create-rakta-app@latest my-app` — this is not valid npm
+- Trying `npm create-rakta-app@latest my-app` - this is not valid npm
   syntax. Use `npm create rakta-app@latest my-app` (with a space).
-- Expecting a `backend/` folder in frontend-only mode — by design, there
+- Expecting a `backend/` folder in frontend-only mode - by design, there
   is none.
 
 ## Related docs
 
-- [`routing.md`](./routing.md) — MendungWeave file-based routing
-- [`templates.md`](./templates.md) — what each generated template contains
-- [`backendFrameworks.md`](./backendFrameworks.md) — fullstack backend choices
+- [`routing.md`](./routing.md) - MendungWeave file-based routing
+- [`templates.md`](./templates.md) - what each generated template contains
+- [`backendFrameworks.md`](./backendFrameworks.md) - fullstack backend choices

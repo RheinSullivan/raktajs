@@ -1,74 +1,113 @@
-# Auto import - TrusmiThread
+# Auto Import - TrusmiThread
 
 ## Overview
 
-TrusmiThread is the Rakta.js auto import system. It keeps generated apps
-clean by making framework primitives and starter hooks available without
-manual imports when Auto Import is enabled.
+**TrusmiThread** is the automatic import system of Rakta.js, inspired by Vue.js and Nuxt.js. It allows you to build applications without writing repetitive `import` statements at the top of every file.
 
-The project generator asks whether Auto Import should be enabled. The
-default is **enabled**.
+When you create UI components (like `<Navbar />`, `<Footer />`, `<Button />`), helper functions, state stores, or validation schemas in your project, Rakta.js automatically detects and registers them in both the global TypeScript scope and the browser runtime.
 
-## Generator behavior
+## How It Works
 
-When Auto Import is enabled, generated starter components can use Rakta
-framework globals and React-compatible hooks without importing them in
-every file.
+1. **Zero Explicit Imports**: Place any component inside `components/` (e.g., `components/Navbar.tsx` or `components/ui/Button.tsx`). You can immediately use `<Navbar />` or `<Button />` inside any page or layout without adding an `import` line.
+2. **Global Runtime Registration**: During development and production builds, Rakta.js mounts discovered exports to the global execution scope (`globalThis`), so React resolves components seamlessly when rendering JSX.
+3. **TypeScript Autocomplete**: Rakta.js generates `.rakta/auto-imports.d.ts` with global type declarations so VS Code and other IDEs provide instant autocompletion and type checking without red squiggly lines.
 
-When Auto Import is disabled, generated files import Rakta-named hooks
-from `raktajs/hooks` instead of importing React hooks directly:
+## Code Example
+
+Create a navigation component in `components/Navbar.tsx`:
 
 ```tsx
-import { raktaEffect, raktaRef, raktaState } from "raktajs/hooks";
+// components/Navbar.tsx
+export default function Navbar() {
+  return (
+    <nav className="navbar">
+      <h2>My Portfolio</h2>
+      <div className="links">
+        <click to="/">Home</click>
+        <click to="/about">About</click>
+        <click to="/projects">Projects</click>
+      </div>
+    </nav>
+  );
+}
 ```
 
-This keeps the code explicit while preserving Rakta.js identity.
+Use it inside `app/page.tsx` directly - **no import required**:
 
-## Configuration
+```tsx
+// app/page.tsx
+export default function HomePage() {
+  return (
+    <main>
+      <Navbar />
+      <section className="hero">
+        <h1>Welcome to My Portfolio</h1>
+        <p>Built with Rakta.js - no manual component imports required!</p>
+      </section>
+    </main>
+  );
+}
+```
+
+## Configured Directories
+
+By default, Rakta.js scans the following directories for auto-imports:
 
 ```ts
+// rakta.config.ts
 import { defineRaktaConfig } from "raktajs";
 
 export default defineRaktaConfig({
   autoImport: {
     enabled: true,
-    directories: ["app", "components", "lib", "stores", "schemas"],
+    directories: ["app", "components", "lib", "stores", "schemas", "utils"],
     outputDirectory: ".rakta",
     dts: true,
   },
 });
 ```
 
-## CLI
+| Folder | What Gets Auto-Imported | Global Identifier Example |
+| --- | --- | --- |
+| `components/` | React components (`.tsx`, `.jsx`) | `<Navbar />`, `<Button />` |
+| `lib/` / `utils/` | Utility functions & helpers | `slugify()`, `cn()` |
+| `stores/` | State management stores | `useCounterStore()` |
+| `schemas/` | Validation schemas | `userSchema` |
 
-Generate the auto import manifest manually:
+## Regenerating Auto Imports Manually
+
+To manually trigger a rescan of auto-imported files, run:
 
 ```bash
 bun rakta imports:generate
 ```
 
-## Generated manifest
+## Disabling Auto Import
 
-TrusmiThread also writes a generated barrel file at
-`.rakta/auto-imports.ts`. This file is useful for explicit imports,
-editor tooling, and future compiler/runtime integration.
+If your team prefers explicit dependencies in every file, disable auto-import in `rakta.config.ts`:
 
 ```ts
-// .rakta/auto-imports.ts
-export { Click } from "../app/components/clickButton";
-export { useCounterStore } from "../stores/counter.store";
+export default defineRaktaConfig({
+  autoImport: {
+    enabled: false,
+  },
+});
 ```
 
-## Best practices
+When disabled, import hooks from `raktajs/hooks` explicitly:
 
-- Keep Auto Import enabled for the simplest Rakta.js starter experience.
-- Disable Auto Import only when your team wants every dependency to be
-  explicit.
-- Use `raktajs/hooks` when Auto Import is disabled.
-- Do not edit `.rakta/auto-imports.ts` by hand.
+```tsx
+import { lengkoState, empalEffect } from "raktajs/hooks";
+```
 
-## Related docs
+## Best Practices
 
-- [`hooks.md`](./hooks.md)
-- [`templates.md`](./templates.md)
-- [`gettingStarted.md`](./gettingStarted.md)
+- Keep `autoImport.enabled: true` for a fast, modern developer experience similar to Nuxt.js.
+- Group reusable UI primitives in `components/` or `components/ui/`.
+- Do not manually edit files inside the `.rakta/` directory.
+
+## Related Docs
+
+- [`gettingStarted.md`](./gettingStarted.md) - Create your first Rakta.js app
+- [`routing.md`](./routing.md) - File-based routing guide
+- [`hooks.md`](./hooks.md) - Framework hooks guide

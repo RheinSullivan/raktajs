@@ -1,17 +1,17 @@
-# SEO — WaliSignal & SunyaragiCrown
+# SEO - WaliSignal & SunyaragiCrown
 
 ## Overview
 
 Rakta.js splits SEO concerns into two cooperating pieces:
-- **SunyaragiCrown** — the metadata and `<head>` manager (`RaktaHead`,
+- **SunyaragiCrown** - the metadata and `<head>` manager (`RaktaHead`,
   `Metadata` type, `resolveTitle`).
-- **WaliSignal** — the signal layer that turns metadata into machine-
+- **WaliSignal** - the signal layer that turns metadata into machine-
   readable output: `robots.txt` and sitemap generation.
 
 ## When to use this
 
 Use this on every public-facing page where search engines or social
-previews matter — almost always your marketing pages, rarely your
+previews matter - almost always your marketing pages, rarely your
 authenticated dashboard pages.
 
 ## Architecture
@@ -35,7 +35,7 @@ import { RaktaHead } from "rakta/seo";
 import type { Metadata } from "rakta/seo";
 
 const metadata: Metadata = {
-  title: "About — My App",
+  title: "About - My App",
   description: "Learn what My App does.",
   openGraph: { title: "About", type: "website" },
 };
@@ -65,7 +65,7 @@ export const GET = createRobotsHandler({
 ## Common mistakes
 
 - Rendering `<RaktaHead>` inside a deeply nested component instead of
-  near the top of the page — head tags should be set once per route, as
+  near the top of the page - head tags should be set once per route, as
   early as possible in the render tree.
 - Forgetting `canonical` on paginated or duplicate-content pages.
 - Mounting the sitemap/robots handler at a path that doesn't match what
@@ -74,4 +74,4 @@ export const GET = createRobotsHandler({
 
 ## Related docs
 
-- [`routing.md`](./routing.md) — where `route.ts` handlers like the robots example live
+- [`routing.md`](./routing.md) - where `route.ts` handlers like the robots example live

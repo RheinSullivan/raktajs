@@ -1,15 +1,15 @@
-# HTTP client — PanturaFetch
+# HTTP client - PanturaFetch
 
 ## Overview
 
-**PanturaFetch** adalah HTTP client bawaan Rakta.js berbasis fetch — typed,
+**PanturaFetch** adalah HTTP client bawaan Rakta.js berbasis fetch - typed,
 kecil, dengan kemudahan request/response yang biasa orang dapatkan dari
 Axios, tanpa menambah dependency.
 
 ## Kapan dipakai
 
 Pakai PanturaFetch untuk panggilan REST ke backend apapun yang tidak
-"berbicara" CarubanWire — API pihak ketiga, backend non-Rakta.js, atau
+"berbicara" CarubanWire - API pihak ketiga, backend non-Rakta.js, atau
 fetch sederhana di mana setup router RPC penuh tidak sepadan.
 
 ## Arsitektur
@@ -28,7 +28,7 @@ generic terhadap tipe response yang diharapkan. Di dalamnya:
   non-2xx melempar `HttpResponseError` dengan `Response` asli terlampir.
 - `addRequestInterceptor` / `addResponseInterceptor` memungkinkan kalian
   mengubah URL/`RequestInit` yang keluar atau response yang sudah
-  diparse sebelum mencapai kode kalian — berguna untuk melampirkan token
+  diparse sebelum mencapai kode kalian - berguna untuk melampirkan token
   auth atau membongkar bentuk envelope.
 
 ## Contoh kode
@@ -72,15 +72,15 @@ http.addRequestInterceptor((url, requestInit) => {
 ## Kesalahan umum
 
 - Tidak menangkap `HttpResponseError` secara terpisah dari
-  `HttpNetworkError` — yang pertama berarti server merespons (misalnya
+  `HttpNetworkError` - yang pertama berarti server merespons (misalnya
   404 atau 500), yang kedua berarti request tidak pernah selesai.
 - Mengatur `timeout` yang sangat singkat secara global dibanding
-  per-request — kirim `{ timeout: ... }` di panggilan spesifik yang
+  per-request - kirim `{ timeout: ... }` di panggilan spesifik yang
   membutuhkannya.
-- Lupa bahwa PanturaFetch untuk REST biasa — kalau kedua sisi panggilan
+- Lupa bahwa PanturaFetch untuk REST biasa - kalau kedua sisi panggilan
   sama-sama Rakta.js, [CarubanWire](./rpc.md) memberi inferensi tipe
   penuh.
 
 ## Dokumen terkait
 
-- [`rpc.md`](./rpc.md) — CarubanWire, kalau kedua sisi Rakta.js
+- [`rpc.md`](./rpc.md) - CarubanWire, kalau kedua sisi Rakta.js

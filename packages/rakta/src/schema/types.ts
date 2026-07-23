@@ -7,7 +7,7 @@ export type Infer<TSchema> =
 
 /** Base class for all Rakta Schema validators. */
 export abstract class RaktaType<TOutput> {
-	/** Internal validation — returns errors array (empty = valid). */
+	/** Internal validation - returns errors array (empty = valid). */
 	abstract _run(value: unknown): ReadonlyArray<ValidationError>;
 
 	/**

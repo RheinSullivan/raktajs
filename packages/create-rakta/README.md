@@ -22,18 +22,18 @@ pnpm dlx create-rakta-app@latest my-app
 
 > Note: `npm create-rakta-app@latest my-app` (without the space before
 > `rakta-app`) is **not** valid npm initializer syntax. The correct form
-> is `npm create rakta-app@latest my-app` — npm's `create` command always
+> is `npm create rakta-app@latest my-app` - npm's `create` command always
 > expects the package name as a separate argument after stripping the
 > `create-` prefix.
 
 ## What it asks you
 
 1. **Project name**
-2. **Project mode** — Frontend only, or Fullstack
-3. **CSS framework** — Tailwind CSS v4 (default), Bootstrap, SASS, or none
-4. **Rendering mode** — CSR, SSR, SSG, CSG, SPA, or Hybrid
-5. *(Fullstack only)* **Backend framework** — Gaman.js, Express.js, Nest.js, or Adonis.js
-6. *(Fullstack only)* **Database** — PostgreSQL, MySQL, MongoDB, Firebase, SQLite, MariaDB, Redis, PlanetScale, Neon, or Turso
+2. **Project mode** - Frontend only, or Fullstack
+3. **CSS framework** - Tailwind CSS v4 (default), Bootstrap, SASS, or none
+4. **Rendering mode** - CSR, SSR, SSG, CSG, SPA, or Hybrid
+5. *(Fullstack only)* **Backend framework** - Gaman.js, Express.js, Nest.js, or Adonis.js
+6. *(Fullstack only)* **Database** - PostgreSQL, MySQL, MongoDB, Firebase, SQLite, MariaDB, Redis, PlanetScale, Neon, or Turso
 
 ## Frontend-only output
 
@@ -72,7 +72,7 @@ my-app/
 └─ tsconfig.base.json
 ```
 
-The contents of `backend/` depend on the backend framework you chose —
+The contents of `backend/` depend on the backend framework you chose -
 Gaman.js, Express.js, Nest.js, and Adonis.js each get a different,
 idiomatic folder structure rather than one generic shape forced onto all
 four.
@@ -86,7 +86,7 @@ bun run dev
 ```
 
 For fullstack apps, the frontend and backend run as separate workspace
-packages — see the generated root `README.md` for the exact dev commands
+packages - see the generated root `README.md` for the exact dev commands
 for your chosen stack.
 
 ## Documentation
@@ -96,6 +96,13 @@ See [`docs/en/templates.md`](../../docs/en/templates.md) /
 of every template, and [`docs/en/backendFrameworks.md`](../../docs/en/backendFrameworks.md)
 for backend-specific architecture notes.
 
+## Support & Donasi Kemanusiaan 🇵🇸
+
+Dukungan Anda membantu pemeliharaan server, domain, infrastruktur, serta disalurkan untuk **kaum dhuafa, anak yatim/piatu, panti asuhan, panti jompo, dan bantuan kemanusiaan 🇵🇸 Free Palestine**.
+
+- **Donasi Resmi:** [buymeacoffee.com/rheinsullivan](https://buymeacoffee.com/rheinsullivan)
+- **Panduan Kemitraan Lembaga Penyalur:** Terbuka bagi yayasan/panti asuhan resmi untuk bermitra sebagai penyalur ([`docs/id/donasi.md`](../../docs/id/donasi.md)).
+
 ## License
 
-MIT — Rhein Sullivan | Vyagra Nexus™
+MIT - Rhein Sullivan | Vyagra Nexus™

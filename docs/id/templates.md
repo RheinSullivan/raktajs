@@ -33,7 +33,7 @@ my-app/
 └─ tsconfig.json
 ```
 
-Tidak ada backend, database, schema, atau file shared di mode ini —
+Tidak ada backend, database, schema, atau file shared di mode ini -
 root project *adalah* frontend-nya.
 
 `app/page.tsx` default adalah halaman selamat datang Rakta.js, termasuk
@@ -77,7 +77,7 @@ my-app/
 │  ├─ rakta.config.ts
 │  ├─ package.json
 │  └─ tsconfig.json
-├─ backend/                                 struktur tergantung framework yang dipilih — lihat backendFrameworks.md
+├─ backend/                                 struktur tergantung framework yang dipilih - lihat backendFrameworks.md
 ├─ shared/
 │  ├─ types/index.ts
 │  └─ constants/index.ts
@@ -89,18 +89,18 @@ my-app/
 Layout publik (navbar + footer) hanya membungkus halaman marketing.
 Route group `(auth)` punya layout sendiri tanpa navbar atau footer
 publik. Route `dashboard` punya layout sendiri dengan sidebar dan tanpa
-footer marketing. Pemisahan ini disengaja — lihat
+footer marketing. Pemisahan ini disengaja - lihat
 [`routing.md`](./routing.md) untuk cara route group mencapainya.
 
 ## Kesalahan umum
 
 - Mengharapkan `backend/` terlihat sama terlepas dari framework yang
-  dipilih — tidak demikian. Lihat
+  dipilih - tidak demikian. Lihat
   [`backendFrameworks.md`](./backendFrameworks.md).
 - Menambah halaman publik baru langsung di bawah `app/` dibanding di
-  dalam scope yang sudah punya layout publik — pastikan halaman tidak
+  dalam scope yang sudah punya layout publik - pastikan halaman tidak
   tidak sengaja ditaruh di bawah `(auth)/` atau `dashboard/`.
-- Memperlakukan `shared/` sebagai tempat logika khusus backend —
+- Memperlakukan `shared/` sebagai tempat logika khusus backend -
   seharusnya hanya berisi tipe dan konstanta yang dibutuhkan `frontend/`
   dan `backend/` keduanya.
 
@@ -108,4 +108,4 @@ footer marketing. Pemisahan ini disengaja — lihat
 
 - [`routing.md`](./routing.md)
 - [`backendFrameworks.md`](./backendFrameworks.md)
-- [`pwa.md`](./pwa.md) — `offline/page.tsx` yang disebutkan di atas
+- [`pwa.md`](./pwa.md) - `offline/page.tsx` yang disebutkan di atas

@@ -1,4 +1,4 @@
-# RPC — CarubanWire
+# RPC - CarubanWire
 
 ## Overview
 
@@ -22,7 +22,7 @@ milik pihak ketiga, pakai [PanturaFetch](./http.md) saja.
   validator Rakta Schema yang opsional, lalu `.query(handler)` atau
   `.mutation(handler)` menyelesaikannya.
 - **Client**, dibuat dengan `createRaktaClient<AppRouter>()`, adalah
-  sebuah `Proxy` — memanggil `client.namaProcedure.query(input)` mengirim
+  sebuah `Proxy` - memanggil `client.namaProcedure.query(input)` mengirim
   request yang typed dan mengembalikan response yang typed, sepenuhnya
   diinferensi dari tipe router server.
 - Error muncul sebagai `RaktaRpcError`, membawa `code` dan `details`
@@ -56,21 +56,21 @@ export const rpc = createRaktaClient<AppRouter>({
 });
 
 const result = await rpc.greet.query({ name: "Rakta" });
-// result.message: string — sudah typed, tanpa anotasi manual
+// result.message: string - sudah typed, tanpa anotasi manual
 ```
 
 ## Kesalahan umum
 
-- Lupa `await` di `.query()` / `.mutate()` — keduanya mengembalikan
+- Lupa `await` di `.query()` / `.mutate()` - keduanya mengembalikan
   `Promise`.
 - Membagikan tipe router dengan re-export seluruh module backend ke
-  bundle frontend — sebaiknya export hanya `type AppRouter`, yang
+  bundle frontend - sebaiknya export hanya `type AppRouter`, yang
   ter-erase saat build dan tidak menambah beban runtime ke client.
 - Menangkap error dengan blok `catch` generik dan mengabaikan
-  `error.code` — `RaktaRpcError.code` membantu membedakan kegagalan
+  `error.code` - `RaktaRpcError.code` membantu membedakan kegagalan
   validasi dari error server lainnya.
 
 ## Dokumen terkait
 
-- [`http.md`](./http.md) — PanturaFetch, untuk panggilan HTTP non-RPC
-- [`backendFrameworks.md`](./backendFrameworks.md) — menghubungkan CarubanWire ke Gaman.js, Express.js, Nest.js, atau Adonis.js
+- [`http.md`](./http.md) - PanturaFetch, untuk panggilan HTTP non-RPC
+- [`backendFrameworks.md`](./backendFrameworks.md) - menghubungkan CarubanWire ke Gaman.js, Express.js, Nest.js, atau Adonis.js

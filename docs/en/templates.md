@@ -33,7 +33,7 @@ my-app/
 └─ tsconfig.json
 ```
 
-No backend, database, schema, or shared files exist in this mode — the
+No backend, database, schema, or shared files exist in this mode - the
 project root *is* the frontend.
 
 The default `app/page.tsx` is the Rakta.js welcome screen, including the
@@ -76,7 +76,7 @@ my-app/
 │  ├─ rakta.config.ts
 │  ├─ package.json
 │  └─ tsconfig.json
-├─ backend/                                 structure depends on chosen framework — see backendFrameworks.md
+├─ backend/                                 structure depends on chosen framework - see backendFrameworks.md
 ├─ shared/
 │  ├─ types/index.ts
 │  └─ constants/index.ts
@@ -88,21 +88,21 @@ my-app/
 The public layout (navbar + footer) wraps marketing pages only. The
 `(auth)` route group has its own layout with no public navbar or footer.
 The `dashboard` route has its own layout with a sidebar and no marketing
-footer. This separation is intentional — see [`routing.md`](./routing.md)
+footer. This separation is intentional - see [`routing.md`](./routing.md)
 for how route groups achieve it.
 
 ## Common mistakes
 
-- Expecting `backend/` to look the same regardless of framework choice —
+- Expecting `backend/` to look the same regardless of framework choice -
   it does not. See [`backendFrameworks.md`](./backendFrameworks.md).
 - Adding new public pages directly under `app/` instead of inside the
-  scope that already has the public layout — make sure the page is not
+  scope that already has the public layout - make sure the page is not
   accidentally placed under `(auth)/` or `dashboard/`.
-- Treating `shared/` as a place for backend-only logic — it should only
+- Treating `shared/` as a place for backend-only logic - it should only
   contain types and constants both `frontend/` and `backend/` need.
 
 ## Related docs
 
 - [`routing.md`](./routing.md)
 - [`backendFrameworks.md`](./backendFrameworks.md)
-- [`pwa.md`](./pwa.md) — the `offline/page.tsx` referenced above
+- [`pwa.md`](./pwa.md) - the `offline/page.tsx` referenced above

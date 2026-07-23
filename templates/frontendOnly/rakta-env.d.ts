@@ -4,7 +4,7 @@ declare module "*.css";
 declare module "*.scss";
 declare module "*.sass";
 
-// Rakta.js built-in anchor component — use <click to="/path"> instead of <a href>
+// Rakta.js built-in anchor component - use <click to="/path"> instead of <a href>
 type RaktaClickAttributes = Omit<
 	import("react").AnchorHTMLAttributes<HTMLElement>,
 	"href"
@@ -12,7 +12,7 @@ type RaktaClickAttributes = Omit<
 	readonly to: string;
 };
 
-// Rakta.js built-in image component — use <photo path="..."> instead of <img>
+// Rakta.js built-in image component - use <photo path="..."> instead of <img>
 type RaktaPhotoAttributes = Omit<
 	import("react").ImgHTMLAttributes<HTMLImageElement>,
 	"src"
@@ -31,7 +31,7 @@ declare module "react" {
 	}
 }
 
-// Rakta.js auto-imported React hooks — no explicit import needed in component files
+// Rakta.js auto-imported React hooks - no explicit import needed in component files
 declare global {
 	type AestheticUnit = "LENIS-MODERN" | "RETRO-CYBER" | "NEO-BRUTALIST";
 	type ReactNode = import("react").ReactNode;
@@ -50,9 +50,12 @@ declare global {
 	const CheckCircle2: import("react").ComponentType<Record<string, unknown>>;
 	const Cloud: import("react").ComponentType<Record<string, unknown>>;
 	const Code: import("react").ComponentType<Record<string, unknown>>;
+	const Coffee: import("react").ComponentType<Record<string, unknown>>;
 	const Copy: import("react").ComponentType<Record<string, unknown>>;
 	const Cpu: import("react").ComponentType<Record<string, unknown>>;
 	const Github: import("react").ComponentType<Record<string, unknown>>;
+	const Globe: import("react").ComponentType<Record<string, unknown>>;
+	const Heart: import("react").ComponentType<Record<string, unknown>>;
 	const Info: import("react").ComponentType<Record<string, unknown>>;
 	const Play: import("react").ComponentType<Record<string, unknown>>;
 	const RotateCcw: import("react").ComponentType<Record<string, unknown>>;

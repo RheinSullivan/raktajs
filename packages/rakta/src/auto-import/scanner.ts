@@ -56,14 +56,24 @@ function toPascalCase(text: string): string {
 		.replace(/^(.)/, (_match: string, char: string) => char.toUpperCase());
 }
 
-function deriveExportName(filePath: string, dirPath: string): string {
+function deriveExportName(
+	filePath: string,
+	dirPath: string,
+): { name: string; simpleName: string } {
 	const relativePath = relative(dirPath, filePath).replace(/\\/g, "/");
 
 	const withoutExtension = relativePath
 		.replace(/\.(ts|tsx|js|jsx)$/, "")
 		.replace(/\/index$/, "");
 
-	return toPascalCase(withoutExtension.replace(/\//g, "_"));
+	const pascalName = toPascalCase(withoutExtension.replace(/\//g, "_"));
+	const rawBaseName = basename(withoutExtension);
+	const simpleName = toPascalCase(rawBaseName);
+
+	return {
+		name: pascalName,
+		simpleName,
+	};
 }
 
 function walkDirectory(
@@ -132,8 +142,11 @@ export function scanForExports(
 				? relativeFromOutput
 				: `./${relativeFromOutput}`;
 
+			const { name, simpleName } = deriveExportName(filePath, directoryAbs);
+
 			discovered.push({
-				name: deriveExportName(filePath, directoryAbs),
+				name,
+				simpleName,
 				filePath: relative(options.frontendRoot, filePath).replace(/\\/g, "/"),
 				importPath,
 				kind: detectKind(filePath),

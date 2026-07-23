@@ -1,7 +1,7 @@
 import type { ManifestOptions, WebAppManifest } from "./types";
 
 /**
- * ShrimpHarbor — generates a web app manifest object for PWA installability.
+ * ShrimpHarbor - generates a web app manifest object for PWA installability.
  * Serialize with JSON.stringify and serve as /manifest.webmanifest.
  */
 export function generateManifest(options: ManifestOptions): WebAppManifest {

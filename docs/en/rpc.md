@@ -1,4 +1,4 @@
-# RPC — CarubanWire
+# RPC - CarubanWire
 
 ## Overview
 
@@ -22,7 +22,7 @@ response. For untyped or third-party REST APIs, use
   Rakta Schema validator, then `.query(handler)` or `.mutation(handler)`
   finalizes it.
 - The **client**, created with `createRaktaClient<AppRouter>()`, is a
-  `Proxy` — calling `client.someProcedure.query(input)` sends a typed
+  `Proxy` - calling `client.someProcedure.query(input)` sends a typed
   request and returns a typed response, fully inferred from the server's
   router type.
 - Errors surface as `RaktaRpcError`, carrying a `code` and optional
@@ -56,21 +56,21 @@ export const rpc = createRaktaClient<AppRouter>({
 });
 
 const result = await rpc.greet.query({ name: "Rakta" });
-// result.message: string — fully typed, no manual annotation
+// result.message: string - fully typed, no manual annotation
 ```
 
 ## Common mistakes
 
-- Forgetting `await` on `.query()` / `.mutate()` — both return a `Promise`.
+- Forgetting `await` on `.query()` / `.mutate()` - both return a `Promise`.
 - Sharing the router type by re-exporting the whole backend module into
-  the frontend bundle — instead, export only the `type AppRouter`, which
+  the frontend bundle - instead, export only the `type AppRouter`, which
   is erased at build time and adds no runtime weight to the client.
-- Catching errors with a generic `catch` block and ignoring `error.code` —
+- Catching errors with a generic `catch` block and ignoring `error.code` -
   `RaktaRpcError.code` lets you distinguish validation failures from other
   server errors.
 
 ## Related docs
 
-- [`schema.md`](./schema.md) *(see package docs for `rakta/schema`)* — input validation used by `.input()`
-- [`http.md`](./http.md) — PanturaFetch, for non-RPC HTTP calls
-- [`backendFrameworks.md`](./backendFrameworks.md) — wiring CarubanWire into Gaman.js, Express.js, Nest.js, or Adonis.js
+- [`schema.md`](./schema.md) *(see package docs for `rakta/schema`)* - input validation used by `.input()`
+- [`http.md`](./http.md) - PanturaFetch, for non-RPC HTTP calls
+- [`backendFrameworks.md`](./backendFrameworks.md) - wiring CarubanWire into Gaman.js, Express.js, Nest.js, or Adonis.js
