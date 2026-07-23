@@ -129,13 +129,11 @@ Rakta.js uses its own framework language. The public naming avoids copying featu
 ## Installation
 
 Create a new Rakta.js app:
-
 ```bash
-bun create-rakta-app@latest my-app
+bun create rakta-app@latest my-app
 ````
 
 Move into the project:
-
 ```bash
 cd my-app
 bun install
@@ -143,7 +141,6 @@ bun run dev
 ```
 
 Other package manager entry points:
-
 ```bash
 bunx create-rakta-app@latest my-app
 npm create rakta-app@latest my-app
@@ -160,11 +157,10 @@ Rakta.js is frontend-first, but it can also generate a fullstack structure when 
 ### Frontend only
 
 ```bash
-bun create-rakta-app@latest my-frontend
+bun create rakta-app@latest my-frontend
 ```
 
 Choose:
-
 ```txt
 Frontend only
 ```
@@ -205,7 +201,7 @@ The project root itself is the frontend app.
 ### Fullstack app
 
 ```bash
-bun create-rakta-app@latest my-fullstack
+bun create rakta-app@latest my-fullstack
 ```
 
 Choose:
@@ -458,7 +454,6 @@ cache strategy helpers
 The Rakta.js repository should not only contain `packages/`. It should be organized like a real framework repository.
 
 Recommended root structure:
-
 ```txt
 raktajs/
 ├─ .github/
@@ -521,7 +516,6 @@ enterprise-app/
 ```
 
 Recommended enterprise separation:
-
 | Area                  | Purpose                           |
 | --------------------- | --------------------------------- |
 | `apps/web`            | Public website                    |
@@ -538,7 +532,6 @@ Recommended enterprise separation:
 ## Scripts
 
 Root scripts:
-
 ```bash
 bun run dev
 bun run build
@@ -549,7 +542,6 @@ bun run format
 ```
 
 Package scripts:
-
 ```bash
 bun run typecheck:rakta
 bun run typecheck:create-rakta
@@ -562,7 +554,6 @@ bun run build:create-rakta
 ## Package exports
 
 Rakta.js is designed with modular exports:
-
 ```txt
 rakta
 rakta/components
@@ -593,7 +584,6 @@ Rakta.js uses the roadmap as a public implementation contract.
 ### Released - v0.1.0 through v1.0.1
 
 All of the following systems are present in this repository and the published packages:
-
 | System | Module |
 | --- | --- |
 | Core configuration | `raktajs/config` |
@@ -631,13 +621,13 @@ All of the following systems are present in this repository and the published pa
 
 | Version | Focus area | Key deliverables |
 | --- | --- | --- |
-| **v1.1** | Database adapters | SQLite, PostgreSQL, MySQL, and edge KV adapters with a typed repository abstraction; ORM adapter contracts |
+| **v1.1** | Database adapters | SQLite, PostgreSQL, MySQL, and edge KV adapters with a typed repository abstraction, ORM adapter contracts |
 | **v1.2** | Auth providers | OAuth, email verification, refresh tokens, stricter session rotation, magic link support |
 | **v1.3** | Devtools UI | Browser-based auto import inspector, route analyzer, bundle analyzer, performance profiler, and overlay panels |
 | **v1.4** | Build compiler | Incremental compilation, persistent cache storage, chunk optimizer, prefetch manifest, parallel compilation |
 | **v1.5** | Content layer | Markdown collections, MDX plugin bridge, typed content schema, and live docs playground |
 | **v2.0** | Ecosystem split | Official packages: `@rakta/auth`, `@rakta/database`, `@rakta/storage`, `@rakta/image`, `@rakta/forms`, `@rakta/analytics`, `@rakta/testing` |
-| **v2.1** | Edge first | Cloudflare Workers / Deno Deploy first-class streaming SSR; edge middleware; edge KV cache |
+| **v2.1** | Edge first | Cloudflare Workers / Deno Deploy first-class streaming SSR, edge middleware, edge KV cache |
 | **v2.2** | React Server Components | Server component rendering, server actions, and streaming with Suspense boundaries |
 | **v2.3** | i18n | Built-in internationalization routing, locale detection, and message catalog |
 | **v3.0** | Multi-runtime | Support React, Preact, Solid, and Vue as interchangeable rendering runtimes via the plugin API |
@@ -649,7 +639,6 @@ All of the following systems are present in this repository and the published pa
 Rakta.js is open for contributions.
 
 Start locally:
-
 ```bash
 git clone https://github.com/RheinSullivan/raktajs.git
 cd raktajs
@@ -659,13 +648,11 @@ bun run build
 ```
 
 Create a branch:
-
 ```bash
 git checkout -b feat/your-feature-name
 ```
 
 Commit style:
-
 ```bash
 feat(rakta): add new framework feature
 fix(schema): correct validation error typing
@@ -675,7 +662,28 @@ chore(repo): update repository structure
 
 ---
 
-## Support & Donasi Kemanusiaan 🇵🇸
+## Support & Humanitarian Donations 🇵🇸 (EN)
+
+Your support and donations are crucial for covering the costs of server maintenance, domain registration, and infrastructure, and are channeled toward humanitarian social initiatives: **the underprivileged, orphans, orphanages, nursing homes, and humanitarian aid for Palestine 🇵🇸 (Free Palestine)**.
+
+<p align="center">
+  <a href="https://buymeacoffee.com/rheinsullivan" target="_blank">
+    <img src="https://img.shields.io/badge/Support-Buy%20Me%20A%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee" />
+  </a>
+</p>
+
+- **Official Donation Link:** [buymeacoffee.com/rheinsullivan](https://buymeacoffee.com/rheinsullivan)
+- 🇵🇸 **Free Palestine** - *Free Palestine, uphold justice & humanity.*
+
+### Partnerships with Donation Distribution Organizations
+
+For orphanages, nursing homes, zakat/infaq institutions, or official humanitarian organizations that wish to partner with us as **organizations to receive and distribute the funds raised through these donations**, you can apply for an official partnership through:
+- Partnership Guide: [`docs/id/donasi.md`](./docs/id/donasi.md) / [`docs/en/donations.md`](./docs/en/donations.md)
+- Partnership & Verification Contact: Open an issue in the GitHub repository or email the developer (Rhein Sullivan).
+  
+---
+
+## Support & Donasi Kemanusiaan 🇵🇸 (ID)
 
 Dukungan dan donasi Anda sangat berarti untuk biaya pemeliharaan server, domain, infrastruktur, serta disalurkan untuk aksi sosial kemanusiaan: **kaum dhuafa, anak yatim & piatu, panti asuhan, panti jompo, dan bantuan kemanusiaan Palestina 🇵🇸 (Free Palestine)**.
 
@@ -690,9 +698,7 @@ Dukungan dan donasi Anda sangat berarti untuk biaya pemeliharaan server, domain,
 
 ### Kemitraan Lembaga Penyalur Donasi
 
-Bagi yayasan panti asuhan, panti jompo, lembaga zakat/infaq, atau organisasi kemanusiaan resmi yang ingin bekerja sama sebagai **lembaga penampung dan penyalur dana hasil pengumpulan donasi ini**, Anda dapat mengajukan kemitraan resmi melalui:
-
-- Panduan Kemitraan: [`docs/id/donasi.md`](./docs/id/donasi.md) / [`docs/en/donations.md`](./docs/en/donations.md)
+Bagi yayasan panti asuhan, panti jompo, lembaga zakat/infaq, atau organisasi kemanusiaan resmi yang ingin bekerja sama sebagai **lembaga penampung dan penyalur dana hasil pengumpulan donasi ini**, Anda dapat mengajukan kemitraan resmi melalui:- Panduan Kemitraan: [`docs/id/donasi.md`](./docs/id/donasi.md) / [`docs/en/donations.md`](./docs/en/donations.md)
 - Kontak Kemitraan & Verifikasi: Pembukaan Issue di GitHub Repository atau Email Pengembang (Rhein Sullivan).
 
 ---
