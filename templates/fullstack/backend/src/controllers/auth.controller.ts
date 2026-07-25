@@ -2,6 +2,8 @@ import {
 	authenticate,
 	login,
 	logout,
+	requestPasswordOtp,
+	resetPassword,
 } from "../auth/auth.service";
 import { readJson, readSessionCookie } from "../http/request";
 import { created, fail, ok } from "../http/response";
@@ -74,4 +76,26 @@ export function logoutController(request: Request): Response {
 			},
 		},
 	);
+}
+
+export async function forgotPasswordController(
+	request: Request,
+): Promise<Response> {
+	const body = await readJson(request);
+	const otp = await requestPasswordOtp(requireString(body, "email", 5));
+
+	return ok({ email: otp.email, expiresAt: otp.expiresAt });
+}
+
+export async function resetPasswordController(
+	request: Request,
+): Promise<Response> {
+	const body = await readJson(request);
+	const success = await resetPassword(
+		requireString(body, "email", 5),
+		requireString(body, "otp", 6),
+		requireString(body, "password", 8),
+	);
+
+	return success ? ok({ reset: true }) : fail("Invalid OTP.", 422);
 }

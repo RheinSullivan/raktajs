@@ -132,7 +132,9 @@ declare module "raktajs/components" {
 		props: RaktaAlertProps,
 	): import("react").ReactElement;
 	export function Alert(props: RaktaAlertProps): import("react").ReactElement;
-	export function Sintren(props: Record<string, unknown>): import("react").ReactElement;
+	export function Sintren(
+		props: Record<string, unknown>,
+	): import("react").ReactElement;
 	export function useSintren(): Record<string, unknown>;
 	export const toast: {
 		info: (

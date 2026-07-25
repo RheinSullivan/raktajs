@@ -84,3 +84,47 @@ export async function createUser(input: {
 	database.users.create(user);
 	return toPublicUser(user);
 }
+
+export async function updateUser(
+	userId: string,
+	input: {
+		firstName?: string;
+		lastName?: string;
+		name?: string;
+		email?: string;
+		password?: string;
+		role?: UserRole;
+		gender?: Gender;
+	},
+): Promise<PublicUser | undefined> {
+	const existingUser = database.users.find(userId);
+
+	if (existingUser === undefined) {
+		return undefined;
+	}
+
+	const firstName = input.firstName ?? existingUser.firstName;
+	const lastName = input.lastName ?? existingUser.lastName;
+	const name = input.name ?? `${firstName} ${lastName}`.trim();
+	const updatedUser: User = {
+		...existingUser,
+		firstName,
+		lastName,
+		name,
+		email: input.email ?? existingUser.email,
+		passwordHash:
+			input.password === undefined
+				? existingUser.passwordHash
+				: await hashPassword(input.password),
+		role: input.role ?? existingUser.role,
+		gender: input.gender ?? existingUser.gender,
+		updatedAt: new Date().toISOString(),
+	};
+
+	database.users.update(userId, updatedUser);
+	return toPublicUser(updatedUser);
+}
+
+export function deleteUser(userId: string): boolean {
+	return database.users.delete(userId);
+}

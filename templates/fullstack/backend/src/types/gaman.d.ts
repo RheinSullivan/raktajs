@@ -24,5 +24,12 @@ declare module "gaman" {
 		mountServer(options: { readonly http: number }): void;
 	}
 
-	export function Gaman<TTransport>(): GamanApp;
+	export class Gaman<TTransport> implements GamanApp {
+		get(path: string, handler: (context: GamanContext) => unknown): void;
+		post(path: string, handler: (context: GamanContext) => unknown): void;
+		patch(path: string, handler: (context: GamanContext) => unknown): void;
+		delete(path: string, handler: (context: GamanContext) => unknown): void;
+		options(path: string, handler: (context: GamanContext) => unknown): void;
+		mountServer(options: { readonly http: number }): void;
+	}
 }

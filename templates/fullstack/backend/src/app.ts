@@ -1,4 +1,4 @@
-import { Gaman, type HTTP } from "gaman";
+import { Gaman, type GamanContext, type HTTP } from "gaman";
 import { runMigrations } from "./database/migrations";
 import { env } from "./env";
 import { requestFromGamanContext, sendGamanResponse } from "./http/gaman";
@@ -18,7 +18,7 @@ await runMigrations();
 await seedUsers();
 seedCmsPosts();
 
-async function handle(context: Parameters<Parameters<typeof app.get>[1]>[0]) {
+async function handle(context: GamanContext): Promise<unknown> {
 	const response = await apiRouter(requestFromGamanContext(context));
 	const headers = new Headers(response.headers);
 
@@ -35,7 +35,7 @@ async function handle(context: Parameters<Parameters<typeof app.get>[1]>[0]) {
 	);
 }
 
-app.options("/*", (context) => {
+app.options("/*", (context: GamanContext) => {
 	context
 		.status(204)
 		.setHeader("Access-Control-Allow-Origin", env.corsOrigin)

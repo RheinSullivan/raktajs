@@ -15,7 +15,8 @@ export async function storeUserController(request: Request): Promise<Response> {
 	try {
 		const body = await readJson(request);
 		const user = await createUser({
-			name: String(body.name ?? ""),
+			firstName: String(body.firstName ?? body.name ?? ""),
+			lastName: String(body.lastName ?? ""),
 			email: String(body.email ?? ""),
 			password: String(body.password ?? ""),
 		});
@@ -32,6 +33,8 @@ export async function updateUserController(
 ): Promise<Response> {
 	const body = await readJson(request);
 	const input: {
+		firstName?: string;
+		lastName?: string;
 		name?: string;
 		email?: string;
 		password?: string;
@@ -39,6 +42,14 @@ export async function updateUserController(
 
 	if (typeof body.name === "string") {
 		input.name = body.name;
+	}
+
+	if (typeof body.firstName === "string") {
+		input.firstName = body.firstName;
+	}
+
+	if (typeof body.lastName === "string") {
+		input.lastName = body.lastName;
 	}
 
 	if (typeof body.email === "string") {
