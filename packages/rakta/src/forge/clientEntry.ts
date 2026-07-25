@@ -171,7 +171,9 @@ function buildClientEntrySource(
 	return `import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import * as ReactHooks from "react";
-import { motion } from "motion/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import {
 	LuArrowRight as ArrowRight,
 	LuBook as Book,
@@ -200,7 +202,10 @@ ${cssImport}
 (globalThis as typeof globalThis & Record<string, unknown>).useEffect = ReactHooks.useEffect;
 (globalThis as typeof globalThis & Record<string, unknown>).useRef = ReactHooks.useRef;
 (globalThis as typeof globalThis & Record<string, unknown>).useState = ReactHooks.useState;
-(globalThis as typeof globalThis & Record<string, unknown>).motion = motion;
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+(globalThis as typeof globalThis & Record<string, unknown>).gsap = gsap;
+(globalThis as typeof globalThis & Record<string, unknown>).ScrollTrigger = ScrollTrigger;
+(globalThis as typeof globalThis & Record<string, unknown>).ScrollToPlugin = ScrollToPlugin;
 (globalThis as typeof globalThis & Record<string, unknown>).ArrowRight = ArrowRight;
 (globalThis as typeof globalThis & Record<string, unknown>).Book = Book;
 (globalThis as typeof globalThis & Record<string, unknown>).Check = Check;

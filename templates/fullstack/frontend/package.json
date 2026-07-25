@@ -15,13 +15,18 @@
 		"raktajs": "^1.0.2",
 		"react": "^19.2.7",
 		"react-dom": "^19.2.7",
-		"motion": "^12.23.6",
+		"gsap": "^3.12.7",
+		"clsx": "^2.1.1",
+		"tailwind-merge": "^3.0.2",
 		"react-icons": "^5.7.0"
 	},
 	"devDependencies": {
 		"@types/node": "^26.0.1",
 		"@types/react": "^19.2.17",
 		"@types/react-dom": "^19.2.3",
+		"autoprefixer": "^10.4.20",
+		"postcss": "^8.5.3",
+		"prettier": "^3.5.3",
 		"typescript": "^6.0.3"
 	}
 }

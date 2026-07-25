@@ -45,7 +45,7 @@ describe("create-rakta fullstack generator", () => {
 		);
 		expect(fileByPath.get("backend/src/app.ts")).toContain("Gaman<HTTP>()");
 		expect(fileByPath.get("backend/src/app.ts")).toContain("new Gaman<HTTP>()");
-		expect(fileByPath.get("frontend/package.json")).toContain('"motion"');
+		expect(fileByPath.get("frontend/package.json")).toContain('"gsap"');
 		expect(fileByPath.get("frontend/package.json")).toContain('"react-icons"');
 		expect(fileByPath.get("backend/src/app.ts")).toContain(
 			"/api/auth/register",

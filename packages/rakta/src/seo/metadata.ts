@@ -94,8 +94,22 @@ export interface MetadataIcons {
 	apple?: string | MetadataAppleIconItem[];
 }
 
+export type TitleMetadata =
+	| string
+	| {
+			default: string;
+			template?: string;
+			absolute?: string;
+	  };
+
+export interface FormatDetection {
+	email?: boolean;
+	address?: boolean;
+	telephone?: boolean;
+}
+
 export interface Metadata {
-	title?: string;
+	title?: TitleMetadata;
 	titleTemplate?: string;
 	defaultTitle?: string;
 	description?: string;
@@ -115,23 +129,39 @@ export interface Metadata {
 	jsonLd?: JsonLd | JsonLd[];
 	icons?: MetadataIcons;
 	manifest?: string;
+	metadataBase?: URL | string;
+	formatDetection?: FormatDetection;
 	other?: Record<string, string | string[]>;
 }
 
 export function resolveTitle(metadata: Metadata): string {
-	if (!metadata.title && metadata.defaultTitle) {
+	if (typeof metadata.title === "object" && metadata.title !== null) {
+		if (metadata.title.absolute) {
+			return metadata.title.absolute;
+		}
+		if (metadata.title.default) {
+			if (metadata.title.template) {
+				return metadata.title.template.replace("%s", metadata.title.default);
+			}
+			return metadata.title.default;
+		}
+	}
+
+	const titleStr = typeof metadata.title === "string" ? metadata.title : undefined;
+
+	if (!titleStr && metadata.defaultTitle) {
 		return metadata.defaultTitle;
 	}
 
-	if (!metadata.title) {
+	if (!titleStr) {
 		return "";
 	}
 
 	if (metadata.titleTemplate) {
-		return metadata.titleTemplate.replace("%s", metadata.title);
+		return metadata.titleTemplate.replace("%s", titleStr);
 	}
 
-	return metadata.title;
+	return titleStr;
 }
 
 export function resolveRobotsContent(robots: string | Robots): string {

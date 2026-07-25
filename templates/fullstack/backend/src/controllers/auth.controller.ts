@@ -2,21 +2,30 @@ import {
 	authenticate,
 	login,
 	logout,
-	requestPasswordOtp,
-	resetPassword,
 } from "../auth/auth.service";
 import { readJson, readSessionCookie } from "../http/request";
 import { created, fail, ok } from "../http/response";
+import type { Gender, UserRole } from "../models/user.model";
 import { createUser } from "../services/user.service";
 import { requireString } from "../validation/auth.validation";
 
 export async function registerController(request: Request): Promise<Response> {
 	try {
 		const body = await readJson(request);
+		const firstName = requireString(body, "firstName", 1);
+		const lastName = requireString(body, "lastName", 1);
+		const email = requireString(body, "email", 5);
+		const password = requireString(body, "password", 8);
+		const role = (body.role as UserRole) || "USER";
+		const gender = (body.gender as Gender) || "MALE";
+
 		const user = await createUser({
-			name: requireString(body, "name", 2),
-			email: requireString(body, "email", 5),
-			password: requireString(body, "password", 8),
+			firstName,
+			lastName,
+			email,
+			password,
+			role,
+			gender,
 		});
 
 		return created(user);
@@ -61,29 +70,8 @@ export function logoutController(request: Request): Response {
 		{
 			headers: {
 				"Set-Cookie":
-					"rakta_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0",
+					"rakta_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0",
 			},
 		},
 	);
-}
-
-export async function forgotPasswordController(
-	request: Request,
-): Promise<Response> {
-	const body = await readJson(request);
-	const otp = await requestPasswordOtp(requireString(body, "email", 5));
-	return ok({ email: otp.email, expiresAt: otp.expiresAt });
-}
-
-export async function resetPasswordController(
-	request: Request,
-): Promise<Response> {
-	const body = await readJson(request);
-	const success = await resetPassword(
-		requireString(body, "email", 5),
-		requireString(body, "otp", 6),
-		requireString(body, "password", 8),
-	);
-
-	return success ? ok({ reset: true }) : fail("Invalid OTP.", 422);
 }

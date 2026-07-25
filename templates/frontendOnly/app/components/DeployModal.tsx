@@ -147,12 +147,8 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 			className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm"
 			id="deploy-modal-container"
 		>
-			<motion.div
-				initial={{ opacity: 0, scale: 0.95, y: 15 }}
-				animate={{ opacity: 1, scale: 1, y: 0 }}
-				exit={{ opacity: 0, scale: 0.95, y: 15 }}
-				transition={{ duration: 0.2 }}
-				className="w-full max-w-3xl h-[70vh] bg-black border-2 border-white flex flex-col relative"
+			<div
+				className="w-full max-w-3xl h-[70vh] bg-black border-2 border-white flex flex-col relative transition-all duration-200 animate-in fade-in zoom-in-95"
 			>
 				{/* Header */}
 				<div className="flex items-center justify-between border-b border-surface-stroke p-5">
@@ -262,10 +258,8 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 					)}
 
 					{status === "success" && (
-						<motion.div
-							initial={{ opacity: 0, y: 10 }}
-							animate={{ opacity: 1, y: 0 }}
-							className="mt-6 p-4 border border-brand-green bg-emerald-950/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+						<div
+							className="mt-6 p-4 border border-brand-green bg-emerald-950/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-200 animate-in fade-in slide-in-from-bottom-2"
 						>
 							<div>
 								<span className="font-bold text-brand-green uppercase flex items-center gap-1.5 text-xs mb-1">
@@ -290,12 +284,12 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 								<div>COMPRESS</div>
 								<div className="text-white text-right">14.12MB</div>
 							</div>
-						</motion.div>
+						</div>
 					)}
 
 					<div ref={terminalEndRef} />
 				</div>
-			</motion.div>
+			</div>
 		</div>
 	);
 }

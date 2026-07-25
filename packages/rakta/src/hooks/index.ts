@@ -36,3 +36,10 @@ export {
 	// Transitions & Optimistic
 	useTransition as sintrenTransition,
 } from "react";
+
+// Smooth Scroll - Sintren (Cirebon traditional performance art)
+export {
+	useSintren,
+	useSintren as sintrenScroll,
+	useScrollTo,
+} from "../components/Scroll";

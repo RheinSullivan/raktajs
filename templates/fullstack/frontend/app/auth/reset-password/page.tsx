@@ -1,5 +1,4 @@
-import { resetPassword } from "../../../lib/auth";
-import AuthShell from "../AuthShell";
+
 
 export default function ResetPasswordPage() {
 	const [email, setEmail] = useState("admin@rakta.local");

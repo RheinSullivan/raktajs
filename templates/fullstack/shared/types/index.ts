@@ -1,11 +1,18 @@
+export type UserRole = "ADMIN" | "USER" | "GUEST";
+export type Gender = "MALE" | "FEMALE" | "OTHER";
+
 export interface ApiResponse<TData = unknown> {
-	readonly success: boolean;
-	readonly data?: TData;
-	readonly error?: string;
+	success: boolean;
+	data?: TData;
+	error?: string;
 }
 
 export interface User {
-	readonly id: string;
-	readonly email: string;
-	readonly name: string;
+	id: string;
+	email: string;
+	firstName: string;
+	lastName: string;
+	name: string;
+	role: UserRole;
+	gender: Gender;
 }

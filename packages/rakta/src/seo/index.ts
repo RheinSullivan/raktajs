@@ -4,6 +4,7 @@ export type { HeadProps } from "./head";
 export { RaktaHead } from "./head";
 export type {
 	AlternateLinks,
+	FormatDetection,
 	GenerateMetadataFn,
 	JsonLd,
 	JsonLdGraph,
@@ -11,6 +12,7 @@ export type {
 	OpenGraph,
 	OpenGraphImage,
 	Robots,
+	TitleMetadata,
 	TwitterCard,
 } from "./metadata";
 // Metadata

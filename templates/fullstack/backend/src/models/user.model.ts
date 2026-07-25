@@ -1,28 +1,40 @@
+export type UserRole = "ADMIN" | "USER" | "GUEST";
+export type Gender = "MALE" | "FEMALE" | "OTHER";
+
 export interface User {
-	readonly id: string;
-	readonly name: string;
-	readonly email: string;
-	readonly passwordHash: string;
-	readonly role: "owner" | "admin" | "editor" | "member";
-	readonly createdAt: string;
-	readonly updatedAt: string;
+	id: string;
+	firstName: string;
+	lastName: string;
+	name: string;
+	email: string;
+	passwordHash: string;
+	role: UserRole;
+	gender: Gender;
+	createdAt: string;
+	updatedAt: string;
 }
 
 export interface PublicUser {
-	readonly id: string;
-	readonly name: string;
-	readonly email: string;
-	readonly role: User["role"];
-	readonly createdAt: string;
-	readonly updatedAt: string;
+	id: string;
+	firstName: string;
+	lastName: string;
+	name: string;
+	email: string;
+	role: UserRole;
+	gender: Gender;
+	createdAt: string;
+	updatedAt: string;
 }
 
 export function toPublicUser(user: User): PublicUser {
 	return {
 		id: user.id,
+		firstName: user.firstName,
+		lastName: user.lastName,
 		name: user.name,
 		email: user.email,
 		role: user.role,
+		gender: user.gender,
 		createdAt: user.createdAt,
 		updatedAt: user.updatedAt,
 	};

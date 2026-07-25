@@ -1,5 +1,5 @@
 import { database } from "../database/client";
-import type { PublicUser, User } from "../models/user.model";
+import type { Gender, PublicUser, User, UserRole } from "../models/user.model";
 import { toPublicUser } from "../models/user.model";
 import { hashPassword } from "../security/password";
 
@@ -11,10 +11,13 @@ export async function seedUsers(): Promise<void> {
 	const now = new Date().toISOString();
 	const admin: User = {
 		id: "user_demo",
+		firstName: "Rakta",
+		lastName: "Admin",
 		name: "Rakta Admin",
 		email: "admin@rakta.local",
 		passwordHash: await hashPassword("rakta-password"),
-		role: "owner",
+		role: "ADMIN",
+		gender: "MALE",
 		createdAt: now,
 		updatedAt: now,
 	};
@@ -23,10 +26,13 @@ export async function seedUsers(): Promise<void> {
 
 	const editor: User = {
 		id: "user_editor",
+		firstName: "CMS",
+		lastName: "Editor",
 		name: "CMS Editor",
 		email: "editor@rakta.local",
 		passwordHash: await hashPassword("rakta-password"),
-		role: "editor",
+		role: "USER",
+		gender: "FEMALE",
 		createdAt: now,
 		updatedAt: now,
 	};
@@ -47,61 +53,34 @@ export function findUserByEmail(email: string): User | undefined {
 }
 
 export async function createUser(input: {
-	readonly name: string;
-	readonly email: string;
-	readonly password: string;
-	readonly role?: User["role"];
+	firstName: string;
+	lastName: string;
+	email: string;
+	password: string;
+	role?: UserRole;
+	gender?: Gender;
 }): Promise<PublicUser> {
 	if (findUserByEmail(input.email) !== undefined) {
 		throw new Error("Email is already registered.");
 	}
 
 	const now = new Date().toISOString();
+	const firstName = input.firstName;
+	const lastName = input.lastName;
+	const name = `${firstName} ${lastName}`.trim();
 	const user: User = {
-		id: crypto.randomUUID(),
-		name: input.name,
+		id: `user_${Math.random().toString(36).substring(2, 10)}`,
+		firstName,
+		lastName,
+		name,
 		email: input.email,
 		passwordHash: await hashPassword(input.password),
-		role: input.role ?? "member",
+		role: input.role ?? "USER",
+		gender: input.gender ?? "MALE",
 		createdAt: now,
 		updatedAt: now,
 	};
 
 	database.users.create(user);
 	return toPublicUser(user);
-}
-
-export async function updateUser(
-	userId: string,
-	input: {
-		readonly name?: string;
-		readonly email?: string;
-		readonly password?: string;
-		readonly role?: User["role"];
-	},
-): Promise<PublicUser | undefined> {
-	const existingUser = database.users.find(userId);
-
-	if (existingUser === undefined) {
-		return undefined;
-	}
-
-	const updatedUser: User = {
-		...existingUser,
-		name: input.name ?? existingUser.name,
-		email: input.email ?? existingUser.email,
-		passwordHash:
-			input.password === undefined
-				? existingUser.passwordHash
-				: await hashPassword(input.password),
-		role: input.role ?? existingUser.role,
-		updatedAt: new Date().toISOString(),
-	};
-
-	database.users.update(userId, updatedUser);
-	return toPublicUser(updatedUser);
-}
-
-export function deleteUser(userId: string): boolean {
-	return database.users.delete(userId);
 }

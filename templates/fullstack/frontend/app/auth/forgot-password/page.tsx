@@ -1,5 +1,4 @@
-import { requestPasswordOtp } from "../../../lib/auth";
-import AuthShell from "../AuthShell";
+
 
 export default function ForgotPasswordPage() {
 	const [email, setEmail] = useState("admin@rakta.local");

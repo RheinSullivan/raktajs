@@ -63,8 +63,41 @@
 </p>
 
 <p align="center">
-  <strong>Bun in the engine. React at the core. Cirebon in the soul. Garuda in the heart.</strong>
+  <strong>Keywords</strong>: Rakta.js | Framework Frontend | React Framework | Cirebon | Nusantara | Javascript Frontend Framework | Indonesia Developer | Rhein Sullivan | Vyagra Nexus | Muhammad Rizky Ramadhan
 </p>
+
+---
+
+## About Rakta.js — Kisah & Visi / Story & Vision
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**🇮🇩 Bahasa Indonesia**
+
+Rakta.js diciptakan oleh **Muhammad Rizky Ramadhan**, seorang pengembang perangkat lunak asal **Cirebon & Jakarta Selatan, Indonesia** — dikenal di komunitas developer sebagai **Rhein Sullivan** dan **Vyagra Nexus**.
+
+Visi Rakta.js lahir dari semangat untuk menyatukan kemampuan terbaik dari ekosistem modern ke dalam satu framework yang ringan dan efisien. Fitur-fitur seperti *File-based App Routing*, *Auto Import*, *Type-Safe RPC*, arsitektur *Monolith Frontend-Backend*, dan *Autentikasi terintegrasi* kini tersedia dalam satu ekosistem terpadu — tanpa fragmentasi, tanpa konfigurasi berlapis.
+
+Rakta.js tidak hadir untuk menggantikan framework yang sudah ada, melainkan untuk menghadirkan perspektif baru: **sebuah framework yang terasa bersih, cepat, dan berdaulat** — buatan tangan seorang anak Indonesia.
+
+</td>
+<td width="50%" valign="top">
+
+**🌏 English**
+
+Rakta.js was created by **Muhammad Rizky Ramadhan**, a software developer from **Cirebon & South Jakarta, Indonesia** — known in the developer community as **Rhein Sullivan** and **Vyagra Nexus**.
+
+The vision of Rakta.js was born from a desire to unite the best capabilities of the modern ecosystem into a single lightweight and efficient framework. Features such as *File-based App Routing*, *Auto Import*, *Type-Safe RPC*, a *Monolith Frontend-Backend* architecture, and *built-in Authentication* are now available in one unified ecosystem — no fragmentation, no layered configuration.
+
+Rakta.js does not aim to replace existing frameworks. Instead, it brings a fresh perspective: **a framework that feels clean, fast, and sovereign** — crafted by the hands of an Indonesian developer.
+
+</td>
+</tr>
+</table>
+
+
 
 ---
 
@@ -105,24 +138,25 @@ Rakta.js is built for people who want speed without losing control, structure wi
 
 Rakta.js uses its own framework language. The public naming avoids copying feature names from other frameworks.
 
-| Feature            | Purpose                                      |
-| ------------------ | -------------------------------------------- |
-| **MegaWeave**      | File-based routing layer                     |
-| **ShrimpStep**     | Navigation experience using `<click to="">`  |
-| **TrusmiFrame**    | Picture experience using `<picture path="">` |
-| **KasepuhanGate**  | File-based API endpoint concept              |
-| **KanomanShield**  | Route protection layer                       |
-| **SunyaragiCrown** | Metadata and head manager                    |
-| **NagaLimanWire**  | Type-safe RPC concept                        |
-| **TrusmiThread**   | Auto import system                           |
-| **CherbonsEngine** | Build and dev engine                         |
-| **NorthCoastFlow** | Runtime and rendering flow                   |
-| **MegaSignal**     | SEO, sitemap, robots, and RSS layer          |
-| **ShrimpHarbor**   | PWA and offline layer                        |
-| **JatiLens**       | Diagnostics and project health               |
-| **RaktaKernel**    | Service container, environment, and plugins  |
-| **RaktaMiddleware** | Async request middleware pipeline            |
-| **RaktaDocs**      | Markdown docs manifest and VitePress bridge  |
+| Feature               | Purpose                                        |
+| --------------------- | ---------------------------------------------- |
+| **MegaWeave**         | File-based routing layer                       |
+| **ShrimpStep**        | Navigation experience using `<click to="">`    |
+| **TrusmiFrame**       | Picture experience using `<picture path="">`   |
+| **Sintren**           | Smooth scroll - `<scroll to="">` / `<sintren>` |
+| **KasepuhanGate**     | File-based API endpoint concept                |
+| **KanomanShield**     | Route protection layer                         |
+| **SunyaragiCrown**    | Metadata and head manager                      |
+| **NagaLimanWire**     | Type-safe RPC concept                          |
+| **TrusmiThread**      | Auto import system                             |
+| **CherbonsEngine**    | Build and dev engine                           |
+| **NorthCoastFlow**    | Runtime and rendering flow                     |
+| **MegaSignal**        | SEO, sitemap, robots, and RSS layer            |
+| **ShrimpHarbor**      | PWA and offline layer                          |
+| **JatiLens**          | Diagnostics and project health                 |
+| **RaktaKernel**       | Service container, environment, and plugins    |
+| **RaktaMiddleware**   | Async request middleware pipeline              |
+| **RaktaDocs**         | Markdown docs manifest and VitePress bridge    |
 
 ---
 
@@ -581,9 +615,22 @@ rakta/tide
 
 Rakta.js uses the roadmap as a public implementation contract.
 
-### Released - v0.1.0 through v1.0.2
+### Patch Series - v1.0.x
+
+Small releases focused on fixes, dependency updates, and additive components that do not break the public API.
+
+| Version | Date | Changes |
+| --- | --- | --- |
+| **v1.0.0** | 2026-07 | Initial public release - full module set (router, render, rpc, store, schema, http, seo, pwa, kernel, middleware, layout, data, dx, performance, security, ops, testing, deployment, plugin, docs) |
+| **v1.0.1** | 2026-07 | Biome lint fix - indentation in `plugin/official.ts` |
+| **v1.0.2** | 2026-07 | Add `gsap` + `ScrollTrigger`, add **Sintren** smooth scroll component (`<scroll>` / `<sintren>`), add `gsap`, `react-icons`, `clsx`, and `tailwind-merge` as first-class dependencies |
+
+---
+
+### Released Systems - v1.0.0 through v1.0.2
 
 All of the following systems are present in this repository and the published packages:
+
 | System | Module |
 | --- | --- |
 | Core configuration | `raktajs/config` |
@@ -611,6 +658,8 @@ All of the following systems are present in this repository and the published pa
 | Deployment adapters | `raktajs/deployment` |
 | Plugin registry | `raktajs/plugin` |
 | Docs manifest - VitePress bridge | `raktajs/docs` |
+| Smooth scroll - Sintren | `raktajs/components` |
+| Brutalist UI Alert & Toaster | `raktajs/components` |
 | Frontend-only starter (ShrimpRun) | `create-rakta-app` template |
 | Fullstack starter (Gaman.js + auth + CMS) | `create-rakta-app` fullstack template |
 | English + Indonesian documentation | `docs/en/` and `docs/id/` |
@@ -621,6 +670,7 @@ All of the following systems are present in this repository and the published pa
 
 | Version | Focus area | Key deliverables |
 | --- | --- | --- |
+| **v1.0.0** | Patch & polish | Bug fixes, dependency updates, additive Cirebon-named components, DX improvements - no breaking changes |
 | **v1.1** | Database adapters | SQLite, PostgreSQL, MySQL, and edge KV adapters with a typed repository abstraction, ORM adapter contracts |
 | **v1.2** | Auth providers | OAuth, email verification, refresh tokens, stricter session rotation, magic link support |
 | **v1.3** | Devtools UI | Browser-based auto import inspector, route analyzer, bundle analyzer, performance profiler, and overlay panels |
@@ -630,6 +680,7 @@ All of the following systems are present in this repository and the published pa
 | **v2.1** | Edge first | Cloudflare Workers / Deno Deploy first-class streaming SSR, edge middleware, edge KV cache |
 | **v2.2** | React Server Components | Server component rendering, server actions, and streaming with Suspense boundaries |
 | **v2.3** | i18n | Built-in internationalization routing, locale detection, and message catalog |
+| **v2.4** | **Native App Engine** | Zero-overhead native application compiler for iOS, Android, macOS, Windows & Linux. Sub-5MB native shell, direct zero-latency IPC bridge for device APIs (Camera, Biometrics, Push Notifications, Storage, Geolocation), 120 FPS hardware-accelerated web views, completely eliminating Capacitor/Cordova runtime overhead to run 10x lighter & faster than Ionic.js |
 | **v3.0** | Multi-runtime | Support React, Preact, Solid, and Vue as interchangeable rendering runtimes via the plugin API |
 
 ---
@@ -698,7 +749,8 @@ Dukungan dan donasi Anda sangat berarti untuk biaya pemeliharaan server, domain,
 
 ### Kemitraan Lembaga Penyalur Donasi
 
-Bagi yayasan panti asuhan, panti jompo, lembaga zakat/infaq, atau organisasi kemanusiaan resmi yang ingin bekerja sama sebagai **lembaga penampung dan penyalur dana hasil pengumpulan donasi ini**, Anda dapat mengajukan kemitraan resmi melalui:- Panduan Kemitraan: [`docs/id/donasi.md`](./docs/id/donasi.md) / [`docs/en/donations.md`](./docs/en/donations.md)
+Bagi yayasan panti asuhan, panti jompo, lembaga zakat/infaq, atau organisasi kemanusiaan resmi yang ingin bekerja sama sebagai **lembaga penampung dan penyalur dana hasil pengumpulan donasi ini**, Anda dapat mengajukan kemitraan resmi melalui:
+- Panduan Kemitraan: [`docs/id/donasi.md`](./docs/id/donasi.md) / [`docs/en/donations.md`](./docs/en/donations.md)
 - Kontak Kemitraan & Verifikasi: Pembukaan Issue di GitHub Repository atau Email Pengembang (Rhein Sullivan).
 
 ---

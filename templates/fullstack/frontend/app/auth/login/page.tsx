@@ -1,5 +1,4 @@
-import { loginUser } from "../../../lib/auth";
-import AuthShell from "../AuthShell";
+
 
 export default function LoginPage() {
 	const [email, setEmail] = useState("admin@rakta.local");

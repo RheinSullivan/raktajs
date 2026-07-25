@@ -31,19 +31,140 @@ declare module "react" {
 	}
 }
 
-// Rakta.js auto-imported React hooks - no explicit import needed in component files
+// Rakta.js auto-imported globals — zero explicit import needed in component files
 declare global {
+	// ── React Global Namespace ──
+	namespace React {
+		type FormEvent<T = Element> = import("react").FormEvent<T>;
+		type ChangeEvent<T = Element> = import("react").ChangeEvent<T>;
+		type MouseEvent<T = Element> = import("react").MouseEvent<T>;
+		type KeyboardEvent<T = Element> = import("react").KeyboardEvent<T>;
+		type FocusEvent<T = Element> = import("react").FocusEvent<T>;
+		type ReactNode = import("react").ReactNode;
+		type ReactElement = import("react").ReactElement;
+		type CSSProperties = import("react").CSSProperties;
+	}
+
+	// ── Core Types ──
 	type AestheticUnit = "LENIS-MODERN" | "RETRO-CYBER" | "NEO-BRUTALIST";
 	type ReactNode = import("react").ReactNode;
+	type ReactElement = import("react").ReactElement;
+	type Metadata = import("raktajs/seo").Metadata;
+	type TitleMetadata = import("raktajs/seo").TitleMetadata;
+	type FormatDetection = import("raktajs/seo").FormatDetection;
+	type SimSpeed = "NORMAL" | "FAST" | "TURBO";
+	type ObstaclePosition = "TOP" | "BOTTOM";
+	type ObstacleSizeClass = "KECIL" | "SEDANG" | "BESAR";
+	type UserRole = "ADMIN" | "USER" | "GUEST";
+	type Gender = "MALE" | "FEMALE" | "OTHER";
 
+	type FormEvent<T = Element> = import("react").FormEvent<T>;
+	type ChangeEvent<T = Element> = import("react").ChangeEvent<T>;
+	type MouseEvent<T = Element> = import("react").MouseEvent<T>;
+	type KeyboardEvent<T = Element> = import("react").KeyboardEvent<T>;
+	type FocusEvent<T = Element> = import("react").FocusEvent<T>;
+	type CSSProperties = import("react").CSSProperties;
+
+	interface ObstacleSize {
+		height: number;
+		width: number;
+		sizeClass: ObstacleSizeClass;
+	}
+
+	interface HeaderProps {
+		lang: "ID" | "EN";
+		onLangToggle: () => void;
+		isMuted: boolean;
+		onMuteToggle: () => void;
+		aestheticUnit: AestheticUnit;
+		onAestheticChange: (unit: AestheticUnit) => void;
+		lowLatencyMode: boolean;
+		onLowLatencyToggle: () => void;
+	}
+
+	interface HeroSectionProps {
+		onOpenDocs: () => void;
+		onOpenComponents: () => void;
+		onOpenDeploy: () => void;
+	}
+
+	interface ShrimpRunGameProps {
+		isPlaying: boolean;
+		score: number;
+		highScore: number;
+		hasCollision: boolean;
+		liveFps: number;
+		playerY: number;
+		obstacleX: number;
+		obstaclePos: ObstaclePosition;
+		obstacleHeight: number;
+		obstacleWidth: number;
+		obstaclePalette: number;
+		obstacleVariant: number;
+		obstacleScaleX: number;
+		obstacleSizeClass: ObstacleSizeClass;
+		simSpeed: SimSpeed;
+		onSpeedChange: (speed: SimSpeed) => void;
+		onStartSimulation: () => void;
+		onTriggerJump: () => void;
+	}
+
+	interface ModalProps {
+		isOpen: boolean;
+		onClose: () => void;
+	}
+
+	interface AuthShellProps {
+		eyebrow: string;
+		title: string;
+		description: string;
+		children: ReactNode;
+	}
+
+	interface AuthResult {
+		user: {
+			id: string;
+			firstName: string;
+			lastName: string;
+			name: string;
+			email: string;
+			role: UserRole;
+			gender: Gender;
+		};
+		token: string;
+		sessionId: string;
+	}
+
+	interface RegisterUserInput {
+		firstName: string;
+		lastName: string;
+		email: string;
+		password: string;
+		role: UserRole;
+		gender: Gender;
+	}
+
+	// ── React Hooks ──
 	const useCallback: typeof import("react").useCallback;
 	const useEffect: typeof import("react").useEffect;
 	const useMemo: typeof import("react").useMemo;
 	const useRef: typeof import("react").useRef;
 	const useState: typeof import("react").useState;
 
-	const motion: typeof import("motion/react").motion;
+	// ── GSAP ──
+	const gsap: typeof import("gsap").default;
 
+	// ── Rakta.js Components ──
+	const RaktaToast: typeof import("raktajs/components").RaktaToast;
+	const Toaster: typeof import("raktajs/components").Toaster;
+	const RaktaAlert: typeof import("raktajs/components").RaktaAlert;
+	const Alert: typeof import("raktajs/components").Alert;
+	const Sintren: typeof import("raktajs/components").Sintren;
+	const useSintren: typeof import("raktajs/components").useSintren;
+	const toast: typeof import("raktajs/components").toast;
+	const useToast: typeof import("raktajs/components").useToast;
+
+	// ── Icons ──
 	const ArrowRight: import("react").ComponentType<Record<string, unknown>>;
 	const Book: import("react").ComponentType<Record<string, unknown>>;
 	const Check: import("react").ComponentType<Record<string, unknown>>;
@@ -66,12 +187,51 @@ declare global {
 	const VolumeX: import("react").ComponentType<Record<string, unknown>>;
 	const X: import("react").ComponentType<Record<string, unknown>>;
 
-	const ComponentsModal: import("react").ComponentType<Record<string, unknown>>;
+	// ── App Components (auto-resolved from app/ directory) ──
+	const ComponentsModal: import("react").ComponentType<ModalProps>;
 	const CoralObstacle: import("react").ComponentType<Record<string, unknown>>;
-	const DeployModal: import("react").ComponentType<Record<string, unknown>>;
-	const DocsModal: import("react").ComponentType<Record<string, unknown>>;
+	const DeployModal: import("react").ComponentType<ModalProps>;
+	const DocsModal: import("react").ComponentType<ModalProps>;
 	const ShrimpCharacter: import("react").ComponentType<Record<string, unknown>>;
+	const Header: import("react").ComponentType<HeaderProps>;
+	const HeroSection: import("react").ComponentType<HeroSectionProps>;
+	const ShrimpRunGame: import("react").ComponentType<ShrimpRunGameProps>;
+	const FeatureGrid: import("react").ComponentType<Record<string, unknown>>;
+	const Footer: import("react").ComponentType<Record<string, unknown>>;
+	const AuthShell: import("react").ComponentType<AuthShellProps>;
 
+	// ── Custom Hooks ──
+	const useShrimpRun: () => {
+		isPlaying: boolean;
+		score: number;
+		highScore: number;
+		hasCollision: boolean;
+		liveFps: number;
+		simSpeed: SimSpeed;
+		setSimSpeed: (speed: SimSpeed) => void;
+		playerY: number;
+		obstacleX: number;
+		obstaclePos: ObstaclePosition;
+		obstacleHeight: number;
+		obstacleWidth: number;
+		obstaclePalette: number;
+		obstacleVariant: number;
+		obstacleScaleX: number;
+		obstacleSizeClass: ObstacleSizeClass;
+		startSimulation: () => void;
+		triggerJump: () => void;
+	};
+
+	// ── Auth Utilities ──
+	const loginUser: (email: string, password: string) => Promise<AuthResult>;
+	const registerUser: (input: RegisterUserInput) => Promise<AuthResult>;
+	const requestPasswordOtp: (email: string) => Promise<{ otp: string; expiresAt: number }>;
+	const resetPassword: (email: string, otp: string, password: string) => Promise<unknown>;
+	const resetPasswordWithOtp: (input: { email: string; otp: string; newPassword: string }) => Promise<unknown>;
+	const apiGet: <TData>(path: string) => Promise<TData>;
+	const API_URL: string;
+
+	// ── Audio Helpers ──
 	const getMuteState: () => boolean;
 	const playGameOverSound: () => void;
 	const playJumpSound: () => void;

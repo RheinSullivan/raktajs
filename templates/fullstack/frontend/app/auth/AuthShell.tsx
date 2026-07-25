@@ -1,8 +1,8 @@
 interface AuthShellProps {
-	readonly eyebrow: string;
-	readonly title: string;
-	readonly description: string;
-	readonly children: ReactNode;
+	eyebrow: string;
+	title: string;
+	description: string;
+	children: ReactNode;
 }
 
 export default function AuthShell({

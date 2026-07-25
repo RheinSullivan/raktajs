@@ -1,16 +1,15 @@
-import { apiGet } from "../../lib/http";
 
 interface UserRow {
-	readonly id: string;
-	readonly name: string;
-	readonly email: string;
-	readonly role: string;
+	id: string;
+	name: string;
+	email: string;
+	role: string;
 }
 
 interface CmsPostRow {
-	readonly id: string;
-	readonly title: string;
-	readonly status: string;
+	id: string;
+	title: string;
+	status: string;
 }
 
 const DASHBOARD_CARDS = [

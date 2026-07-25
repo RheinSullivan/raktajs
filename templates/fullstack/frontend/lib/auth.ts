@@ -1,14 +1,29 @@
 import { API_URL } from "./http";
 
+export type UserRole = "ADMIN" | "USER" | "GUEST";
+export type Gender = "MALE" | "FEMALE" | "OTHER";
+
 export interface AuthResult {
-	readonly user: {
-		readonly id: string;
-		readonly name: string;
-		readonly email: string;
-		readonly role: string;
+	user: {
+		id: string;
+		firstName: string;
+		lastName: string;
+		name: string;
+		email: string;
+		role: UserRole;
+		gender: Gender;
 	};
-	readonly token: string;
-	readonly sessionId: string;
+	token: string;
+	sessionId: string;
+}
+
+export interface RegisterUserInput {
+	firstName: string;
+	lastName: string;
+	email: string;
+	password: string;
+	role: UserRole;
+	gender: Gender;
 }
 
 async function postJson<TData>(
@@ -25,9 +40,9 @@ async function postJson<TData>(
 	});
 
 	const payload = (await response.json()) as {
-		readonly success: boolean;
-		readonly data?: TData;
-		readonly error?: string;
+		success: boolean;
+		data?: TData;
+		error?: string;
 	};
 
 	if (!response.ok || !payload.success || payload.data === undefined) {
@@ -44,21 +59,25 @@ export function loginUser(
 	return postJson<AuthResult>("/api/auth/login", { email, password });
 }
 
-export function registerUser(input: {
-	readonly name: string;
-	readonly email: string;
-	readonly password: string;
-}) {
+export function registerUser(input: RegisterUserInput) {
 	return postJson("/api/auth/register", input);
 }
 
 export function requestPasswordOtp(email: string) {
-	return postJson<{ readonly otp: string; readonly expiresAt: number }>(
+	return postJson<{ otp: string; expiresAt: number }>(
 		"/api/auth/forgot-password",
 		{ email },
 	);
 }
 
+export function resetPasswordWithOtp(input: {
+	email: string;
+	otp: string;
+	newPassword: string;
+}) {
+	return postJson("/api/auth/reset-password", input);
+}
+
 export function resetPassword(email: string, otp: string, password: string) {
-	return postJson("/api/auth/reset-password", { email, otp, password });
+	return resetPasswordWithOtp({ email, otp, newPassword: password });
 }

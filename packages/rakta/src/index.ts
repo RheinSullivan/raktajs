@@ -1,5 +1,5 @@
 export const RAKTA_NAME = "Rakta.js";
-export const RAKTA_VERSION = "0.1.0";
+export const RAKTA_VERSION = "1.0.2";
 export const RAKTA_TAGLINE =
 	"Small in size. Fierce in speed. Alive in every route.";
 
@@ -18,17 +18,34 @@ export {
 	scanForExports,
 } from "./auto-import/index";
 export type {
+	AlertType,
+	AnchorProps,
 	ClickProps,
 	PictureProps,
 	PictureProps as PhotoProps,
+	RaktaAlertProps,
+	ScrollProps,
+	ToastItem,
+	ToastType,
 } from "./components/index";
-
-// Components
+// Components - ShrimpStep, TrusmiFrame, Sintren, RaktaAlert, RaktaToast
 export {
+	Alert,
+	Anchor,
 	Click,
 	Picture,
 	Picture as Photo,
+	RaktaAlert,
+	RaktaToast,
+	Scroll,
+	Sintren,
+	toast,
+	Toaster,
+	useSintren,
+	useScrollTo,
+	useToast,
 } from "./components/index";
+export type { SintrenOptions, GunungjatiScrollOptions as LosariScrollOptions } from "./components/Scroll";
 export type {
 	AutoImportConfig,
 	BuildConfig,

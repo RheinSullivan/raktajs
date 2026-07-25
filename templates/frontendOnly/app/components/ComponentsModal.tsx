@@ -189,12 +189,8 @@ export default function ComponentsModal({
 			className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm"
 			id="components-modal-container"
 		>
-			<motion.div
-				initial={{ opacity: 0, scale: 0.95, y: 15 }}
-				animate={{ opacity: 1, scale: 1, y: 0 }}
-				exit={{ opacity: 0, scale: 0.95, y: 15 }}
-				transition={{ duration: 0.2 }}
-				className="w-full max-w-4xl h-[75vh] bg-black border-2 border-white flex flex-col relative"
+			<div
+				className="w-full max-w-4xl h-[75vh] bg-black border-2 border-white flex flex-col relative transition-all duration-200 animate-in fade-in zoom-in-95"
 			>
 				{/* Header */}
 				<div className="flex items-center justify-between border-b border-surface-stroke p-5">
@@ -281,7 +277,7 @@ export default function ComponentsModal({
 						</div>
 					</div>
 				</div>
-			</motion.div>
+			</div>
 		</div>
 	);
 }
