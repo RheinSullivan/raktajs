@@ -63,37 +63,40 @@
 </p>
 
 <p align="center">
+  <strong>Bun in the engine. React at the core. Cirebon in the soul. Garuda in the heart.</strong>
   <strong>Keywords</strong>: Rakta.js | Framework Frontend | React Framework | Cirebon | Jakarta Selatan | Javascript Frontend Framework | Indonesia Developer | Rhein Sullivan | Muhammad Rizky Ramadhan | Vyagra Nexus™
 </p>
 
 ---
 
-## About Rakta.js — Kisah & Visi / Story & Vision
+## About Rakta.js: Kisah & Visi / Story & Vision
 
 <table>
-<tr>
-<td width="50%" valign="top">
+  <tr>
+  <td width="50%" valign="top">
 
-**Indonesia**
+  **Bahasa Indonesia**
 
-Rakta.js diciptakan oleh **Muhammad Rizky Ramadhan**, seorang pengembang perangkat lunak asal **Cirebon & Jakarta Selatan, Indonesia**, dikenal di komunitas developer sebagai **Rhein Sullivan** dan ketua dari tim **Vyagra Nexus™**.
+  Rakta.js diciptakan oleh **Muhammad Rizky Ramadhan**, seorang pengembang perangkat lunak asal **Cirebon & Jakarta Selatan, Indonesia**, dikenal di komunitas developer sebagai **Rhein Sullivan** dan ketua dari tim **Vyagra Nexus™**.
 
-Visi Rakta.js lahir dari semangat untuk menyatukan kemampuan terbaik dari ekosistem modern ke dalam satu framework yang ringan dan efisien. Fitur-fitur seperti *File-based App Routing*, *Auto Import*, *Type-Safe RPC*, arsitektur *Monolith Frontend-Backend*, dan *Autentikasi terintegrasi* kini tersedia dalam satu ekosistem terpadu, tanpa fragmentasi, tanpa konfigurasi berlapis.
+  Visi Rakta.js lahir dari semangat untuk menyatukan kemampuan terbaik dari ekosistem modern ke dalam satu framework yang ringan dan efisien. Fitur-fitur seperti *File-based App Routing*, *Auto Import*, *Type-Safe RPC*, arsitektur *Monolith Frontend-Backend*, dan *Autentikasi terintegrasi* kini tersedia dalam satu ekosistem terpadu, tanpa fragmentasi, tanpa konfigurasi berlapis.
 
-Rakta.js tidak hadir untuk menggantikan framework yang sudah ada, melainkan untuk menghadirkan perspektif baru: **sebuah framework yang terasa bersih, cepat, dan berdaulat**, buatan tangan seorang anak Indonesia.
+  Rakta.js tidak hadir untuk menggantikan framework yang sudah ada, melainkan untuk menghadirkan perspektif baru: **sebuah framework yang terasa bersih, cepat, dan berdaulat**, buatan tangan seorang anak Indonesia.
 
-</td>
-<td width="50%" valign
-**English**
+  </td>
 
-Rakta.js was created by **Muhammad Rizky Ramadhan**, a software developer from **Cirebon & South Jakarta, Indonesia**, known in the developer community as **Rhein Sullivan** and lead of **Vyagra Nexus™** team.
+  <td width="50%" valign="top">
 
-The vision of Rakta.js was born from a desire to unite the best capabilities of the modern ecosystem into a single lightweight and efficient framework. Features such as *File-based App Routing*, *Auto Import*, *Type-Safe RPC*, a *Monolith Frontend-Backend* architecture, and *built-in Authentication* are now available in one unified ecosystem, no fragmentation, no layered configuration.
+  **English Language**
 
-Rakta.js does not aim to replace existing frameworks. Instead, it brings a fresh perspective: **a framework that feels clean, fast, and sovereign**, crafted by the hands of an Indonesian developer.
+  Rakta.js was created by **Muhammad Rizky Ramadhan**, a software developer from **Cirebon & South Jakarta, Indonesia**, known in the developer community as **Rhein Sullivan** and lead of **Vyagra Nexus™** team.
 
-</td>
-</tr>
+  The vision of Rakta.js was born from a desire to unite the best capabilities of the modern ecosystem into a single lightweight and efficient framework. Features such as *File-based App Routing*, *Auto Import*, *Type-Safe RPC*, a *Monolith Frontend-Backend* architecture, and *built-in Authentication* are now available in one unified ecosystem, no fragmentation, no layered configuration.
+
+  Rakta.js does not aim to replace existing frameworks. Instead, it brings a fresh perspective: **a framework that feels clean, fast, and sovereign**, crafted by the hands of an Indonesian developer.
+
+  </td>
+  </tr>
 </table>
 
 
@@ -712,7 +715,7 @@ chore(repo): update repository structure
 
 ---
 
-## Support & Humanitarian Donations 🇵🇸 (EN)
+## Support & Humanitarian Donations 🇵🇸
 
 Your support and donations are crucial for covering the costs of server maintenance, domain registration, and infrastructure, and are channeled toward humanitarian social initiatives: **the underprivileged, orphans, orphanages, nursing homes, and humanitarian aid for Palestine 🇵🇸 (Free Palestine)**.
 
@@ -729,11 +732,11 @@ Your support and donations are crucial for covering the costs of server maintena
 
 For orphanages, nursing homes, zakat/infaq institutions, or official humanitarian organizations that wish to partner with us as **organizations to receive and distribute the funds raised through these donations**, you can apply for an official partnership through:
 - Partnership Guide: [`docs/id/donasi.md`](./docs/id/donasi.md) / [`docs/en/donations.md`](./docs/en/donations.md)
-- Partnership & Verification Contact: Open an issue in the GitHub repository or email the developer (Rhein Sullivan).
+- Partnership & Verification Contact: Open an issue in the GitHub repository or email the developer [`rheinsullivan.web.id/`](Rhein Sullivan).
   
 ---
 
-## Support & Donasi Kemanusiaan 🇵🇸 (ID)
+## Support & Donasi Kemanusiaan 🇵🇸
 
 Dukungan dan donasi Anda sangat berarti untuk biaya pemeliharaan server, domain, infrastruktur, serta disalurkan untuk aksi sosial kemanusiaan: **kaum dhuafa, anak yatim & piatu, panti asuhan, panti jompo, dan bantuan kemanusiaan Palestina 🇵🇸 (Free Palestine)**.
 
@@ -750,7 +753,7 @@ Dukungan dan donasi Anda sangat berarti untuk biaya pemeliharaan server, domain,
 
 Bagi yayasan panti asuhan, panti jompo, lembaga zakat/infaq, atau organisasi kemanusiaan resmi yang ingin bekerja sama sebagai **lembaga penampung dan penyalur dana hasil pengumpulan donasi ini**, Anda dapat mengajukan kemitraan resmi melalui:
 - Panduan Kemitraan: [`docs/id/donasi.md`](./docs/id/donasi.md) / [`docs/en/donations.md`](./docs/en/donations.md)
-- Kontak Kemitraan & Verifikasi: Pembukaan Issue di GitHub Repository atau Email Pengembang (Rhein Sullivan).
+- Kontak Kemitraan & Verifikasi: Pembukaan Issue di GitHub Repository atau Email Pengembang [`rheinsullivan.web.id/`](Rhein Sullivan).
 
 ---
 
