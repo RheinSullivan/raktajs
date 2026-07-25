@@ -63,7 +63,7 @@
 </p>
 
 <p align="center">
-  <strong>Keywords</strong>: Rakta.js | Framework Frontend | React Framework | Cirebon | Nusantara | Javascript Frontend Framework | Indonesia Developer | Rhein Sullivan | Vyagra Nexus | Muhammad Rizky Ramadhan
+  <strong>Keywords</strong>: Rakta.js | Framework Frontend | React Framework | Cirebon | Jakarta Selatan | Javascript Frontend Framework | Indonesia Developer | Rhein Sullivan | Muhammad Rizky Ramadhan | Vyagra Nexus™
 </p>
 
 ---
@@ -74,24 +74,23 @@
 <tr>
 <td width="50%" valign="top">
 
-**🇮🇩 Bahasa Indonesia**
+**Indonesia**
 
-Rakta.js diciptakan oleh **Muhammad Rizky Ramadhan**, seorang pengembang perangkat lunak asal **Cirebon & Jakarta Selatan, Indonesia** — dikenal di komunitas developer sebagai **Rhein Sullivan** dan **Vyagra Nexus**.
+Rakta.js diciptakan oleh **Muhammad Rizky Ramadhan**, seorang pengembang perangkat lunak asal **Cirebon & Jakarta Selatan, Indonesia**, dikenal di komunitas developer sebagai **Rhein Sullivan** dan ketua dari tim **Vyagra Nexus™**.
 
-Visi Rakta.js lahir dari semangat untuk menyatukan kemampuan terbaik dari ekosistem modern ke dalam satu framework yang ringan dan efisien. Fitur-fitur seperti *File-based App Routing*, *Auto Import*, *Type-Safe RPC*, arsitektur *Monolith Frontend-Backend*, dan *Autentikasi terintegrasi* kini tersedia dalam satu ekosistem terpadu — tanpa fragmentasi, tanpa konfigurasi berlapis.
+Visi Rakta.js lahir dari semangat untuk menyatukan kemampuan terbaik dari ekosistem modern ke dalam satu framework yang ringan dan efisien. Fitur-fitur seperti *File-based App Routing*, *Auto Import*, *Type-Safe RPC*, arsitektur *Monolith Frontend-Backend*, dan *Autentikasi terintegrasi* kini tersedia dalam satu ekosistem terpadu, tanpa fragmentasi, tanpa konfigurasi berlapis.
 
-Rakta.js tidak hadir untuk menggantikan framework yang sudah ada, melainkan untuk menghadirkan perspektif baru: **sebuah framework yang terasa bersih, cepat, dan berdaulat** — buatan tangan seorang anak Indonesia.
+Rakta.js tidak hadir untuk menggantikan framework yang sudah ada, melainkan untuk menghadirkan perspektif baru: **sebuah framework yang terasa bersih, cepat, dan berdaulat**, buatan tangan seorang anak Indonesia.
 
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign
+**English**
 
-**🌏 English**
+Rakta.js was created by **Muhammad Rizky Ramadhan**, a software developer from **Cirebon & South Jakarta, Indonesia**, known in the developer community as **Rhein Sullivan** and lead of **Vyagra Nexus™** team.
 
-Rakta.js was created by **Muhammad Rizky Ramadhan**, a software developer from **Cirebon & South Jakarta, Indonesia** — known in the developer community as **Rhein Sullivan** and **Vyagra Nexus**.
+The vision of Rakta.js was born from a desire to unite the best capabilities of the modern ecosystem into a single lightweight and efficient framework. Features such as *File-based App Routing*, *Auto Import*, *Type-Safe RPC*, a *Monolith Frontend-Backend* architecture, and *built-in Authentication* are now available in one unified ecosystem, no fragmentation, no layered configuration.
 
-The vision of Rakta.js was born from a desire to unite the best capabilities of the modern ecosystem into a single lightweight and efficient framework. Features such as *File-based App Routing*, *Auto Import*, *Type-Safe RPC*, a *Monolith Frontend-Backend* architecture, and *built-in Authentication* are now available in one unified ecosystem — no fragmentation, no layered configuration.
-
-Rakta.js does not aim to replace existing frameworks. Instead, it brings a fresh perspective: **a framework that feels clean, fast, and sovereign** — crafted by the hands of an Indonesian developer.
+Rakta.js does not aim to replace existing frameworks. Instead, it brings a fresh perspective: **a framework that feels clean, fast, and sovereign**, crafted by the hands of an Indonesian developer.
 
 </td>
 </tr>

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 		"Framework Frontend",
 		"React Framework",
 		"Cirebon",
-		"Nusantara",
+		"Jakarta Selatan",
 		"Javascript Frontend Framework",
 		"Indonesia Developer",
 		"Rhein Sullivan",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 	},
 	openGraph: {
 		type: "website",
-		title: "Rakta.js — Ultra-Fast Fullstack Framework | Nusantara Ecosystem",
+		title: "Rakta.js — Ultra-Fast Fullstack Framework | Jakarta Selatan Ecosystem",
 		description:
 			"An ultra-lightweight fullstack framework unifying App Routing, Auto Import, Type-Safe RPC, and built-in Auth. Built on Bun + React + TypeScript.",
 		siteName: "Rakta.js",

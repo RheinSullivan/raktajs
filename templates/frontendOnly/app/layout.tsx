@@ -10,11 +10,11 @@ export const metadata: Metadata = {
 		"Framework Frontend",
 		"React Framework",
 		"Cirebon",
-		"Nusantara",
+		"Jakarta Selatan",
 		"Javascript Frontend Framework",
 		"Indonesia Developer",
 		"Rhein Sullivan",
-		"Vyagra Nexus",
+		"Vyagra Nexus™",
 		"Muhammad Rizky Ramadhan",
 		"Type-Safe RPC",
 		"Auto Import",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 	],
 	authors: [{ name: "Muhammad Rizky Ramadhan", url: "https://github.com/RheinSullivan" }],
 	creator: "Rhein Sullivan",
-	publisher: "Vyagra Nexus",
+	publisher: "Vyagra Nexus™",
 	applicationName: "Rakta.js",
 	formatDetection: {
 		email: false,
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 	},
 	openGraph: {
 		type: "website",
-		title: "Rakta.js — Ultra-Fast Frontend Framework | Nusantara Ecosystem",
+		title: "Rakta.js — Ultra-Fast Frontend Framework | Jakarta Selatan Ecosystem",
 		description:
 			"An ultra-lightweight fullstack framework unifying App Routing, Auto Import, Type-Safe RPC, and built-in Auth. Built on Bun + React + TypeScript.",
 		siteName: "Rakta.js",
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
 		author: {
 			"@type": "Person",
 			name: "Muhammad Rizky Ramadhan",
-			alternateName: ["Rhein Sullivan", "Vyagra Nexus"],
+			alternateName: ["Rhein Sullivan", "Vyagra Nexus™"],
 			address: {
 				"@type": "PostalAddress",
 				addressLocality: "Cirebon & Jakarta Selatan",
