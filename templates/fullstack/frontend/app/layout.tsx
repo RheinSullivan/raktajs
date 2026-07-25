@@ -1,50 +1,85 @@
+const SITE_URL = "https://raktajs.dev";
+const OG_IMAGE = `${SITE_URL}/og/rakta-banner.png`;
+
 export const metadata: Metadata = {
+	metadataBase: SITE_URL,
 	title: {
-		default: "Rakta.js — Ultra-Fast Fullstack Framework",
+		default: "Rakta.js — Ultra-Fast Fullstack Framework | Cirebon · Nusantara",
 		template: "%s | Rakta.js",
 	},
 	description:
-		"Rakta.js is an ultra-lightweight fullstack framework built on Bun, React, and TypeScript. Created by Muhammad Rizky Ramadhan (Rhein Sullivan) from Cirebon & Jakarta Selatan, Indonesia — unifying File-based App Routing, Auto Import, Type-Safe RPC, Monolith Frontend-Backend, and built-in Authentication into a single blazing-fast ecosystem.",
+		"Rakta.js is a lightweight fullstack React framework by Muhammad Rizky Ramadhan (Rhein Sullivan / Vyagra Nexus™) from Cirebon & South Jakarta, Indonesia. File-based App Routing, zero-import Auto Import, end-to-end Type-Safe RPC, integrated frontend-backend monolith, and built-in Authentication — all in one Bun + TypeScript ecosystem.",
 	keywords: [
 		"Rakta.js",
 		"Framework Frontend",
 		"React Framework",
-		"Cirebon",
-		"Jakarta Selatan",
 		"Javascript Frontend Framework",
 		"Indonesia Developer",
 		"Rhein Sullivan",
-		"Vyagra Nexus",
 		"Muhammad Rizky Ramadhan",
-		"Type-Safe RPC",
+		"Vyagra Nexus",
+		"Cirebon",
+		"Jakarta Selatan",
+		"Nusantara",
 		"Auto Import",
+		"Type-Safe RPC",
 		"Bun Framework",
 		"TypeScript Framework",
 		"Fullstack React",
+		"Indonesian JavaScript Framework",
+		"Monolith Frontend Backend",
 	],
-	authors: [{ name: "Muhammad Rizky Ramadhan", url: "https://github.com/RheinSullivan" }],
+	authors: [
+		{
+			name: "Muhammad Rizky Ramadhan",
+			url: "https://github.com/RheinSullivan",
+		},
+	],
 	creator: "Rhein Sullivan",
-	publisher: "Vyagra Nexus",
+	publisher: "Vyagra Nexus™",
 	applicationName: "Rakta.js",
+	themeColor: "#000000",
+	colorScheme: "dark",
 	formatDetection: {
 		email: false,
 		address: false,
 		telephone: false,
 	},
+	canonical: SITE_URL,
+	alternates: {
+		canonical: SITE_URL,
+		languages: {
+			"id-ID": SITE_URL,
+			"en-US": SITE_URL,
+		},
+	},
 	openGraph: {
 		type: "website",
-		title: "Rakta.js — Ultra-Fast Fullstack Framework | Jakarta Selatan Ecosystem",
+		url: SITE_URL,
+		title: "Rakta.js — Ultra-Fast Fullstack Framework | Cirebon · Nusantara",
 		description:
-			"An ultra-lightweight fullstack framework unifying App Routing, Auto Import, Type-Safe RPC, and built-in Auth. Built on Bun + React + TypeScript.",
+			"Lightweight fullstack React framework with zero-import Auto Import, file-based routing, type-safe RPC, and built-in auth. Crafted in Indonesia by Rhein Sullivan.",
 		siteName: "Rakta.js",
 		locale: "id_ID",
+		images: [
+			{
+				url: OG_IMAGE,
+				width: 1200,
+				height: 630,
+				alt: "Rakta.js — Small in Size. Fierce in Speed. Alive in Every Route.",
+				type: "image/png",
+			},
+		],
 	},
 	twitter: {
 		card: "summary_large_image",
+		site: "@RheinSullivan",
+		creator: "@RheinSullivan",
 		title: "Rakta.js — Ultra-Fast Fullstack Framework",
 		description:
-			"Unifying App Routing, Auto Import, Type-Safe RPC & built-in Auth into one blazing-fast ecosystem. By Rhein Sullivan.",
-		creator: "@RheinSullivan",
+			"Zero-import Auto Import · File-based Routing · Type-Safe RPC · Built-in Auth. By Rhein Sullivan / Vyagra Nexus™ from Cirebon, Indonesia.",
+		image: OG_IMAGE,
+		imageAlt: "Rakta.js Framework Banner",
 	},
 	robots: {
 		index: true,
@@ -57,61 +92,85 @@ export const metadata: Metadata = {
 			maxSnippet: -1,
 		},
 	},
+	icons: {
+		icon: "/favicon.ico",
+		apple: "/apple-touch-icon.png",
+	},
+	other: {
+		generator: "Rakta.js",
+		"geo.region": "ID-JB",
+		"geo.placename": "Cirebon, West Java, Indonesia",
+		"geo.position": "-6.7063;108.5570",
+		ICBM: "-6.7063, 108.5570",
+		language: "Indonesian, English",
+		"description:lang:id":
+			"Rakta.js — framework React fullstack ringan karya Muhammad Rizky Ramadhan (Rhein Sullivan / Vyagra Nexus™) dari Cirebon & Jakarta Selatan. Menyatukan App Routing berbasis file, Auto Import tanpa pernyataan import manual, Type-Safe RPC, arsitektur monolith frontend-backend, dan autentikasi bawaan dalam satu ekosistem Bun + TypeScript.",
+	},
 	jsonLd: {
 		"@context": "https://schema.org",
-		"@type": "SoftwareApplication",
-		name: "Rakta.js",
-		applicationCategory: "DeveloperApplication",
-		operatingSystem: "Cross-platform",
-		author: {
-			"@type": "Person",
-			name: "Muhammad Rizky Ramadhan",
-			alternateName: ["Rhein Sullivan", "Vyagra Nexus"],
-			address: {
-				"@type": "PostalAddress",
-				addressLocality: "Cirebon & Jakarta Selatan",
-				addressCountry: "Indonesia",
+		"@graph": [
+			{
+				"@type": "WebSite",
+				"@id": `${SITE_URL}/#website`,
+				url: SITE_URL,
+				name: "Rakta.js",
+				description:
+					"Ultra-fast fullstack React framework from Indonesia with zero-import Auto Import, file-based routing, and type-safe RPC.",
+				inLanguage: ["id-ID", "en-US"],
+				publisher: { "@id": `${SITE_URL}/#organization` },
 			},
-		},
+			{
+				"@type": "SoftwareApplication",
+				"@id": `${SITE_URL}/#software`,
+				name: "Rakta.js",
+				applicationCategory: "DeveloperApplication",
+				operatingSystem: "Cross-platform",
+				description:
+					"A lightweight fullstack React framework unifying file-based App Routing, zero-import Auto Import, end-to-end Type-Safe RPC, integrated frontend-backend monolith, and built-in Authentication.",
+				url: SITE_URL,
+				author: { "@id": `${SITE_URL}/#person` },
+				offers: {
+					"@type": "Offer",
+					price: "0",
+					priceCurrency: "USD",
+				},
+			},
+			{
+				"@type": "Person",
+				"@id": `${SITE_URL}/#person`,
+				name: "Muhammad Rizky Ramadhan",
+				alternateName: ["Rhein Sullivan", "Vyagra Nexus"],
+				jobTitle: "Software Developer",
+				nationality: "Indonesian",
+				address: {
+					"@type": "PostalAddress",
+					addressLocality: "Cirebon",
+					addressRegion: "West Java",
+					addressCountry: "ID",
+				},
+				sameAs: [
+					"https://github.com/RheinSullivan",
+					"https://github.com/RheinSullivan/raktajs",
+				],
+			},
+			{
+				"@type": "Organization",
+				"@id": `${SITE_URL}/#organization`,
+				name: "Vyagra Nexus",
+				founder: { "@id": `${SITE_URL}/#person` },
+				url: SITE_URL,
+			},
+		],
 	},
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-	const titleStr =
-		typeof metadata.title === "object" && metadata.title !== null
-			? (metadata.title as { default: string }).default
-			: (metadata.title as string);
-	const descriptionStr = metadata.description ?? "";
-	const keywordsStr = Array.isArray(metadata.keywords)
-		? metadata.keywords.join(", ")
-		: (metadata.keywords ?? "");
-
 	return (
 		<html lang="id">
 			<head>
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-				<title>{titleStr}</title>
-				<meta name="description" content={descriptionStr} />
-				<meta name="keywords" content={keywordsStr} />
-				<meta name="author" content={metadata.creator ?? ""} />
-				<meta name="application-name" content={metadata.applicationName} />
-				<meta property="og:title" content={metadata.openGraph?.title ?? titleStr} />
-				<meta property="og:description" content={metadata.openGraph?.description ?? descriptionStr} />
-				<meta property="og:type" content={metadata.openGraph?.type ?? "website"} />
-				<meta property="og:site_name" content={metadata.openGraph?.siteName ?? "Rakta.js"} />
-				<meta property="og:locale" content={metadata.openGraph?.locale ?? "id_ID"} />
-				<meta name="twitter:card" content={metadata.twitter?.card ?? "summary_large_image"} />
-				<meta name="twitter:title" content={metadata.twitter?.title ?? titleStr} />
-				<meta name="twitter:description" content={metadata.twitter?.description ?? descriptionStr} />
-				<meta name="twitter:creator" content={metadata.twitter?.creator ?? ""} />
-				<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-				<script
-					type="application/ld+json"
-					dangerouslySetInnerHTML={{
-						__html: JSON.stringify(metadata.jsonLd),
-					}}
-				/>
+				<RaktaHead metadata={metadata} />
 			</head>
 			<body className="min-h-screen bg-black text-white antialiased">
 				<RaktaToast position="top-right" />

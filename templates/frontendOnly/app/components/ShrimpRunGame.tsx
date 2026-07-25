@@ -1,5 +1,3 @@
-
-
 export default function ShrimpRunGame({
 	isPlaying,
 	score,
@@ -11,8 +9,8 @@ export default function ShrimpRunGame({
 	obstaclePos,
 	obstacleHeight,
 	obstacleWidth,
-	obstaclePalette,
-	obstacleVariant,
+	obstaclePalette: _obstaclePalette,
+	obstacleVariant: _obstacleVariant,
 	obstacleScaleX,
 	obstacleSizeClass,
 	simSpeed,
@@ -25,23 +23,37 @@ export default function ShrimpRunGame({
 			<div className="mx-auto max-w-4xl">
 				<div className="flex items-center justify-between border-b border-surface-stroke bg-zinc-900/50 p-4 font-mono text-xs">
 					<div className="flex items-center gap-4">
-						<span className="font-bold text-white uppercase">SHRIMPRUN PHYSICS ARENA</span>
+						<span className="font-bold text-white uppercase">
+							SHRIMPRUN PHYSICS ARENA
+						</span>
 						<span className="text-brand-green font-bold">{liveFps} FPS</span>
 					</div>
 					<div className="flex items-center gap-3">
-						<span className="text-gray-400">SCORE: <strong className="text-white">{score}</strong></span>
-						<span className="text-gray-400">BEST: <strong className="text-brand-pink">{highScore}</strong></span>
+						<span className="text-gray-400">
+							SCORE: <strong className="text-white">{score}</strong>
+						</span>
+						<span className="text-gray-400">
+							BEST: <strong className="text-brand-pink">{highScore}</strong>
+						</span>
 					</div>
 				</div>
 
 				<div
-					onClick={onTriggerJump}
-					className="relative h-[220px] w-full overflow-hidden border-x border-b border-surface-stroke bg-black select-none cursor-pointer"
+					className="relative h-[220px] w-full overflow-hidden border-x border-b border-surface-stroke bg-black select-none"
 					style={{
-						backgroundImage: "radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px)",
+						backgroundImage:
+							"radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px)",
 						backgroundSize: "16px 16px",
 					}}
 				>
+					{isPlaying && (
+						<button
+							type="button"
+							onClick={onTriggerJump}
+							className="absolute inset-0 z-10 cursor-pointer bg-transparent p-0"
+							aria-label="Jump"
+						/>
+					)}
 					<div className="absolute top-0 left-0 right-0 h-1 bg-brand-pink/30"></div>
 
 					<div
@@ -73,7 +85,9 @@ export default function ShrimpRunGame({
 					{!isPlaying && (
 						<div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm p-4">
 							<h3 className="font-mono text-xl font-bold uppercase text-white mb-2">
-								{hasCollision ? "COLLISION DETECTED" : "CLICK OR TAP TO START SHRIMPRUN"}
+								{hasCollision
+									? "COLLISION DETECTED"
+									: "CLICK OR TAP TO START SHRIMPRUN"}
 							</h3>
 							<p className="font-mono text-xs text-gray-400 mb-4">
 								144 FPS Zero-Allocation Physics Loop Engine

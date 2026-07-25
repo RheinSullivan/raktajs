@@ -26,9 +26,9 @@ export interface RegisterUserInput {
 	gender: Gender;
 }
 
-async function postJson<TData>(
+async function postJson<TData, TBody = Record<string, unknown>>(
 	path: string,
-	body: Record<string, unknown>,
+	body: TBody,
 ): Promise<TData> {
 	const response = await fetch(`${API_URL}${path}`, {
 		method: "POST",

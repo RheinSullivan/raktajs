@@ -147,7 +147,8 @@ export function resolveTitle(metadata: Metadata): string {
 		}
 	}
 
-	const titleStr = typeof metadata.title === "string" ? metadata.title : undefined;
+	const titleStr =
+		typeof metadata.title === "string" ? metadata.title : undefined;
 
 	if (!titleStr && metadata.defaultTitle) {
 		return metadata.defaultTitle;

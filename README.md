@@ -2,7 +2,7 @@
   <img src="docs/assets//raktajs_benner.png" alt="Rakta.js banner" width="100%" />
 </p>
 
-<h1 align="center">React Framework</h1>
+<h1 align="center">Rakta.js | React Framework</h1>
 
 <p align="center">
   <strong>A lightweight, composable frontend framework built on Bun, React, and TypeScript.</strong>
@@ -77,11 +77,11 @@
 
   **Bahasa Indonesia**
 
-  Rakta.js diciptakan oleh **Muhammad Rizky Ramadhan**, seorang pengembang perangkat lunak asal **Cirebon & Jakarta Selatan, Indonesia**, dikenal di komunitas developer sebagai **Rhein Sullivan** dan ketua dari tim **Vyagra Nexus™**.
+  Rakta.js dirancang oleh **Muhammad Rizky Ramadhan**, pengembang perangkat lunak asal **Cirebon & Jakarta Selatan, Nusantara, Indonesia**, dikenal luas sebagai **Rhein Sullivan** dan ketua **Vyagra Nexus™**.
 
-  Visi Rakta.js lahir dari semangat untuk menyatukan kemampuan terbaik dari ekosistem modern ke dalam satu framework yang ringan dan efisien. Fitur-fitur seperti *File-based App Routing*, *Auto Import*, *Type-Safe RPC*, arsitektur *Monolith Frontend-Backend*, dan *Autentikasi terintegrasi* kini tersedia dalam satu ekosistem terpadu, tanpa fragmentasi, tanpa konfigurasi berlapis.
+  Framework ini lahir dari keinginan menyatukan kemampuan esensial yang kerap tersebar di ekosistem modern — *File-based App Routing*, *Auto Import tanpa satu pun pernyataan `import`*, *Type-Safe RPC*, arsitektur *monolith frontend-backend*, dan *autentikasi bawaan* — ke dalam satu platform ringan, cepat, dan siap produksi.
 
-  Rakta.js tidak hadir untuk menggantikan framework yang sudah ada, melainkan untuk menghadirkan perspektif baru: **sebuah framework yang terasa bersih, cepat, dan berdaulat**, buatan tangan seorang anak Indonesia.
+  Rakta.js hadir bukan untuk menggantikan framework lain, melainkan menawarkan perspektif baru: **framework yang terasa bersih, cepat, dan berdaulat**, dibangun oleh tangan anak bangsa Indonesia.
 
   </td>
 
@@ -89,11 +89,11 @@
 
   **English Language**
 
-  Rakta.js was created by **Muhammad Rizky Ramadhan**, a software developer from **Cirebon & South Jakarta, Indonesia**, known in the developer community as **Rhein Sullivan** and lead of **Vyagra Nexus™** team.
+  Rakta.js is crafted by **Muhammad Rizky Ramadhan**, a software developer from **Cirebon & South Jakarta, Nusantara, Indonesia**, widely known as **Rhein Sullivan** and lead of **Vyagra Nexus™**.
 
-  The vision of Rakta.js was born from a desire to unite the best capabilities of the modern ecosystem into a single lightweight and efficient framework. Features such as *File-based App Routing*, *Auto Import*, *Type-Safe RPC*, a *Monolith Frontend-Backend* architecture, and *built-in Authentication* are now available in one unified ecosystem, no fragmentation, no layered configuration.
+  The framework was born from a vision to unify essential capabilities often scattered across the modern ecosystem — *file-based App Routing*, *Auto Import with zero import statements*, *end-to-end Type-Safe RPC*, an integrated *frontend-backend monolith* architecture, and *built-in authentication* — into one lightweight, fast, production-ready platform.
 
-  Rakta.js does not aim to replace existing frameworks. Instead, it brings a fresh perspective: **a framework that feels clean, fast, and sovereign**, crafted by the hands of an Indonesian developer.
+  Rakta.js does not aim to replace existing frameworks. Instead, it offers a fresh perspective: **a framework that feels clean, fast, and sovereign**, built by an Indonesian developer.
 
   </td>
   </tr>
@@ -188,7 +188,7 @@ yarn create rakta-app my-app
 
 ## Create app modes
 
-Rakta.js is frontend-first, but it can also generate a fullstack structure when needed.
+Rakta.js is frontend first, but it can also generate a fullstack structure when needed.
 
 ### Frontend only
 
@@ -732,7 +732,7 @@ Your support and donations are crucial for covering the costs of server maintena
 
 For orphanages, nursing homes, zakat/infaq institutions, or official humanitarian organizations that wish to partner with us as **organizations to receive and distribute the funds raised through these donations**, you can apply for an official partnership through:
 - Partnership Guide: [`docs/id/donasi.md`](./docs/id/donasi.md) / [`docs/en/donations.md`](./docs/en/donations.md)
-- Partnership & Verification Contact: Open an issue in the GitHub repository or email the developer [`rheinsullivan.web.id/`](Rhein Sullivan).
+- Partnership & Verification Contact: Open an issue in the GitHub repository or email the developer [Rhein Sullivan](https://rheinsullivan.web.id/).
   
 ---
 
@@ -753,7 +753,7 @@ Dukungan dan donasi Anda sangat berarti untuk biaya pemeliharaan server, domain,
 
 Bagi yayasan panti asuhan, panti jompo, lembaga zakat/infaq, atau organisasi kemanusiaan resmi yang ingin bekerja sama sebagai **lembaga penampung dan penyalur dana hasil pengumpulan donasi ini**, Anda dapat mengajukan kemitraan resmi melalui:
 - Panduan Kemitraan: [`docs/id/donasi.md`](./docs/id/donasi.md) / [`docs/en/donations.md`](./docs/en/donations.md)
-- Kontak Kemitraan & Verifikasi: Pembukaan Issue di GitHub Repository atau Email Pengembang [`rheinsullivan.web.id/`](Rhein Sullivan).
+- Kontak Kemitraan & Verifikasi: Pembukaan Issue di GitHub Repository atau Email Pengembang [Rhein Sullivan](https://rheinsullivan.web.id/).
 
 ---
 
@@ -761,7 +761,7 @@ Bagi yayasan panti asuhan, panti jompo, lembaga zakat/infaq, atau organisasi kem
 
 Created by **Rhein Sullivan**.
 
-Built with a Cirebon soul, a red identity, and a frontend-first mindset.
+Built with a Cirebon soul, a red identity, and a frontend first mindset.
 
 ---
 

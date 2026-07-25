@@ -48,6 +48,7 @@ export default function App() {
 
 			{/* Sub-component: Hero Banner */}
 			<HeroSection
+				lang={lang}
 				onOpenDocs={() => setIsDocsOpen(true)}
 				onOpenComponents={() => setIsComponentsOpen(true)}
 				onOpenDeploy={() => setIsDeployOpen(true)}

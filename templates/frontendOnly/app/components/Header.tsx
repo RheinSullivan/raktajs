@@ -1,5 +1,3 @@
-
-
 export default function Header({
 	lang,
 	onLangToggle,
@@ -28,20 +26,22 @@ export default function Header({
 
 				<div className="flex items-center gap-3">
 					<div className="hidden md:flex items-center gap-2 border border-surface-stroke bg-black p-1 font-mono text-[10px]">
-						{(["LENIS-MODERN", "RETRO-CYBER", "NEO-BRUTALIST"] as const).map((unit) => (
-							<button
-								key={unit}
-								type="button"
-								onClick={() => onAestheticChange(unit)}
-								className={`px-2 py-1 uppercase transition-colors cursor-pointer ${
-									aestheticUnit === unit
-										? "bg-brand-pink text-white font-bold"
-										: "text-gray-400 hover:text-white"
-								}`}
-							>
-								{unit.replace("-", " ")}
-							</button>
-						))}
+						{(["LENIS-MODERN", "RETRO-CYBER", "NEO-BRUTALIST"] as const).map(
+							(unit) => (
+								<button
+									key={unit}
+									type="button"
+									onClick={() => onAestheticChange(unit)}
+									className={`px-2 py-1 uppercase transition-colors cursor-pointer ${
+										aestheticUnit === unit
+											? "bg-brand-pink text-white font-bold"
+											: "text-gray-400 hover:text-white"
+									}`}
+								>
+									{unit.replace("-", " ")}
+								</button>
+							),
+						)}
 					</div>
 
 					<button
@@ -53,7 +53,9 @@ export default function Header({
 								: "border-surface-stroke bg-zinc-900 text-gray-400"
 						}`}
 					>
-						<span className={`w-1.5 h-1.5 rounded-full ${lowLatencyMode ? "bg-emerald-400 animate-pulse" : "bg-gray-600"}`}></span>
+						<span
+							className={`w-1.5 h-1.5 rounded-full ${lowLatencyMode ? "bg-emerald-400 animate-pulse" : "bg-gray-600"}`}
+						></span>
 						LATENCY: {lowLatencyMode ? "LOW" : "STD"}
 					</button>
 

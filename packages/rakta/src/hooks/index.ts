@@ -39,7 +39,7 @@ export {
 
 // Smooth Scroll - Sintren (Cirebon traditional performance art)
 export {
+	useScrollTo,
 	useSintren,
 	useSintren as sintrenScroll,
-	useScrollTo,
 } from "../components/Scroll";

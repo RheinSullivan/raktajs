@@ -1,4 +1,4 @@
-import React, { type CSSProperties, type ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 export type AlertType = "info" | "success" | "warning" | "error";
 
@@ -29,9 +29,19 @@ const TYPE_CONFIGS: Record<
 		textClass: "text-rose-400",
 		badgeBgClass: "bg-rose-500/10 text-rose-400 border-rose-500/30",
 		iconSvg: (
-			<svg className="w-5 h-5 text-rose-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+			<svg
+				className="w-5 h-5 text-rose-500 flex-shrink-0"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke="currentColor"
+			>
 				<title>Info Icon</title>
-				<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+				<path
+					strokeLinecap="round"
+					strokeLinejoin="round"
+					strokeWidth={2}
+					d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+				/>
 			</svg>
 		),
 	},
@@ -42,9 +52,19 @@ const TYPE_CONFIGS: Record<
 		textClass: "text-emerald-400",
 		badgeBgClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
 		iconSvg: (
-			<svg className="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+			<svg
+				className="w-5 h-5 text-emerald-500 flex-shrink-0"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke="currentColor"
+			>
 				<title>Success Icon</title>
-				<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+				<path
+					strokeLinecap="round"
+					strokeLinejoin="round"
+					strokeWidth={2}
+					d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+				/>
 			</svg>
 		),
 	},
@@ -55,9 +75,19 @@ const TYPE_CONFIGS: Record<
 		textClass: "text-amber-400",
 		badgeBgClass: "bg-amber-500/10 text-amber-400 border-amber-500/30",
 		iconSvg: (
-			<svg className="w-5 h-5 text-amber-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+			<svg
+				className="w-5 h-5 text-amber-500 flex-shrink-0"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke="currentColor"
+			>
 				<title>Warning Icon</title>
-				<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+				<path
+					strokeLinecap="round"
+					strokeLinejoin="round"
+					strokeWidth={2}
+					d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+				/>
 			</svg>
 		),
 	},
@@ -68,9 +98,19 @@ const TYPE_CONFIGS: Record<
 		textClass: "text-red-400",
 		badgeBgClass: "bg-red-600/10 text-red-400 border-red-600/30",
 		iconSvg: (
-			<svg className="w-5 h-5 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+			<svg
+				className="w-5 h-5 text-red-500 flex-shrink-0"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke="currentColor"
+			>
 				<title>Error Icon</title>
-				<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+				<path
+					strokeLinecap="round"
+					strokeLinejoin="round"
+					strokeWidth={2}
+					d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+				/>
 			</svg>
 		),
 	},
@@ -122,9 +162,19 @@ export function RaktaAlert({
 						className="p-1 border border-zinc-800 hover:border-white text-gray-400 hover:text-white transition-colors cursor-pointer"
 						aria-label="Close Alert"
 					>
-						<svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<svg
+							className="w-4 h-4"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
 							<title>Close Alert</title>
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={2}
+								d="M6 18L18 6M6 6l12 12"
+							/>
 						</svg>
 					</button>
 				)}

@@ -39,13 +39,16 @@ export {
 	RaktaToast,
 	Scroll,
 	Sintren,
-	toast,
 	Toaster,
-	useSintren,
+	toast,
 	useScrollTo,
+	useSintren,
 	useToast,
 } from "./components/index";
-export type { SintrenOptions, GunungjatiScrollOptions as LosariScrollOptions } from "./components/Scroll";
+export type {
+	GunungjatiScrollOptions as LosariScrollOptions,
+	SintrenOptions,
+} from "./components/Scroll";
 export type {
 	AutoImportConfig,
 	BuildConfig,

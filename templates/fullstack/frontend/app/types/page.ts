@@ -23,6 +23,7 @@ export interface HeaderProps {
 }
 
 export interface HeroSectionProps {
+	lang: "ID" | "EN";
 	onOpenDocs: () => void;
 	onOpenComponents: () => void;
 	onOpenDeploy: () => void;

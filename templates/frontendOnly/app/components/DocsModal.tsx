@@ -115,9 +115,7 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 			className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
 			id="docs-modal-container"
 		>
-			<div
-				className="w-full max-w-5xl h-[80vh] bg-black border-2 border-white flex flex-col relative transition-all duration-200 animate-in fade-in zoom-in-95"
-			>
+			<div className="w-full max-w-5xl h-[80vh] bg-black border-2 border-white flex flex-col relative transition-all duration-200 animate-in fade-in zoom-in-95">
 				{/* Header */}
 				<div className="flex items-center justify-between border-b border-surface-stroke p-5">
 					<div className="flex items-center gap-3">

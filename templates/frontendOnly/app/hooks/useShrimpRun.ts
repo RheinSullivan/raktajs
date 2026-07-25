@@ -1,7 +1,5 @@
-
-
 const getRandomObstacleSize = (
-	pos: "TOP" | "BOTTOM",
+	_pos: "TOP" | "BOTTOM",
 ): {
 	height: number;
 	width: number;
@@ -34,7 +32,10 @@ export function useShrimpRun() {
 	const [score, setScore] = useState(0);
 	const [highScore, setHighScore] = useState(() => {
 		try {
-			return parseInt(localStorage.getItem("rakta_shrimprun_highscore") || "0", 10);
+			return parseInt(
+				localStorage.getItem("rakta_shrimprun_highscore") || "0",
+				10,
+			);
 		} catch {
 			return 0;
 		}
@@ -51,7 +52,8 @@ export function useShrimpRun() {
 	const [obstacleScaleX, setObstacleScaleX] = useState(1);
 	const [obstacleHeight, setObstacleHeight] = useState(95);
 	const [obstacleWidth, setObstacleWidth] = useState(64);
-	const [obstacleSizeClass, setObstacleSizeClass] = useState<ObstacleSizeClass>("SEDANG");
+	const [obstacleSizeClass, setObstacleSizeClass] =
+		useState<ObstacleSizeClass>("SEDANG");
 
 	const playerYRef = useRef(40);
 	const obstacleXRef = useRef(100);
@@ -120,7 +122,9 @@ export function useShrimpRun() {
 
 			if (delta > 0 && delta < 0.1) {
 				const currentFps = 1 / delta;
-				setLiveFps((prev) => Math.round((prev * 0.9 + currentFps * 0.1) * 10) / 10);
+				setLiveFps(
+					(prev) => Math.round((prev * 0.9 + currentFps * 0.1) * 10) / 10,
+				);
 			}
 
 			if (isPlayingRef.current) {
@@ -137,14 +141,17 @@ export function useShrimpRun() {
 					velocityRef.current = -0.5;
 				}
 
-				const speedMultiplier = simSpeed === "TURBO" ? 1.8 : simSpeed === "FAST" ? 1.4 : 1.0;
-				const currentObstacleSpeed = (0.65 + scoreRef.current * 0.02) * speedMultiplier;
+				const speedMultiplier =
+					simSpeed === "TURBO" ? 1.8 : simSpeed === "FAST" ? 1.4 : 1.0;
+				const currentObstacleSpeed =
+					(0.65 + scoreRef.current * 0.02) * speedMultiplier;
 
 				obstacleXRef.current -= currentObstacleSpeed;
 
 				if (obstacleXRef.current < -15) {
 					obstacleXRef.current = 100;
-					const nextPos: ObstaclePosition = Math.random() > 0.5 ? "TOP" : "BOTTOM";
+					const nextPos: ObstaclePosition =
+						Math.random() > 0.5 ? "TOP" : "BOTTOM";
 					obstaclePosRef.current = nextPos;
 
 					const newSize = getRandomObstacleSize(nextPos);
@@ -168,7 +175,10 @@ export function useShrimpRun() {
 					if (scoreRef.current > highScore) {
 						setHighScore(scoreRef.current);
 						try {
-							localStorage.setItem("rakta_shrimprun_highscore", scoreRef.current.toString());
+							localStorage.setItem(
+								"rakta_shrimprun_highscore",
+								scoreRef.current.toString(),
+							);
 						} catch {}
 					}
 				}
@@ -180,7 +190,8 @@ export function useShrimpRun() {
 				const shrimpWidthPercent = 8;
 				const isXOverlap =
 					shrimpXPercent + shrimpWidthPercent > obstacleXRef.current &&
-					shrimpXPercent < obstacleXRef.current + (obstacleWidthRef.current / 400) * 100;
+					shrimpXPercent <
+						obstacleXRef.current + (obstacleWidthRef.current / 400) * 100;
 
 				let isYCollision = false;
 				if (isXOverlap) {

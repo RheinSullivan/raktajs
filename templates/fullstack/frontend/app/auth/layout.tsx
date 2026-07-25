@@ -1,7 +1,7 @@
 export const metadata: Metadata = {
 	title: "Authentication | Rakta.js Secure Identity Gateway",
 	description:
-		"Rakta.js Authentication Gateway — Secure login, user registration with First Name, Last Name, Role Enum, and Gender checkboxes.",
+		"Rakta.js Authentication Gateway - Secure login, user registration with First Name, Last Name, Role Enum, and Gender checkboxes.",
 	keywords: ["Rakta Auth", "Identity Gateway", "Rhein Sullivan", "Vyagra Nexus"],
 	robots: { index: false, follow: false },
 };

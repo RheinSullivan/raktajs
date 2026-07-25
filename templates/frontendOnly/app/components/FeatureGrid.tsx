@@ -1,11 +1,9 @@
-
-
 const RAKTA_FEATURES = [
 	{
 		id: "megaweave",
 		title: "MegaWeave",
 		desc: "File-based routing layer compiling routes into streaming zero-overhead HTML nodes.",
-		code: "<click to=\"/dashboard\">",
+		code: '<click to="/dashboard">',
 	},
 	{
 		id: "nagalimanwire",
@@ -23,7 +21,7 @@ const RAKTA_FEATURES = [
 		id: "sintren",
 		title: "Sintren",
 		desc: "Smooth scroll and section navigation engine inspired by Cirebon folk dance folklore.",
-		code: "<sintren to=\"section-id\">",
+		code: '<sintren to="section-id">',
 	},
 	{
 		id: "sunyaragicrown",

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, type ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 export type ToastType = "info" | "success" | "warning" | "error";
 
@@ -63,12 +63,18 @@ export const toastManager = new ToastManager();
 export const toast = {
 	info: (message: ReactNode, options?: { title?: string; duration?: number }) =>
 		toastManager.add({ type: "info", message, ...options }),
-	success: (message: ReactNode, options?: { title?: string; duration?: number }) =>
-		toastManager.add({ type: "success", message, ...options }),
-	warning: (message: ReactNode, options?: { title?: string; duration?: number }) =>
-		toastManager.add({ type: "warning", message, ...options }),
-	error: (message: ReactNode, options?: { title?: string; duration?: number }) =>
-		toastManager.add({ type: "error", message, ...options }),
+	success: (
+		message: ReactNode,
+		options?: { title?: string; duration?: number },
+	) => toastManager.add({ type: "success", message, ...options }),
+	warning: (
+		message: ReactNode,
+		options?: { title?: string; duration?: number },
+	) => toastManager.add({ type: "warning", message, ...options }),
+	error: (
+		message: ReactNode,
+		options?: { title?: string; duration?: number },
+	) => toastManager.add({ type: "error", message, ...options }),
 	remove: (id: string) => toastManager.remove(id),
 	clear: () => toastManager.clear(),
 };
@@ -129,7 +135,9 @@ export function RaktaToast({
 						<div className="flex items-start justify-between gap-3">
 							<div className="flex-1 min-w-0">
 								<div className="flex items-center gap-2 mb-1">
-									<span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 border ${badgeStyle}`}>
+									<span
+										className={`text-[9px] font-bold uppercase px-1.5 py-0.5 border ${badgeStyle}`}
+									>
 										[{t.type.toUpperCase()}]
 									</span>
 									{t.title && (
@@ -148,9 +156,19 @@ export function RaktaToast({
 								className="text-gray-500 hover:text-white p-0.5 border border-zinc-800 hover:border-white cursor-pointer"
 								aria-label="Dismiss toast"
 							>
-								<svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<svg
+									className="w-3.5 h-3.5"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
 									<title>Dismiss toast</title>
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M6 18L18 6M6 6l12 12"
+									/>
 								</svg>
 							</button>
 						</div>

@@ -4,6 +4,164 @@ declare module "*.css";
 declare module "*.scss";
 declare module "*.sass";
 
+declare module "raktajs/seo" {
+	export interface MetadataAuthor {
+		name: string;
+		url?: string;
+	}
+	export interface OpenGraphImage {
+		url: string;
+		width?: number;
+		height?: number;
+		alt?: string;
+		type?: string;
+	}
+	export interface OpenGraph {
+		type?: "website" | "article" | "book" | "profile";
+		title?: string;
+		description?: string;
+		url?: string;
+		siteName?: string;
+		images?: OpenGraphImage[];
+		locale?: string;
+	}
+	export interface TwitterCard {
+		card?: "summary" | "summary_large_image" | "app" | "player";
+		site?: string;
+		creator?: string;
+		title?: string;
+		description?: string;
+		image?: string;
+		imageAlt?: string;
+	}
+	export interface RobotsGoogleBot {
+		index?: boolean;
+		follow?: boolean;
+		noimageindex?: boolean;
+		maxVideoPreview?: number;
+		maxImagePreview?: "none" | "standard" | "large";
+		maxSnippet?: number;
+	}
+	export interface Robots {
+		index?: boolean;
+		follow?: boolean;
+		nocache?: boolean;
+		googleBot?: RobotsGoogleBot;
+	}
+	export interface AlternateLinks {
+		canonical?: string;
+		languages?: Record<string, string>;
+	}
+	export interface MetadataIcons {
+		icon?: string | { url: string; sizes?: string; type?: string }[];
+		shortcut?: string;
+		apple?: string | { url: string; sizes?: string }[];
+	}
+	export type TitleMetadata =
+		| string
+		| { default: string; template?: string; absolute?: string };
+	export interface FormatDetection {
+		email?: boolean;
+		address?: boolean;
+		telephone?: boolean;
+	}
+	export interface JsonLdObject {
+		readonly [key: string]:
+			| string
+			| number
+			| boolean
+			| JsonLdObject
+			| readonly (string | number | boolean | JsonLdObject)[];
+	}
+	export interface JsonLd extends JsonLdObject {
+		"@context": string;
+		"@graph"?: JsonLdObject[];
+		"@type"?: string;
+	}
+	export interface Metadata {
+		title?: TitleMetadata;
+		description?: string;
+		keywords?: string | string[];
+		authors?: MetadataAuthor[];
+		creator?: string;
+		publisher?: string;
+		applicationName?: string;
+		themeColor?: string;
+		colorScheme?: "light" | "dark" | "light dark" | "dark light";
+		viewport?: string;
+		robots?: string | Robots;
+		canonical?: string;
+		alternates?: AlternateLinks;
+		openGraph?: OpenGraph;
+		twitter?: TwitterCard;
+		jsonLd?: JsonLd | JsonLd[];
+		icons?: MetadataIcons;
+		manifest?: string;
+		metadataBase?: URL | string;
+		formatDetection?: FormatDetection;
+		other?: Record<string, string | string[]>;
+	}
+	export function RaktaHead(props: {
+		metadata: Metadata;
+	}): import("react").ReactElement;
+}
+
+declare module "raktajs/components" {
+	export type ToastType = "info" | "success" | "warning" | "error";
+	export interface ToastItem {
+		id: string;
+		message: import("react").ReactNode;
+		title?: string;
+		type: ToastType;
+		duration?: number;
+	}
+	export function RaktaToast(props: {
+		readonly position?: "top-right" | "top-center" | "bottom-right";
+	}): import("react").ReactElement | null;
+	export const Toaster: typeof RaktaToast;
+	export type AlertType = "info" | "success" | "warning" | "error";
+	export interface RaktaAlertProps {
+		readonly type?: AlertType;
+		readonly title?: string;
+		readonly children: import("react").ReactNode;
+		readonly onClose?: () => void;
+		readonly className?: string;
+		readonly style?: import("react").CSSProperties;
+	}
+	export function RaktaAlert(
+		props: RaktaAlertProps,
+	): import("react").ReactElement;
+	export function Alert(props: RaktaAlertProps): import("react").ReactElement;
+	export function Sintren(props: Record<string, unknown>): import("react").ReactElement;
+	export function useSintren(): Record<string, unknown>;
+	export const toast: {
+		info: (
+			message: import("react").ReactNode,
+			options?: { title?: string; duration?: number },
+		) => string;
+		success: (
+			message: import("react").ReactNode,
+			options?: { title?: string; duration?: number },
+		) => string;
+		warning: (
+			message: import("react").ReactNode,
+			options?: { title?: string; duration?: number },
+		) => string;
+		error: (
+			message: import("react").ReactNode,
+			options?: { title?: string; duration?: number },
+		) => string;
+		remove: (id: string) => void;
+		clear: () => void;
+	};
+	export function useToast(): {
+		toasts: readonly ToastItem[];
+		toast: typeof toast;
+		removeToast: (id: string) => void;
+		clearToasts: () => void;
+	};
+}
+
 // Rakta.js built-in anchor component - use <click to="/path"> instead of <a href>
 type RaktaClickAttributes = Omit<
 	import("react").AnchorHTMLAttributes<HTMLElement>,
@@ -31,7 +189,7 @@ declare module "react" {
 	}
 }
 
-// Rakta.js auto-imported globals — zero explicit import needed in component files
+// Rakta.js auto-imported globals - zero explicit import needed in component files
 declare global {
 	// ── React Global Namespace ──
 	namespace React {
@@ -83,6 +241,7 @@ declare global {
 	}
 
 	interface HeroSectionProps {
+		lang: "ID" | "EN";
 		onOpenDocs: () => void;
 		onOpenComponents: () => void;
 		onOpenDeploy: () => void;
@@ -153,6 +312,9 @@ declare global {
 
 	// ── GSAP ──
 	const gsap: typeof import("gsap").default;
+
+	// ── Rakta.js SEO ──
+	const RaktaHead: typeof import("raktajs/seo").RaktaHead;
 
 	// ── Rakta.js Components ──
 	const RaktaToast: typeof import("raktajs/components").RaktaToast;

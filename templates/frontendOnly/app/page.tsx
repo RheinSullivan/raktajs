@@ -7,7 +7,8 @@ export default function App() {
 	// Settings states
 	const [lang, setLang] = useState<"ID" | "EN">("ID");
 	const [isMuted, setIsMuted] = useState(false);
-	const [aestheticUnit, setAestheticUnit] = useState<AestheticUnit>("LENIS-MODERN");
+	const [aestheticUnit, setAestheticUnit] =
+		useState<AestheticUnit>("LENIS-MODERN");
 	const [lowLatencyMode, setLowLatencyMode] = useState(true);
 
 	// Custom 144 FPS game physics hook
@@ -48,6 +49,7 @@ export default function App() {
 
 			{/* Sub-component: Hero Banner */}
 			<HeroSection
+				lang={lang}
 				onOpenDocs={() => setIsDocsOpen(true)}
 				onOpenComponents={() => setIsComponentsOpen(true)}
 				onOpenDeploy={() => setIsDeployOpen(true)}
@@ -83,8 +85,14 @@ export default function App() {
 
 			{/* Modals */}
 			<DocsModal isOpen={isDocsOpen} onClose={() => setIsDocsOpen(false)} />
-			<ComponentsModal isOpen={isComponentsOpen} onClose={() => setIsComponentsOpen(false)} />
-			<DeployModal isOpen={isDeployOpen} onClose={() => setIsDeployOpen(false)} />
+			<ComponentsModal
+				isOpen={isComponentsOpen}
+				onClose={() => setIsComponentsOpen(false)}
+			/>
+			<DeployModal
+				isOpen={isDeployOpen}
+				onClose={() => setIsDeployOpen(false)}
+			/>
 		</div>
 	);
 }
