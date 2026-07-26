@@ -28,7 +28,7 @@ export const RENDER_MODE_DESCRIPTORS: Readonly<
 		serverRequired: true,
 		buildTimeGenerated: false,
 		clientHydration: true,
-		roadmap: true, // Roadmap: v1.0.3
+		roadmap: true, // Roadmap: v1.0.4
 	},
 	ssg: {
 		mode: "ssg",
@@ -39,7 +39,7 @@ export const RENDER_MODE_DESCRIPTORS: Readonly<
 		serverRequired: false,
 		buildTimeGenerated: true,
 		clientHydration: false,
-		roadmap: true, // Roadmap: v1.0.3
+		roadmap: true, // Roadmap: v1.0.4
 	},
 	csg: {
 		mode: "csg",
@@ -50,7 +50,7 @@ export const RENDER_MODE_DESCRIPTORS: Readonly<
 		serverRequired: false,
 		buildTimeGenerated: true,
 		clientHydration: true,
-		roadmap: true, // Roadmap: v1.0.3
+		roadmap: true, // Roadmap: v1.0.4
 	},
 	spa: {
 		mode: "spa",

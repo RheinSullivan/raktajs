@@ -55,7 +55,7 @@ Telemetry is local opt-in state stored in `.rakta/telemetry.json`.
 
 ```bash
 rakta upgrade
-rakta upgrade ^1.0.3
+rakta upgrade ^1.0.4
 ```
 
 Without a version, `upgrade` moves Rakta.js dependencies to `latest`.

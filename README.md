@@ -60,6 +60,12 @@
 
 ---
 
+Assalamu'alaikum Warahmatullahi Wabarakatuh · Shalom · Om Swastiastu · Namo Buddhaya · Wei De Dong Tian
+
+🇮🇩 Dibuat dengan bangga dari Cirebon & Jakarta Selatan, Nusantara, Indonesia. 🇵🇸 Free Palestine.
+
+---
+
 ## Story & Vision / Kisah & Visi
 
 <table>
@@ -968,13 +974,13 @@ rakta/forge         Dev server dan build system internals
 
 **Bahasa Indonesia** Roadmap di bawah ini adalah kontrak publik. Apa yang tercantum di sini adalah apa yang kami rencanakan untuk dibangun. Versi dikelompokkan berdasarkan area fokus, dan setiap entri menunjukkan deliverables utamanya.
 
-### Released v1.0.0 through v1.0.3 / Sudah Rilis
+### Released v1.0.0 through v1.0.4 / Sudah Rilis
 
 | Version | Date | Changes |
 | --- | --- | --- |
 | **v1.0.0** | 2026-07 | First public release full module set: router, render, rpc, store, schema, http, seo, pwa, kernel, middleware, layout, data, dx, performance, security, ops, testing, deployment, plugin, docs |
 | **v1.0.1** | 2026-07 | Biome lint fix indentation in `plugin/official.ts` |
-| **v1.0.3** | 2026-07 | Add GSAP + ScrollTrigger, PanturaScroll smooth scroll (`<pantura>` / `<reborns>`), separate lib/helper files in templates, remove CSS from .tsx files, update documentation language |
+| **v1.0.4** | 2026-07 | Add GSAP + ScrollTrigger, PanturaScroll smooth scroll (`<pantura>` / `<reborns>`), separate lib/helper files in templates, remove CSS from .tsx files, update documentation language |
 
 ### All Systems Shipped / Semua Sistem yang Sudah Ada
 
@@ -1230,20 +1236,6 @@ Prinsipnya sederhana: **semua yang masuk tercatat, semua yang keluar bisa dibukt
 | `docs/assets/android-chrome-512x512.png` | 512×512 | Android splash screen / large PWA icon |
 | `docs/assets/apple-touch-icon.png` | 180×180 | iOS/iPadOS home screen icon |
 
-### Cara Pakai di shields.io / Using with shields.io
-
-**English** shields.io only supports logos from [Simple Icons](https://simpleicons.org). To display the Rakta.js logo on shields.io badges, the logo must first be submitted and accepted to the Simple Icons project. Until then, use the badge without a logo parameter — the brand color `#C60005` is enough to identify it.
-
-**Bahasa Indonesia** shields.io hanya mendukung logo dari [Simple Icons](https://simpleicons.org). Untuk menampilkan logo Rakta.js di badge shields.io, logo harus terlebih dahulu disubmit dan diterima oleh project Simple Icons. Sampai saat itu, gunakan badge tanpa parameter logo — warna brand `#C60005` sudah cukup untuk mengidentifikasinya.
-
-```markdown
-<!-- Badge version Rakta.js -->
-[![raktajs](https://img.shields.io/npm/v/raktajs?style=flat&label=Rakta.js&color=C60005&labelColor=555)](https://www.npmjs.com/package/raktajs)
-
-<!-- Badge downloads -->
-[![downloads](https://img.shields.io/npm/dm/raktajs?style=flat&label=rakta.js/month&color=009688&labelColor=555)](https://www.npmjs.com/package/raktajs)
-```
-
 ### Cara Pakai di HTML / Using in HTML
 
 ```html
@@ -1291,24 +1283,4 @@ https://yourapp.vercel.app/site.webmanifest
 
 ## License / Lisensi
 
-**English** Rakta.js is released under the MIT License. You are free to use, modify, and distribute it in any project personal, commercial, or open source with no restrictions other than including the original license notice.
-
-**Bahasa Indonesia** Rakta.js dirilis di bawah MIT License. Kamu bebas menggunakan, memodifikasi, dan mendistribusikannya di project apapun personal, komersial, atau open source tanpa batasan selain menyertakan pemberitahuan lisensi aslinya.
-
-```
-MIT License
-
-Copyright © 2026 Rakta.js | Vyagra Nexus™
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-```
-
-Full license text: [`LICENSE`](./LICENSE)
+MIT — see [LICENSE](./LICENSE)

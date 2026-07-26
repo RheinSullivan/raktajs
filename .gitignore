@@ -47,7 +47,7 @@ biome-errors.txt
 # Documentation draft / generated architecture notes
 AGENTS.md
 RAKTA_ENHANCEMENT_SUMMARY.md
-RELEASE_READY_v1.0.3_REPORT.md
+RELEASE_READY_v1.0.4_REPORT.md
 .agents/
 appArchitecture.md
 monorepoArchitecture.md

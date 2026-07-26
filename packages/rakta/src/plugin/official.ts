@@ -19,7 +19,7 @@ export function createOfficialPlugins(): readonly RaktaOfficialPlugin[] {
 	return OFFICIAL_PLUGIN_DEFINITIONS.map((definition) => ({
 		manifest: {
 			name: definition.name,
-			version: "1.0.3",
+			version: "1.0.4",
 			capabilities: definition.capabilities,
 		},
 		plugin: {
