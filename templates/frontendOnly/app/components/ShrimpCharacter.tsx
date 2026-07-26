@@ -56,15 +56,6 @@ export default function ShrimpCharacter({
 				transform: `rotate(${finalRotation}deg)`,
 			}}
 		>
-			{/* Little Bubble Trail from Shrimp Mouth (Only when active/swimming) */}
-			{!isDead && status !== "IDLE" && (
-				<div className="absolute -left-2 top-4 w-12 h-6 pointer-events-none overflow-visible">
-					<div className="absolute left-0 bottom-0 w-1.5 h-1.5 bg-cyan-200/40 rounded-full animate-[bubble-up_0.8s_infinite_ease-out_infinite] scale-75"></div>
-					<div className="absolute left-2 top-1 w-2.5 h-2.5 bg-cyan-200/30 rounded-full animate-[bubble-up_1.2s_infinite_ease-out_infinite_0.3s]"></div>
-					<div className="absolute left-4 bottom-2 w-2 h-2 bg-white/40 rounded-full animate-[bubble-up_1s_infinite_ease-out_infinite_0.1s] scale-90"></div>
-				</div>
-			)}
-
 			{/* Main Shrimp SVG */}
 			<svg
 				viewBox="0 0 100 100"
@@ -94,7 +85,7 @@ export default function ShrimpCharacter({
 				</defs>
 
 				{/* LAYER 1 (BOTTOM): Tail, Legs, Head Base - Render First */}
-				
+
 				{/* Tail Segment & Fan (Ekor) */}
 				<g className={tailClass} style={{ transformOrigin: "28px 45px" }}>
 					{/* Tail fan */}
@@ -149,7 +140,7 @@ export default function ShrimpCharacter({
 				/>
 
 				{/* LAYER 2 (MIDDLE): Main Body - Covers Connection Points */}
-				
+
 				{/* Main curved middle segments */}
 				<path
 					d="M 30 46 C 25 32, 45 22, 58 28 C 65 31, 62 48, 55 54 C 44 58, 35 55, 30 46 Z"
@@ -174,7 +165,7 @@ export default function ShrimpCharacter({
 				/>
 
 				{/* LAYER 3 (TOP): Antennas and Head Details - Top Layer */}
-				
+
 				{/* Antennas / Sungut (waving forward) */}
 				<g className={antennaClass} style={{ transformOrigin: "75px 45px" }}>
 					<path
@@ -192,7 +183,7 @@ export default function ShrimpCharacter({
 						strokeLinecap="round"
 					/>
 				</g>
-				
+
 				{/* Head horn (Rostrum) */}
 				<path d="M 72 38 L 84 34 L 75 42 Z" fill="url(#shrimpGrad)" />
 

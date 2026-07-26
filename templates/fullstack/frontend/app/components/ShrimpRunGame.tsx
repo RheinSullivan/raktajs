@@ -1,5 +1,9 @@
 
 
+import BubbleLayer from "./BubbleLayer";
+import SeaweedGrass from "./SeaweedGrass";
+import BackgroundFish from "./BackgroundFish";
+
 export default function ShrimpRunGame({
 	isPlaying,
 	score,
@@ -42,6 +46,11 @@ export default function ShrimpRunGame({
 						backgroundSize: "16px 16px",
 					}}
 				>
+					{/* Background layers (z-0) */}
+					<BubbleLayer />
+					<BackgroundFish />
+					<SeaweedGrass />
+
 					{/* Water Surface / Sky Grid line */}
 					<div className="absolute top-0 left-0 right-0 h-1 bg-brand-pink/30"></div>
 
@@ -101,11 +110,10 @@ export default function ShrimpRunGame({
 								key={speed}
 								type="button"
 								onClick={() => onSpeedChange(speed)}
-								className={`px-2 py-0.5 uppercase cursor-pointer border ${
-									simSpeed === speed
-										? "border-brand-pink text-brand-pink font-bold bg-rose-950/20"
-										: "border-zinc-800 text-gray-500 hover:text-white"
-								}`}
+								className={`px-2 py-0.5 uppercase cursor-pointer border ${simSpeed === speed
+									? "border-brand-pink text-brand-pink font-bold bg-rose-950/20"
+									: "border-zinc-800 text-gray-500 hover:text-white"
+									}`}
 							>
 								{speed}
 							</button>
