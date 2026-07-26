@@ -9,7 +9,7 @@ When you create UI components (like `<Navbar />`, `<Footer />`, `<Button />`), h
 ## How It Works
 
 1. **Zero Explicit Imports**: Place any component inside `components/` (e.g., `components/Navbar.tsx` or `components/ui/Button.tsx`). You can immediately use `<Navbar />` or `<Button />` inside any page or layout without adding an `import` line.
-2. **Global Runtime Registration**: During development and production builds, Rakta.js mounts discovered exports to the global execution scope (`globalThis`), so React resolves components seamlessly when rendering JSX.
+2. **Global Runtime Registration**: During dev and production builds, Rakta.js mounts discovered exports to the global scope (`globalThis`), so React can find components when rendering JSX.
 3. **TypeScript Autocomplete**: Rakta.js generates `.rakta/auto-imports.d.ts` with global type declarations so VS Code and other IDEs provide instant autocompletion and type checking without red squiggly lines.
 
 ## Code Example

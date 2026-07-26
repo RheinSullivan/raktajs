@@ -102,18 +102,6 @@ export default function SeaweedGrass() {
 					style={{ transformOrigin: "14px 52px", animationDelay: "0.2s" }}
 				/>
 			</svg>
-
-			<style>{`
-        @keyframes sway-left {
-          0%, 100% { transform: rotate(0deg); }
-          50% { transform: rotate(-4deg); }
-        }
-        
-        @keyframes sway-right {
-          0%, 100% { transform: rotate(0deg); }
-          50% { transform: rotate(4deg); }
-        }
-      `}</style>
 		</div>
 	);
 }

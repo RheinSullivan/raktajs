@@ -9,8 +9,8 @@ const COPY = {
 					Muhammad Rizky Ramadhan
 				</strong>{" "}
 				(<strong className="text-white">Rhein Sullivan</strong> /{" "}
-				<strong className="text-white">Vyagra Nexus™</strong>) — pengembang
-				perangkat lunak asal Cirebon & Jakarta Selatan — Rakta.js hadir sebagai
+				<strong className="text-white">Vyagra Nexus™</strong>), pengembang
+				perangkat lunak asal Cirebon & Jakarta Selatan, Rakta.js hadir sebagai
 				solusi terpadu yang menyatukan{" "}
 				<em className="text-brand-pink not-italic">File-based App Routing</em>,{" "}
 				<em className="text-brand-pink not-italic">
@@ -35,8 +35,8 @@ const COPY = {
 					Muhammad Rizky Ramadhan
 				</strong>{" "}
 				(<strong className="text-white">Rhein Sullivan</strong> /{" "}
-				<strong className="text-white">Vyagra Nexus™</strong>) — a software
-				developer from Cirebon & South Jakarta — Rakta.js is a unified solution
+				<strong className="text-white">Vyagra Nexus™</strong>), a software
+				developer from Cirebon & South Jakarta, Rakta.js is a unified solution
 				bringing{" "}
 				<em className="text-brand-pink not-italic">file-based App Routing</em>,{" "}
 				<em className="text-brand-pink not-italic">

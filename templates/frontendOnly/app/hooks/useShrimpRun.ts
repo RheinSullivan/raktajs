@@ -1,51 +1,36 @@
-const getRandomObstacleSize = (
-	_pos: "TOP" | "BOTTOM",
-): {
-	height: number;
-	width: number;
-	sizeClass: ObstacleSizeClass;
-} => {
-	const rand = Math.random();
-	let sizeClass: ObstacleSizeClass;
-	let height = 60;
-	let width = 40;
+// Hook utama ShrimpRun — mengelola state game, fisika, dan collision.
+// Logic fisika dan konstanta dipisah ke app/lib/gameData.ts dan app/lib/gameUtils.ts.
+// NOTE: useState, useEffect, useRef di-auto-import oleh Rakta.js.
 
-	if (rand < 0.33) {
-		sizeClass = "KECIL";
-		height = Math.floor(Math.random() * 8) + 32;
-		width = Math.floor(Math.random() * 5) + 26;
-	} else if (rand < 0.67) {
-		sizeClass = "SEDANG";
-		height = Math.floor(Math.random() * 10) + 55;
-		width = Math.floor(Math.random() * 6) + 38;
-	} else {
-		sizeClass = "BESAR";
-		height = Math.floor(Math.random() * 12) + 75;
-		width = Math.floor(Math.random() * 6) + 48;
-	}
-
-	return { height, width, sizeClass };
-};
+import {
+	GAME_PHYSICS,
+	HIGH_SCORE_KEY,
+	OBSTACLE_CONFIG,
+	type ObstaclePosition,
+	type ObstacleSizeClass,
+	SIM_SPEED_MULTIPLIER,
+	type SimSpeed,
+} from "../lib/gameData";
+import {
+	calculateObstacleSpeed,
+	checkCollision,
+	getRandomObstacleSize,
+	readHighScore,
+	saveHighScore,
+} from "../lib/gameUtils";
 
 export function useShrimpRun() {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [score, setScore] = useState(0);
-	const [highScore, setHighScore] = useState(() => {
-		try {
-			return parseInt(
-				localStorage.getItem("rakta_shrimprun_highscore") || "0",
-				10,
-			);
-		} catch {
-			return 0;
-		}
-	});
+	const [highScore, setHighScore] = useState(() =>
+		readHighScore(HIGH_SCORE_KEY),
+	);
 	const [hasCollision, setHasCollision] = useState(false);
 	const [liveFps, setLiveFps] = useState(144.0);
 	const [simSpeed, setSimSpeed] = useState<SimSpeed>("NORMAL");
 
-	const [playerY, setPlayerY] = useState(40);
-	const [obstacleX, setObstacleX] = useState(100);
+	const [playerY, setPlayerY] = useState(GAME_PHYSICS.playerStartY / 2);
+	const [obstacleX, setObstacleX] = useState(OBSTACLE_CONFIG.startX);
 	const [obstaclePos, setObstaclePos] = useState<ObstaclePosition>("BOTTOM");
 	const [obstaclePalette, setObstaclePalette] = useState(0);
 	const [obstacleVariant, setObstacleVariant] = useState(0);
@@ -55,8 +40,8 @@ export function useShrimpRun() {
 	const [obstacleSizeClass, setObstacleSizeClass] =
 		useState<ObstacleSizeClass>("SEDANG");
 
-	const playerYRef = useRef(40);
-	const obstacleXRef = useRef(100);
+	const playerYRef = useRef(GAME_PHYSICS.playerStartY / 2);
+	const obstacleXRef = useRef(OBSTACLE_CONFIG.startX);
 	const obstaclePosRef = useRef<ObstaclePosition>("BOTTOM");
 	const obstacleHeightRef = useRef(95);
 	const obstacleWidthRef = useRef(64);
@@ -80,13 +65,13 @@ export function useShrimpRun() {
 			startSimulation();
 			return;
 		}
-		velocityRef.current = 6.2;
+		velocityRef.current = GAME_PHYSICS.jumpVelocity;
 	};
 
 	const startSimulation = () => {
-		playerYRef.current = 80;
-		velocityRef.current = 4.0;
-		obstacleXRef.current = 100;
+		playerYRef.current = GAME_PHYSICS.playerStartY;
+		velocityRef.current = GAME_PHYSICS.startVelocity;
+		obstacleXRef.current = OBSTACLE_CONFIG.startX;
 		obstaclePosRef.current = "BOTTOM";
 
 		const newSize = getRandomObstacleSize("BOTTOM");
@@ -99,8 +84,8 @@ export function useShrimpRun() {
 
 		scoreRef.current = 0;
 
-		setPlayerY(80);
-		setObstacleX(100);
+		setPlayerY(GAME_PHYSICS.playerStartY);
+		setObstacleX(OBSTACLE_CONFIG.startX);
 		setObstaclePos("BOTTOM");
 		setObstacleHeight(newSize.height);
 		setObstacleWidth(newSize.width);
@@ -128,28 +113,30 @@ export function useShrimpRun() {
 			}
 
 			if (isPlayingRef.current) {
-				const gravity = 0.28;
-				velocityRef.current -= gravity;
+				// Fisika: gravitasi dan batas layar
+				velocityRef.current -= GAME_PHYSICS.gravity;
 				playerYRef.current += velocityRef.current;
 
-				if (playerYRef.current <= 0) {
-					playerYRef.current = 0;
+				if (playerYRef.current <= GAME_PHYSICS.playerMinY) {
+					playerYRef.current = GAME_PHYSICS.playerMinY;
 					velocityRef.current = 0;
 				}
-				if (playerYRef.current >= 165) {
-					playerYRef.current = 165;
-					velocityRef.current = -0.5;
+				if (playerYRef.current >= GAME_PHYSICS.playerMaxY) {
+					playerYRef.current = GAME_PHYSICS.playerMaxY;
+					velocityRef.current = GAME_PHYSICS.playerBounceVelocity;
 				}
 
-				const speedMultiplier =
-					simSpeed === "TURBO" ? 1.8 : simSpeed === "FAST" ? 1.4 : 1.0;
-				const currentObstacleSpeed =
-					(0.65 + scoreRef.current * 0.02) * speedMultiplier;
+				// Kecepatan obstacle: naik 5% setiap 5 poin, maksimal 2.5x
+				const currentObstacleSpeed = calculateObstacleSpeed(
+					scoreRef.current,
+					SIM_SPEED_MULTIPLIER[simSpeed],
+				);
 
 				obstacleXRef.current -= currentObstacleSpeed;
 
-				if (obstacleXRef.current < -15) {
-					obstacleXRef.current = 100;
+				// Reset obstacle ketika keluar layar dan tambah skor
+				if (obstacleXRef.current < OBSTACLE_CONFIG.resetX) {
+					obstacleXRef.current = OBSTACLE_CONFIG.startX;
 					const nextPos: ObstaclePosition =
 						Math.random() > 0.5 ? "TOP" : "BOTTOM";
 					obstaclePosRef.current = nextPos;
@@ -172,41 +159,24 @@ export function useShrimpRun() {
 
 					scoreRef.current += 1;
 					setScore(scoreRef.current);
+
 					if (scoreRef.current > highScore) {
 						setHighScore(scoreRef.current);
-						try {
-							localStorage.setItem(
-								"rakta_shrimprun_highscore",
-								scoreRef.current.toString(),
-							);
-						} catch {}
+						saveHighScore(HIGH_SCORE_KEY, scoreRef.current);
 					}
 				}
 
 				setPlayerY(playerYRef.current);
 				setObstacleX(obstacleXRef.current);
 
-				const shrimpXPercent = 15;
-				const shrimpWidthPercent = 8;
-				const isXOverlap =
-					shrimpXPercent + shrimpWidthPercent > obstacleXRef.current &&
-					shrimpXPercent <
-						obstacleXRef.current + (obstacleWidthRef.current / 400) * 100;
-
-				let isYCollision = false;
-				if (isXOverlap) {
-					const obsHeight = obstacleHeightRef.current;
-					if (obstaclePosRef.current === "BOTTOM") {
-						if (playerYRef.current < obsHeight - 10) {
-							isYCollision = true;
-						}
-					} else {
-						const obsTopThreshold = 200 - obsHeight + 10;
-						if (playerYRef.current + 28 > obsTopThreshold) {
-							isYCollision = true;
-						}
-					}
-				}
+				// Cek tabrakan
+				const isYCollision = checkCollision(
+					playerYRef.current,
+					obstacleXRef.current,
+					obstacleWidthRef.current,
+					obstacleHeightRef.current,
+					obstaclePosRef.current,
+				);
 
 				if (isYCollision) {
 					setHasCollision(true);

@@ -43,25 +43,6 @@ export default function BubbleLayer() {
 				className="absolute bottom-4 left-[60%] w-2 h-2 bg-white/18 rounded-full animate-[bubble-rise_4.3s_infinite_ease-out]"
 				style={{ animationDelay: "2.5s" }}
 			/>
-
-			<style>{`
-        @keyframes bubble-rise {
-          0% { 
-            transform: translateY(0) scale(0.8); 
-            opacity: 0; 
-          }
-          10% { 
-            opacity: 1; 
-          }
-          90% { 
-            opacity: 0.6; 
-          }
-          100% { 
-            transform: translateY(-220px) scale(1.4); 
-            opacity: 0; 
-          }
-        }
-      `}</style>
 		</div>
 	);
 }

@@ -1573,3 +1573,154 @@ svg {
 [class~="hover:text-rakta-red"]:hover {
 	color: var(--color-rakta-red);
 }
+
+/* Game viewport — dot-grid background pattern */
+.game-viewport-bg {
+	background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+	background-size: 16px 16px;
+}
+
+/* Game Component Animations - moved from inline <style> tags */
+
+/* Shrimp Character Animations */
+@keyframes shrimp-float {
+	0%,
+	100% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-4px);
+	}
+}
+
+@keyframes shrimp-swim {
+	0% {
+		transform: scale(1) translateY(0);
+	}
+	100% {
+		transform: scale(1.02, 0.98) translateY(-1px);
+	}
+}
+
+@keyframes shrimp-tail {
+	0% {
+		transform: rotate(-5deg);
+	}
+	100% {
+		transform: rotate(8deg);
+	}
+}
+
+@keyframes shrimp-legs {
+	0% {
+		transform: rotate(-10deg);
+	}
+	100% {
+		transform: rotate(15deg);
+	}
+}
+
+@keyframes shrimp-antenna {
+	0% {
+		transform: rotate(-2deg);
+	}
+	100% {
+		transform: rotate(3deg);
+	}
+}
+
+/* Background Fish Animations */
+@keyframes swim-right {
+	0% {
+		left: -10%;
+	}
+	100% {
+		left: 110%;
+	}
+}
+
+@keyframes swim-left {
+	0% {
+		left: 110%;
+	}
+	100% {
+		left: -10%;
+	}
+}
+
+/* Seaweed Grass Animations */
+@keyframes sway-left {
+	0%,
+	100% {
+		transform: rotate(0deg);
+	}
+	50% {
+		transform: rotate(-4deg);
+	}
+}
+
+@keyframes sway-right {
+	0%,
+	100% {
+		transform: rotate(0deg);
+	}
+	50% {
+		transform: rotate(4deg);
+	}
+}
+
+/* Bubble Layer Animations */
+@keyframes bubble-rise {
+	0% {
+		transform: translateY(0) scale(0.8);
+		opacity: 0;
+	}
+	10% {
+		opacity: 0.6;
+	}
+	90% {
+		opacity: 0.4;
+	}
+	100% {
+		transform: translateY(-200px) scale(1.2);
+		opacity: 0;
+	}
+}
+
+/* Utility animation classes */
+[class~="animate-[bubble-rise_4s_infinite_ease-out]"] {
+	animation: bubble-rise 4s infinite ease-out;
+}
+[class~="animate-[bubble-rise_4.5s_infinite_ease-out]"] {
+	animation: bubble-rise 4.5s infinite ease-out;
+}
+[class~="animate-[bubble-rise_4.8s_infinite_ease-out]"] {
+	animation: bubble-rise 4.8s infinite ease-out;
+}
+[class~="animate-[bubble-rise_5.5s_infinite_ease-out]"] {
+	animation: bubble-rise 5.5s infinite ease-out;
+}
+[class~="animate-[sway-left_2.7s_infinite_ease-in-out]"] {
+	animation: sway-left 2.7s infinite ease-in-out;
+}
+[class~="animate-[sway-left_3s_infinite_ease-in-out]"] {
+	animation: sway-left 3s infinite ease-in-out;
+}
+[class~="animate-[sway-left_3.1s_infinite_ease-in-out]"] {
+	animation: sway-left 3.1s infinite ease-in-out;
+}
+[class~="animate-[sway-left_3.2s_infinite_ease-in-out]"] {
+	animation: sway-left 3.2s infinite ease-in-out;
+}
+[class~="animate-[sway-right_2.8s_infinite_ease-in-out]"] {
+	animation: sway-right 2.8s infinite ease-in-out;
+}
+[class~="animate-[sway-right_2.9s_infinite_ease-in-out]"] {
+	animation: sway-right 2.9s infinite ease-in-out;
+}
+[class~="animate-[sway-right_3.3s_infinite_ease-in-out]"] {
+	animation: sway-right 3.3s infinite ease-in-out;
+}
+[class~="animate-[sway-right_3.5s_infinite_ease-in-out]"] {
+	animation: sway-right 3.5s infinite ease-in-out;
+}

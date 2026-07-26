@@ -1,32 +1,12 @@
-// Background Fish - Swimming fish for Shrimp Run game background
-// NOTE: Rakta.js uses automatic JSX transform - no React import needed.
+// Ikan latar belakang untuk arena ShrimpRun
+// NOTE: Rakta.js menggunakan automatic JSX transform — tidak perlu import React.
 
-interface Fish {
-	id: number;
-	size: "small" | "medium";
-	speed: number; // seconds for full traversal
-	startY: number; // percentage from top
-	delay: number; // animation delay in seconds
-	direction: "left" | "right"; // swimming direction
-}
-
-const fishConfig: Fish[] = [
-	{ id: 1, size: "small", speed: 12, startY: 20, delay: 0, direction: "right" },
-	{
-		id: 2,
-		size: "medium",
-		speed: 18,
-		startY: 50,
-		delay: 4,
-		direction: "left",
-	},
-	{ id: 3, size: "small", speed: 15, startY: 75, delay: 8, direction: "right" },
-];
+import { FISH_CONFIG } from "../lib/fishData";
 
 export default function BackgroundFish() {
 	return (
 		<div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-			{fishConfig.map((fish) => (
+			{FISH_CONFIG.map((fish) => (
 				<div
 					key={fish.id}
 					className="absolute"
@@ -43,6 +23,8 @@ export default function BackgroundFish() {
 						width={fish.size === "small" ? "24" : "36"}
 						height={fish.size === "small" ? "16" : "24"}
 						viewBox="0 0 40 24"
+						role="img"
+						aria-label="Background fish decoration"
 					>
 						<defs>
 							<linearGradient
@@ -79,18 +61,6 @@ export default function BackgroundFish() {
 					</svg>
 				</div>
 			))}
-
-			<style>{`
-        @keyframes swim-right {
-          0% { left: -10%; }
-          100% { left: 110%; }
-        }
-        
-        @keyframes swim-left {
-          0% { left: 110%; }
-          100% { left: -10%; }
-        }
-      `}</style>
 		</div>
 	);
 }

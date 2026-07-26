@@ -1,5 +1,5 @@
-// biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.
-// biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.
+// biome-ignore-all lint: Template welcome starter Rakta.js — cerminan desain resmi.
+// biome-ignore-all assist: Template welcome starter Rakta.js — cerminan desain resmi.
 // NOTE: Rakta.js uses automatic JSX transform - no React import needed.
 
 interface ShrimpCharacterProps {
@@ -230,35 +230,7 @@ export default function ShrimpCharacter({
 				)}
 			</svg>
 
-			{/* Style overrides for custom keyframe animations inside index.css */}
-			<style>{`
-        @keyframes shrimp-float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-4px); }
-        }
-        @keyframes shrimp-swim {
-          0% { transform: scale(1) translateY(0); }
-          100% { transform: scale(1.02, 0.98) translateY(-1px); }
-        }
-        @keyframes shrimp-tail {
-          0% { transform: rotate(-5deg); }
-          100% { transform: rotate(8deg); }
-        }
-        @keyframes shrimp-legs {
-          0% { transform: rotate(-10deg); }
-          100% { transform: rotate(15deg); }
-        }
-        @keyframes shrimp-antenna {
-          0% { transform: rotate(-2deg); }
-          100% { transform: rotate(3deg); }
-        }
-        @keyframes bubble-up {
-          0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 0.8; }
-          100% { transform: translate(-30px, -40px) scale(1.2); opacity: 0; }
-        }
-      `}</style>
+
 		</div>
 	);
 }

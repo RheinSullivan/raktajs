@@ -1,43 +1,7 @@
+// Grid modul inti Rakta.js
+// Data fitur dipisah ke app/lib/featureData.ts supaya komponen ini hanya bertugas render.
 
-
-const RAKTA_FEATURES = [
-	{
-		id: "megaweave",
-		title: "MegaWeave",
-		desc: "File-based routing layer compiling routes into streaming zero-overhead HTML nodes.",
-		code: "<click to=\"/dashboard\">",
-	},
-	{
-		id: "nagalimanwire",
-		title: "NagaLimanWire",
-		desc: "Type-safe RPC engine binding backend controllers to frontend callers seamlessly.",
-		code: "const data = await rpc.getUsers();",
-	},
-	{
-		id: "trusmithread",
-		title: "TrusmiThread",
-		desc: "Automatic import scanner generating typed declarations for components, stores, and hooks.",
-		code: "const [state, setState] = useState()",
-	},
-	{
-		id: "sintren",
-		title: "Sintren",
-		desc: "Smooth scroll and section navigation engine inspired by Cirebon folk dance folklore.",
-		code: "<sintren to=\"section-id\">",
-	},
-	{
-		id: "sunyaragicrown",
-		title: "SunyaragiCrown",
-		desc: "Built-in metadata and head manager driving SEO, OpenGraph tags, and canonical URLs.",
-		code: "defineSeo({ title, description })",
-	},
-	{
-		id: "shrimpharbor",
-		title: "ShrimpHarbor",
-		desc: "PWA offline caching, manifest generation, and service worker lifecycle control.",
-		code: "registerPwaWorker()",
-	},
-];
+import { RAKTA_FEATURES } from "../lib/featureData";
 
 export default function FeatureGrid() {
 	return (

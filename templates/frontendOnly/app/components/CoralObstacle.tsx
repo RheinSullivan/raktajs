@@ -1,5 +1,5 @@
-// biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.
-// biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.
+// biome-ignore-all lint: Template welcome starter Rakta.js — cerminan desain resmi.
+// biome-ignore-all assist: Template welcome starter Rakta.js — cerminan desain resmi.
 // NOTE: Rakta.js uses automatic JSX transform - no React import needed.
 
 interface CoralObstacleProps {

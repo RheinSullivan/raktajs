@@ -11,7 +11,6 @@ export default function App() {
 		useState<AestheticUnit>("LENIS-MODERN");
 	const [lowLatencyMode, setLowLatencyMode] = useState(true);
 
-	// Custom 144 FPS game physics hook
 	const {
 		isPlaying,
 		score,
