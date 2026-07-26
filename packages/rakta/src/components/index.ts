@@ -12,6 +12,7 @@ export type {
 } from "./Scroll";
 export {
 	Anchor,
+	Paksi,
 	Scroll,
 	Sintren,
 	useScrollTo,

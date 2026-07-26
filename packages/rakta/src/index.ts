@@ -33,6 +33,7 @@ export {
 	Alert,
 	Anchor,
 	Click,
+	Paksi,
 	Picture,
 	Picture as Photo,
 	RaktaAlert,
@@ -45,10 +46,7 @@ export {
 	useSintren,
 	useToast,
 } from "./components/index";
-export type {
-	GunungjatiScrollOptions as LosariScrollOptions,
-	SintrenOptions,
-} from "./components/Scroll";
+export type { SintrenOptions } from "./components/Scroll";
 export type {
 	AutoImportConfig,
 	BuildConfig,

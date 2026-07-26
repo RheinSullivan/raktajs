@@ -93,22 +93,17 @@ export default function ShrimpCharacter({
 					</linearGradient>
 				</defs>
 
-				{/* Antennas / Sungut (waving forward) */}
-				<g className={antennaClass} style={{ transformOrigin: "75px 45px" }}>
+				{/* LAYER 1 (BOTTOM): Tail, Legs, Head Base - Render First */}
+				
+				{/* Tail Segment & Fan (Ekor) */}
+				<g className={tailClass} style={{ transformOrigin: "28px 45px" }}>
+					{/* Tail fan */}
 					<path
-						d="M 72 42 C 85 35, 95 38, 102 34"
-						fill="none"
-						stroke={isDead ? "#fdba74" : "#fecdd3"}
-						strokeWidth="1.5"
-						strokeLinecap="round"
+						d="M 16 38 C 12 34, 10 44, 8 41 C 10 45, 11 50, 15 48 C 12 53, 8 50, 6 54 C 11 56, 17 52, 20 46 Z"
+						fill="url(#shrimpGrad)"
 					/>
-					<path
-						d="M 72 45 C 88 48, 97 52, 105 53"
-						fill="none"
-						stroke={isDead ? "#fdba74" : "#fecdd3"}
-						strokeWidth="1.2"
-						strokeLinecap="round"
-					/>
+					{/* Segment 1 */}
+					<path d="M 28 46 Q 20 48 22 40 Q 30 38 28 46" fill={shellShade} />
 				</g>
 
 				{/* Swimmerets / Kaki Renang (underneath) */}
@@ -147,18 +142,14 @@ export default function ShrimpCharacter({
 					/>
 				</g>
 
-				{/* Segmented Body Curves */}
-				{/* Tail Segment & Fan (Ekor) */}
-				<g className={tailClass} style={{ transformOrigin: "28px 45px" }}>
-					{/* Tail fan */}
-					<path
-						d="M 16 38 C 12 34, 10 44, 8 41 C 10 45, 11 50, 15 48 C 12 53, 8 50, 6 54 C 11 56, 17 52, 20 46 Z"
-						fill="url(#shrimpGrad)"
-					/>
-					{/* Segment 1 */}
-					<path d="M 28 46 Q 20 48 22 40 Q 30 38 28 46" fill={shellShade} />
-				</g>
+				{/* Head Segment Base (Kepala) */}
+				<path
+					d="M 55 30 C 65 24, 76 34, 74 46 C 72 54, 62 55, 55 48 Z"
+					fill="url(#shrimpGrad)"
+				/>
 
+				{/* LAYER 2 (MIDDLE): Main Body - Covers Connection Points */}
+				
 				{/* Main curved middle segments */}
 				<path
 					d="M 30 46 C 25 32, 45 22, 58 28 C 65 31, 62 48, 55 54 C 44 58, 35 55, 30 46 Z"
@@ -182,11 +173,26 @@ export default function ShrimpCharacter({
 					opacity="0.6"
 				/>
 
-				{/* Head Segment (Kepala) */}
-				<path
-					d="M 55 30 C 65 24, 76 34, 74 46 C 72 54, 62 55, 55 48 Z"
-					fill="url(#shrimpGrad)"
-				/>
+				{/* LAYER 3 (TOP): Antennas and Head Details - Top Layer */}
+				
+				{/* Antennas / Sungut (waving forward) */}
+				<g className={antennaClass} style={{ transformOrigin: "75px 45px" }}>
+					<path
+						d="M 72 42 C 85 35, 95 38, 102 34"
+						fill="none"
+						stroke={isDead ? "#fdba74" : "#fecdd3"}
+						strokeWidth="1.5"
+						strokeLinecap="round"
+					/>
+					<path
+						d="M 72 45 C 88 48, 97 52, 105 53"
+						fill="none"
+						stroke={isDead ? "#fdba74" : "#fecdd3"}
+						strokeWidth="1.2"
+						strokeLinecap="round"
+					/>
+				</g>
+				
 				{/* Head horn (Rostrum) */}
 				<path d="M 72 38 L 84 34 L 75 42 Z" fill="url(#shrimpGrad)" />
 

@@ -30,11 +30,13 @@ export interface GunungjatiScrollOptions {
 	readonly updateHash?: boolean;
 }
 
+export type SintrenOptions = GunungjatiScrollOptions;
+
 // ─── Scroll Component Props ───────────────────────────────────────────────────
 
 export interface ScrollProps
 	extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
-	/** The id of the target <anchor> element to scroll to */
+	/** The id of the target marker to navigate to */
 	readonly to: string;
 	/** Pixel offset from top of the target (default: 0) */
 	readonly offset?: number;
@@ -52,7 +54,7 @@ export interface ScrollProps
 // ─── Anchor Component Props ───────────────────────────────────────────────────
 
 export interface AnchorProps extends HTMLAttributes<HTMLElement> {
-	/** The id used as scroll target - must match <scroll to="this-id"> */
+	/** The id used as a Sintren target marker */
 	readonly id: string;
 	readonly children?: ReactNode;
 	readonly style?: CSSProperties;
@@ -119,9 +121,7 @@ function smoothScrollTo(
 // ─── Programmatic Hook ────────────────────────────────────────────────────────
 
 /**
- * useScrollTo - programmatic smooth scroll hook.
- *
- * Cirebon identity export: `gunungjatiScroll`
+ * useScrollTo - programmatic smooth navigation hook.
  *
  * @example
  * const scrollTo = useScrollTo();
@@ -164,13 +164,7 @@ function renderScrollElement(
 }
 
 /**
- * Scroll - smooth scroll trigger component.
- *
- * Renders as a custom `<scroll>` element. Use `<anchor id="">` as the target.
- *
- * Cirebon identity:
- * - Component name: GunungjatiScroll
- * - Custom element: `<scroll to="section-id">`
+ * Scroll - backward-compatible smooth navigation trigger component.
  *
  * @example
  * <Scroll to="about" offset={80}>
@@ -271,13 +265,7 @@ export function Scroll({
 // ─── <anchor id=""> Component ─────────────────────────────────────────────────
 
 /**
- * Anchor - scroll target marker component.
- *
- * Renders as a custom `<anchor>` element. Use alongside `<scroll to="">`.
- *
- * Cirebon identity:
- * - Component name: GunungjatiAnchor
- * - Custom element: `<anchor id="section-id">`
+ * Anchor - backward-compatible target marker component.
  *
  * @example
  * <Anchor id="about">
@@ -308,12 +296,13 @@ export function Anchor({
 // Named after Sintren - the mesmerizing, mystical traditional folk performance
 // art of Cirebon, flowing smoothly with rhythmic elegance.
 
-/** Sintren: smooth scroll trigger & container - `<scroll to="section-id">` */
+/** Sintren: smooth in-page navigation trigger. */
 export const Sintren = Scroll;
+
+/** Paksi: target marker for Sintren, named after Paksi Naga Liman. */
+export const Paksi = Anchor;
 
 /** useSintren: programmatic smooth scroll hook */
 export const useSintren = useScrollTo;
-
-export type { GunungjatiScrollOptions as SintrenOptions };
 
 export default Scroll;
