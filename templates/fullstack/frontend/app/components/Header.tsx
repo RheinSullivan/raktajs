@@ -22,7 +22,7 @@ export default function Header({
 						RAKTA<span className="text-brand-pink">.JS</span>
 					</span>
 					<span className="hidden sm:inline-block border border-surface-stroke bg-zinc-900/80 px-2 py-0.5 font-mono text-[10px] uppercase text-gray-400">
-						v1.0.4 • CORE ENGINE
+						v1.0.5 • CORE ENGINE
 					</span>
 				</div>
 

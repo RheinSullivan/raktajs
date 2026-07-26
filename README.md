@@ -974,13 +974,13 @@ rakta/forge         Dev server dan build system internals
 
 **Bahasa Indonesia** Roadmap di bawah ini adalah kontrak publik. Apa yang tercantum di sini adalah apa yang kami rencanakan untuk dibangun. Versi dikelompokkan berdasarkan area fokus, dan setiap entri menunjukkan deliverables utamanya.
 
-### Released v1.0.0 through v1.0.4 / Sudah Rilis
+### Released v1.0.0 through v1.0.5 / Sudah Rilis
 
 | Version | Date | Changes |
 | --- | --- | --- |
 | **v1.0.0** | 2026-07 | First public release full module set: router, render, rpc, store, schema, http, seo, pwa, kernel, middleware, layout, data, dx, performance, security, ops, testing, deployment, plugin, docs |
 | **v1.0.1** | 2026-07 | Biome lint fix indentation in `plugin/official.ts` |
-| **v1.0.4** | 2026-07 | Add GSAP + ScrollTrigger, PanturaScroll smooth scroll (`<pantura>` / `<reborns>`), separate lib/helper files in templates, remove CSS from .tsx files, update documentation language |
+| **v1.0.5** | 2026-07 | Add GSAP + ScrollTrigger, PanturaScroll smooth scroll (`<pantura>` / `<reborns>`), separate lib/helper files in templates, remove CSS from .tsx files, update documentation language |
 
 ### All Systems Shipped / Semua Sistem yang Sudah Ada
 

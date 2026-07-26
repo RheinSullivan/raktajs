@@ -209,7 +209,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^1.0.4",
+						raktajs: "^1.0.5",
 						gsap: "^3.12.7",
 						clsx: "^2.1.1",
 						"tailwind-merge": "^3.0.2",
@@ -380,7 +380,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^1.0.4",
+						raktajs: "^1.0.5",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						gsap: "^3.12.7",
