@@ -1216,71 +1216,15 @@ Prinsipnya sederhana: **semua yang masuk tercatat, semua yang keluar bisa dibukt
 
 ---
 
-## Icons & Brand Assets / Ikon & Aset Brand
-
-**English** All official Rakta.js icons and brand assets are in `docs/assets/`. Here is how to use them in various contexts.
-
-**Bahasa Indonesia** Semua ikon dan aset brand resmi Rakta.js ada di `docs/assets/`. Begini cara menggunakannya di berbagai konteks.
-
-### Available Assets / Aset yang Tersedia
-
-| File | Size | Purpose |
-| --- | --- | --- |
-| `docs/assets/Rakta.js.svg` | Scalable | Logo utama (udang Cirebon) dipakai di web, dokumen, presentasi |
-| `docs/assets/Rakta.js.png` | 1080×1079 | Logo PNG resolusi tinggi print, social media |
-| `docs/assets/raktajs_benner.png` | Full width | Banner untuk GitHub README, header website |
-| `docs/assets/favicon.ico` | 48×48 | Browser tab icon |
-| `docs/assets/favicon-16x16.png` | 16×16 | Favicon kecil |
-| `docs/assets/favicon-32x32.png` | 32×32 | Favicon medium |
-| `docs/assets/android-chrome-192x192.png` | 192×192 | Android home screen icon / PWA icon |
-| `docs/assets/android-chrome-512x512.png` | 512×512 | Android splash screen / large PWA icon |
-| `docs/assets/apple-touch-icon.png` | 180×180 | iOS/iPadOS home screen icon |
-
-### Cara Pakai di HTML / Using in HTML
-
-```html
-<!-- Favicon lengkap untuk semua platform -->
-<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="48x48" />
-<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
-<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
-<link rel="icon" type="image/svg+xml" href="/rakta-logo.svg" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-<link rel="manifest" href="/site.webmanifest" />
-<meta name="theme-color" content="#e11d48" />
-<meta name="msapplication-TileColor" content="#e11d48" />
-```
-
-**English** When you create a new app with `create-rakta-app`, all of these icon files are automatically placed in your `public/` folder. The `layout.tsx` is pre-configured to reference them. You do not need to do anything manually.
-
-**Bahasa Indonesia** Saat kamu membuat app baru dengan `create-rakta-app`, semua file icon ini otomatis ditempatkan di folder `public/`. `layout.tsx` sudah dikonfigurasi untuk mereferensikannya. Kamu tidak perlu melakukan apapun secara manual.
-
-### Pakai di Vercel / Netlify
-
-**English** Vercel and Netlify automatically serve files from the `public/` folder at the root URL. Icons will be available at `yourdomain.com/favicon.ico`, `yourdomain.com/rakta-logo.svg`, etc. The `site.webmanifest` tells browsers how to install your app as a PWA and which icon to show on the home screen.
-
-**Bahasa Indonesia** Vercel dan Netlify otomatis menyajikan file dari folder `public/` di URL root. Icon akan tersedia di `yourdomain.com/favicon.ico`, `yourdomain.com/rakta-logo.svg`, dll. `site.webmanifest` memberi tahu browser cara menginstal app sebagai PWA dan icon mana yang ditampilkan di home screen.
-
-```bash
-# Setelah deploy, icon tersedia di:
-https://yourapp.vercel.app/favicon.ico
-https://yourapp.vercel.app/favicon-32x32.png
-https://yourapp.vercel.app/android-chrome-192x192.png
-https://yourapp.vercel.app/android-chrome-512x512.png
-https://yourapp.vercel.app/apple-touch-icon.png
-https://yourapp.vercel.app/rakta-logo.svg
-https://yourapp.vercel.app/site.webmanifest
-```
-
----
-
 ## Author / Penulis
 
-**English** ,  Created by **Rhein Sullivan** (Muhammad Rizky Ramadhan). Built with a Cirebon soul, a red identity, and a frontend-first mindset. Lead of **Vyagra Nexus™**, a software development team based in Cirebon and South Jakarta, Indonesia.
+**English** Created by **Rhein Sullivan** (Muhammad Rizky Ramadhan). Built with a Cirebon soul, a red identity, and a frontend-first mindset. Lead of **Vyagra Nexus™**, a software development team based in Cirebon and South Jakarta, Indonesia.
 
-**Bahasa Indonesia** ,  Dibuat oleh **Rhein Sullivan** (Muhammad Rizky Ramadhan). Dibangun dengan jiwa Cirebon, identitas merah, dan pikiran yang mengutamakan frontend. Ketua **Vyagra Nexus™**, tim pengembangan perangkat lunak berbasis di Cirebon dan Jakarta Selatan, Indonesia.
+**Bahasa Indonesia** Dibuat oleh **Rhein Sullivan** (Muhammad Rizky Ramadhan). Dibangun dengan jiwa Cirebon, identitas merah, dan pikiran yang mengutamakan frontend. Ketua **Vyagra Nexus™**, tim pengembangan perangkat lunak berbasis di Cirebon dan Jakarta Selatan, Indonesia.
 
 ---
 
 ## License / Lisensi
 
-MIT — see [LICENSE](./LICENSE)
+MIT - Rakta.js | Vyagra Nexus™ ❤️ 🇮🇩 Indonesian & 🇵🇸 Palestine
+[LICENSE](./LICENSE)

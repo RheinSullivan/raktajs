@@ -27,7 +27,7 @@ cd my-app && bun install && bun run dev
 
 ## What is Rakta.js?
 
-Rakta.js is a React framework powered by Bun. It handles routing, rendering, SEO, components, RPC, schema validation, HTTP, PWA, middleware, and more — all from a single package with no fragmentation.
+Rakta.js is a React framework powered by Bun. It handles routing, rendering, SEO, components, RPC, schema validation, HTTP, PWA, middleware, and more - all from a single package with no fragmentation.
 
 Every feature is named after the cultural heritage of **Cirebon, West Java, Indonesia**.
 
@@ -83,16 +83,16 @@ export default defineRaktaConfig({
 ### Components
 
 ```tsx
-// ShrimpStep — SPA navigation
+// ShrimpStep - SPA navigation
 <click to="/about">About</click>
 
-// TrusmiFrame — optimized image
+// TrusmiFrame - optimized image
 <picture path="/hero.jpg" alt="Hero" />
 
-// PanturaScroll — smooth scroll trigger
+// PanturaScroll - smooth scroll trigger
 <pantura to="features" offset={80}>See Features</pantura>
 
-// Reborns — scroll target marker
+// Reborns - scroll target marker
 <reborns id="features"><h2>Features</h2></reborns>
 ```
 
@@ -271,7 +271,7 @@ rakta doctor
 
 ## Cultural Identity
 
-Rakta.js names its features after the heritage of Cirebon, West Java, Indonesia — landmarks, arts, culinary traditions, and history. Not decoration. A real foundation from the developer who built it.
+Rakta.js names its features after the heritage of Cirebon, West Java, Indonesia - landmarks, arts, culinary traditions, and history. Not decoration. A real foundation from the developer who built it.
 
 | Name | Origin | Role |
 |---|---|---|
@@ -289,6 +289,6 @@ Rakta.js names its features after the heritage of Cirebon, West Java, Indonesia 
 
 ## License
 
-MIT — [Rhein Sullivan](https://github.com/RheinSullivan) | Vyagra Nexus™
+MIT - [Rhein Sullivan](https://github.com/RheinSullivan) | Vyagra Nexus™
 
 🇮🇩 Made from Cirebon & South Jakarta, Nusantara, Indonesia. 🇵🇸 Free Palestine.

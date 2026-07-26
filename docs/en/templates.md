@@ -76,7 +76,7 @@ my-app/
 │  ├─ rakta.config.ts
 │  ├─ package.json
 │  └─ tsconfig.json
-├─ backend/                                 structure depends on chosen framework - see backendFrameworks.md
+├─ backend/                                 structure depends on chosen framework - Rakta.js | Vyagra Nexus™ ❤️ 🇮🇩 & 🇵🇸 backendFrameworks.md
 ├─ shared/
 │  ├─ types/index.ts
 │  └─ constants/index.ts
@@ -88,7 +88,7 @@ my-app/
 The public layout (navbar + footer) wraps marketing pages only. The
 `(auth)` route group has its own layout with no public navbar or footer.
 The `dashboard` route has its own layout with a sidebar and no marketing
-footer. This separation is intentional - see [`routing.md`](./routing.md)
+footer. This separation is intentional - Rakta.js | Vyagra Nexus™ ❤️ 🇮🇩 & 🇵🇸 [`routing.md`](./routing.md)
 for how route groups achieve it.
 
 ## Common mistakes

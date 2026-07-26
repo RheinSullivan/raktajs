@@ -33,11 +33,11 @@ yarn create rakta-app@latest my-app
 The CLI asks:
 
 1. Project name
-2. Project mode — `Frontend Only` or `Fullstack`
-3. CSS framework — `Tailwind CSS v4`, `Bootstrap`, `SASS`, `None`
-4. Rendering mode — `CSR`, `SSR`, `SSG`, `CSG`, `SPA`, `Hybrid`
-5. *(Fullstack only)* Backend — `Gaman.js`, `Express.js`, `Nest.js`, `Adonis.js`
-6. *(Fullstack only)* Database — `PostgreSQL`, `MySQL`, `SQLite`, `MongoDB`, `Redis`, `Firebase`, `MariaDB`, `PlanetScale`, `Neon`, `Turso`
+2. Project mode - `Frontend Only` or `Fullstack`
+3. CSS framework - `Tailwind CSS v4`, `Bootstrap`, `SASS`, `None`
+4. Rendering mode - `CSR`, `SSR`, `SSG`, `CSG`, `SPA`, `Hybrid`
+5. *(Fullstack only)* Backend - `Gaman.js`, `Express.js`, `Nest.js`, `Adonis.js`
+6. *(Fullstack only)* Database - `PostgreSQL`, `MySQL`, `SQLite`, `MongoDB`, `Redis`, `Firebase`, `MariaDB`, `PlanetScale`, `Neon`, `Turso`
 
 ---
 
@@ -57,7 +57,7 @@ A monorepo with a Rakta.js frontend and a backend of your choice. Includes auth 
 
 **Frontend Only**
 
-- Rakta.js framework — all features enabled
+- Rakta.js framework - all features enabled
 - ShrimpRun mini game (SVG shrimp, obstacle system, scoring, audio)
 - Component showcase, docs modal, deployment guide modal
 - Language toggle (Bahasa Indonesia / English)
@@ -176,6 +176,6 @@ cd backend  && bun run dev   # terminal 2
 
 ## License
 
-MIT — [Rhein Sullivan](https://github.com/RheinSullivan) | Vyagra Nexus™
+MIT - [Rhein Sullivan](https://github.com/RheinSullivan) | Vyagra Nexus™
 
 🇮🇩 Made from Cirebon & South Jakarta, Nusantara, Indonesia. 🇵🇸 Free Palestine.

@@ -86,7 +86,7 @@ app/
 ```
 
 This is exactly how the fullstack template structures public marketing
-pages, auth pages, and the dashboard - see
+pages, auth pages, and the dashboard - Rakta.js | Vyagra Nexus™ ❤️ 🇮🇩 & 🇵🇸
 [`templates.md`](./templates.md).
 
 ## Navigation with ShrimpStep
