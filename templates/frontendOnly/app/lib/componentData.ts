@@ -1,6 +1,6 @@
 // Data komponen demo untuk ComponentsModal (Component Library)
 // Dipisah dari komponen supaya ComponentsModal.tsx fokus pada UI dan interaksi.
-// NOTE: Preview functions pakai JSX — pastikan file ini diproses sebagai .tsx jika perlu JSX.
+// NOTE: Preview functions pakai JSX , pastikan file ini diproses sebagai .tsx jika perlu JSX.
 
 import type { ReactNode } from "react";
 
@@ -15,7 +15,7 @@ export interface ComponentItem {
 	code: string;
 }
 
-// Data ini dipakai di ComponentsModal — preview function berisi JSX
+// Data ini dipakai di ComponentsModal , preview function berisi JSX
 // sehingga tetap berada di sini sebagai data, bukan inline di komponen.
 export const COMPONENT_IDS = [
 	"button",

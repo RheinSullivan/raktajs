@@ -19,34 +19,31 @@ export {
 } from "./auto-import/index";
 export type {
 	AlertType,
-	AnchorProps,
 	ClickProps,
+	PanturaOptions,
+	PanturaProps,
 	PictureProps,
 	PictureProps as PhotoProps,
 	RaktaAlertProps,
-	ScrollProps,
+	RebornsProps,
 	ToastItem,
 	ToastType,
 } from "./components/index";
-// Components - ShrimpStep, TrusmiFrame, Sintren, RaktaAlert, RaktaToast
+// Components - ShrimpStep, TrusmiFrame, PanturaScroll, RaktaAlert, RaktaToast
 export {
 	Alert,
-	Anchor,
 	Click,
-	Paksi,
+	Pantura,
 	Picture,
 	Picture as Photo,
 	RaktaAlert,
 	RaktaToast,
-	Scroll,
-	Sintren,
+	Reborns,
 	Toaster,
 	toast,
-	useScrollTo,
-	useSintren,
+	usePantura,
 	useToast,
 } from "./components/index";
-export type { SintrenOptions } from "./components/Scroll";
 export type {
 	AutoImportConfig,
 	BuildConfig,

@@ -37,9 +37,5 @@ export {
 	useTransition as sintrenTransition,
 } from "react";
 
-// Smooth Scroll - Sintren (Cirebon traditional performance art)
-export {
-	useScrollTo,
-	useSintren,
-	useSintren as sintrenScroll,
-} from "../components/Scroll";
+// Smooth Scroll - PanturaScroll (named after Jalur Pantura, north coast highway of Java)
+export { usePantura } from "../components/Scroll";

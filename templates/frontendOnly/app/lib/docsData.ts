@@ -39,7 +39,7 @@ rakta dev --port 3000
 
 ### Cara ShrimpRun Bekerja
 - **RequestAnimationFrame**: Fisika game disinkronkan langsung ke refresh monitor, bukan ke siklus render React.
-- **Physics Loop Tanpa Alokasi**: Posisi obstacle dan state game disimpan di ref tetap — tidak ada objek baru yang dibuat setiap frame.
+- **Physics Loop Tanpa Alokasi**: Posisi obstacle dan state game disimpan di ref tetap , tidak ada objek baru yang dibuat setiap frame.
 - **Low Latency Mode**: Beralih dari gradient ke layout SVG langsung, menghemat sekitar 40% siklus CPU di perangkat lama.
 
 ### Contoh Loop Efisien
@@ -56,7 +56,7 @@ function tick(timestamp: number) {
 		id: "styling",
 		title: "3. Gaya Visual Neo-Brutalist",
 		category: "Desain & Gaya",
-		content: `Rakta menggunakan filosofi desain Neo-Brutalism — kontras tinggi, border tajam, tidak ada sudut bulat, dan hierarki tipografi yang jelas.
+		content: `Rakta menggunakan filosofi desain Neo-Brutalism , kontras tinggi, border tajam, tidak ada sudut bulat, dan hierarki tipografi yang jelas.
 
 ### Prinsip Visual
 1. **True Black (#000000)**: Hindari abu-abu keruh kecuali untuk state grid.

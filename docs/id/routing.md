@@ -76,13 +76,13 @@ bawah layout bersama tanpa menambah segmen URL:
 ```txt
 app/
 ├─ (auth)/
-│  ├─ layout.tsx        ← hanya membungkus login/register/dll, tanpa navbar/footer
-│  ├─ login/page.tsx     → /login
-│  └─ register/page.tsx  → /register
+│  ├─ layout.tsx        hanya membungkus login/register/dll, tanpa navbar/footer
+│  ├─ login/page.tsx     /login
+│  └─ register/page.tsx  /register
 ├─ dashboard/
-│  ├─ layout.tsx        ← sidebar dashboard, tanpa footer marketing
-│  └─ page.tsx           → /dashboard
-└─ layout.tsx            ← layout marketing publik (navbar + footer)
+│  ├─ layout.tsx        sidebar dashboard, tanpa footer marketing
+│  └─ page.tsx           /dashboard
+└─ layout.tsx            layout marketing publik (navbar + footer)
 ```
 
 Begini cara template fullstack menyusun halaman marketing publik, halaman

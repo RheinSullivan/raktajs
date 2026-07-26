@@ -1,5 +1,5 @@
 // Ikan latar belakang untuk arena ShrimpRun
-// NOTE: Rakta.js menggunakan automatic JSX transform — tidak perlu import React.
+// NOTE: Rakta.js menggunakan automatic JSX transform , tidak perlu import React.
 
 import { FISH_CONFIG } from "../lib/fishData";
 

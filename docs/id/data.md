@@ -49,20 +49,20 @@ import { defineRouteDataStrategy, isIncrementalRoute, shouldStreamRoute, shouldP
 
 const dashboardStrategy = defineRouteDataStrategy({
   routePattern: "/dashboard",
-  runtime: "server",     // "server" | "client" | "edge"
-  prerender: false,       // true = SSG / ISR saat build
-  stream: true,           // true = aktifkan respon streaming
-  prefetch: true,         // true = prefetch saat hover
-  revalidate: 60,         // interval revalidasi ISR dalam detik
+  runtime: "server",    // "server" | "client" | "edge"
+  prerender: false,      // true = SSG / ISR saat build
+  stream: true,          // true = aktifkan respon streaming
+  prefetch: true,        // true = prefetch saat hover
+  revalidate: 60,        // interval revalidasi ISR dalam detik
 });
 
 const blogStrategy = defineRouteDataStrategy({
   routePattern: "/blog/:slug",
   runtime: "server",
-  prerender: true,        // pra-render saat build
+  prerender: true,       // pra-render saat build
   stream: false,
   prefetch: true,
-  revalidate: 3600,       // buat ulang setiap jam
+  revalidate: 3600,      // buat ulang setiap jam
 });
 
 // Fungsi Pengecekan

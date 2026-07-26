@@ -12,37 +12,49 @@ import React, {
 } from "react";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Rakta.js GunungjatiScroll - Named after Sunan Gunung Jati, the iconic
-// landmark and wali songo figure of Cirebon, West Java.
-// Smooth scroll navigation: <scroll to="section-id"> and <anchor id="section-id">
+// Rakta.js PanturaScroll - Named after Jalur Pantura (Pantai Utara / North
+// Coast Road), the legendary highway connecting coastal cities of Java.
+// Smooth scroll navigation: <pantura to="section-id"> and <reborns id="section-id">
 // ─────────────────────────────────────────────────────────────────────────────
 
-// ─── Scroll Options ──────────────────────────────────────────────────────────
+// ─── GSAP Type Reference ─────────────────────────────────────────────────────
 
-export interface GunungjatiScrollOptions {
+interface GSAPInstance {
+	to: (
+		target: Window,
+		vars: {
+			scrollTo?: { y: number; autoKill?: boolean };
+			duration?: number;
+			ease?: string;
+			onComplete?: () => void;
+		},
+	) => void;
+}
+
+// ─── Options ─────────────────────────────────────────────────────────────────
+
+export interface PanturaOptions {
 	/** Offset in pixels from the top of the target element (default: 0) */
 	readonly offset?: number;
 	/** Scroll duration in milliseconds (default: 600) */
 	readonly duration?: number;
-	/** CSS easing function (default: "cubic-bezier(0.4, 0, 0.2, 1)") */
+	/** CSS easing function (default: "ease-in-out") */
 	readonly easing?: string;
 	/** Whether to update the browser URL hash (default: false) */
 	readonly updateHash?: boolean;
 }
 
-export type SintrenOptions = GunungjatiScrollOptions;
+// ─── Component Props ──────────────────────────────────────────────────────────
 
-// ─── Scroll Component Props ───────────────────────────────────────────────────
-
-export interface ScrollProps
+export interface PanturaProps
 	extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
-	/** The id of the target marker to navigate to */
+	/** The id of the target Reborns marker to navigate to */
 	readonly to: string;
 	/** Pixel offset from top of the target (default: 0) */
 	readonly offset?: number;
 	/** Duration in milliseconds (default: 600) */
 	readonly duration?: number;
-	/** CSS easing (default: "cubic-bezier(0.4, 0, 0.2, 1)") */
+	/** CSS easing (default: "ease-in-out") */
 	readonly easing?: string;
 	/** Update the URL hash on scroll (default: false) */
 	readonly updateHash?: boolean;
@@ -51,10 +63,8 @@ export interface ScrollProps
 	readonly children: ReactNode;
 }
 
-// ─── Anchor Component Props ───────────────────────────────────────────────────
-
-export interface AnchorProps extends HTMLAttributes<HTMLElement> {
-	/** The id used as a Sintren target marker */
+export interface RebornsProps extends HTMLAttributes<HTMLElement> {
+	/** The id used as a Pantura scroll target marker */
 	readonly id: string;
 	readonly children?: ReactNode;
 	readonly style?: CSSProperties;
@@ -67,8 +77,20 @@ function getScrollTarget(id: string): Element | null {
 	return document.getElementById(id);
 }
 
-function resolveEasing(easing: string): (t: number) => number {
-	// Predefined named easings
+function resolveGSAPEasing(easing: string): string {
+	const map: Record<string, string> = {
+		linear: "none",
+		ease: "power1.inOut",
+		"ease-in": "power2.in",
+		"ease-out": "power2.out",
+		"ease-in-out": "power2.inOut",
+		"cubic-bezier(0.4, 0, 0.2, 1)": "power2.inOut",
+		"cubic-bezier(0.25, 0.1, 0.25, 1)": "power1.inOut",
+	};
+	return map[easing] ?? "power2.inOut";
+}
+
+function resolveRAFEasing(easing: string): (t: number) => number {
 	const presets: Record<string, (t: number) => number> = {
 		linear: (t) => t,
 		ease: (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
@@ -76,18 +98,15 @@ function resolveEasing(easing: string): (t: number) => number {
 		"ease-out": (t) => 1 - (1 - t) ** 3,
 		"ease-in-out": (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2),
 	};
-
-	if (easing in presets) {
-		return presets[easing] as (t: number) => number;
-	}
-
-	// Default: smooth cubic
-	return (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+	return (
+		presets[easing] ??
+		((t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2))
+	);
 }
 
-function smoothScrollTo(
+function smoothScrollRAF(
 	targetElement: Element,
-	options: Required<GunungjatiScrollOptions>,
+	options: Required<PanturaOptions>,
 ): void {
 	if (typeof window === "undefined") return;
 
@@ -95,19 +114,14 @@ function smoothScrollTo(
 	const startY = window.scrollY;
 	const targetY = startY + targetRect.top - options.offset;
 	const distance = targetY - startY;
-	const easingFn = resolveEasing(options.easing);
-
+	const easingFn = resolveRAFEasing(options.easing);
 	let startTime: number | null = null;
 
 	function step(currentTime: number): void {
 		if (startTime === null) startTime = currentTime;
-
 		const elapsed = currentTime - startTime;
 		const progress = Math.min(elapsed / options.duration, 1);
-		const easedProgress = easingFn(progress);
-
-		window.scrollTo(0, startY + distance * easedProgress);
-
+		window.scrollTo(0, startY + distance * easingFn(progress));
 		if (progress < 1) {
 			window.requestAnimationFrame(step);
 		} else if (options.updateHash) {
@@ -118,20 +132,47 @@ function smoothScrollTo(
 	window.requestAnimationFrame(step);
 }
 
-// ─── Programmatic Hook ────────────────────────────────────────────────────────
+function smoothScrollTo(
+	targetElement: Element,
+	options: Required<PanturaOptions>,
+): void {
+	if (typeof window === "undefined") return;
+
+	const gsap = (globalThis as typeof globalThis & { gsap?: GSAPInstance }).gsap;
+
+	if (gsap) {
+		const targetRect = targetElement.getBoundingClientRect();
+		const targetY = window.scrollY + targetRect.top - options.offset;
+
+		gsap.to(window, {
+			scrollTo: { y: targetY, autoKill: true },
+			duration: options.duration / 1000,
+			ease: resolveGSAPEasing(options.easing),
+			onComplete: () => {
+				if (options.updateHash) {
+					window.history.replaceState(null, "", `#${targetElement.id}`);
+				}
+			},
+		});
+	} else {
+		smoothScrollRAF(targetElement, options);
+	}
+}
+
+// ─── usePantura Hook ──────────────────────────────────────────────────────────
 
 /**
- * useScrollTo - programmatic smooth navigation hook.
+ * usePantura ,  programmatic smooth scroll hook.
  *
  * @example
- * const scrollTo = useScrollTo();
+ * const scrollTo = usePantura();
  * scrollTo("contact", { offset: 80 });
  */
-export function useScrollTo(
-	defaultOptions?: GunungjatiScrollOptions,
-): (id: string, overrides?: GunungjatiScrollOptions) => void {
+export function usePantura(
+	defaultOptions?: PanturaOptions,
+): (id: string, overrides?: PanturaOptions) => void {
 	return useCallback(
-		(id: string, overrides?: GunungjatiScrollOptions) => {
+		(id: string, overrides?: PanturaOptions) => {
 			const target = getScrollTarget(id);
 			if (!target) return;
 
@@ -147,31 +188,23 @@ export function useScrollTo(
 	);
 }
 
-// ─── <scroll to=""> Component ─────────────────────────────────────────────────
+// ─── <pantura to=""> Component ────────────────────────────────────────────────
 
-type ScrollElementAttributes = Omit<
+type PanturaElementAttributes = Omit<
 	AnchorHTMLAttributes<HTMLAnchorElement>,
 	"href"
 > & {
 	readonly to: string;
 };
 
-function renderScrollElement(
-	attributes: ScrollElementAttributes,
-	children: ReactNode,
-): ReactElement {
-	return React.createElement("scroll", attributes, children);
-}
-
 /**
- * Scroll - backward-compatible smooth navigation trigger component.
+ * Pantura ,  smooth scroll trigger. Named after Jalur Pantura, the iconic
+ * north coast highway of Java. Navigates to a `<reborns id="">` target.
  *
  * @example
- * <Scroll to="about" offset={80}>
- *   Go to About
- * </Scroll>
+ * <Pantura to="about" offset={80}>Go to About</Pantura>
  */
-export function Scroll({
+export function Pantura({
 	to,
 	offset = 0,
 	duration = 600,
@@ -184,13 +217,12 @@ export function Scroll({
 	onKeyDown,
 	style,
 	...restAttributes
-}: ScrollProps): ReactElement {
+}: PanturaProps): ReactElement {
 	const isActiveRef = useRef(false);
 
 	const handleScroll = useCallback((): void => {
 		const target = getScrollTarget(to);
 		if (!target) return;
-
 		smoothScrollTo(target, { offset, duration, easing, updateHash });
 	}, [to, offset, duration, easing, updateHash]);
 
@@ -214,7 +246,6 @@ export function Scroll({
 		[onKeyDown, handleScroll],
 	);
 
-	// Active detection via IntersectionObserver
 	useEffect(() => {
 		if (!activeClassName) return;
 		if (typeof window === "undefined") return;
@@ -242,7 +273,7 @@ export function Scroll({
 		.filter(Boolean)
 		.join(" ");
 
-	const scrollAttributes: ScrollElementAttributes = {
+	const attrs: PanturaElementAttributes = {
 		...restAttributes,
 		to,
 		onClick: handleClick,
@@ -251,58 +282,36 @@ export function Scroll({
 		tabIndex: 0,
 	};
 
-	if (resolvedClassName) {
-		scrollAttributes.className = resolvedClassName;
-	}
+	if (resolvedClassName) attrs.className = resolvedClassName;
+	if (style) attrs.style = style;
 
-	if (style) {
-		scrollAttributes.style = style;
-	}
-
-	return renderScrollElement(scrollAttributes, children);
+	return React.createElement("pantura", attrs, children);
 }
 
-// ─── <anchor id=""> Component ─────────────────────────────────────────────────
+// ─── <reborns id=""> Component ────────────────────────────────────────────────
 
 /**
- * Anchor - backward-compatible target marker component.
+ * Reborns ,  scroll target marker. Place this around the section you want
+ * `<pantura to="">` to navigate to.
  *
  * @example
- * <Anchor id="about">
- *   <h2>About Us</h2>
- * </Anchor>
+ * <Reborns id="about"><h2>About Us</h2></Reborns>
  */
-export function Anchor({
+export function Reborns({
 	id,
 	children,
 	style,
 	...restAttributes
-}: AnchorProps): ReactElement {
+}: RebornsProps): ReactElement {
 	return React.createElement(
-		"anchor",
+		"reborns",
 		{
 			...restAttributes,
 			id,
-			style: {
-				display: "block",
-				...style,
-			},
+			style: { display: "block", ...style },
 		},
 		children,
 	);
 }
 
-// ─── Cirebon Cultural Identity Exports ─────────────────────────────────────────
-// Named after Sintren - the mesmerizing, mystical traditional folk performance
-// art of Cirebon, flowing smoothly with rhythmic elegance.
-
-/** Sintren: smooth in-page navigation trigger. */
-export const Sintren = Scroll;
-
-/** Paksi: target marker for Sintren, named after Paksi Naga Liman. */
-export const Paksi = Anchor;
-
-/** useSintren: programmatic smooth scroll hook */
-export const useSintren = useScrollTo;
-
-export default Scroll;
+export default Pantura;

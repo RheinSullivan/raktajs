@@ -1,5 +1,5 @@
-// biome-ignore-all lint: Template welcome starter Rakta.js — cerminan desain resmi.
-// biome-ignore-all assist: Template welcome starter Rakta.js — cerminan desain resmi.
+// biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
+// biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
 // NOTE: useState, useEffect, useRef di-auto-import oleh Rakta.js.
 
 import {
@@ -114,7 +114,7 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 							)}
 							{status === "success" && (
 								<span className="font-mono text-sm text-brand-green font-bold uppercase flex items-center gap-1.5">
-									<span className="w-2 h-2 bg-brand-green" /> LIVE — PRODUKSI
+									<span className="w-2 h-2 bg-brand-green" /> LIVE , PRODUKSI
 									AKTIF
 								</span>
 							)}

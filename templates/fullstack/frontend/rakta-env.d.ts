@@ -132,8 +132,16 @@ declare module "raktajs/components" {
 		props: RaktaAlertProps,
 	): import("react").ReactElement;
 	export function Alert(props: RaktaAlertProps): import("react").ReactElement;
-	export function Sintren(props: Record<string, unknown>): import("react").ReactElement;
-	export function useSintren(): Record<string, unknown>;
+	export function Pantura(
+		props: Record<string, unknown>,
+	): import("react").ReactElement;
+	export function Reborns(
+		props: Record<string, unknown>,
+	): import("react").ReactElement;
+	export function usePantura(): (
+		id: string,
+		options?: Record<string, unknown>,
+	) => void;
 	export const toast: {
 		info: (
 			message: import("react").ReactNode,
@@ -185,6 +193,22 @@ declare module "react" {
 			click: RaktaClickAttributes;
 			// Rakta.js image: compiles to <img> with built-in lazy loading & optimization
 			photo: RaktaPhotoAttributes;
+			// Rakta.js smooth scroll trigger: navigates to <reborns id="">
+			pantura: Omit<
+				import("react").AnchorHTMLAttributes<HTMLElement>,
+				"href"
+			> & {
+				readonly to: string;
+				readonly offset?: number;
+				readonly duration?: number;
+				readonly easing?: string;
+				readonly updateHash?: boolean;
+				readonly activeClassName?: string;
+			};
+			// Rakta.js scroll target marker
+			reborns: import("react").HTMLAttributes<HTMLElement> & {
+				readonly id: string;
+			};
 		}
 	}
 }
@@ -321,8 +345,9 @@ declare global {
 	const Toaster: typeof import("raktajs/components").Toaster;
 	const RaktaAlert: typeof import("raktajs/components").RaktaAlert;
 	const Alert: typeof import("raktajs/components").Alert;
-	const Sintren: typeof import("raktajs/components").Sintren;
-	const useSintren: typeof import("raktajs/components").useSintren;
+	const Pantura: typeof import("raktajs/components").Pantura;
+	const Reborns: typeof import("raktajs/components").Reborns;
+	const usePantura: typeof import("raktajs/components").usePantura;
 	const toast: typeof import("raktajs/components").toast;
 	const useToast: typeof import("raktajs/components").useToast;
 
@@ -387,9 +412,19 @@ declare global {
 	// ── Auth Utilities ──
 	const loginUser: (email: string, password: string) => Promise<AuthResult>;
 	const registerUser: (input: RegisterUserInput) => Promise<AuthResult>;
-	const requestPasswordOtp: (email: string) => Promise<{ otp: string; expiresAt: number }>;
-	const resetPassword: (email: string, otp: string, password: string) => Promise<unknown>;
-	const resetPasswordWithOtp: (input: { email: string; otp: string; newPassword: string }) => Promise<unknown>;
+	const requestPasswordOtp: (
+		email: string,
+	) => Promise<{ otp: string; expiresAt: number }>;
+	const resetPassword: (
+		email: string,
+		otp: string,
+		password: string,
+	) => Promise<unknown>;
+	const resetPasswordWithOtp: (input: {
+		email: string;
+		otp: string;
+		newPassword: string;
+	}) => Promise<unknown>;
 	const apiGet: <TData>(path: string) => Promise<TData>;
 	const API_URL: string;
 

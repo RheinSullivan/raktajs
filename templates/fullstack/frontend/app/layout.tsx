@@ -93,9 +93,25 @@ export const metadata: Metadata = {
 		},
 	},
 	icons: {
-		icon: "/favicon.ico",
-		apple: "/apple-touch-icon.png",
+		icon: [
+			{ url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+			{ url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+			{ url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+			{
+				url: "/android-chrome-192x192.png",
+				sizes: "192x192",
+				type: "image/png",
+			},
+			{
+				url: "/android-chrome-512x512.png",
+				sizes: "512x512",
+				type: "image/png",
+			},
+			{ url: "/rakta-logo.svg", type: "image/svg+xml" },
+		],
+		apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
 	},
+	manifest: "/site.webmanifest",
 	other: {
 		generator: "Rakta.js",
 		"geo.region": "ID-JB",
@@ -170,6 +186,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 			<head>
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+				{/* mask-icon untuk Safari pinned tab ,  pakai logo udang Rakta.js */}
+				<link rel="mask-icon" href="/rakta-logo.svg" color="#e11d48" />
 				<RaktaHead metadata={metadata} />
 			</head>
 			<body className="min-h-screen bg-black text-white antialiased">

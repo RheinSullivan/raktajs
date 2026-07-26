@@ -76,13 +76,13 @@ without adding a URL segment:
 ```txt
 app/
 ├─ (auth)/
-│  ├─ layout.tsx        ← only wraps login/register/etc, no navbar/footer
-│  ├─ login/page.tsx     → /login
-│  └─ register/page.tsx  → /register
+│  ├─ layout.tsx        only wraps login/register/etc, no navbar/footer
+│  ├─ login/page.tsx     /login
+│  └─ register/page.tsx  /register
 ├─ dashboard/
-│  ├─ layout.tsx        ← dashboard sidebar, no marketing footer
-│  └─ page.tsx           → /dashboard
-└─ layout.tsx            ← public marketing layout (navbar + footer)
+│  ├─ layout.tsx        dashboard sidebar, no marketing footer
+│  └─ page.tsx           /dashboard
+└─ layout.tsx            public marketing layout (navbar + footer)
 ```
 
 This is exactly how the fullstack template structures public marketing

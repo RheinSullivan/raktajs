@@ -24,14 +24,14 @@ export const RAKTA_FEATURES: RaktaFeature[] = [
 	{
 		id: "trusmithread",
 		title: "TrusmiThread",
-		desc: "Scanner auto-import yang menghasilkan deklarasi bertype untuk komponen, store, dan hooks — tanpa satu pun import manual.",
+		desc: "Scanner auto-import yang menghasilkan deklarasi bertype untuk komponen, store, dan hooks , tanpa satu pun import manual.",
 		code: "const [state, setState] = useState()",
 	},
 	{
-		id: "sintren",
-		title: "Sintren",
-		desc: "Engine smooth scroll dan navigasi bagian halaman, terinspirasi dari seni pertunjukan rakyat Cirebon.",
-		code: '<sintren to="section-id">',
+		id: "panturascroll",
+		title: "PanturaScroll",
+		desc: "Engine smooth scroll dan navigasi bagian halaman, dinamai dari Jalur Pantura, jalan pantai utara Jawa yang legendaris.",
+		code: '<pantura to="section-id">',
 	},
 	{
 		id: "sunyaragicrown",

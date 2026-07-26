@@ -1,5 +1,5 @@
-// biome-ignore-all lint: Template welcome starter Rakta.js — cerminan desain resmi.
-// biome-ignore-all assist: Template welcome starter Rakta.js — cerminan desain resmi.
+// biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
+// biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
 // NOTE: useState di-auto-import oleh Rakta.js.
 //
 // Catatan arsitektur:
@@ -13,7 +13,7 @@ interface ComponentsModalProps {
 	onClose: () => void;
 }
 
-// Preview functions — dipisah dari metadata tapi tetap di file .tsx karena pakai JSX
+// Preview functions , dipisah dari metadata tapi tetap di file .tsx karena pakai JSX
 const COMPONENT_PREVIEWS: Record<
 	string,
 	(

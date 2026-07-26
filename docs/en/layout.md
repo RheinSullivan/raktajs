@@ -44,22 +44,22 @@ Create a `layout.tsx` inside any segment folder to wrap only those routes:
 
 ```txt
 app/
-├─ layout.tsx           ← root layout (wraps everything)
-├─ page.tsx             → /
+├─ layout.tsx           root layout (wraps everything)
+├─ page.tsx             /
 ├─ dashboard/
-│  ├─ layout.tsx        ← dashboard layout (sidebar, user menu)
-│  ├─ page.tsx          → /dashboard
+│  ├─ layout.tsx        dashboard layout (sidebar, user menu)
+│  ├─ page.tsx          /dashboard
 │  ├─ settings/
-│  │  └─ page.tsx       → /dashboard/settings
+│  │  └─ page.tsx       /dashboard/settings
 │  └─ analytics/
-│     └─ page.tsx       → /dashboard/analytics
+│     └─ page.tsx       /dashboard/analytics
 └─ (auth)/
-   ├─ layout.tsx        ← auth layout (no sidebar, centered form)
-   ├─ login/page.tsx    → /login
-   └─ register/page.tsx → /register
+   ├─ layout.tsx        auth layout (no sidebar, centered form)
+   ├─ login/page.tsx    /login
+   └─ register/page.tsx /register
 ```
 
-The layout chain for `/dashboard/settings` is: `app/layout.tsx` → `app/dashboard/layout.tsx`.
+The layout chain for `/dashboard/settings` is: `app/layout.tsx` `app/dashboard/layout.tsx`.
 
 ## Route groups for layout isolation
 
@@ -94,7 +94,7 @@ const manifest: RaktaLayoutManifest = createLayoutManifest([
 
 // Resolve the layout chain for a given pathname
 const activeLayouts: RaktaLayoutEntry[] = matchLayouts(manifest, "/dashboard/settings");
-// → [app/layout.tsx, app/dashboard/layout.tsx]
+// [app/layout.tsx, app/dashboard/layout.tsx]
 ```
 
 ### Layout kinds

@@ -1574,7 +1574,7 @@ svg {
 	color: var(--color-rakta-red);
 }
 
-/* Game viewport — dot-grid background pattern */
+/* Game viewport , dot-grid background pattern */
 .game-viewport-bg {
 	background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
 	background-size: 16px 16px;

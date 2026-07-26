@@ -1,5 +1,5 @@
 // Utility functions untuk ShrimpRun game logic
-// Tidak bergantung pada React — bisa ditest secara independen.
+// Tidak bergantung pada React , bisa ditest secara independen.
 
 import {
 	OBSTACLE_CONFIG,
@@ -101,6 +101,6 @@ export function saveHighScore(key: string, score: number): void {
 	try {
 		localStorage.setItem(key, score.toString());
 	} catch {
-		// localStorage tidak tersedia — abaikan
+		// localStorage tidak tersedia , abaikan
 	}
 }

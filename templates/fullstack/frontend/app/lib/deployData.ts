@@ -42,7 +42,7 @@ export const DEPLOY_LOGS: readonly DeployLog[] = [
 		text: "[ESBUILD] Bundling dengan flag --platform=node --format=cjs --packages=external",
 		type: "info",
 	},
-	{ text: "[ESBUILD] ✓ server.ts → dist/server.cjs [120ms]", type: "success" },
+	{ text: "[ESBUILD] ✓ server.ts dist/server.cjs [120ms]", type: "success" },
 	{ text: "[DOCKER] Membangun container deployment...", type: "info" },
 	{
 		text: "[DOCKER] Membersihkan devDependencies non-produksi dari image...",

@@ -44,22 +44,22 @@ Buat berkas `layout.tsx` di dalam folder segmen mana pun untuk membungkus rute d
 
 ```txt
 app/
-├─ layout.tsx           ← root layout (membungkus semua)
-├─ page.tsx             → /
+├─ layout.tsx           root layout (membungkus semua)
+├─ page.tsx             /
 ├─ dashboard/
-│  ├─ layout.tsx        ← layout dashboard (sidebar, menu pengguna)
-│  ├─ page.tsx          → /dashboard
+│  ├─ layout.tsx        layout dashboard (sidebar, menu pengguna)
+│  ├─ page.tsx          /dashboard
 │  ├─ settings/
-│  │  └─ page.tsx       → /dashboard/settings
+│  │  └─ page.tsx       /dashboard/settings
 │  └─ analytics/
-│     └─ page.tsx       → /dashboard/analytics
+│     └─ page.tsx       /dashboard/analytics
 └─ (auth)/
-   ├─ layout.tsx        ← layout auth (tanpa sidebar, form di tengah)
-   ├─ login/page.tsx    → /login
-   └─ register/page.tsx → /register
+   ├─ layout.tsx        layout auth (tanpa sidebar, form di tengah)
+   ├─ login/page.tsx    /login
+   └─ register/page.tsx /register
 ```
 
-Rantai layout untuk `/dashboard/settings` adalah: `app/layout.tsx` → `app/dashboard/layout.tsx`.
+Rantai layout untuk `/dashboard/settings` adalah: `app/layout.tsx` `app/dashboard/layout.tsx`.
 
 ## Grup Rute untuk Isolasi Layout
 
@@ -94,7 +94,7 @@ const manifest: RaktaLayoutManifest = createLayoutManifest([
 
 // Dapatkan rantai layout aktif untuk suatu jalur URL
 const activeLayouts: RaktaLayoutEntry[] = matchLayouts(manifest, "/dashboard/settings");
-// → [app/layout.tsx, app/dashboard/layout.tsx]
+// [app/layout.tsx, app/dashboard/layout.tsx]
 ```
 
 ## Layout Khusus

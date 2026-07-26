@@ -18,7 +18,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 					<span>/ ADMIN PORTAL</span>
 				</div>
 				<click to="/" className="text-gray-400 hover:text-white transition-colors cursor-pointer">
-					← Return to App
+					Return to App
 				</click>
 			</div>
 			<main className="p-6">{children}</main>

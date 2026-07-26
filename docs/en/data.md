@@ -49,20 +49,20 @@ import { defineRouteDataStrategy, isIncrementalRoute, shouldStreamRoute, shouldP
 
 const dashboardStrategy = defineRouteDataStrategy({
   routePattern: "/dashboard",
-  runtime: "server",     // "server" | "client" | "edge"
-  prerender: false,       // true = SSG / ISR at build time
-  stream: true,           // true = enable streaming response
-  prefetch: true,         // true = prefetch on hover
-  revalidate: 60,         // ISR revalidation interval in seconds (only when prerender: true)
+  runtime: "server",    // "server" | "client" | "edge"
+  prerender: false,      // true = SSG / ISR at build time
+  stream: true,          // true = enable streaming response
+  prefetch: true,        // true = prefetch on hover
+  revalidate: 60,        // ISR revalidation interval in seconds (only when prerender: true)
 });
 
 const blogStrategy = defineRouteDataStrategy({
   routePattern: "/blog/:slug",
   runtime: "server",
-  prerender: true,        // pre-render at build time
+  prerender: true,       // pre-render at build time
   stream: false,
   prefetch: true,
-  revalidate: 3600,       // re-generate every hour
+  revalidate: 3600,      // re-generate every hour
 });
 
 // Check helpers

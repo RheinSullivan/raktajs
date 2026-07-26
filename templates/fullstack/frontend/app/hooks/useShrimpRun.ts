@@ -1,4 +1,4 @@
-// Hook utama ShrimpRun — mengelola state game, fisika, dan collision.
+// Hook utama ShrimpRun , mengelola state game, fisika, dan collision.
 // Logic fisika dan konstanta dipisah ke app/lib/gameData.ts dan app/lib/gameUtils.ts.
 // NOTE: useState, useEffect, useRef di-auto-import oleh Rakta.js.
 

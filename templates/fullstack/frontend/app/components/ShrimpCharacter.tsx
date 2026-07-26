@@ -1,5 +1,5 @@
-// biome-ignore-all lint: Template welcome starter Rakta.js — cerminan desain resmi.
-// biome-ignore-all assist: Template welcome starter Rakta.js — cerminan desain resmi.
+// biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
+// biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
 // NOTE: Rakta.js uses automatic JSX transform - no React import needed.
 
 interface ShrimpCharacterProps {
@@ -84,7 +84,7 @@ export default function ShrimpCharacter({
 					</linearGradient>
 				</defs>
 
-				{/* LAYER 1 (BOTTOM): Tail, Legs, Head Base - Render First */}
+				{/* LAYER 1 (BOTTOM): Tail, Legs, Head Details - Render First */}
 
 				{/* Tail Segment & Fan (Ekor) */}
 				<g className={tailClass} style={{ transformOrigin: "28px 45px" }}>
@@ -138,33 +138,6 @@ export default function ShrimpCharacter({
 					d="M 55 30 C 65 24, 76 34, 74 46 C 72 54, 62 55, 55 48 Z"
 					fill="url(#shrimpGrad)"
 				/>
-
-				{/* LAYER 2 (MIDDLE): Main Body - Covers Connection Points */}
-
-				{/* Main curved middle segments */}
-				<path
-					d="M 30 46 C 25 32, 45 22, 58 28 C 65 31, 62 48, 55 54 C 44 58, 35 55, 30 46 Z"
-					fill="url(#shrimpGrad)"
-				/>
-
-				{/* Shell Segments detailing overlays */}
-				<path
-					d="M 36 34 C 40 28, 48 28, 52 32 C 48 38, 42 38, 36 34 Z"
-					fill={shellShade}
-					opacity="0.6"
-				/>
-				<path
-					d="M 44 38 C 48 32, 55 34, 58 38 C 54 44, 48 44, 44 38 Z"
-					fill={shellShade}
-					opacity="0.6"
-				/>
-				<path
-					d="M 50 43 C 54 39, 60 41, 62 45 C 58 50, 53 50, 50 43 Z"
-					fill={shellShade}
-					opacity="0.6"
-				/>
-
-				{/* LAYER 3 (TOP): Antennas and Head Details - Top Layer */}
 
 				{/* Antennas / Sungut (waving forward) */}
 				<g className={antennaClass} style={{ transformOrigin: "75px 45px" }}>
@@ -228,6 +201,31 @@ export default function ShrimpCharacter({
 						opacity="0.5"
 					/>
 				)}
+
+				{/* LAYER 2 (TOP): Main Body - Rendered Last to Cover Connection Points */}
+
+				{/* Main curved middle segments */}
+				<path
+					d="M 30 46 C 25 32, 45 22, 58 28 C 65 31, 62 48, 55 54 C 44 58, 35 55, 30 46 Z"
+					fill="url(#shrimpGrad)"
+				/>
+
+				{/* Shell Segments detailing overlays */}
+				<path
+					d="M 36 34 C 40 28, 48 28, 52 32 C 48 38, 42 38, 36 34 Z"
+					fill={shellShade}
+					opacity="0.6"
+				/>
+				<path
+					d="M 44 38 C 48 32, 55 34, 58 38 C 54 44, 48 44, 44 38 Z"
+					fill={shellShade}
+					opacity="0.6"
+				/>
+				<path
+					d="M 50 43 C 54 39, 60 41, 62 45 C 58 50, 53 50, 50 43 Z"
+					fill={shellShade}
+					opacity="0.6"
+				/>
 			</svg>
 
 
