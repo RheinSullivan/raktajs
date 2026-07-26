@@ -2,10 +2,6 @@
   <img src="docs/assets/raktajs_benner.png" alt="Rakta.js banner" width="100%" />
 </p>
 
-<p align="center">
-  <img src="docs/assets/Rakta.js.png" alt="Rakta.js shrimp logo" width="120" height="120" />
-</p>
-
 <h1 align="center">Rakta.js | React Framework</h1>
 
 <p align="center">
@@ -32,16 +28,16 @@
     <img src="https://img.shields.io/github/last-commit/RheinSullivan/raktajs?style=flat&logo=github&label=last%20commit&color=28A745&labelColor=555" alt="Last commit" />
   </a>
   <a href="https://www.npmjs.com/package/raktajs">
-    <img src="https://img.shields.io/npm/v/raktajs?style=flat&logo=npm&label=Rakta.js&color=CB3837&labelColor=555" alt="raktajs npm version" />
+    <img src="https://img.shields.io/npm/v/raktajs?style=flat&label=Rakta.js&color=C60005&labelColor=555" alt="raktajs npm version" />
   </a>
   <a href="https://www.npmjs.com/package/create-rakta-app">
-    <img src="https://img.shields.io/npm/v/create-rakta-app?style=flat&logo=npm&label=create-rakta-app&color=CB3837&labelColor=555" alt="create-rakta-app npm version" />
+    <img src="https://img.shields.io/npm/v/create-rakta-app?style=flat&label=create-rakta-app&color=C60005&labelColor=555" alt="create-rakta-app npm version" />
   </a>
   <a href="https://www.npmjs.com/package/raktajs">
-    <img src="https://img.shields.io/npm/dm/raktajs?style=flat&logo=npm&label=rakta.js/month&color=009688&labelColor=555" alt="raktajs monthly downloads" />
+    <img src="https://img.shields.io/npm/dm/raktajs?style=flat&label=rakta.js/month&color=009688&labelColor=555" alt="raktajs monthly downloads" />
   </a>
   <a href="https://www.npmjs.com/package/create-rakta-app">
-    <img src="https://img.shields.io/npm/dm/create-rakta-app?style=flat&logo=npm&label=create-rakta-app/month&color=009688&labelColor=555" alt="create-rakta-app monthly downloads" />
+    <img src="https://img.shields.io/npm/dm/create-rakta-app?style=flat&label=create-rakta-app/month&color=009688&labelColor=555" alt="create-rakta-app monthly downloads" />
   </a>
   <a href="https://bun.sh">
     <img src="https://img.shields.io/badge/Bun-1.3.11-db2777?style=flat&logo=bun&logoColor=white&labelColor=555" alt="Bun 1.3.11" />
@@ -972,13 +968,13 @@ rakta/forge         Dev server dan build system internals
 
 **Bahasa Indonesia** Roadmap di bawah ini adalah kontrak publik. Apa yang tercantum di sini adalah apa yang kami rencanakan untuk dibangun. Versi dikelompokkan berdasarkan area fokus, dan setiap entri menunjukkan deliverables utamanya.
 
-### Released v1.0.0 through v1.0.2 / Sudah Rilis
+### Released v1.0.0 through v1.0.3 / Sudah Rilis
 
 | Version | Date | Changes |
 | --- | --- | --- |
 | **v1.0.0** | 2026-07 | First public release full module set: router, render, rpc, store, schema, http, seo, pwa, kernel, middleware, layout, data, dx, performance, security, ops, testing, deployment, plugin, docs |
 | **v1.0.1** | 2026-07 | Biome lint fix indentation in `plugin/official.ts` |
-| **v1.0.2** | 2026-07 | Add GSAP + ScrollTrigger, PanturaScroll smooth scroll (`<pantura>` / `<reborns>`), separate lib/helper files in templates, remove CSS from .tsx files, update documentation language |
+| **v1.0.3** | 2026-07 | Add GSAP + ScrollTrigger, PanturaScroll smooth scroll (`<pantura>` / `<reborns>`), separate lib/helper files in templates, remove CSS from .tsx files, update documentation language |
 
 ### All Systems Shipped / Semua Sistem yang Sudah Ada
 
@@ -1236,22 +1232,16 @@ Prinsipnya sederhana: **semua yang masuk tercatat, semua yang keluar bisa dibukt
 
 ### Cara Pakai di shields.io / Using with shields.io
 
-**English** shields.io supports custom logo via URL. Use the raw GitHub URL of `Rakta.js.svg` as the `logo` parameter.
+**English** shields.io only supports logos from [Simple Icons](https://simpleicons.org). To display the Rakta.js logo on shields.io badges, the logo must first be submitted and accepted to the Simple Icons project. Until then, use the badge without a logo parameter — the brand color `#C60005` is enough to identify it.
 
-**Bahasa Indonesia** shields.io mendukung logo kustom via URL. Pakai URL raw GitHub dari `Rakta.js.svg` sebagai parameter `logo`.
+**Bahasa Indonesia** shields.io hanya mendukung logo dari [Simple Icons](https://simpleicons.org). Untuk menampilkan logo Rakta.js di badge shields.io, logo harus terlebih dahulu disubmit dan diterima oleh project Simple Icons. Sampai saat itu, gunakan badge tanpa parameter logo — warna brand `#C60005` sudah cukup untuk mengidentifikasinya.
 
 ```markdown
-<!-- Badge dengan logo Rakta.js dari GitHub raw -->
-![Rakta.js](https://img.shields.io/badge/Rakta.js-Framework-e11d48?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjE4IiBmaWxsPSIjMWEwMDA4Ii8+PHRleHQgeD0iNTAiIHk9IjcyIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI2OCIgZm9udC13ZWlnaHQ9IjkwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2UxMWQ0OCI+UjwvdGV4dD48Y2lyY2xlIGN4PSI3NCIgY3k9IjgwIiByPSI1IiBmaWxsPSIjZTExZDQ4Ii8+PC9zdmc+&logoColor=white&labelColor=555)
+<!-- Badge version Rakta.js -->
+[![raktajs](https://img.shields.io/npm/v/raktajs?style=flat&label=Rakta.js&color=C60005&labelColor=555)](https://www.npmjs.com/package/raktajs)
 
-<!-- Atau pakai raw URL setelah icon di-host -->
-![Rakta.js](https://img.shields.io/badge/Rakta.js-e11d48?style=flat&logoColor=white&labelColor=555)
-
-<!-- Badge version -->
-[![npm](https://img.shields.io/npm/v/raktajs?style=flat&logo=npm&label=Rakta.js&color=e11d48&labelColor=555)](https://www.npmjs.com/package/raktajs)
-
-<!-- Badge download -->
-[![downloads](https://img.shields.io/npm/dm/raktajs?style=flat&logo=npm&label=rakta.js%2Fmonth&color=009688&labelColor=555)](https://www.npmjs.com/package/raktajs)
+<!-- Badge downloads -->
+[![downloads](https://img.shields.io/npm/dm/raktajs?style=flat&label=rakta.js/month&color=009688&labelColor=555)](https://www.npmjs.com/package/raktajs)
 ```
 
 ### Cara Pakai di HTML / Using in HTML
