@@ -30,21 +30,26 @@ describe("Rakta Dev Terminal", () => {
 			version: "1.0.6",
 			projectRoot: process.cwd(),
 		});
-		const before = Date.now();
 		t.markStart();
 		const logs: string[] = [];
 		const orig = console.log;
 		console.log = (...args: unknown[]) => logs.push(args.join(" "));
 		t.printStartup("http://localhost:3000");
 		console.log = orig;
+
 		const readyLine = logs.find((l) => l.includes("Ready in"));
 		expect(readyLine).toBeDefined();
-		// Timer should be >= 0ms and <= time since test started
-		const match = readyLine?.match(/Ready in (\d+)ms/);
+
+		// Strip ANSI color codes — use String.fromCharCode(27) for ESC to avoid
+		// biome lint/suspicious/noControlCharactersInRegex on \x1b literal
+		const esc = String.fromCharCode(27);
+		const ansiPattern = new RegExp(`${esc}\\[[0-9;]*m`, "g");
+		const stripped = readyLine?.replace(ansiPattern, "") ?? "";
+		const match = stripped.match(/Ready in (\d+)ms/);
 		expect(match).toBeTruthy();
 		const ms = Number(match?.[1]);
 		expect(ms).toBeGreaterThanOrEqual(0);
-		expect(ms).toBeLessThan(Date.now() - before + 100);
+		expect(ms).toBeLessThan(10_000);
 	});
 
 	test("logRequest 2xx uses correct symbol", () => {

@@ -243,6 +243,36 @@ export {
 	redirect,
 	rewrite,
 } from "./middleware/index";
+export {
+	useCursorFollower,
+	useDrag,
+	useMagnetic,
+	useParallax,
+	useSpotlight,
+	useTilt,
+} from "./motion/interactions";
+// Motion - NusantaraMotion (page transitions, interactions, typography)
+export {
+	createMotionTimeline,
+	definePageTransition,
+	defineSharedElement,
+	MOTION_PRESETS,
+	usePageTransition,
+	useSharedElement,
+} from "./motion/transitions";
+export type {
+	MotionPreset,
+	MotionTarget,
+	NusantaraTransitionConfig,
+	PageTransitionHooks,
+	SharedElementConfig,
+	TransitionPhase,
+} from "./motion/types";
+export {
+	animateText,
+	splitText,
+	useKineticText,
+} from "./motion/typography";
 export type {
 	RaktaCronTask,
 	RaktaEvent,
@@ -377,6 +407,24 @@ export {
 	publicProcedure,
 	RaktaRpcError,
 } from "./rpc/index";
+export { clearAssetCache, loadGLTF, loadTexture } from "./scene/loader";
+// Scene - MegaScape (optional 3D layer, requires three as peer dep)
+export {
+	createMegaScape,
+	detectDeviceQuality,
+	useMegaScapeScene,
+	useScrollScene,
+} from "./scene/scene";
+export type {
+	JatiCameraConfig,
+	MegaScapeConfig,
+	QualityPreset,
+	RenderMode as SceneRenderMode,
+	SceneAdapter,
+	SceneDiagnostics,
+	ScrollSceneConfig,
+	TrusmiMaterialConfig,
+} from "./scene/types";
 export type {
 	Infer,
 	InferShape,
@@ -490,3 +538,18 @@ export {
 	createBunAdapter,
 	createRuntimeContext,
 } from "./tide/index";
+export { useImageZoom, useTrusmiGallery } from "./vector/imageExperience";
+// Vector - TrusmiVector (SVG state machine, mascot, image zoom)
+export {
+	createStateMachine,
+	SHRIMP_MASCOT_STATES,
+	useMascot,
+	useTrusmiVector,
+} from "./vector/stateMachine";
+export type {
+	MascotState,
+	StateMachineConfig,
+	StateMachineTransition,
+	TrusmiVectorConfig,
+	VectorAnimationState,
+} from "./vector/types";
