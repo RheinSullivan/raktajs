@@ -39,6 +39,11 @@
 		"plugin-system",
 		"service-container"
 	],
+	"sideEffects": false,
+	"engines": {
+		"bun": ">=1.0.0",
+		"node": ">=18.0.0"
+	},
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"bin": {

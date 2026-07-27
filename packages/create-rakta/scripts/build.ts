@@ -23,7 +23,7 @@ rmSync(outDirectory, { recursive: true, force: true });
 const buildResult = await Bun.build({
 	entrypoints: [resolve(packageRoot, "src/index.ts")],
 	outdir: outDirectory,
-	target: "bun",
+	target: "node",
 	sourcemap: "external",
 });
 

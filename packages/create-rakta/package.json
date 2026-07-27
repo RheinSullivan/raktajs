@@ -35,6 +35,10 @@
 	"publishConfig": {
 		"access": "public"
 	},
+	"engines": {
+		"bun": ">=1.0.0",
+		"node": ">=18.0.0"
+	},
 	"bin": {
 		"create-rakta-app": "dist/index.js"
 	},
