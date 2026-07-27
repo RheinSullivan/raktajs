@@ -28,7 +28,7 @@ export interface HttpRequestConfig {
 	readonly timeout?: number;
 	/** Number of retry attempts on transient network errors (default: 0). */
 	readonly retries?: number;
-	/** Base delay in ms between retries — doubled on each attempt (default: 100). */
+	/** Base delay in ms between retries - doubled on each attempt (default: 100). */
 	readonly retryDelay?: number;
 }
 

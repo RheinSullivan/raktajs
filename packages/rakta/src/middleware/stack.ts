@@ -48,6 +48,10 @@ export function createMiddlewareStack(
 		async handle(request, terminal, options = {}) {
 			const context = createContext(request, options);
 			let activeIndex = -1;
+			// Track total time spent in all middleware layers.
+			// This is exposed via X-Rakta-Middleware-Ms response header in dev mode
+			// so the terminal reporter can surface it as frameworkMs.
+			let middlewareTotalMs = 0;
 
 			const dispatch = async (index: number): Promise<Response> => {
 				if (index <= activeIndex) {
@@ -62,7 +66,9 @@ export function createMiddlewareStack(
 					return terminal(context);
 				}
 
+				const mwStart = Date.now();
 				const result = await middleware(context, () => dispatch(index + 1));
+				middlewareTotalMs += Date.now() - mwStart;
 
 				if (result instanceof Response) {
 					return result;
@@ -75,7 +81,21 @@ export function createMiddlewareStack(
 				return dispatch(index + 1);
 			};
 
-			return dispatch(0);
+			const response = await dispatch(0);
+
+			// Attach timing header (development diagnostic, stripped in production
+			// by the tide adapter's response pipeline if desired).
+			if (middlewareTotalMs > 0) {
+				const headers = new Headers(response.headers);
+				headers.set("X-Rakta-Middleware-Ms", String(middlewareTotalMs));
+				return new Response(response.body, {
+					status: response.status,
+					statusText: response.statusText,
+					headers,
+				});
+			}
+
+			return response;
 		},
 	};
 }

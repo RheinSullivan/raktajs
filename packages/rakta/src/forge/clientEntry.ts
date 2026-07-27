@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { scanForExports } from "../auto-import/scanner";
 import type { RouteManifest, RouteManifestEntry } from "../router/types";
@@ -168,6 +168,45 @@ function buildClientEntrySource(
 		cssImportSpecifier !== null ? `import "${cssImportSpecifier}";\n` : "";
 	const starterGlobalLoaders = buildStarterGlobalLoaders(options, entryPath);
 
+	// Embed the Rakta.js SVG logo as a base64 data URL so the dev indicator
+	// has no runtime filesystem dependency. Computed once at bundle time.
+	const svgCandidates = [
+		join(options.projectRoot, "docs", "assets", "Rakta.js.svg"),
+		join(options.projectRoot, "..", "..", "docs", "assets", "Rakta.js.svg"),
+		join(__dirname, "..", "..", "..", "..", "docs", "assets", "Rakta.js.svg"),
+	];
+	const svgPath = svgCandidates.find((p) => existsSync(p));
+	const logoDataUrl = svgPath
+		? `data:image/svg+xml;base64,${readFileSync(svgPath).toString("base64")}`
+		: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHBhdGggZmlsbD0iI0M2MDAwNSIgZD0iTTE2IDJMNCA4djE2bDEyIDYgMTItNlY4TDE2IDJ6Ii8+PC9zdmc+";
+
+	// Resolve path to devIndicator module relative to the generated entry file.
+	const devIndicatorAbsPath = join(__dirname, "..", "dx", "devIndicator.js");
+	const devIndicatorPath = toModuleSpecifier(entryPath, devIndicatorAbsPath);
+
+	// Read version from package.json at build time.
+	const pkgPath = join(
+		options.projectRoot,
+		"node_modules",
+		"raktajs",
+		"package.json",
+	);
+	let rVersion = "1.0.6";
+	if (existsSync(pkgPath)) {
+		try {
+			const pkg = JSON.parse(readFileSync(pkgPath, "utf8")) as {
+				version?: string;
+			};
+			if (typeof pkg.version === "string") rVersion = pkg.version;
+		} catch {
+			// fall back to default
+		}
+	}
+	const rVersionSafe = rVersion.replace(/"/g, "");
+	const logoDataUrlSafe = logoDataUrl
+		.replace(/\\/g, "\\\\")
+		.replace(/`/g, "\\`");
+
 	return `import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import * as ReactHooks from "react";
@@ -232,7 +271,7 @@ ${starterGlobalLoaders}
 
 await loadRaktaGlobals();
 
-function setupRaktaDevToolsAndPreview(): void {
+function setupUrlPreview(): void {
 	if (typeof document === "undefined") return;
 
 	const urlPreview = document.createElement("div");
@@ -281,96 +320,21 @@ function setupRaktaDevToolsAndPreview(): void {
 			urlPreview.style.transform = "translateY(2px)";
 		}
 	});
-
-	const devToolsContainer = document.createElement("div");
-	devToolsContainer.id = "rakta-devtools-container";
-	Object.assign(devToolsContainer.style, {
-		position: "fixed",
-		bottom: "16px",
-		left: "16px",
-		zIndex: "999999",
-		fontFamily:
-			"system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-	});
-
-	const devToolsBtn = document.createElement("button");
-	devToolsBtn.id = "rakta-devtools-btn";
-	devToolsBtn.title = "Rakta.js DevTools";
-	Object.assign(devToolsBtn.style, {
-		width: "36px",
-		height: "36px",
-		borderRadius: "50%",
-		background: "#000",
-		border: "1px solid rgba(255, 255, 255, 0.25)",
-		boxShadow: "0 4px 14px rgba(0, 0, 0, 0.7)",
-		display: "flex",
-		alignItems: "center",
-		justifyContent: "center",
-		cursor: "pointer",
-		transition: "transform 0.15s ease, border-color 0.15s ease",
-		color: "#fff",
-	});
-	devToolsBtn.innerHTML = \`<svg width="20" height="20" viewBox="0 0 32 32" fill="none"><path d="M16 2L4 8v16l12 6 12-6V8L16 2z" stroke="#E11D48" stroke-width="2.5" fill="#000"/><path d="M11 12h10M11 16h8M11 20h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>\`;
-
-	const devToolsPanel = document.createElement("div");
-	devToolsPanel.id = "rakta-devtools-panel";
-	Object.assign(devToolsPanel.style, {
-		position: "absolute",
-		bottom: "46px",
-		left: "0",
-		width: "250px",
-		background: "#09090b",
-		border: "1px solid rgba(255, 255, 255, 0.15)",
-		borderRadius: "14px",
-		padding: "14px",
-		boxShadow: "0 12px 36px rgba(0,0,0,0.85)",
-		display: "none",
-		flexDirection: "column",
-		gap: "10px",
-		color: "#f4f4f5",
-		fontSize: "13px",
-		backdropFilter: "blur(12px)",
-	});
-
-	devToolsPanel.innerHTML = \`
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <span style="color: #a1a1aa; font-size: 13px;">Route</span>
-      <span style="font-weight: 600; color: #fff; font-size: 13px;">Static</span>
-    </div>
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <span style="color: #a1a1aa; font-size: 13px;">Bundler</span>
-      <span style="font-weight: 600; color: #e11d48; font-size: 13px;">CherbonsEngine</span>
-    </div>
-    <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
-      <span style="color: #a1a1aa; font-size: 13px;">Route Info</span>
-      <span style="color: #71717a; font-size: 13px;">&rsaquo;</span>
-    </div>
-    <div style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 4px; padding-top: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #eee; cursor: pointer;">
-      <span>Preferences</span>
-      <span style="font-size: 13px; color: #71717a;">⚙</span>
-    </div>
-  \`;
-
-	let isOpen = false;
-	devToolsBtn.addEventListener("click", (e) => {
-		e.stopPropagation();
-		isOpen = !isOpen;
-		devToolsPanel.style.display = isOpen ? "flex" : "none";
-	});
-
-	document.addEventListener("click", (e) => {
-		if (isOpen && !devToolsContainer.contains(e.target as Node)) {
-			isOpen = false;
-			devToolsPanel.style.display = "none";
-		}
-	});
-
-	devToolsContainer.appendChild(devToolsPanel);
-	devToolsContainer.appendChild(devToolsBtn);
-	document.body.appendChild(devToolsContainer);
 }
 
-setupRaktaDevToolsAndPreview();
+setupUrlPreview();
+
+// Dev Indicator — development only. Production builds exclude this via
+// dead-code elimination because the block below is unreachable when
+// process.env.NODE_ENV !== "development".
+if (process.env.NODE_ENV === "development") {
+  const { mountDevIndicator } = await import(${devIndicatorPath});
+  mountDevIndicator({
+    version: ${rVersionSafe},
+    logoDataUrl: ${logoDataUrlSafe},
+    bundler: "Bun / Vite (CherbonsEngine)",
+  });
+}
 
 const raktaElementStyle = document.createElement("style");
 raktaElementStyle.textContent = \`

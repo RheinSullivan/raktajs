@@ -66,6 +66,9 @@ export {
 export type {
 	RaktaCacheEntry,
 	RaktaCacheOptions,
+	RaktaDataResult,
+	RaktaDataState,
+	RaktaDataStatus,
 	RaktaRenderRuntime,
 	RaktaRouteDataStrategy,
 } from "./data/index";
@@ -77,6 +80,7 @@ export {
 	RaktaDataCache,
 	shouldPrefetchRoute,
 	shouldStreamRoute,
+	useRaktaData,
 } from "./data/index";
 export type {
 	DeploymentAdapter,
@@ -100,20 +104,28 @@ export type {
 // Docs
 export { createVitePressConfig, scanMarkdownDocs } from "./docs/index";
 export type {
+	DevIndicatorOptions,
+	DevTerminalOptions,
 	RaktaBundleAnalysis,
 	RaktaDependencyEdge,
 	RaktaDependencyGraph,
 	RaktaRouteAnalysis,
 	RaktaSourceModule,
+	RequestLogEntry,
 } from "./dx/index";
 // DX
 export {
 	analyzeBundle,
 	analyzeRoutes,
 	createDependencyGraph,
+	createDevTerminal,
 	createErrorOverlay,
 	createProfilerReport,
+	detectEnvFiles,
+	detectLanAddress,
 	inspectAutoImports,
+	mountDevIndicator,
+	RAKTA_TERMINAL_GLYPH,
 } from "./dx/index";
 export type {
 	ArtifactKind,

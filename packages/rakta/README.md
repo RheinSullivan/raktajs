@@ -193,6 +193,52 @@ function Counter() {
 }
 ```
 
+### Data Fetching — useRaktaData
+
+```ts
+import { useRaktaData } from "raktajs";
+
+function ReportPage() {
+  const { data, loading, error, refetch } = useRaktaData(
+    (signal) => fetch("/api/report", { signal }).then(r => r.json()),
+    [],       // deps — refetch when these change
+    "report"  // optional dedup key
+  );
+
+  if (loading) return <p>Loading...</p>;
+  if (error)   return <p>Error: {error.message}</p>;
+  return <pre>{JSON.stringify(data)}</pre>;
+}
+```
+
+Features: lifecycle (idle→loading→success|error), in-memory deduplication, AbortController cancellation on unmount, manual refetch.
+
+### Dev Tools — Experimental
+
+Development-only. Not in production builds.
+
+**Rakta Dev Terminal** — output when `bun run dev`:
+
+```
+  ⩛ Rakta.js 1.0.6 (CherbonsEngine)
+
+  Local:         http://localhost:3000
+  Network:       http://192.168.1.8:3000
+  Environments:  .env.local
+  Mode:          development
+
+  ✓ Ready in 421ms
+
+  ✓ GET  /                  200  24ms
+  ✓ GET  /api/report        200  17ms
+  ⚠ GET  /api/slow          200  1.4s  [slow]
+  ✗ GET  /missing           404   2ms
+```
+
+**Rakta Dev Indicator** — floating panel in browser (bottom-left, Rakta.js SVG logo). Shows route, render mode, bundler, real Performance API measurements, and diagnostics for the "response done but UI slow" case.
+
+See [docs/en/devtools.md](../../docs/en/devtools.md) and [docs/en/performance.md](../../docs/en/performance.md).
+
 ### SEO
 
 ```tsx

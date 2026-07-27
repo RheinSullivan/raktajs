@@ -14,8 +14,6 @@ import type {
 
 type HttpJsonResponse = HttpRequestBody | string;
 
-// ─── URL helpers ─────────────────────────────────────────────────────────────
-
 function buildUrl(
 	baseUrl: string,
 	path: string,
@@ -61,8 +59,6 @@ function createRequestInit(
 	return requestInit;
 }
 
-// ─── Retry helper ─────────────────────────────────────────────────────────────
-
 async function withRetry<T>(
 	operation: () => Promise<T>,
 	retries: number,
@@ -76,7 +72,7 @@ async function withRetry<T>(
 		} catch (caughtError) {
 			lastError = caughtError;
 
-			// Don't retry on timeout or HTTP errors — only network errors.
+			// Don't retry on timeout or HTTP errors - only network errors.
 			if (
 				caughtError instanceof HttpTimeoutError ||
 				caughtError instanceof HttpResponseError
@@ -96,16 +92,14 @@ async function withRetry<T>(
 	throw lastError;
 }
 
-// ─── Client ───────────────────────────────────────────────────────────────────
-
 /**
- * PanturaFetch — Rakta.js built-in type-safe HTTP client.
+ * PanturaFetch - Rakta.js built-in type-safe HTTP client.
  *
  * Named after the Pantura (Pantai Utara) highway: fast, reliable, coastal.
  *
  * Performance improvements over v1.0.3:
  * - Default timeout reduced from 30 000 ms → 10 000 ms.
- * - keepalive: true by default — reuses TCP connections, eliminates handshake
+ * - keepalive: true by default - reuses TCP connections, eliminates handshake
  *   overhead on sequential requests to the same host.
  * - Retry support for transient network errors (configurable, off by default).
  * - Interceptor chain no longer wraps every call in Promise.resolve().

@@ -20,19 +20,19 @@ export interface RendererOptions {
 // ─── HTML Shell ───────────────────────────────────────────────────────────────
 // Key performance choices:
 //
-// 1. <link rel="preload"> for CSS — tells the browser to fetch the stylesheet
+// 1. <link rel="preload"> for CSS - tells the browser to fetch the stylesheet
 //    in parallel with HTML parsing instead of waiting for the <link> tag.
 //
-// 2. <link rel="modulepreload"> for the JS bundle — the most impactful change.
+// 2. <link rel="modulepreload"> for the JS bundle - the most impactful change.
 //    Without this, the browser only discovers the script when it reaches the
 //    <script type="module"> tag, then must download + parse it before any
 //    React component renders. modulepreload eliminates that delay entirely:
 //    the browser prefetches, parses, and compiles the module during HTML parse.
 //
-// 3. <meta name="color-scheme"> — prevents a flash of unstyled light background
+// 3. <meta name="color-scheme"> - prevents a flash of unstyled light background
 //    on dark-mode sites while the CSS is loading.
 //
-// 4. Inline critical CSS for #rakta-root — prevents the blank white flash that
+// 4. Inline critical CSS for #rakta-root - prevents the blank white flash that
 //    users perceive as the page "not loading", even though the network response
 //    already arrived.
 //

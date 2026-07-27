@@ -981,6 +981,7 @@ rakta/forge         Dev server dan build system internals
 | **v1.0.0** | 2026-07 | First public release full module set: router, render, rpc, store, schema, http, seo, pwa, kernel, middleware, layout, data, dx, performance, security, ops, testing, deployment, plugin, docs |
 | **v1.0.1** | 2026-07 | Biome lint fix indentation in `plugin/official.ts` |
 | **v1.0.5** | 2026-07 | Add GSAP + ScrollTrigger, PanturaScroll smooth scroll (`<pantura>` / `<reborns>`), separate lib/helper files in templates, remove CSS from .tsx files, update documentation language |
+| **v1.0.6** | 2026-07 | Rakta Dev Indicator (floating browser panel, Rakta.js SVG, Performance/Diagnostics/Preferences, dev-only), Rakta Dev Terminal (⩛ glyph, LAN detection, env file detection, request timing, slow-request flag, NO_COLOR), middleware timing instrumentation, `useRaktaData` hook, HTML shell `modulepreload`/`preload` for faster first paint, HTTP client timeout 10s + keepalive + retry, `useRaktaData` cache+dedup+cancel, version 1.0.6 |
 
 ### All Systems Shipped / Semua Sistem yang Sudah Ada
 
@@ -1022,6 +1023,9 @@ rakta/forge         Dev server dan build system internals
 | Version | Focus / Fokus | Key Deliverables / Deliverables Utama |
 | --- | --- | --- |
 | **v1.0.x** | Patch & polish | Bug fixes, dependency updates, new Cirebon-named components, DX improvements no breaking changes |
+| **v1.0.3** | Immersive 3D *(Planned)* | Optional declarative 3D layer: scenes, models, lighting, camera, scroll-driven 3D, adaptive quality, render-on-demand, JatiLens 3D diagnostics. Technology references: Three.js, React Three Fiber |
+| **v1.0.4** | Navigation Motion *(Planned)* | Page transitions, route transitions, shared element transitions, GSAP integration, native View Transition API enhancement, prefetch-aware transitions. Technology reference: Barba.js pattern |
+| **v1.0.5** | Living UI *(Planned)* | Interactive vector animation, state-machine mascot, animated illustrations, TrusmiFrame zoom & gallery, gesture support. Technology references: Rive, react-medium-image-zoom |
 | **v1.1** | Database adapters | SQLite, PostgreSQL, MySQL, and edge KV adapters with typed repository abstraction, ORM adapter contracts |
 | **v1.2** | Auth providers | OAuth, email verification, refresh tokens, session rotation, magic link support |
 | **v1.3** | Devtools UI | Browser-based auto-import inspector, route analyzer, bundle analyzer, performance profiler, error overlay |
@@ -1031,7 +1035,7 @@ rakta/forge         Dev server dan build system internals
 | **v2.1** | Edge first | Cloudflare Workers / Deno Deploy streaming SSR, edge middleware, edge KV cache |
 | **v2.2** | React Server Components | Server component rendering, server actions, Suspense streaming |
 | **v2.3** | i18n | Built-in internationalization routing, locale detection, message catalog |
-| **v2.4** | Native App Engine | Native compiler for iOS, Android, macOS, Windows, Linux. Sub-5MB shell, zero-latency IPC for device APIs (Camera, Biometrics, Push, Storage, Geolocation), 120 FPS hardware-accelerated web views lighter than Capacitor/Cordova |
+| **v2.4** | Native App Engine *(Research)* | Native targets: iOS, Android, macOS, Windows, Linux. Engineering targets: minimal shell size, low-latency IPC for device APIs (Camera, Biometrics, Push, Storage, Geolocation), hardware-accelerated web views |
 | **v3.0** | Multi-runtime | React, Preact, Solid, and Vue as interchangeable rendering runtimes via plugin API |
 
 ---

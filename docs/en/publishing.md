@@ -40,7 +40,7 @@ Package live on npm with verified provenance
 
 ## Workflows
 
-### CI — `.github/workflows/ci.yml`
+### CI - `.github/workflows/ci.yml`
 
 Runs on every push to `main` and every pull request targeting `main`.
 
@@ -50,7 +50,7 @@ Runs on every push to `main` and every pull request targeting `main`.
 - Concurrency: cancels redundant runs on same branch/PR
 - Permissions: `contents: read` only
 
-### Publish — `.github/workflows/publish.yml`
+### Publish - `.github/workflows/publish.yml`
 
 Fires only on:
 1. A published GitHub Release (`release: published`)
@@ -61,8 +61,8 @@ Steps in order:
 1. Checkout (frozen)
 2. Setup Bun 1.3.11 + Node.js 22
 3. `bun install --frozen-lockfile`
-4. **Version validation** — git tag (e.g. `v1.0.5`) must match both `packages/rakta/package.json` and `packages/create-rakta/package.json`. Fails the workflow if they don't match.
-5. **Version conflict check** — queries npm to ensure neither version is already published. Prevents accidental re-publish.
+4. **Version validation** - git tag (e.g. `v1.0.5`) must match both `packages/rakta/package.json` and `packages/create-rakta/package.json`. Fails the workflow if they don't match.
+5. **Version conflict check** - queries npm to ensure neither version is already published. Prevents accidental re-publish.
 6. typecheck → lint → test → build
 7. `npm pack --dry-run` for both packages
 8. CLI smoke test (`node packages/create-rakta/dist/index.js --version`)
@@ -89,7 +89,7 @@ concurrency:
 
 ---
 
-## OIDC Trusted Publishing — How It Works
+## OIDC Trusted Publishing - How It Works
 
 npm Trusted Publishing uses GitHub Actions OIDC (OpenID Connect). Instead of a long-lived secret token:
 
@@ -106,7 +106,7 @@ This means:
 
 ---
 
-## MANUAL SETUP REQUIRED — npmjs.com
+## MANUAL SETUP REQUIRED - npmjs.com
 
 This is a **one-time manual step** that must be done on npmjs.com. It cannot be automated from the repository.
 
@@ -138,7 +138,7 @@ Do this for **both** packages before the first OIDC publish:
 
 ---
 
-## MANUAL SETUP REQUIRED — GitHub
+## MANUAL SETUP REQUIRED - GitHub
 
 ### GitHub Environment `npm`
 
@@ -154,13 +154,13 @@ The publish workflow uses `environment: npm`. You should create this environment
 
 ---
 
-## Release Process — Step by Step
+## Release Process - Step by Step
 
 1. **Make changes** on a feature branch, open a PR, get CI green.
 
 2. **Merge to `main`** after review.
 
-3. **Bump versions** — update both:
+3. **Bump versions** - update both:
    - `packages/rakta/package.json` → `"version": "X.Y.Z"`
    - `packages/create-rakta/package.json` → `"version": "X.Y.Z"`
 
@@ -237,8 +237,8 @@ npm does not allow unpublishing versions older than 72 hours. To handle a bad re
 
 ```bash
 # Deprecate a specific version
-npm deprecate raktajs@1.0.5 "Critical bug — use 1.0.6"
-npm deprecate create-rakta-app@1.0.5 "Critical bug — use 1.0.6"
+npm deprecate raktajs@1.0.5 "Critical bug - use 1.0.6"
+npm deprecate create-rakta-app@1.0.5 "Critical bug - use 1.0.6"
 ```
 
 Then release a fixed version immediately.

@@ -1,5 +1,6 @@
 import { existsSync, statSync, watch } from "node:fs";
 import { join, relative } from "node:path";
+import { createDevTerminal } from "../dx/terminal";
 import { resolveRouteMode } from "../render/modes";
 import { render } from "../render/renderer";
 import { generateManifest } from "../router/manifest";
@@ -68,7 +69,6 @@ async function buildDevClientBundle(
 		const buildErrors = buildResult.logs
 			.map((buildLog) => buildLog.message)
 			.join("\n");
-
 		throw new Error(`Failed to build Rakta.js client bundle.\n${buildErrors}`);
 	}
 
@@ -87,7 +87,22 @@ interface ApiRouteExports {
 
 /**
  * Starts the Rakta.js Forge development server.
- * Powered by Bun.serve. HMR is a roadmap feature (v1.0.5).
+ * Powered by Bun.serve. HMR is a roadmap feature.
+ *
+ * Terminal output (development only):
+ *
+ *   ⩛ Rakta.js 1.0.6 (CherbonsEngine)
+ *
+ *     Local:        http://localhost:3000
+ *     Network:      http://192.168.1.x:3000
+ *     Environments: .env.local
+ *     Mode:         development
+ *
+ *   ✓ Ready in 421ms
+ *
+ *   ✓ GET  /                  200  24ms
+ *   ✓ GET  /api/report        200  18ms
+ *   ✗ GET  /missing           404   2ms
  */
 export async function startDevServer(
 	options: ForgeDevServerOptions,
@@ -97,6 +112,16 @@ export async function startDevServer(
 	let clientOutDir = await buildDevClientBundle(options, manifest);
 	let isClientBundleDirty = false;
 	let clientBundleRebuild: Promise<void> | null = null;
+
+	// Development-only. Zero cost in production: this module is never imported
+	// by the production server path (tide/adapter.ts).
+	const terminal = createDevTerminal({
+		version: "1.0.6",
+		projectRoot: options.projectRoot,
+		slowRequestThresholdMs: 1000,
+		detailedTiming: false,
+	});
+	terminal.markStart();
 
 	function shouldReloadForPath(changedPath: string | null): boolean {
 		if (changedPath === null) return true;
@@ -145,40 +170,36 @@ export async function startDevServer(
 		},
 
 		async fetch(request: Request, server): Promise<Response> {
+			// Measure every request from arrival to response.
+			// This is the server-side half; browser-side timing is in JatiLens.
+			const requestStartMs = Date.now();
+
 			if (request.url.endsWith("/__livereload")) {
 				const upgraded = server.upgrade(request);
-				if (upgraded) {
-					return new Response(null);
-				}
+				if (upgraded) return new Response(null);
 			}
 
 			const url = new URL(request.url);
 			const { pathname } = url;
 
-			// Ensure bundle is fresh ONCE per request (was called twice before).
+			// Rebuild bundle if source changed since last request.
 			await ensureFreshClientBundle();
 
 			if (clientOutDir.length > 0) {
 				const clientBundlePath = join(clientOutDir, pathname);
-
 				if (isReadableFile(clientBundlePath)) {
-					const mime = resolveMime(clientBundlePath);
-					// Hashed assets (chunks) are immutable; app.js/app.css use no-cache
-					// so the browser always revalidates in dev.
 					const isHashedAsset = pathname.includes("/chunks/");
-					const cacheControl = isHashedAsset
-						? "public, max-age=31536000, immutable"
-						: "no-cache, no-store, must-revalidate";
 					return new Response(Bun.file(clientBundlePath), {
 						headers: {
-							"Content-Type": mime,
-							"Cache-Control": cacheControl,
+							"Content-Type": resolveMime(clientBundlePath),
+							"Cache-Control": isHashedAsset
+								? "public, max-age=31536000, immutable"
+								: "no-cache, no-store, must-revalidate",
 						},
 					});
 				}
 			}
 
-			// Serve static files from public dir
 			const publicPath = join(options.publicDir, pathname);
 			if (isReadableFile(publicPath)) {
 				return new Response(Bun.file(publicPath), {
@@ -189,7 +210,6 @@ export async function startDevServer(
 				});
 			}
 
-			// Match API routes
 			const apiMatch = matchRoute(
 				pathname,
 				manifest.routes.filter((route) => route.kind === "api"),
@@ -202,13 +222,27 @@ export async function startDevServer(
 				const handler = routeModule[method];
 
 				if (typeof handler !== "function") {
+					const ms = Date.now() - requestStartMs;
+					terminal.logRequest({
+						method: request.method,
+						pathname,
+						status: 405,
+						totalMs: ms,
+					});
 					return new Response("Method not allowed", { status: 405 });
 				}
 
-				return await handler(request);
+				const apiResponse = await handler(request);
+				const ms = Date.now() - requestStartMs;
+				terminal.logRequest({
+					method: request.method,
+					pathname,
+					status: apiResponse.status,
+					totalMs: ms,
+				});
+				return apiResponse;
 			}
 
-			// Resolve render mode and serve HTML shell for page routes
 			const resolved = resolveRouteMode(pathname, options.renderConfig);
 
 			const searchParams: Record<string, string> = {};
@@ -240,21 +274,36 @@ export async function startDevServer(
 				},
 			);
 
+			const ms = Date.now() - requestStartMs;
+
 			if (result.kind === "failure") {
+				terminal.logRequest({
+					method: request.method,
+					pathname,
+					status: result.httpStatus,
+					totalMs: ms,
+				});
 				return new Response(result.reason, { status: result.httpStatus });
 			}
 
-			const liveReloadScript = `
-<script>
-  (function() {
-    const ws = new WebSocket("ws://" + location.host + "/__livereload");
-    ws.onmessage = () => location.reload();
+			// Inject livereload WebSocket into dev HTML.
+			const liveReloadScript = `<script>
+  (function(){
+    const ws=new WebSocket("ws://"+location.host+"/__livereload");
+    ws.onmessage=()=>location.reload();
   })();
 </script>`;
 			const finalHtml = result.html.replace(
 				"</body>",
 				`${liveReloadScript}</body>`,
 			);
+
+			terminal.logRequest({
+				method: request.method,
+				pathname,
+				status: result.httpStatus,
+				totalMs: ms,
+			});
 
 			return new Response(finalHtml, {
 				status: result.httpStatus,
@@ -265,6 +314,16 @@ export async function startDevServer(
 
 	const serverPort =
 		typeof server.port === "number" ? server.port : resolvedPort;
+
+	const displayHost =
+		options.host === "0.0.0.0" || options.host === "::"
+			? "localhost"
+			: options.host;
+
+	const localUrl = `http://${displayHost}:${serverPort}`;
+
+	// Print startup banner now that the server is accepting connections.
+	terminal.printStartup(localUrl);
 
 	try {
 		watch(options.projectRoot, { recursive: true }, (_eventType, filename) => {
@@ -279,18 +338,14 @@ export async function startDevServer(
 			}
 		});
 	} catch {
-		// Some filesystems do not support recursive watch. The dev server still runs.
+		// Some filesystems (e.g. certain Linux containers) do not support
+		// recursive watch. Dev server still functions — just no HMR.
 	}
-
-	const displayHost =
-		options.host === "0.0.0.0" || options.host === "::"
-			? "localhost"
-			: options.host;
 
 	return {
 		port: serverPort,
 		host: options.host,
-		url: `http://${displayHost}:${serverPort}`,
+		url: localUrl,
 		stop: () => server.stop(),
 	};
 }

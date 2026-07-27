@@ -40,7 +40,7 @@ Package aktif di npm dengan provenance terverifikasi
 
 ## Workflow
 
-### CI — `.github/workflows/ci.yml`
+### CI - `.github/workflows/ci.yml`
 
 Berjalan pada setiap push ke `main` dan setiap pull request yang menargetkan `main`.
 
@@ -50,7 +50,7 @@ Berjalan pada setiap push ke `main` dan setiap pull request yang menargetkan `ma
 - Concurrency: membatalkan run yang redundan pada branch/PR yang sama
 - Permission: hanya `contents: read`
 
-### Publish — `.github/workflows/publish.yml`
+### Publish - `.github/workflows/publish.yml`
 
 Hanya berjalan pada:
 1. GitHub Release yang dipublish (`release: published`)
@@ -61,8 +61,8 @@ Urutan langkah:
 1. Checkout (frozen)
 2. Setup Bun 1.3.11 + Node.js 22
 3. `bun install --frozen-lockfile`
-4. **Validasi versi** — git tag (misal `v1.0.5`) harus cocok dengan `packages/rakta/package.json` dan `packages/create-rakta/package.json`. Workflow gagal jika tidak cocok.
-5. **Cek konflik versi** — query npm untuk memastikan versi belum pernah dipublish. Mencegah publish ulang yang tidak disengaja.
+4. **Validasi versi** - git tag (misal `v1.0.5`) harus cocok dengan `packages/rakta/package.json` dan `packages/create-rakta/package.json`. Workflow gagal jika tidak cocok.
+5. **Cek konflik versi** - query npm untuk memastikan versi belum pernah dipublish. Mencegah publish ulang yang tidak disengaja.
 6. typecheck → lint → test → build
 7. `npm pack --dry-run` untuk kedua package
 8. Smoke test CLI (`node packages/create-rakta/dist/index.js --version`)
@@ -89,7 +89,7 @@ concurrency:
 
 ---
 
-## OIDC Trusted Publishing — Cara Kerjanya
+## OIDC Trusted Publishing - Cara Kerjanya
 
 npm Trusted Publishing menggunakan GitHub Actions OIDC (OpenID Connect). Alih-alih token rahasia berumur panjang:
 
@@ -106,7 +106,7 @@ Ini berarti:
 
 ---
 
-## KONFIGURASI MANUAL DIPERLUKAN — npmjs.com
+## KONFIGURASI MANUAL DIPERLUKAN - npmjs.com
 
 Ini adalah **langkah manual satu kali** yang harus dilakukan di npmjs.com. Tidak bisa diotomasi dari repository.
 
@@ -138,7 +138,7 @@ Lakukan ini untuk **kedua** package sebelum publish OIDC pertama kali:
 
 ---
 
-## KONFIGURASI MANUAL DIPERLUKAN — GitHub
+## KONFIGURASI MANUAL DIPERLUKAN - GitHub
 
 ### GitHub Environment `npm`
 
@@ -154,13 +154,13 @@ Workflow publish menggunakan `environment: npm`. Kamu perlu membuat environment 
 
 ---
 
-## Proses Release — Langkah demi Langkah
+## Proses Release - Langkah demi Langkah
 
 1. **Buat perubahan** di branch fitur, buka PR, tunggu CI hijau.
 
 2. **Merge ke `main`** setelah review.
 
-3. **Bump versi** — update keduanya:
+3. **Bump versi** - update keduanya:
    - `packages/rakta/package.json` → `"version": "X.Y.Z"`
    - `packages/create-rakta/package.json` → `"version": "X.Y.Z"`
 
@@ -237,8 +237,8 @@ npm tidak mengizinkan unpublish versi yang lebih dari 72 jam. Untuk menangani re
 
 ```bash
 # Deprecate versi tertentu
-npm deprecate raktajs@1.0.5 "Bug kritis — gunakan 1.0.6"
-npm deprecate create-rakta-app@1.0.5 "Bug kritis — gunakan 1.0.6"
+npm deprecate raktajs@1.0.5 "Bug kritis - gunakan 1.0.6"
+npm deprecate create-rakta-app@1.0.5 "Bug kritis - gunakan 1.0.6"
 ```
 
 Kemudian segera rilis versi yang sudah diperbaiki.

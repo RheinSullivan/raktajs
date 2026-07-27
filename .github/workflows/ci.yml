@@ -2,7 +2,7 @@ name: CI
 
 # Runs on every push to main and on all pull requests targeting main.
 # This workflow is intentionally separate from publish.yml.
-# It NEVER publishes packages — it only validates the codebase.
+# It NEVER publishes packages - it only validates the codebase.
 
 on:
   push:
@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read  # checkout only — no other permissions needed
+  contents: read  # checkout only - no other permissions needed
 
 jobs:
   validate:
@@ -39,7 +39,7 @@ jobs:
         with:
           node-version: 22
 
-      # ── 3. Install (frozen — reproducible, no silent lockfile changes) ─────
+      # ── 3. Install (frozen - reproducible, no silent lockfile changes) ─────
       - name: Install dependencies
         run: bun install --frozen-lockfile
 

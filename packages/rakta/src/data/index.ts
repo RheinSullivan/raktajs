@@ -11,3 +11,9 @@ export type {
 	RaktaRenderRuntime,
 	RaktaRouteDataStrategy,
 } from "./types";
+export type {
+	RaktaDataResult,
+	RaktaDataState,
+	RaktaDataStatus,
+} from "./useRaktaData";
+export { useRaktaData } from "./useRaktaData";
