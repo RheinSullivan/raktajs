@@ -127,10 +127,17 @@ export function createBunAdapter(
 			const filePath = join(searchDirectory, staticPathname);
 
 			if (isReadableFile(filePath)) {
+				const isHashedAsset =
+					staticPathname.includes("chunks/") ||
+					staticPathname.match(/\.[a-f0-9]{8,}\.(js|css)$/) !== null;
+				const cacheControl = isHashedAsset
+					? "public, max-age=31536000, immutable"
+					: "public, max-age=0, must-revalidate";
 				return new Response(readFileSync(filePath), {
 					headers: {
 						"Content-Type": mimeForPath(filePath),
-						"Cache-Control": "public, max-age=31536000, immutable",
+						"Cache-Control": cacheControl,
+						Vary: "Accept-Encoding",
 					},
 				});
 			}

@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, statSync, watch } from "node:fs";
+import { existsSync, statSync, watch } from "node:fs";
 import { join, relative } from "node:path";
 import { resolveRouteMode } from "../render/modes";
 import { render } from "../render/renderer";
@@ -155,13 +155,25 @@ export async function startDevServer(
 			const url = new URL(request.url);
 			const { pathname } = url;
 
+			// Ensure bundle is fresh ONCE per request (was called twice before).
+			await ensureFreshClientBundle();
+
 			if (clientOutDir.length > 0) {
-				await ensureFreshClientBundle();
 				const clientBundlePath = join(clientOutDir, pathname);
 
 				if (isReadableFile(clientBundlePath)) {
-					return new Response(readFileSync(clientBundlePath), {
-						headers: { "Content-Type": resolveMime(clientBundlePath) },
+					const mime = resolveMime(clientBundlePath);
+					// Hashed assets (chunks) are immutable; app.js/app.css use no-cache
+					// so the browser always revalidates in dev.
+					const isHashedAsset = pathname.includes("/chunks/");
+					const cacheControl = isHashedAsset
+						? "public, max-age=31536000, immutable"
+						: "no-cache, no-store, must-revalidate";
+					return new Response(Bun.file(clientBundlePath), {
+						headers: {
+							"Content-Type": mime,
+							"Cache-Control": cacheControl,
+						},
 					});
 				}
 			}
@@ -169,8 +181,11 @@ export async function startDevServer(
 			// Serve static files from public dir
 			const publicPath = join(options.publicDir, pathname);
 			if (isReadableFile(publicPath)) {
-				return new Response(readFileSync(publicPath), {
-					headers: { "Content-Type": resolveMime(pathname) },
+				return new Response(Bun.file(publicPath), {
+					headers: {
+						"Content-Type": resolveMime(pathname),
+						"Cache-Control": "no-cache, no-store, must-revalidate",
+					},
 				});
 			}
 
@@ -194,7 +209,6 @@ export async function startDevServer(
 			}
 
 			// Resolve render mode and serve HTML shell for page routes
-			await ensureFreshClientBundle();
 			const resolved = resolveRouteMode(pathname, options.renderConfig);
 
 			const searchParams: Record<string, string> = {};

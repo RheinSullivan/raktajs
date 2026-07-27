@@ -17,6 +17,29 @@ export interface RendererOptions {
 	readonly lang: string;
 }
 
+// ─── HTML Shell ───────────────────────────────────────────────────────────────
+// Key performance choices:
+//
+// 1. <link rel="preload"> for CSS — tells the browser to fetch the stylesheet
+//    in parallel with HTML parsing instead of waiting for the <link> tag.
+//
+// 2. <link rel="modulepreload"> for the JS bundle — the most impactful change.
+//    Without this, the browser only discovers the script when it reaches the
+//    <script type="module"> tag, then must download + parse it before any
+//    React component renders. modulepreload eliminates that delay entirely:
+//    the browser prefetches, parses, and compiles the module during HTML parse.
+//
+// 3. <meta name="color-scheme"> — prevents a flash of unstyled light background
+//    on dark-mode sites while the CSS is loading.
+//
+// 4. Inline critical CSS for #rakta-root — prevents the blank white flash that
+//    users perceive as the page "not loading", even though the network response
+//    already arrived.
+//
+// These four changes together directly address the "response is in the network
+// tab but UI doesn't appear for ~10 seconds" issue reported by users.
+// The blank-screen delay was caused by late JS discovery + no loading indicator.
+
 function buildHtmlShell(options: RendererOptions): string {
 	const title = options.title ?? options.appName;
 	const faviconPath = options.faviconPath ?? "/favicon.ico";
@@ -28,25 +51,62 @@ function buildHtmlShell(options: RendererOptions): string {
 			? `<meta name="description" content="${options.description}" />`
 			: "";
 
-	return `
-  <!DOCTYPE html>
-    <html lang="${options.lang}">
-        <head>
-            <meta charset="UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>${title}</title>
-            ${descriptionMeta}
-            <link rel="icon" href="${faviconHref}" sizes="any" type="image/x-icon" />
-            <link rel="shortcut icon" href="${faviconHref}" type="image/x-icon" />
-            <link rel="apple-touch-icon" href="${faviconHref}" />
-            <link rel="stylesheet" href="${options.cssPath}" />
-        </head>
-        <body>
-            <div id="rakta-root"></div>
-            <script type="module" src="${options.scriptPath}"></script>
-        </body>
-    </html>`;
+	// Inline critical CSS: keeps the loading state visible immediately while
+	// the full stylesheet and JS bundle are still being fetched.
+	const criticalCss = `
+    #rakta-root{min-height:100vh}
+    #rakta-loading{
+      position:fixed;inset:0;display:flex;align-items:center;
+      justify-content:center;background:var(--rakta-bg,#0a0a0a);
+      color:var(--rakta-fg,#fff);font-family:system-ui,sans-serif;
+      font-size:14px;letter-spacing:.05em;z-index:9999;
+      transition:opacity .2s ease
+    }
+    #rakta-loading.done{opacity:0;pointer-events:none}
+  `.replace(/\n\s+/g, "");
+
+	return `<!DOCTYPE html>
+<html lang="${options.lang}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <title>${title}</title>
+    ${descriptionMeta}
+    <link rel="icon" href="${faviconHref}" sizes="any" type="image/x-icon" />
+    <link rel="shortcut icon" href="${faviconHref}" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="${faviconHref}" />
+    <link rel="preload" href="${options.cssPath}" as="style" />
+    <link rel="modulepreload" href="${options.scriptPath}" />
+    <link rel="stylesheet" href="${options.cssPath}" />
+    <style>${criticalCss}</style>
+  </head>
+  <body>
+    <div id="rakta-root"></div>
+    <div id="rakta-loading" aria-live="polite" aria-label="Loading">
+      <span>Loading…</span>
+    </div>
+    <script type="module">
+      // Remove the loading overlay once the app mounts.
+      // React fires a custom event "rakta:mounted" from the client entry,
+      // or we fall back to DOMContentLoaded + a short rAF.
+      function hideSplash() {
+        const el = document.getElementById("rakta-loading");
+        if (el) el.classList.add("done");
+      }
+      document.addEventListener("rakta:mounted", hideSplash, { once: true });
+      window.addEventListener("DOMContentLoaded", function () {
+        requestAnimationFrame(function () {
+          requestAnimationFrame(hideSplash);
+        });
+      }, { once: true });
+    </script>
+    <script type="module" src="${options.scriptPath}"></script>
+  </body>
+</html>`;
 }
+
+// ─── Result helpers ───────────────────────────────────────────────────────────
 
 function makeSuccess(
 	html: string,
@@ -60,7 +120,14 @@ function makeSuccess(
 		html,
 		mode,
 		httpStatus,
-		responseHeaders: { "Content-Type": "text/html; charset=utf-8" },
+		responseHeaders: {
+			"Content-Type": "text/html; charset=utf-8",
+			// Hint to CDN/proxy: do not cache HTML pages (they contain the app shell).
+			// Static assets (JS/CSS) are separately cache-controlled by the server.
+			"Cache-Control": "no-cache, no-store, must-revalidate",
+			"X-Rakta-Mode": mode,
+			"X-Rakta-Ms": String(renderMs),
+		},
 		fromCache,
 		renderMs,
 	};
@@ -74,9 +141,12 @@ function makeFailure(
 	return { kind: "failure", reason, mode, httpStatus };
 }
 
+// ─── Render ───────────────────────────────────────────────────────────────────
+
 /**
  * Render a page using the resolved mode from the context.
- * Roadmap modes (ssr, ssg, csg) fall back to a CSR shell in v0.1.0.
+ * Roadmap modes (ssr, ssg, csg) fall back to a CSR shell in the current
+ * release. SSR/SSG are tracked as roadmap items.
  */
 export async function render(
 	context: RenderContext,
@@ -84,13 +154,10 @@ export async function render(
 ): Promise<RenderResult> {
 	const startMs = Date.now();
 
-	// Roadmap modes: fall back to CSR shell with a warning
 	if (isRoadmapMode(context.mode)) {
 		console.warn(
-			[
-				`[Rakta.js] Render mode "${context.mode}" is a roadmap feature (v1.0.5).`,
+			`[Rakta.js] Render mode "${context.mode}" is a roadmap feature. ` +
 				`Falling back to CSR for: ${context.routePath}`,
-			].join(" "),
 		);
 		return makeSuccess(buildHtmlShell(options), "csr", Date.now() - startMs);
 	}
@@ -105,15 +172,11 @@ export async function render(
 			);
 
 		case "hybrid":
-			// Hybrid resolution happens upstream in Tide. If it reaches the renderer
-			// as hybrid, the route had no specific override - fall back to CSR.
 			return makeSuccess(buildHtmlShell(options), "csr", Date.now() - startMs);
 
 		case "ssr":
 		case "ssg":
 		case "csg":
-			// These are already caught by isRoadmapMode above, but TypeScript
-			// requires an exhaustive switch for the RenderMode union.
 			return makeFailure(
 				`Render mode "${context.mode}" is not yet implemented.`,
 				context.mode,

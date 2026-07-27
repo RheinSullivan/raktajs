@@ -614,6 +614,12 @@ if (!rootElement) {
 }
 
 createRoot(rootElement).render(React.createElement(App));
+
+// Notify the HTML shell that the app has mounted so the loading overlay
+// can be dismissed. This fires after React's first commit.
+requestAnimationFrame(function() {
+  document.dispatchEvent(new Event("rakta:mounted"));
+});
 `;
 }
 
