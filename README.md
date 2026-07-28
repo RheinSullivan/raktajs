@@ -1043,6 +1043,15 @@ rakta/vector        TrusmiVector — SVG state machine, useTrusmiVector, useMasc
 
 ---
 
+## Upgrade Guide / Panduan Upgrade
+
+**English** Upgrading from an older version? See the full upgrade guide:
+
+- [Upgrade Guide (EN)](docs/en/migrationGuide.md) — breaking changes, renamed APIs, useRaktaData, postcss.config.ts, performance fixes
+- [Panduan Upgrade (ID)](docs/id/migrationGuide.md) — perubahan breaking, API yang diubah nama, useRaktaData, postcss.config.ts, perbaikan performa
+
+---
+
 ## Contributing / Kontribusi
 
 **English** Rakta.js is open for contributions from anyone. Whether you are fixing a bug, improving documentation, adding a new feature, or just reporting an issue all of it helps. Here is how to get started.
