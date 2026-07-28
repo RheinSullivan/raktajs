@@ -2,6 +2,8 @@ import {
 	authenticate,
 	login,
 	logout,
+	logoutAll,
+	refreshTokens,
 	requestPasswordOtp,
 	resetPassword,
 } from "../auth/auth.service";
@@ -40,9 +42,12 @@ export async function registerController(request: Request): Promise<Response> {
 
 export async function loginController(request: Request): Promise<Response> {
 	const body = await readJson(request);
+	const rememberMe = body.rememberMe === true;
+
 	const result = await login(
 		requireString(body, "email", 5),
 		requireString(body, "password", 1),
+		rememberMe,
 	);
 
 	if (result === undefined) {
@@ -50,8 +55,61 @@ export async function loginController(request: Request): Promise<Response> {
 	}
 
 	return Response.json(
-		{ success: true, data: result },
-		{ headers: { "Set-Cookie": result.cookie } },
+		{
+			success: true,
+			data: {
+				user: result.user,
+				accessToken: result.accessToken,
+				sessionId: result.sessionId,
+			},
+		},
+		{
+			headers: {
+				"Set-Cookie": [result.cookie, result.refreshCookie].join(", "),
+			},
+		},
+	);
+}
+
+export async function refreshController(request: Request): Promise<Response> {
+	// Accept refresh token from cookie or body
+	const cookieRefresh = request.headers
+		.get("cookie")
+		?.split(";")
+		.map((c) => c.trim())
+		.find((c) => c.startsWith("rakta_refresh="))
+		?.slice("rakta_refresh=".length);
+
+	const body = request.headers.get("content-type")?.includes("application/json")
+		? await readJson(request).catch(() => ({}))
+		: {};
+
+	const refreshToken =
+		cookieRefresh ?? (body.refreshToken as string | undefined);
+
+	if (!refreshToken) {
+		return fail("Refresh token required.", 401);
+	}
+
+	const result = await refreshTokens(refreshToken);
+
+	if (result === undefined) {
+		return fail("Invalid or expired refresh token.", 401);
+	}
+
+	return Response.json(
+		{
+			success: true,
+			data: {
+				accessToken: result.accessToken,
+				sessionId: result.sessionId,
+			},
+		},
+		{
+			headers: {
+				"Set-Cookie": `rakta_session=${result.sessionId}; HttpOnly; SameSite=Lax; Path=/; Max-Age=604800`,
+			},
+		},
 	);
 }
 
@@ -71,8 +129,31 @@ export function logoutController(request: Request): Response {
 		{ success: true },
 		{
 			headers: {
-				"Set-Cookie":
+				"Set-Cookie": [
 					"rakta_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0",
+					"rakta_refresh=; Path=/api/auth/refresh; HttpOnly; SameSite=Strict; Max-Age=0",
+				].join(", "),
+			},
+		},
+	);
+}
+
+export async function logoutAllController(
+	request: Request,
+): Promise<Response> {
+	const user = await authenticate(request);
+	if (!user) return fail("Unauthorized.", 401);
+
+	logoutAll(user.id);
+
+	return Response.json(
+		{ success: true, message: "All sessions revoked." },
+		{
+			headers: {
+				"Set-Cookie": [
+					"rakta_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0",
+					"rakta_refresh=; Path=/api/auth/refresh; HttpOnly; SameSite=Strict; Max-Age=0",
+				].join(", "),
 			},
 		},
 	);
@@ -83,7 +164,6 @@ export async function forgotPasswordController(
 ): Promise<Response> {
 	const body = await readJson(request);
 	const otp = await requestPasswordOtp(requireString(body, "email", 5));
-
 	return ok({ email: otp.email, expiresAt: otp.expiresAt });
 }
 
@@ -96,6 +176,5 @@ export async function resetPasswordController(
 		requireString(body, "otp", 6),
 		requireString(body, "password", 8),
 	);
-
 	return success ? ok({ reset: true }) : fail("Invalid OTP.", 422);
 }

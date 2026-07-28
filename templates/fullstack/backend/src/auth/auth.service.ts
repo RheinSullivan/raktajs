@@ -2,6 +2,7 @@ import { env } from "../env";
 import type { PublicUser } from "../models/user.model";
 import { toPublicUser } from "../models/user.model";
 import {
+	rotateRefreshToken,
 	signAccessToken,
 	signRefreshToken,
 	verifyJwt,
@@ -13,7 +14,12 @@ import {
 	findUserById,
 	updateUser,
 } from "../services/user.service";
-import { createSession, readSession, revokeSession } from "./session.store";
+import {
+	createSession,
+	readSession,
+	revokeAllSessions,
+	revokeSession,
+} from "./session.store";
 
 export async function login(
 	email: string,
@@ -36,7 +42,8 @@ export async function login(
 	);
 
 	const accessExpiry = 60 * 60; // 1 hour
-	const refreshExpiry = rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60; // 30d or 7d
+	const refreshExpiry = rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60;
+	const cookieMaxAge = refreshExpiry;
 
 	const accessToken = await signAccessToken(
 		user.id,
@@ -51,16 +58,29 @@ export async function login(
 		refreshExpiry,
 	);
 
-	const cookieMaxAge = rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60;
-
 	return {
 		user: toPublicUser(user),
 		accessToken,
 		refreshToken,
 		sessionId: session.id,
 		cookie: `rakta_session=${session.id}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${cookieMaxAge}`,
-		refreshCookie: `rakta_refresh=${refreshToken}; HttpOnly; SameSite=Lax; Path=/api/auth/refresh; Max-Age=${cookieMaxAge}`,
+		refreshCookie: `rakta_refresh=${refreshToken}; HttpOnly; SameSite=Strict; Path=/api/auth/refresh; Max-Age=${cookieMaxAge}`,
 	};
+}
+
+/**
+ * Refresh access token using a valid refresh token.
+ * Issues a new access + refresh token pair (refresh rotation).
+ */
+export async function refreshTokens(refreshToken: string): Promise<
+	| {
+		accessToken: string;
+		refreshToken: string;
+		sessionId: string;
+	}
+	| undefined
+> {
+	return rotateRefreshToken(refreshToken);
 }
 
 export async function authenticate(
@@ -70,14 +90,22 @@ export async function authenticate(
 	const bearerToken = authorization?.startsWith("Bearer ")
 		? authorization.slice(7)
 		: undefined;
+
 	const cookieSessionId = request.headers
 		.get("cookie")
 		?.split(";")
-		.map((cookie) => cookie.trim())
-		.find((cookie) => cookie.startsWith("rakta_session="))
+		.map((c) => c.trim())
+		.find((c) => c.startsWith("rakta_session="))
 		?.slice("rakta_session=".length);
+
 	const payload =
 		bearerToken === undefined ? undefined : await verifyJwt(bearerToken);
+
+	// Accept access token type only for authentication
+	if (payload && payload.type !== "access") {
+		return undefined;
+	}
+
 	const sessionId = payload?.sessionId ?? cookieSessionId;
 	const session = sessionId === undefined ? undefined : readSession(sessionId);
 	const user = session === undefined ? undefined : findUserById(session.userId);
@@ -87,6 +115,10 @@ export async function authenticate(
 
 export function logout(sessionId: string): void {
 	revokeSession(sessionId);
+}
+
+export function logoutAll(userId: string): void {
+	revokeAllSessions(userId);
 }
 
 export async function requestPasswordOtp(email: string) {
