@@ -339,7 +339,7 @@ export async function startDevServer(
 		});
 	} catch {
 		// Some filesystems (e.g. certain Linux containers) do not support
-		// recursive watch. Dev server still functions — just no HMR.
+		// recursive watch. Dev server still functions - just no HMR.
 	}
 
 	return {

@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>A lightweight, composable frontend framework built on Bun, React, and TypeScript.</strong><br />
-  <strong>Framework frontend ringan yang dibangun di atas Bun, React, dan TypeScript.</strong>
+  <strong>Frontend Framework ringan yang dibangun di atas Bun, React, dan TypeScript.</strong>
 </p>
 
 <p align="center">
@@ -62,7 +62,7 @@
 
 Assalamu'alaikum Warahmatullahi Wabarakatuh · Shalom · Om Swastiastu · Namo Buddhaya · Wei De Dong Tian
 
-🇮🇩 Dibuat dengan bangga dari Cirebon & Jakarta Selatan, Nusantara, Indonesia. 🇵🇸 Free Palestine.
+🇮🇩 Dibuat dengan bangga dari Cirebon & Jakarta Selatan, Indonesia, Indonesia. 🇵🇸 Free Palestine.
 
 ---
 
@@ -74,7 +74,7 @@ Assalamu'alaikum Warahmatullahi Wabarakatuh · Shalom · Om Swastiastu · Namo B
 
   **English**
 
-  Rakta.js was created by **Muhammad Rizky Ramadhan**, a software developer from **Cirebon & South Jakarta, Nusantara, Indonesia**, known in the developer community as **Rhein Sullivan**, lead of **Vyagra Nexus™**.
+  Rakta.js was created by **Muhammad Rizky Ramadhan**, a software developer from **Cirebon & South Jakarta, Indonesia, Indonesia**, known in the developer community as **Rhein Sullivan**, lead of **Vyagra Nexus™**.
 
   The vision behind Rakta.js is simple: stop repeating the same setup across every project. Features like *file-based routing*, *auto-import with zero manual import statements*, *type-safe RPC*, an integrated *frontend-backend monolith* architecture, and *built-in authentication* are all available in one unified package no fragmentation, no layered configuration, no fighting your tools.
 
@@ -85,7 +85,7 @@ Assalamu'alaikum Warahmatullahi Wabarakatuh · Shalom · Om Swastiastu · Namo B
 
   **Bahasa Indonesia**
 
-  Rakta.js diciptakan oleh **Muhammad Rizky Ramadhan**, pengembang perangkat lunak asal **Cirebon & Jakarta Selatan, Nusantara, Indonesia**, yang dikenal di komunitas developer sebagai **Rhein Sullivan**, ketua dari tim **Vyagra Nexus™**.
+  Rakta.js diciptakan oleh **Muhammad Rizky Ramadhan**, pengembang perangkat lunak asal **Cirebon & Jakarta Selatan, Indonesia, Indonesia**, yang dikenal di komunitas developer sebagai **Rhein Sullivan**, ketua dari tim **Vyagra Nexus™**.
 
   Visi di balik Rakta.js sederhana: berhenti mengulang setup yang sama di setiap project. Fitur-fitur seperti *routing berbasis file*, *auto-import tanpa satu pun pernyataan import manual*, *RPC type-safe*, arsitektur *monolith frontend-backend*, dan *autentikasi bawaan* tersedia dalam satu paket terpadu tanpa fragmentasi, tanpa konfigurasi berlapis, tanpa bersaing dengan tools sendiri.
 
@@ -109,7 +109,7 @@ The shrimp mascot represents Cirebon, a coastal city in West Java, Indonesia. Ci
 
 **Bahasa Indonesia**
 
-Rakta.js adalah framework frontend ringan yang dibangun di atas React, Bun, dan TypeScript. Tersedia routing berbasis file, berbagai mode rendering (CSR, SSR, SSG, SPA, Hybrid), SEO tooling, PWA, RPC type-safe, state management, validasi schema, HTTP client, dan generator project semuanya dalam satu paket.
+Rakta.js adalah Frontend Framework ringan yang dibangun di atas React, Bun, dan TypeScript. Tersedia routing berbasis file, berbagai mode rendering (CSR, SSR, SSG, SPA, Hybrid), SEO tooling, PWA, RPC type-safe, state management, validasi schema, HTTP client, dan generator project semuanya dalam satu paket.
 
 Nama **Rakta** berasal dari bahasa Sansekerta. Artinya merah, energi hidup, keberanian, kekuatan, identitas, dan gerak. Di dalam nama ini juga ada pengingat kecil: ketika orang biasa menanggung hari yang berat dalam diam, setiap tool kecil seharusnya membantu mereka membangun sesuatu yang benar-benar milik mereka bukan sesuatu yang membuat mereka terus menunggu di depan gerbang.
 
@@ -142,9 +142,9 @@ Maskot udang mewakili Cirebon, kota pesisir di Jawa Barat. Cirebon dikenal denga
 
 ## Feature Identity / Identitas Fitur
 
-**English** Rakta.js uses its own naming system for all public features. The names are inspired by the cultural heritage of Cirebon and the wider Nusantara region, so they are memorable, unique, and carry real meaning not just generic tech names.
+**English** Rakta.js uses its own naming system for all public features. The names are inspired by the cultural heritage of Cirebon and the wider Indonesia region, so they are memorable, unique, and carry real meaning not just generic tech names.
 
-**Bahasa Indonesia** Rakta.js menggunakan sistem penamaan sendiri untuk semua fitur publik. Nama-nama ini terinspirasi dari warisan budaya Cirebon dan Nusantara, sehingga mudah diingat, unik, dan punya makna nyata bukan sekadar nama teknologi generik.
+**Bahasa Indonesia** Rakta.js menggunakan sistem penamaan sendiri untuk semua fitur publik. Nama-nama ini terinspirasi dari warisan budaya Cirebon dan Indonesia, sehingga mudah diingat, unik, dan punya makna nyata bukan sekadar nama teknologi generik.
 
 | Feature / Fitur | Purpose (EN) | Fungsi (ID) |
 | --- | --- | --- |
@@ -964,9 +964,9 @@ rakta/plugin        createOfficialPlugin, createCommunityPlugin
 rakta/dx            DependencyGraph, RouteAnalyzer, BundleReport, DevTerminal, DevIndicator
 rakta/tide          Runtime request/response layer
 rakta/forge         Dev server dan build system internals
-rakta/motion        NusantaraMotion — page transitions, useMagnetic, useTilt, useParallax, useDrag, splitText
-rakta/scene         MegaScape — optional 3D (Three.js peer dep), useMegaScapeScene, useScrollScene
-rakta/vector        TrusmiVector — SVG state machine, useTrusmiVector, useMascot, useImageZoom
+rakta/motion        IndonesiaMotion - page transitions, useMagnetic, useTilt, useParallax, useDrag, splitText
+rakta/scene         MegaScape - optional 3D (Three.js peer dep), useMegaScapeScene, useScrollScene
+rakta/vector        TrusmiVector - SVG state machine, useTrusmiVector, useMascot, useImageZoom
 ```
 
 ---
@@ -1047,8 +1047,8 @@ rakta/vector        TrusmiVector — SVG state machine, useTrusmiVector, useMasc
 
 **English** Upgrading from an older version? See the full upgrade guide:
 
-- [Upgrade Guide (EN)](docs/en/migrationGuide.md) — breaking changes, renamed APIs, useRaktaData, postcss.config.ts, performance fixes
-- [Panduan Upgrade (ID)](docs/id/migrationGuide.md) — perubahan breaking, API yang diubah nama, useRaktaData, postcss.config.ts, perbaikan performa
+- [Upgrade Guide (EN)](docs/en/migrationGuide.md) - breaking changes, renamed APIs, useRaktaData, postcss.config.ts, performance fixes
+- [Panduan Upgrade (ID)](docs/id/migrationGuide.md) - perubahan breaking, API yang diubah nama, useRaktaData, postcss.config.ts, perbaikan performa
 
 ---
 

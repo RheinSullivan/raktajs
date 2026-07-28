@@ -1,8 +1,8 @@
-// Kinetic typography — text splitting and animation
+// Kinetic typography - text splitting and animation
 // Beyond Rive's text capabilities: works on any DOM text, no runtime needed
 
 /**
- * splitText — splits text content into spans for individual animation.
+ * splitText - splits text content into spans for individual animation.
  * Returns { chars, words, lines } for GSAP stagger or manual animation.
  */
 export function splitText(
@@ -45,7 +45,7 @@ export function splitText(
 }
 
 /**
- * animateText — animate split text with GSAP if available, CSS otherwise.
+ * animateText - animate split text with GSAP if available, CSS otherwise.
  */
 export function animateText(
 	elements: HTMLElement[],
@@ -95,7 +95,7 @@ export function animateText(
 }
 
 /**
- * useKineticText — React hook for kinetic text effects.
+ * useKineticText - React hook for kinetic text effects.
  * Returns ref + trigger function.
  */
 export function useKineticText(

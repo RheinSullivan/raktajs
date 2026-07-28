@@ -193,7 +193,7 @@ function Counter() {
 }
 ```
 
-### Data Fetching — useRaktaData
+### Data Fetching - useRaktaData
 
 ```ts
 import { useRaktaData } from "raktajs";
@@ -201,7 +201,7 @@ import { useRaktaData } from "raktajs";
 function ReportPage() {
   const { data, loading, error, refetch } = useRaktaData(
     (signal) => fetch("/api/report", { signal }).then(r => r.json()),
-    [],       // deps — refetch when these change
+    [],       // deps - refetch when these change
     "report"  // optional dedup key
   );
 
@@ -213,11 +213,11 @@ function ReportPage() {
 
 Features: lifecycle (idle→loading→success|error), in-memory deduplication, AbortController cancellation on unmount, manual refetch.
 
-### Dev Tools — Experimental
+### Dev Tools - Experimental
 
 Development-only. Not in production builds.
 
-**Rakta Dev Terminal** — output when `bun run dev`:
+**Rakta Dev Terminal** - output when `bun run dev`:
 
 ```
   ⩛ Rakta.js 1.0.6 (CherbonsEngine)
@@ -235,7 +235,7 @@ Development-only. Not in production builds.
   ✗ GET  /missing           404   2ms
 ```
 
-**Rakta Dev Indicator** — floating panel in browser (bottom-left, Rakta.js SVG logo). Shows route, render mode, bundler, real Performance API measurements, and diagnostics for the "response done but UI slow" case.
+**Rakta Dev Indicator** - floating panel in browser (bottom-left, Rakta.js SVG logo). Shows route, render mode, bundler, real Performance API measurements, and diagnostics for the "response done but UI slow" case.
 
 See [docs/en/devtools.md](../../docs/en/devtools.md) and [docs/en/performance.md](../../docs/en/performance.md).
 
@@ -340,4 +340,4 @@ Rakta.js names its features after the heritage of Cirebon, West Java, Indonesia 
 
 MIT - [Rhein Sullivan](https://github.com/RheinSullivan) | Vyagra Nexus™
 
-🇮🇩 Made from Cirebon & South Jakarta, Nusantara, Indonesia. 🇵🇸 Free Palestine.
+🇮🇩 Made from Cirebon & South Jakarta, Indonesia, Indonesia. 🇵🇸 Free Palestine.

@@ -7,24 +7,41 @@ import { seedCmsPosts } from "./services/cms.service";
 import { seedUsers } from "./services/user.service";
 
 const app = new Gaman<HTTP>();
-const corsHeaders: Readonly<Record<string, string>> = {
-	"Access-Control-Allow-Origin": env.corsOrigin,
-	"Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-	"Access-Control-Allow-Headers": "Content-Type, Authorization",
-	"Access-Control-Allow-Credentials": "true",
-};
 
 await runMigrations();
 await seedUsers();
 seedCmsPosts();
 
+function setCorsHeaders(context: GamanContext): void {
+	context.setHeader("Access-Control-Allow-Origin", env.corsOrigin);
+	context.setHeader(
+		"Access-Control-Allow-Methods",
+		"GET, POST, PUT, PATCH, DELETE, OPTIONS",
+	);
+	context.setHeader(
+		"Access-Control-Allow-Headers",
+		"Content-Type, Authorization",
+	);
+	context.setHeader("Access-Control-Allow-Credentials", "true");
+}
+
 async function handle(context: GamanContext): Promise<unknown> {
+	// Handle CORS preflight requests
+	if ((context.method ?? "").toUpperCase() === "OPTIONS") {
+		setCorsHeaders(context);
+		return context.status(204).send(undefined);
+	}
+
 	const response = await apiRouter(requestFromGamanContext(context));
 	const headers = new Headers(response.headers);
 
-	for (const [key, value] of Object.entries(corsHeaders)) {
-		headers.set(key, value);
-	}
+	headers.set("Access-Control-Allow-Origin", env.corsOrigin);
+	headers.set(
+		"Access-Control-Allow-Methods",
+		"GET, POST, PUT, PATCH, DELETE, OPTIONS",
+	);
+	headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+	headers.set("Access-Control-Allow-Credentials", "true");
 
 	return sendGamanResponse(
 		context,
@@ -34,20 +51,6 @@ async function handle(context: GamanContext): Promise<unknown> {
 		}),
 	);
 }
-
-app.options("/*", (context: GamanContext) => {
-	context
-		.status(204)
-		.setHeader("Access-Control-Allow-Origin", env.corsOrigin)
-		.setHeader(
-			"Access-Control-Allow-Methods",
-			"GET, POST, PUT, PATCH, DELETE, OPTIONS",
-		)
-		.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
-		.setHeader("Access-Control-Allow-Credentials", "true");
-
-	return context.send(undefined);
-});
 
 app.get("/api/hello", handle);
 app.post("/api/auth/register", handle);

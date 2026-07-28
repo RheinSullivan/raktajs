@@ -20,7 +20,7 @@ T7  React commit (DOM update)
 T8  browser paints
 ```
 
-The 10-second gap is between **T3 and T8** — entirely in the browser.
+The 10-second gap is between **T3 and T8** - entirely in the browser.
 
 ### Common causes
 
@@ -78,8 +78,8 @@ const { data, loading, error, refetch } = useRaktaData(
 
 `PanturaFetch` (v1.0.6+) improvements:
 
-- **Default timeout**: 10s (was 30s) — surfaces slow APIs faster
-- **keepalive: true** — reuses TCP connections, eliminates handshake overhead on sequential requests to the same host
+- **Default timeout**: 10s (was 30s) - surfaces slow APIs faster
+- **keepalive: true** - reuses TCP connections, eliminates handshake overhead on sequential requests to the same host
 - **Retry support**: `{ retries: 2 }` for transient network errors
 
 ```ts
@@ -98,9 +98,9 @@ const data = await http.get<Report>("/api/report", { retries: 2 });
 
 Rakta.js v1.0.6 HTML shell changes:
 
-- `<link rel="modulepreload">` for JS bundle — browser fetches+parses+compiles in parallel with HTML
-- `<link rel="preload">` for CSS — stylesheet no longer blocks render
-- Inline critical CSS — loading indicator visible immediately, no blank white flash
+- `<link rel="modulepreload">` for JS bundle - browser fetches+parses+compiles in parallel with HTML
+- `<link rel="preload">` for CSS - stylesheet no longer blocks render
+- Inline critical CSS - loading indicator visible immediately, no blank white flash
 - Loading overlay removed after first React commit via `rakta:mounted` event
 
 ---

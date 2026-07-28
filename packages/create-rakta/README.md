@@ -178,4 +178,4 @@ cd backend  && bun run dev   # terminal 2
 
 MIT - [Rhein Sullivan](https://github.com/RheinSullivan) | Vyagra Nexus™
 
-🇮🇩 Made from Cirebon & South Jakarta, Nusantara, Indonesia. 🇵🇸 Free Palestine.
+🇮🇩 Made from Cirebon & South Jakarta, Indonesia, Indonesia. 🇵🇸 Free Palestine.

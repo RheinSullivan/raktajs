@@ -16,7 +16,7 @@ A floating panel injected into the browser in development mode. Powered by the a
 - Diagnostics tab highlighting the "response arrived but UI is slow" case
 - Keyboard accessible: `Enter`/`Space` to open, `Escape` to close
 - Respects `prefers-reduced-motion`
-- Zero production cost — guarded by `process.env.NODE_ENV === "development"`
+- Zero production cost - guarded by `process.env.NODE_ENV === "development"`
 
 **What it measures:**
 
@@ -36,7 +36,7 @@ The Diagnostics panel calculates `Response → UI gap = FCP - networkMs`. If thi
 **Production exclusion:**
 
 ```ts
-// In generated client entry — only runs in development
+// In generated client entry - only runs in development
 if (process.env.NODE_ENV === "development") {
   const { mountDevIndicator } = await import("./devIndicator");
   mountDevIndicator({ version, logoDataUrl, bundler });
@@ -76,7 +76,7 @@ Output printed to the server terminal when running `bun run dev`.
 
 - Real Local URL from server port (not hardcoded)
 - LAN Network IP detected from active network interfaces (skips Docker, WSL, VPN)
-- Environment filenames detected — values never exposed
+- Environment filenames detected - values never exposed
 - Ready time measured from server start to first accepted connection
 - Request timing: total server-side ms per request
 - Slow request flag: configurable threshold (default 1000ms)
@@ -91,7 +91,7 @@ Used as a fallback glyph representing the Vyagra Nexus shield/trident geometry. 
 **Configuration:**
 
 ```ts
-// rakta.config.ts (planned — not yet available)
+// rakta.config.ts (planned - not yet available)
 export default defineConfig({
   dev: {
     terminal: {

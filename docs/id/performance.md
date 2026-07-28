@@ -20,7 +20,7 @@ T7  React commit (update DOM)
 T8  browser melakukan paint
 ```
 
-Gap 10 detik berada antara **T3 dan T8** — sepenuhnya di browser.
+Gap 10 detik berada antara **T3 dan T8** - sepenuhnya di browser.
 
 ### Penyebab umum
 
@@ -78,8 +78,8 @@ const { data, loading, error, refetch } = useRaktaData(
 
 Peningkatan `PanturaFetch` (v1.0.6+):
 
-- **Default timeout**: 10 detik (sebelumnya 30 detik) — API lambat terdeteksi lebih cepat
-- **keepalive: true** — reuse koneksi TCP, eliminasi overhead handshake pada request sekuensial ke host yang sama
+- **Default timeout**: 10 detik (sebelumnya 30 detik) - API lambat terdeteksi lebih cepat
+- **keepalive: true** - reuse koneksi TCP, eliminasi overhead handshake pada request sekuensial ke host yang sama
 - **Dukungan retry**: `{ retries: 2 }` untuk network error sementara
 
 ```ts
@@ -98,9 +98,9 @@ const data = await http.get<Laporan>("/api/laporan", { retries: 2 });
 
 Perubahan HTML shell Rakta.js v1.0.6:
 
-- `<link rel="modulepreload">` untuk JS bundle — browser fetch+parse+compile paralel dengan HTML
-- `<link rel="preload">` untuk CSS — stylesheet tidak lagi memblokir render
-- Inline critical CSS — loading indicator langsung terlihat, tidak ada blank white flash
+- `<link rel="modulepreload">` untuk JS bundle - browser fetch+parse+compile paralel dengan HTML
+- `<link rel="preload">` untuk CSS - stylesheet tidak lagi memblokir render
+- Inline critical CSS - loading indicator langsung terlihat, tidak ada blank white flash
 - Loading overlay dihapus setelah React commit pertama via event `rakta:mounted`
 
 ---

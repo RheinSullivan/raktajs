@@ -33,7 +33,7 @@ export interface PageTransitionHooks {
 	readonly onAfterEnter?: (to: Element) => void;
 }
 
-export interface NusantaraTransitionConfig {
+export interface IndonesiaTransitionConfig {
 	readonly preset?: MotionPreset;
 	readonly duration?: number;
 	readonly ease?: string;

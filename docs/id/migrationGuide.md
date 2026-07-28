@@ -35,7 +35,7 @@ Kalau ada error TypeScript atau masalah runtime, cek bagian yang relevan di bawa
 
 ## v1.0.5 → v1.0.6
 
-Ini adalah rilis yang paling berdampak untuk performa aplikasi. Kalau aplikasimu mengalami UI lambat setelah response API (seperti yang RAUL laporkan — "response sudah muncul di Network tapi UI butuh 10 detik"), upgrade ke v1.0.6 langsung mengatasi masalah ini.
+Ini adalah rilis yang paling berdampak untuk performa aplikasi. Kalau aplikasimu mengalami UI lambat setelah response API (seperti yang RAUL laporkan - "response sudah muncul di Network tapi UI butuh 10 detik"), upgrade ke v1.0.6 langsung mengatasi masalah ini.
 
 ### Breaking changes
 
@@ -43,7 +43,7 @@ Tidak ada. Semua API yang sudah ada tetap kompatibel.
 
 ### Apa yang berubah dan apa yang perlu kamu update
 
-#### HTTP client — PanturaFetch
+#### HTTP client - PanturaFetch
 
 Default timeout berkurang dari 30.000ms menjadi 10.000ms. Kalau API kamu memang butuh lebih dari 10 detik, set custom timeout:
 
@@ -61,7 +61,7 @@ Opsi baru tersedia:
 const data = await http.get("/api/laporan", { retries: 2 });
 ```
 
-#### Smooth scroll — nama komponen berubah
+#### Smooth scroll - nama komponen berubah
 
 Nama lama masih bisa dipakai tapi sudah dihapus dari dokumentasi. Pakai nama baru:
 
@@ -98,7 +98,7 @@ const scrollTo = usePantura({ offset: 80 });
 Kalau sebelumnya kamu mengatur loading/error state secara manual dengan `useState` + `useEffect`, ganti dengan `useRaktaData`:
 
 ```ts
-// Sebelum — fetch manual
+// Sebelum - fetch manual
 const [data, setData] = useState(null);
 const [loading, setLoading] = useState(true);
 const [error, setError] = useState(null);
@@ -111,7 +111,7 @@ useEffect(() => {
     .finally(() => setLoading(false));
 }, []);
 
-// Sesudah — useRaktaData
+// Sesudah - useRaktaData
 import { useRaktaData } from "raktajs";
 
 const { data, loading, error, refetch } = useRaktaData(
@@ -151,11 +151,11 @@ export default config;
 Ini sepenuhnya opsional. Aplikasi yang sudah ada tidak terpengaruh sama sekali. Kalau mau pakai:
 
 ```bash
-# Motion system — tidak perlu install tambahan
-# 3D scene — perlu three.js
+# Motion system - tidak perlu install tambahan
+# 3D scene - perlu three.js
 bun add three
 
-# Vector animation — tidak perlu install tambahan
+# Vector animation - tidak perlu install tambahan
 ```
 
 ```ts
@@ -193,7 +193,7 @@ GSAP sekarang menjadi engine animasi. Kalau sebelumnya kamu import dari `motion`
 bun remove motion framer-motion
 ```
 
-GSAP sudah dikonfigurasi di Rakta.js — kamu tidak perlu melakukan apa-apa.
+GSAP sudah dikonfigurasi di Rakta.js - kamu tidak perlu melakukan apa-apa.
 
 ---
 
@@ -211,16 +211,16 @@ Kalau kamu mengalami: **response sudah muncul di Network browser tapi UI tidak u
 
 Setelah upgrade ke v1.0.6:
 
-- HTML shell sekarang punya `<link rel="modulepreload">` untuk JS bundle — browser mulai loading JavaScript saat parsing HTML bukan setelah selesai
+- HTML shell sekarang punya `<link rel="modulepreload">` untuk JS bundle - browser mulai loading JavaScript saat parsing HTML bukan setelah selesai
 - HTTP client menjaga koneksi TCP tetap aktif (`keepalive: true`)
 - Loading overlay muncul langsung sehingga halaman tidak pernah terlihat kosong
 
 Kalau masalah masih ada setelah upgrade, cek ini:
 
-1. **Payload JSON terlalu besar** — paginasi response API kamu (`limit: 50` bukan return 10.000 baris sekaligus)
-2. **Transform di client yang berat** — sorting atau filtering 1000+ item di JavaScript memblokir main thread
-3. **Terlalu banyak request sekaligus** — `useRaktaData` mendeduplikasi request dengan key yang sama
-4. **Tidak ada AbortController** — pola `useEffect` + `fetch` lama mungkin terus berjalan setelah unmount; `useRaktaData` menangani ini otomatis
+1. **Payload JSON terlalu besar** - paginasi response API kamu (`limit: 50` bukan return 10.000 baris sekaligus)
+2. **Transform di client yang berat** - sorting atau filtering 1000+ item di JavaScript memblokir main thread
+3. **Terlalu banyak request sekaligus** - `useRaktaData` mendeduplikasi request dengan key yang sama
+4. **Tidak ada AbortController** - pola `useEffect` + `fetch` lama mungkin terus berjalan setelah unmount; `useRaktaData` menangani ini otomatis
 
 Lihat [docs/id/performance.md](./performance.md) untuk panduan diagnosis lengkap.
 

@@ -251,7 +251,7 @@ export {
 	useSpotlight,
 	useTilt,
 } from "./motion/interactions";
-// Motion - NusantaraMotion (page transitions, interactions, typography)
+// Motion - IndonesiaMotion (page transitions, interactions, typography)
 export {
 	createMotionTimeline,
 	definePageTransition,
@@ -261,9 +261,9 @@ export {
 	useSharedElement,
 } from "./motion/transitions";
 export type {
+	IndonesiaTransitionConfig,
 	MotionPreset,
 	MotionTarget,
-	NusantaraTransitionConfig,
 	PageTransitionHooks,
 	SharedElementConfig,
 	TransitionPhase,

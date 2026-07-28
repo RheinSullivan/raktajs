@@ -11,7 +11,7 @@ export default function Footer() {
 						</strong>
 					</span>
 					<span className="mt-1 block text-[10px] text-gray-600">
-						Cirebon & Jakarta Selatan, Nusantara · Indonesia
+						Cirebon & Jakarta Selatan, Indonesia · Indonesia
 					</span>
 				</div>
 				<div className="flex items-center gap-4 text-[10px] uppercase">

@@ -1,4 +1,4 @@
-// Asset loader for 3D scenes — lazy, cached, progressive
+// Asset loader for 3D scenes - lazy, cached, progressive
 // Named after Sunan Gunung Jati's coastal trade routes: assets flow in
 // like ships arriving at Cirebon harbor, cached for reuse.
 //
@@ -14,8 +14,8 @@ export interface LoaderOptions {
 const assetCache = new Map<string, unknown>();
 
 /**
- * loadGLTF — lazy-loads a GLTF/GLB 3D model.
- * Three.js GLTFLoader is dynamically imported — zero cost until called.
+ * loadGLTF - lazy-loads a GLTF/GLB 3D model.
+ * Three.js GLTFLoader is dynamically imported - zero cost until called.
  */
 export async function loadGLTF(
 	url: string,
@@ -76,7 +76,7 @@ export async function loadGLTF(
 }
 
 /**
- * loadTexture — lazy-loads a texture asset.
+ * loadTexture - lazy-loads a texture asset.
  */
 export async function loadTexture(
 	url: string,
@@ -112,7 +112,7 @@ export async function loadTexture(
 }
 
 /**
- * clearAssetCache — releases cached 3D assets.
+ * clearAssetCache - releases cached 3D assets.
  */
 export function clearAssetCache(url?: string): void {
 	if (url) assetCache.delete(url);

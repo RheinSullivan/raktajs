@@ -1,10 +1,10 @@
-// TrusmiVector — Rakta.js Interactive Vector Animation System
+// TrusmiVector - Rakta.js Interactive Vector Animation System
 //
 // Named after Trusmi, the batik village of Cirebon whose artisans
-// weave intricate patterns — like state machines weaving motion.
+// weave intricate patterns - like state machines weaving motion.
 //
 // How it goes beyond Rive:
-// 1. NO proprietary .riv format — works with SVG (open standard)
+// 1. NO proprietary .riv format - works with SVG (open standard)
 // 2. State machines defined in TypeScript (type-safe, tree-shakeable)
 // 3. Accessible: animations respect prefers-reduced-motion automatically
 // 4. React-native: hooks instead of imperative API

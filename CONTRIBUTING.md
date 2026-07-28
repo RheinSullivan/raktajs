@@ -8,7 +8,7 @@
 
 Terima kasih sudah mau berkontribusi untuk Rakta.js.
 
-Rakta.js adalah framework frontend ringan berbasis Bun, React, dan TypeScript. Project ini dibuat untuk developer yang ingin membangun aplikasi modern dengan routing yang jelas, DX yang nyaman, dan struktur yang tidak terlalu berat.
+Rakta.js adalah Frontend Framework ringan berbasis Bun, React, dan TypeScript. Project ini dibuat untuk developer yang ingin membangun aplikasi modern dengan routing yang jelas, DX yang nyaman, dan struktur yang tidak terlalu berat.
 
 Kontribusi yang baik bukan hanya soal menambah fitur. Kontribusi yang baik juga berarti menjaga project tetap stabil, mudah dipahami, mudah dites, dan tidak merusak fitur yang sudah berjalan.
 

@@ -95,9 +95,9 @@ describe("create-rakta fullstack generator", () => {
 		// In CI, build runs before test (ci.yml step order: build → test).
 		// Locally: run `bun run build` before `bun run test`.
 		if (!existsSync("packages/create-rakta/dist/index.js")) {
-			// dist not built yet — skip gracefully
+			// dist not built yet - skip gracefully
 			console.warn(
-				"[skip] create-rakta dist not found — run bun run build first",
+				"[skip] create-rakta dist not found - run bun run build first",
 			);
 			return;
 		}

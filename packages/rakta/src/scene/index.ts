@@ -1,4 +1,4 @@
-// MegaScape — Rakta.js 3D Scene System
+// MegaScape - Rakta.js 3D Scene System
 //
 // Named after Mega Mendung, the iconic cloud batik motif of Cirebon,
 // which flows in layered depth like a 3D scene.

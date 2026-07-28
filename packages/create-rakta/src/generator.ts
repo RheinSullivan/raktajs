@@ -61,6 +61,7 @@ function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
 					scripts:
 						projectMode === "fullstack"
 							? {
+									dev: "bun run dev:frontend & bun run dev:backend",
 									"dev:frontend": "cd frontend && bun run dev",
 									"dev:backend": "cd backend && bun run dev",
 									"build:frontend": "cd frontend && bun run build",
@@ -80,7 +81,7 @@ function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
 									start: "rakta start",
 									...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 								},
-					description: `${projectName} â€” built with Rakta.js`,
+					description: `${projectName} -” built with Rakta.js`,
 				},
 				null,
 				2,
@@ -433,7 +434,7 @@ function getFullstackFrontendFiles(
 		},
 		{
 			path: "frontend/rakta.config.ts",
-			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n${getAutoImportConfig(projectConfig.autoImport)}  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {\n      "/": "ssg",\n      "/about": "ssg",\n      "/blog": "csg",\n      "/blog/:slug": "csg",\n      "/dashboard": "csr"\n    }\n  }\n});\n`,
+			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n${getAutoImportConfig(projectConfig.autoImport)}  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js -” Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {\n      "/": "ssg",\n      "/about": "ssg",\n      "/blog": "csg",\n      "/blog/:slug": "csg",\n      "/dashboard": "csr"\n    }\n  }\n});\n`,
 		},
 		{
 			path: "frontend/rakta-env.d.ts",
@@ -441,7 +442,7 @@ function getFullstackFrontendFiles(
 		},
 		{
 			path: "frontend/app/layout.tsx",
-			content: `import "../styles/${styleFileName}";\n\ninterface RootLayoutProps {\n  readonly children: React.ReactNode;\n}\n\nexport default function RootLayout({ children }: RootLayoutProps) {\n  return (\n    <html lang="en">\n      <body>{children}</body>\n    </html>\n  );\n}\n`,
+			content: `import "../styles/${styleFileName}";\n\ninterface RootLayoutProps {\n  readonly children: React.ReactNode;\n}\n\nexport default function RootLayout({ children }: RootLayoutProps) {\n  return (\n    <html  lang="en">\n      <body>{children}</body>\n    </html>\n  );\n}\n`,
 		},
 		{
 			path: "frontend/app/page.tsx",
@@ -1505,7 +1506,7 @@ function generateFrontendOnlyLayout(): string {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en">
+    <html  lang="en">
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -1607,7 +1608,7 @@ function _generateShrimpMascotComponent(): string {
 }
 
 /**
- * RaktaShrimpMascot â€” The animated shrimp hero of ShrimpRun.
+ * RaktaShrimpMascot -” The animated shrimp hero of ShrimpRun.
  * Drawn entirely with inline SVG. No external assets required.
  */
 export default function RaktaShrimpMascot({
@@ -1852,13 +1853,13 @@ function checkCollision(
 //  Component
 
 /**
- * ShrimpRun â€” Default Rakta.js interactive starter game.
+ * ShrimpRun -” Default Rakta.js interactive starter game.
  *
  * Like the Chrome offline Dino game, but the dinosaur is an animated shrimp.
  * Press Space or click the game canvas to jump. Avoid the red obstacles!
  *
  * Features:
- * - React state only â€” no external game library
+ * - React state only -” no external game library
  * - requestAnimationFrame game loop
  * - Physics: gravity + jump velocity
  * - Score that increases over time
@@ -1867,7 +1868,7 @@ function checkCollision(
  * - High score tracked in component state
  * - Keyboard (Space) and click/tap support
  * - Accessible button game canvas
- * - SVG shrimp mascot â€” no external assets
+ * - SVG shrimp mascot -” no external assets
  */
 export default function ShrimpRunGame() {
   const [gameStatus, setGameStatus] = useState<GameStatus>("idle");
@@ -2167,7 +2168,7 @@ function generateFullstackHomePage(projectName: string): string {
         <p className="eyebrow">THE RED ROUTER FRAMEWORK</p>
         <h1>Welcome to ${projectName}</h1>
         <p>
-          Built with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.
+          Built with Rakta.js -” Small in size. Fierce in speed. Alive in every route.
         </p>
         <div className="button-row">
           <click to="/about">About</click>
@@ -2216,10 +2217,10 @@ function generateProjectReadme(projectConfig: ProjectConfig): string {
 	const { projectName, projectMode } = projectConfig;
 
 	if (projectMode === "frontend-only") {
-		return `# ${projectName}\n\nBuilt with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\nbun run dev\n\`\`\`\n\n## ShrimpRun\n\nYour starter includes ShrimpRun â€” an interactive game where a shrimp dodges obstacles. Press Space or click to jump!\n`;
+		return `# ${projectName}\n\nBuilt with Rakta.js -” Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\nbun run dev\n\`\`\`\n\n## ShrimpRun\n\nYour starter includes ShrimpRun -” an interactive game where a shrimp dodges obstacles. Press Space or click to jump!\n`;
 	}
 
-	return `# ${projectName}\n\nBuilt with Rakta.js â€” Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Backend | ${BACKEND_DISPLAY[projectConfig.backendFramework]} |\n| Database | ${DATABASE_DISPLAY[projectConfig.database]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\n\n# Terminal 1\nbun run dev:frontend\n\n# Terminal 2\nbun run dev:backend\n\`\`\`\n\n## Endpoints\n\n- Frontend: http://localhost:3000\n- Backend: http://localhost:4000\n`;
+	return `# ${projectName}\n\nBuilt with Rakta.js -” Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Backend | ${BACKEND_DISPLAY[projectConfig.backendFramework]} |\n| Database | ${DATABASE_DISPLAY[projectConfig.database]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\n\n# Frontend + backend in one command\nbun run dev\n\n# Or separately:\nbun run dev:frontend\nbun run dev:backend\n\`\`\`\n\n## Endpoints\n\n- Frontend: http://localhost:3000\n- Backend: http://localhost:4000\n`;
 }
 
 //  Main export

@@ -1,12 +1,12 @@
 import type {
+	IndonesiaTransitionConfig,
 	MotionPreset,
-	NusantaraTransitionConfig,
 	SharedElementConfig,
 } from "./types";
 
-// NusantaraMotion goes beyond Barba.js by:
+// IndonesiaMotion goes beyond Barba.js by:
 // - Native View Transitions API first (sub-16ms transitions when supported)
-// - No global singleton required — each route pair has isolated context
+// - No global singleton required - each route pair has isolated context
 // - Automatic prefetch-awareness: if MegaWeave prefetched the route,
 //   transition fires with pre-loaded DOM, not a blank flash
 // - JatiLens perf marks emitted automatically
@@ -31,7 +31,7 @@ function emitPerfMark(name: string): void {
 }
 
 /**
- * definePageTransition — declarative page transition config.
+ * definePageTransition - declarative page transition config.
  *
  * Goes beyond Barba.js: integrates with the View Transitions API natively,
  * falls back to GSAP-based animation only when the API is unavailable.
@@ -45,8 +45,8 @@ function emitPerfMark(name: string): void {
  * });
  */
 export function definePageTransition(
-	config: NusantaraTransitionConfig,
-): NusantaraTransitionConfig {
+	config: IndonesiaTransitionConfig,
+): IndonesiaTransitionConfig {
 	return {
 		useViewTransition: true,
 		duration: 350,
@@ -56,11 +56,11 @@ export function definePageTransition(
 }
 
 /**
- * usePageTransition — executes a page transition.
+ * usePageTransition - executes a page transition.
  * Emits JatiLens performance marks for accurate timing.
  */
 export async function usePageTransition(
-	config: NusantaraTransitionConfig,
+	config: IndonesiaTransitionConfig,
 	callback: () => void | Promise<void>,
 ): Promise<void> {
 	emitPerfMark("rakta:transition-start");
@@ -69,7 +69,7 @@ export async function usePageTransition(
 		typeof document !== "undefined" && "startViewTransition" in document;
 
 	if (config.useViewTransition !== false && supportsVT) {
-		// Native View Transitions API — browser handles cross-fade/morph natively
+		// Native View Transitions API - browser handles cross-fade/morph natively
 		await (
 			document as Document & {
 				startViewTransition: (cb: () => void | Promise<void>) => {
@@ -91,7 +91,7 @@ export async function usePageTransition(
 }
 
 /**
- * defineSharedElement — marks an element for matched-element transition.
+ * defineSharedElement - marks an element for matched-element transition.
  * Similar to React Shared Element Transitions but framework-native.
  */
 export function defineSharedElement(
@@ -107,7 +107,7 @@ export function defineSharedElement(
 }
 
 /**
- * useSharedElement — programmatic shared element hook.
+ * useSharedElement - programmatic shared element hook.
  */
 export function useSharedElement(id: string): {
 	ref: (el: HTMLElement | null) => void;
@@ -120,7 +120,7 @@ export function useSharedElement(id: string): {
 }
 
 /**
- * createMotionTimeline — GSAP-backed composable timeline.
+ * createMotionTimeline - GSAP-backed composable timeline.
  * Beyond Barba.js: multiple elements, stagger, scrub, loop, yoyo.
  */
 export interface MotionTimelineOptions {
@@ -195,7 +195,7 @@ export function createMotionTimeline(): MotionTimeline {
 		return timeline;
 	}
 
-	// No-op fallback — zero overhead when GSAP not loaded
+	// No-op fallback - zero overhead when GSAP not loaded
 	const noop: MotionTimeline = {
 		to: () => noop,
 		from: () => noop,

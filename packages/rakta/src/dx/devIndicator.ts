@@ -253,27 +253,27 @@ function buildPanelHtml(opts: DevIndicatorOptions): string {
   <div class="rakta-dev-perf" id="rd-perf-content" aria-live="polite">
     <div class="rakta-dev-perf-row">
       <span class="rakta-dev-perf-label">Network</span>
-      <span class="rakta-dev-perf-val" id="rd-p-net">—</span>
+      <span class="rakta-dev-perf-val" id="rd-p-net">-</span>
     </div>
     <div class="rakta-dev-perf-row">
       <span class="rakta-dev-perf-label">Parse</span>
-      <span class="rakta-dev-perf-val" id="rd-p-parse">—</span>
+      <span class="rakta-dev-perf-val" id="rd-p-parse">-</span>
     </div>
     <div class="rakta-dev-perf-row">
       <span class="rakta-dev-perf-label">State</span>
-      <span class="rakta-dev-perf-val" id="rd-p-state">—</span>
+      <span class="rakta-dev-perf-val" id="rd-p-state">-</span>
     </div>
     <div class="rakta-dev-perf-row">
       <span class="rakta-dev-perf-label">Render</span>
-      <span class="rakta-dev-perf-val" id="rd-p-render">—</span>
+      <span class="rakta-dev-perf-val" id="rd-p-render">-</span>
     </div>
     <div class="rakta-dev-perf-row">
       <span class="rakta-dev-perf-label">Paint (FCP)</span>
-      <span class="rakta-dev-perf-val" id="rd-p-paint">—</span>
+      <span class="rakta-dev-perf-val" id="rd-p-paint">-</span>
     </div>
     <div class="rakta-dev-perf-row" style="border-top:1px solid #1c1c1c;margin-top:4px;padding-top:4px;">
       <span class="rakta-dev-perf-label" style="font-weight:600">Total</span>
-      <span class="rakta-dev-perf-val" id="rd-p-total" style="font-weight:600">—</span>
+      <span class="rakta-dev-perf-val" id="rd-p-total" style="font-weight:600">-</span>
     </div>
   </div>
 </div>
@@ -304,7 +304,7 @@ export function mountDevIndicator(opts: DevIndicatorOptions): void {
 	style.textContent = CSS;
 	document.head.appendChild(style);
 
-	// Root wrapper (shadow-root would be ideal but adds complexity — scoped
+	// Root wrapper (shadow-root would be ideal but adds complexity - scoped
 	// CSS class prefix is sufficient for a dev tool)
 	const root = document.createElement("div");
 	root.dataset.raktaDev = "";
@@ -367,7 +367,7 @@ export function mountDevIndicator(opts: DevIndicatorOptions): void {
 			const el = document.getElementById(id);
 			if (!el) return;
 			if (ms <= 0) {
-				el.textContent = "—";
+				el.textContent = "-";
 				return;
 			}
 			el.textContent = ms >= 1000 ? `${(ms / 1000).toFixed(1)}s` : `${ms}ms`;

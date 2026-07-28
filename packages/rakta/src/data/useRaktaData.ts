@@ -6,7 +6,7 @@ import {
 	useRef,
 } from "react";
 
-// useRaktaData — lightweight data-fetching hook for Rakta.js
+// useRaktaData - lightweight data-fetching hook for Rakta.js
 //
 // Features:
 // - request lifecycle (idle / loading / success / error)
@@ -78,10 +78,10 @@ const initialState = <T>(): RaktaDataState<T> => ({
 const inFlight = new Map<string, Promise<unknown>>();
 
 /**
- * useRaktaData — data-fetching hook.
+ * useRaktaData - data-fetching hook.
  *
  * @param fetcher  Async function that returns the data. Receives an AbortSignal.
- * @param deps     Dependency list — refetches when any dep changes (like useEffect).
+ * @param deps     Dependency list - refetches when any dep changes (like useEffect).
  * @param key      Optional deduplication key. Same-key concurrent calls share one request.
  *
  * @example
@@ -144,7 +144,7 @@ export function useRaktaData<T>(
 		[key],
 	);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: refetchCounter is the manual-refetch trigger — removing it breaks refetch()
+	// biome-ignore lint/correctness/useExhaustiveDependencies: refetchCounter is the manual-refetch trigger - removing it breaks refetch()
 	useEffect(() => {
 		const controller = new AbortController();
 		run(controller.signal);

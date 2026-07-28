@@ -1,4 +1,4 @@
-// MegaScape — Rakta.js 3D Scene System (beyond React Three Fiber)
+// MegaScape - Rakta.js 3D Scene System (beyond React Three Fiber)
 //
 // Differences from React Three Fiber:
 // 1. Lazy-loaded: zero bundle cost unless you import a 3D component
@@ -20,11 +20,11 @@ export interface MegaScapeConfig {
 	readonly adapter?: SceneAdapter;
 	/** Rendering strategy (default: "on-demand") */
 	readonly renderMode?: RenderMode;
-	/** Quality preset — "auto" detects device capability (default: "auto") */
+	/** Quality preset - "auto" detects device capability (default: "auto") */
 	readonly quality?: QualityPreset;
 	/** Enable JatiLens diagnostics in development (default: true in dev) */
 	readonly diagnostics?: boolean;
-	/** Pixel ratio cap — prevents retina overdraw (default: 1.5) */
+	/** Pixel ratio cap - prevents retina overdraw (default: 1.5) */
 	readonly maxPixelRatio?: number;
 	/** Background color (default: transparent) */
 	readonly background?: string | null;

@@ -181,8 +181,19 @@ function buildClientEntrySource(
 		: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHBhdGggZmlsbD0iI0M2MDAwNSIgZD0iTTE2IDJMNCA4djE2bDEyIDYgMTItNlY4TDE2IDJ6Ii8+PC9zdmc+";
 
 	// Resolve path to devIndicator module relative to the generated entry file.
-	const devIndicatorAbsPath = join(__dirname, "..", "dx", "devIndicator.js");
-	const devIndicatorPath = toModuleSpecifier(entryPath, devIndicatorAbsPath);
+	// For browser bundles, we inline the devIndicator source directly from the
+	// built dist file so there is no dynamic filesystem import at runtime.
+	const devIndicatorDistPath = join(__dirname, "..", "dx", "devIndicator.js");
+	const devIndicatorInline = existsSync(devIndicatorDistPath)
+		? readFileSync(devIndicatorDistPath, "utf8")
+				.replace(/^#!.*\n/, "") // strip shebang if any
+				.replace(/export \{[^}]*\};?\s*$/m, "") // strip named exports
+				.replace(/export function /g, "function ")
+				.replace(/export const /g, "const ")
+				.replace(/export class /g, "class ")
+				.replace(/export interface /g, "// interface ")
+				.replace(/export type /g, "// type ")
+		: "";
 
 	// Read version from package.json at build time.
 	const pkgPath = join(
@@ -324,16 +335,16 @@ function setupUrlPreview(): void {
 
 setupUrlPreview();
 
-// Dev Indicator — development only. Production builds exclude this via
-// dead-code elimination because the block below is unreachable when
-// process.env.NODE_ENV !== "development".
+// Dev Indicator - development only. Inlined at build time, no dynamic import.
 if (process.env.NODE_ENV === "development") {
-  const { mountDevIndicator } = await import(${devIndicatorPath});
-  mountDevIndicator({
-    version: ${rVersionSafe},
-    logoDataUrl: ${logoDataUrlSafe},
-    bundler: "Bun / Vite (CherbonsEngine)",
-  });
+  ${devIndicatorInline}
+  if (typeof mountDevIndicator === "function") {
+    mountDevIndicator({
+      version: "${rVersionSafe}",
+      logoDataUrl: \`${logoDataUrlSafe}\`,
+      bundler: "Bun / Vite (CherbonsEngine)",
+    });
+  }
 }
 
 const raktaElementStyle = document.createElement("style");

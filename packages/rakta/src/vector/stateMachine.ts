@@ -15,8 +15,8 @@ function emitMark(name: string): void {
 }
 
 /**
- * createStateMachine — type-safe state machine for SVG animation.
- * No proprietary file format — pure TypeScript.
+ * createStateMachine - type-safe state machine for SVG animation.
+ * No proprietary file format - pure TypeScript.
  *
  * @example
  * const machine = createStateMachine({
@@ -63,7 +63,7 @@ export function createStateMachine(config: StateMachineConfig): {
 }
 
 /**
- * useTrusmiVector — React hook for SVG state machine animation.
+ * useTrusmiVector - React hook for SVG state machine animation.
  * Integrates with GSAP when available, uses CSS otherwise.
  */
 export function useTrusmiVector(config: TrusmiVectorConfig): {
@@ -109,7 +109,7 @@ export function useTrusmiVector(config: TrusmiVectorConfig): {
 	return { state, send };
 }
 
-// Built-in Shrimp mascot states — matches ShrimpRun game states
+// Built-in Shrimp mascot states - matches ShrimpRun game states
 export const SHRIMP_MASCOT_STATES: StateMachineConfig = {
 	initial: "idle",
 	states: [
@@ -173,7 +173,7 @@ export const SHRIMP_MASCOT_STATES: StateMachineConfig = {
 };
 
 /**
- * useMascot — typed hook for Rakta.js shrimp mascot state machine.
+ * useMascot - typed hook for Rakta.js shrimp mascot state machine.
  * Pre-wired with SHRIMP_MASCOT_STATES.
  */
 export function useMascot(target: string | SVGElement): {

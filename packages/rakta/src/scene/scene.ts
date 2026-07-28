@@ -1,4 +1,4 @@
-// MegaScape — Rakta.js 3D Scene System
+// MegaScape - Rakta.js 3D Scene System
 // Three.js is an optional peer dependency. Install: bun add three
 import { useEffect, useRef } from "react";
 import type {
@@ -8,7 +8,7 @@ import type {
 } from "./types";
 
 /**
- * detectDeviceQuality — auto-detect GPU/CPU capability for adaptive quality.
+ * detectDeviceQuality - auto-detect GPU/CPU capability for adaptive quality.
  */
 export function detectDeviceQuality(): Exclude<QualityPreset, "auto"> {
 	if (typeof navigator === "undefined") return "medium";
@@ -39,7 +39,7 @@ function resolveQuality(
 }
 
 /**
- * createMegaScape — imperative 3D scene factory (async, lazy Three.js).
+ * createMegaScape - imperative 3D scene factory (async, lazy Three.js).
  */
 export async function createMegaScape(
 	canvas: HTMLCanvasElement,
@@ -158,7 +158,7 @@ export async function createMegaScape(
 }
 
 /**
- * useMegaScapeScene — React hook for a 3D scene. Attach ref to a <canvas>.
+ * useMegaScapeScene - React hook for a 3D scene. Attach ref to a <canvas>.
  */
 export function useMegaScapeScene(
 	config: MegaScapeConfig = {},
@@ -196,7 +196,7 @@ export function useMegaScapeScene(
 }
 
 /**
- * useScrollScene — scroll-driven 3D scene.
+ * useScrollScene - scroll-driven 3D scene.
  * Progress (0–1) passed to your update callback on each scroll event.
  */
 export function useScrollScene(

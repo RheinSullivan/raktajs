@@ -40,7 +40,7 @@ describe("Rakta Dev Terminal", () => {
 		const readyLine = logs.find((l) => l.includes("Ready in"));
 		expect(readyLine).toBeDefined();
 
-		// Strip ANSI color codes — use String.fromCharCode(27) for ESC to avoid
+		// Strip ANSI color codes - use String.fromCharCode(27) for ESC to avoid
 		// biome lint/suspicious/noControlCharactersInRegex on \x1b literal
 		const esc = String.fromCharCode(27);
 		const ansiPattern = new RegExp(`${esc}\\[[0-9;]*m`, "g");
@@ -137,7 +137,7 @@ describe("Rakta Dev Terminal", () => {
 	test("NO_COLOR disables ANSI codes", () => {
 		const original = process.env.NO_COLOR;
 		process.env.NO_COLOR = "1";
-		// Re-import is not possible in same module — test via output absence
+		// Re-import is not possible in same module - test via output absence
 		const t = createDevTerminal({
 			version: "1.0.6",
 			projectRoot: process.cwd(),
@@ -153,7 +153,7 @@ describe("Rakta Dev Terminal", () => {
 		expect(logs.some((l) => l.includes("200"))).toBe(true);
 	});
 
-	test("detectEnvFiles returns only existing files — no secrets exposed", () => {
+	test("detectEnvFiles returns only existing files - no secrets exposed", () => {
 		const files = detectEnvFiles(process.cwd());
 		// Should be an array of strings (filenames only, never values)
 		expect(Array.isArray(files)).toBe(true);
@@ -168,7 +168,7 @@ describe("Rakta Dev Terminal", () => {
 	test("detectEnvFiles never exposes env values", () => {
 		const files = detectEnvFiles(process.cwd());
 		for (const f of files) {
-			// File names only — no slashes (paths), no equals (values)
+			// File names only - no slashes (paths), no equals (values)
 			expect(f).not.toContain("/");
 			expect(f).not.toContain("\\");
 			expect(f.startsWith(".env")).toBe(true);
@@ -265,7 +265,7 @@ describe("Rakta Dev Indicator", () => {
 	});
 
 	test("mountDevIndicator does not throw when document is undefined (SSR/Node)", () => {
-		// In Bun test environment there is no DOM — function should guard
+		// In Bun test environment there is no DOM - function should guard
 		expect(() => {
 			mountDevIndicator({
 				version: "1.0.6",

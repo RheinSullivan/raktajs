@@ -35,7 +35,7 @@ If you see TypeScript errors or runtime issues, check the relevant section below
 
 ## v1.0.5 → v1.0.6
 
-This is the most impactful release for app performance. If your app had slow UI updates after API responses (like RAUL reported — "response shows in Network but UI takes 10 seconds"), upgrading to v1.0.6 directly addresses this.
+This is the most impactful release for app performance. If your app had slow UI updates after API responses (like RAUL reported - "response shows in Network but UI takes 10 seconds"), upgrading to v1.0.6 directly addresses this.
 
 ### Breaking changes
 
@@ -43,7 +43,7 @@ None. All existing APIs are backward-compatible.
 
 ### What changed and what you may want to update
 
-#### HTTP client — PanturaFetch
+#### HTTP client - PanturaFetch
 
 Default timeout reduced from 30 000ms to 10 000ms. If your API legitimately takes more than 10 seconds, set a custom timeout:
 
@@ -61,7 +61,7 @@ New options available:
 const data = await http.get("/api/report", { retries: 2 });
 ```
 
-#### Smooth scroll — component renamed
+#### Smooth scroll - component renamed
 
 Old names still work but are removed from docs. Use the new names:
 
@@ -98,7 +98,7 @@ const scrollTo = usePantura({ offset: 80 });
 If you were manually managing loading/error state with `useState` + `useEffect`, replace it with `useRaktaData`:
 
 ```ts
-// Before — manual fetch
+// Before - manual fetch
 const [data, setData] = useState(null);
 const [loading, setLoading] = useState(true);
 const [error, setError] = useState(null);
@@ -111,7 +111,7 @@ useEffect(() => {
     .finally(() => setLoading(false));
 }, []);
 
-// After — useRaktaData
+// After - useRaktaData
 import { useRaktaData } from "raktajs";
 
 const { data, loading, error, refetch } = useRaktaData(
@@ -154,12 +154,12 @@ These are entirely optional. Your existing app is unaffected. If you want to use
 
 ```bash
 # Motion system (page transitions, gestures, parallax)
-# No extra install needed — included in raktajs
+# No extra install needed - included in raktajs
 
 # 3D scenes (optional peer dependency)
 bun add three
 
-# Vector animation — no extra install needed
+# Vector animation - no extra install needed
 ```
 
 ```ts
@@ -197,7 +197,7 @@ GSAP is now the animation engine. If you previously imported from `motion` or `f
 bun remove motion framer-motion
 ```
 
-GSAP is already configured in Rakta.js — no action needed on your part.
+GSAP is already configured in Rakta.js - no action needed on your part.
 
 ---
 
@@ -215,16 +215,16 @@ If you are seeing: **response appears in the browser Network tab but the UI does
 
 After upgrading to v1.0.6:
 
-- The HTML shell now includes `<link rel="modulepreload">` for the JS bundle — the browser starts loading JavaScript during HTML parsing instead of after it finishes
+- The HTML shell now includes `<link rel="modulepreload">` for the JS bundle - the browser starts loading JavaScript during HTML parsing instead of after it finishes
 - The HTTP client keeps TCP connections alive (`keepalive: true`)
 - A loading overlay appears immediately so the page never looks blank
 
 If the problem persists after upgrading, check:
 
-1. **Large JSON payload** — paginate your API response (`limit: 50` instead of returning 10 000 rows)
-2. **Expensive client-side transform** — sorting or filtering 1000+ items in JavaScript blocks the main thread
-3. **Many simultaneous requests** — `useRaktaData` deduplicates requests with the same key
-4. **No AbortController** — old `useEffect` + `fetch` patterns may continue running after unmount; `useRaktaData` handles this automatically
+1. **Large JSON payload** - paginate your API response (`limit: 50` instead of returning 10 000 rows)
+2. **Expensive client-side transform** - sorting or filtering 1000+ items in JavaScript blocks the main thread
+3. **Many simultaneous requests** - `useRaktaData` deduplicates requests with the same key
+4. **No AbortController** - old `useEffect` + `fetch` patterns may continue running after unmount; `useRaktaData` handles this automatically
 
 See [docs/en/performance.md](./performance.md) for the full diagnosis guide.
 

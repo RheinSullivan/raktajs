@@ -1,7 +1,7 @@
-// Rakta.js Motion System — NusantaraMotion
+// Rakta.js Motion System - IndonesiaMotion
 //
-// Named after the vast Nusantara archipelago: a connected web of islands,
-// each independent yet part of the whole — like composable motion primitives.
+// Named after the vast Indonesia archipelago: a connected web of islands,
+// each independent yet part of the whole - like composable motion primitives.
 //
 // Architecture differs from Barba.js, Framer Motion, and CSS Transitions by:
 // 1. Lifecycle-aware: hooks into MegaWeave router, cancels on navigation
@@ -28,9 +28,9 @@ export {
 	useSharedElement,
 } from "./transitions";
 export type {
+	IndonesiaTransitionConfig,
 	MotionPreset,
 	MotionTarget,
-	NusantaraTransitionConfig,
 	PageTransitionHooks,
 	SharedElementConfig,
 	TransitionPhase,

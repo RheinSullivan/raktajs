@@ -16,7 +16,7 @@ Panel floating yang diinjeksikan ke browser saat mode development. Menggunakan l
 - Tab Diagnostics yang menyoroti kasus "response sudah datang tapi UI lambat"
 - Accessible dengan keyboard: `Enter`/`Space` untuk buka, `Escape` untuk tutup
 - Menghormati `prefers-reduced-motion`
-- Zero production cost — dijaga oleh `process.env.NODE_ENV === "development"`
+- Zero production cost - dijaga oleh `process.env.NODE_ENV === "development"`
 
 **Yang diukur:**
 
@@ -36,7 +36,7 @@ Panel Diagnostics menghitung `Response → UI gap = FCP - networkMs`. Jika angka
 **Eksklusi production:**
 
 ```ts
-// Di generated client entry — hanya berjalan di development
+// Di generated client entry - hanya berjalan di development
 if (process.env.NODE_ENV === "development") {
   const { mountDevIndicator } = await import("./devIndicator");
   mountDevIndicator({ version, logoDataUrl, bundler });
@@ -76,7 +76,7 @@ Output yang dicetak ke terminal server saat menjalankan `bun run dev`.
 
 - Local URL nyata dari port server (bukan hardcode)
 - IP Network LAN terdeteksi dari interface jaringan aktif (skip Docker, WSL, VPN)
-- Nama file environment terdeteksi — nilai tidak pernah ditampilkan
+- Nama file environment terdeteksi - nilai tidak pernah ditampilkan
 - Ready time diukur dari start server sampai koneksi pertama diterima
 - Timing request: total ms sisi server per request
 - Flag slow request: threshold dapat dikonfigurasi (default 1000ms)

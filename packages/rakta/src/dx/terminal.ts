@@ -112,7 +112,7 @@ const ENV_FILE_CANDIDATES = [
 
 /**
  * Returns the names of env files that exist in the project root.
- * NEVER exposes values — only filenames.
+ * NEVER exposes values - only filenames.
  */
 export function detectEnvFiles(projectRoot: string): readonly string[] {
 	return ENV_FILE_CANDIDATES.filter((file) =>

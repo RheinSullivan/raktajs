@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 
-// Interactive motion primitives — beyond Framer Motion's gesture system:
+// Interactive motion primitives - beyond Framer Motion's gesture system:
 // - useMagnetic: magnetic button effect, respects reduced motion
 // - useTilt: 3D tilt on hover using CSS transforms (GPU-accelerated)
 // - useSpotlight: radial gradient spotlight following cursor
@@ -14,7 +14,7 @@ function prefersReducedMotion(): boolean {
 }
 
 /**
- * useMagnetic — magnetic pull effect on hover.
+ * useMagnetic - magnetic pull effect on hover.
  * Element follows cursor within a radius then snaps back on leave.
  *
  * Beyond RTF: works on any HTML element, not just 3D canvas.
@@ -62,7 +62,7 @@ export function useMagnetic(
 }
 
 /**
- * useTilt — 3D tilt effect on hover using CSS perspective.
+ * useTilt - 3D tilt effect on hover using CSS perspective.
  * More performant than React Three Fiber for UI elements.
  */
 export function useTilt(maxTilt = 15): {
@@ -103,8 +103,8 @@ export function useTilt(maxTilt = 15): {
 }
 
 /**
- * useSpotlight — radial gradient spotlight that follows cursor.
- * No canvas, no WebGL — pure CSS custom properties.
+ * useSpotlight - radial gradient spotlight that follows cursor.
+ * No canvas, no WebGL - pure CSS custom properties.
  */
 export function useSpotlight(
 	size = 400,
@@ -140,7 +140,7 @@ export function useSpotlight(
 }
 
 /**
- * useCursorFollower — custom cursor element that follows with lag.
+ * useCursorFollower - custom cursor element that follows with lag.
  * Returns a ref to attach to a cursor DIV.
  */
 export function useCursorFollower(lag = 0.1): {
@@ -181,7 +181,7 @@ export function useCursorFollower(lag = 0.1): {
 }
 
 /**
- * useDrag — drag with momentum and optional snap.
+ * useDrag - drag with momentum and optional snap.
  * Beyond RTF drag: works on any HTML element, touch + mouse, momentum physics.
  */
 export function useDrag(options?: {
@@ -272,7 +272,7 @@ export function useDrag(options?: {
 }
 
 /**
- * useParallax — scroll-driven parallax with IntersectionObserver + rAF.
+ * useParallax - scroll-driven parallax with IntersectionObserver + rAF.
  * Smoother than CSS parallax, cheaper than ScrollTrigger for simple cases.
  */
 export function useParallax(speed = 0.3): {

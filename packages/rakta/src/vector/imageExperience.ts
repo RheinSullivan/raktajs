@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// TrusmiFrame image experience — beyond react-medium-image-zoom:
-// 1. Zero external dependencies — uses CSS + Web Animations API
+// TrusmiFrame image experience - beyond react-medium-image-zoom:
+// 1. Zero external dependencies - uses CSS + Web Animations API
 // 2. Keyboard accessible: Enter to zoom, Escape to close
 // 3. Gesture support: pinch-zoom on mobile
 // 4. Gallery mode with preload of prev/next
@@ -9,7 +9,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 // 6. Works with <picture path=""> TrusmiFrame component
 
 /**
- * useImageZoom — click-to-zoom with smooth expansion animation.
+ * useImageZoom - click-to-zoom with smooth expansion animation.
  * Goes beyond react-medium-image-zoom: no dep, gesture support, a11y.
  */
 export function useImageZoom(): {
@@ -128,7 +128,7 @@ export function useImageZoom(): {
 }
 
 /**
- * useTrusmiGallery — image gallery with preload and keyboard nav.
+ * useTrusmiGallery - image gallery with preload and keyboard nav.
  * Returns current index, navigation, and refs for prev/next preload.
  */
 export function useTrusmiGallery(images: readonly string[]): {

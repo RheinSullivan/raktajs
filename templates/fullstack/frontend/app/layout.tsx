@@ -4,14 +4,14 @@ const OG_IMAGE = `${SITE_URL}/og/rakta-banner.png`;
 export const metadata: Metadata = {
 	metadataBase: SITE_URL,
 	title: {
-		default: "Rakta.js, Ultra-Fast Fullstack Framework | Cirebon · Nusantara",
+		default: "Rakta.js, Ultra-Fast Fullstack Framework | Cirebon · Indonesia",
 		template: "%s | Rakta.js",
 	},
 	description:
 		"Rakta.js is a lightweight fullstack React framework by Muhammad Rizky Ramadhan (Rhein Sullivan / Vyagra Nexus™) from Cirebon & South Jakarta, Indonesia. File-based App Routing, zero-import Auto Import, end-to-end Type-Safe RPC, integrated frontend-backend monolith, and built-in Authentication, all in one Bun + TypeScript ecosystem.",
 	keywords: [
 		"Rakta.js",
-		"Framework Frontend",
+		"Frontend Framework",
 		"React Framework",
 		"Javascript Frontend Framework",
 		"Indonesia Developer",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 		"Vyagra Nexus",
 		"Cirebon",
 		"Jakarta Selatan",
-		"Nusantara",
+		"Indonesia",
 		"Auto Import",
 		"Type-Safe RPC",
 		"Bun Framework",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		type: "website",
 		url: SITE_URL,
-		title: "Rakta.js, Ultra-Fast Fullstack Framework | Cirebon · Nusantara",
+		title: "Rakta.js, Ultra-Fast Fullstack Framework | Cirebon · Indonesia",
 		description:
 			"Lightweight fullstack React framework with zero-import Auto Import, file-based routing, type-safe RPC, and built-in auth. Crafted in Indonesia by Rhein Sullivan.",
 		siteName: "Rakta.js",
@@ -127,24 +127,24 @@ export const metadata: Metadata = {
 		"@graph": [
 			{
 				"@type": "WebSite",
-				"@id": `${SITE_URL}/#website`,
+				"@id": `${SITE_URL}/website`,
 				url: SITE_URL,
 				name: "Rakta.js",
 				description:
 					"Ultra-fast fullstack React framework from Indonesia with zero-import Auto Import, file-based routing, and type-safe RPC.",
 				inLanguage: ["id-ID", "en-US"],
-				publisher: { "@id": `${SITE_URL}/#organization` },
+				publisher: { "@id": `${SITE_URL}/organization` },
 			},
 			{
 				"@type": "SoftwareApplication",
-				"@id": `${SITE_URL}/#software`,
+				"@id": `${SITE_URL}/software`,
 				name: "Rakta.js",
 				applicationCategory: "DeveloperApplication",
 				operatingSystem: "Cross-platform",
 				description:
 					"A lightweight fullstack React framework unifying file-based App Routing, zero-import Auto Import, end-to-end Type-Safe RPC, integrated frontend-backend monolith, and built-in Authentication.",
 				url: SITE_URL,
-				author: { "@id": `${SITE_URL}/#person` },
+				author: { "@id": `${SITE_URL}/person` },
 				offers: {
 					"@type": "Offer",
 					price: "0",
@@ -153,7 +153,7 @@ export const metadata: Metadata = {
 			},
 			{
 				"@type": "Person",
-				"@id": `${SITE_URL}/#person`,
+				"@id": `${SITE_URL}/person`,
 				name: "Muhammad Rizky Ramadhan",
 				alternateName: ["Rhein Sullivan", "Vyagra Nexus"],
 				jobTitle: "Software Developer",
@@ -171,9 +171,9 @@ export const metadata: Metadata = {
 			},
 			{
 				"@type": "Organization",
-				"@id": `${SITE_URL}/#organization`,
+				"@id": `${SITE_URL}/organization`,
 				name: "Vyagra Nexus",
-				founder: { "@id": `${SITE_URL}/#person` },
+				founder: { "@id": `${SITE_URL}/person` },
 				url: SITE_URL,
 			},
 		],
@@ -182,18 +182,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="id">
-			<head>
+		<htmllang = "en">
+			< head >
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-				{/* mask-icon untuk Safari pinned tab ,  pakai logo udang Rakta.js */}
+	{/* mask-icon untuk Safari pinned tab ,  pakai logo udang Rakta.js */ }
 				<link rel="mask-icon" href="/rakta-logo.svg" color="#e11d48" />
 				<RaktaHead metadata={metadata} />
-			</head>
-			<body className="min-h-screen bg-black text-white antialiased">
-				<RaktaToast position="top-right" />
-				{children}
-			</body>
-		</html>
+			</head >
+		<body className="min-h-screen bg-black text-white antialiased">
+			<RaktaToast position="top-right" />
+			{children}
+		</body>
+		</html >
 	);
 }
