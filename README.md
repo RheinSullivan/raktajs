@@ -953,7 +953,7 @@ rakta/kernel        createRaktaKernel, RaktaPlugin type
 rakta/middleware    defineMiddleware, compose, RaktaMiddlewareContext
 rakta/auto-import   scanForExports, generateDts
 rakta/layout        defineLayout, matchLayout, LayoutManifest
-rakta/data          cache, revalidate, prefetch, CacheStrategy
+rakta/data          cache, revalidate, prefetch, useRaktaData
 rakta/docs          generateManifest, generateSidebar, generateVitePressConfig
 rakta/security      createCsrf, createSecureHeaders, RateLimiter, SecretManager
 rakta/ops           createEventBus, createJobQueue, createCron
@@ -961,9 +961,12 @@ rakta/performance   Benchmark, BundleAnalyzer, BuildCache
 rakta/testing       createMockServer, createSnapshot, coverage
 rakta/deployment    createDeploymentAdapter, listDeploymentTargets
 rakta/plugin        createOfficialPlugin, createCommunityPlugin
-rakta/dx            DependencyGraph, RouteAnalyzer, BundleReport
+rakta/dx            DependencyGraph, RouteAnalyzer, BundleReport, DevTerminal, DevIndicator
 rakta/tide          Runtime request/response layer
 rakta/forge         Dev server dan build system internals
+rakta/motion        NusantaraMotion — page transitions, useMagnetic, useTilt, useParallax, useDrag, splitText
+rakta/scene         MegaScape — optional 3D (Three.js peer dep), useMegaScapeScene, useScrollScene
+rakta/vector        TrusmiVector — SVG state machine, useTrusmiVector, useMascot, useImageZoom
 ```
 
 ---

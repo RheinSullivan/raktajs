@@ -209,7 +209,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^1.0.5",
+						raktajs: "^1.0.6",
 						gsap: "^3.12.7",
 						clsx: "^2.1.1",
 						"tailwind-merge": "^3.0.2",
@@ -302,6 +302,10 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 					: getFrontendOnlyCssGlobals(cssFramework),
 		},
 		{
+			path: "postcss.config.ts",
+			content: `import type { Config } from "postcss-load-config";\n\nconst config: Config = {\n\tplugins: {\n\t\t"@tailwindcss/postcss": {},\n\t\tautoprefixer: {},\n\t},\n};\n\nexport default config;\n`,
+		},
+		{
 			path: "public/.gitkeep",
 			content: "",
 		},
@@ -380,7 +384,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^1.0.5",
+						raktajs: "^1.0.6",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						gsap: "^3.12.7",
@@ -494,6 +498,10 @@ function getFullstackFrontendFiles(
 		{
 			path: `frontend/styles/${styleFileName}`,
 			content: getFrontendOnlyCssGlobals(cssFramework),
+		},
+		{
+			path: "frontend/postcss.config.ts",
+			content: `import type { Config } from "postcss-load-config";\n\nconst config: Config = {\n\tplugins: {\n\t\t"@tailwindcss/postcss": {},\n\t\tautoprefixer: {},\n\t},\n};\n\nexport default config;\n`,
 		},
 		{
 			path: "frontend/public/.gitkeep",

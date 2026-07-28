@@ -51,13 +51,13 @@ jobs:
       - name: Lint
         run: bun run lint
 
-      # ── 6. Test ────────────────────────────────────────────────────────────
-      - name: Test
-        run: bun run test
-
-      # ── 7. Build ───────────────────────────────────────────────────────────
+      # ── 6. Build first (test depends on dist/) ─────────────────────────────
       - name: Build
         run: bun run build
+
+      # ── 7. Test ────────────────────────────────────────────────────────────
+      - name: Test
+        run: bun run test
 
       # ── 8. Workspace integrity check ───────────────────────────────────────
       - name: Workspace check

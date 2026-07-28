@@ -162,6 +162,18 @@
 		"./ops": {
 			"types": "./dist/ops/index.d.ts",
 			"import": "./dist/ops/index.js"
+		},
+		"./motion": {
+			"types": "./dist/motion/index.d.ts",
+			"import": "./dist/motion/index.js"
+		},
+		"./scene": {
+			"types": "./dist/scene/index.d.ts",
+			"import": "./dist/scene/index.js"
+		},
+		"./vector": {
+			"types": "./dist/vector/index.d.ts",
+			"import": "./dist/vector/index.js"
 		}
 	},
 	"scripts": {

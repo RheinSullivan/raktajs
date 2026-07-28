@@ -284,15 +284,18 @@ raktajs/tide          runtime adapter, request context
 raktajs/kernel        createRaktaKernel, createServiceContainer
 raktajs/middleware    defineMiddleware, createMiddlewareStack
 raktajs/security      createSecureHeaders, CSRF, RateLimiter, SecretManager
-raktajs/data          createDataCache, defineRouteDataStrategy
+raktajs/data          createDataCache, defineRouteDataStrategy, useRaktaData
 raktajs/layout        createLayoutManifest, matchLayouts
 raktajs/deployment    createDeploymentAdapter, listDeploymentTargets
 raktajs/testing       runRaktaTests, createMockServer
 raktajs/performance   benchmark, createBundleSizeReport
 raktajs/plugin        createPluginRegistry, createOfficialPlugins
-raktajs/dx            analyzeBundle, analyzeRoutes, createDependencyGraph
+raktajs/dx            analyzeBundle, analyzeRoutes, createDependencyGraph, DevTerminal, DevIndicator
 raktajs/docs          scanMarkdownDocs, createVitePressConfig
 raktajs/ops           RaktaQueue, RaktaEventBus, runCronTask
+raktajs/motion        definePageTransition, useSharedElement, useMagnetic, useTilt, useParallax, useDrag, useSpotlight, useCursorFollower, splitText, animateText
+raktajs/scene         createMegaScape, useMegaScapeScene, useScrollScene, loadGLTF, loadTexture
+raktajs/vector        createStateMachine, useTrusmiVector, useMascot, useImageZoom, useTrusmiGallery
 ```
 
 ---
