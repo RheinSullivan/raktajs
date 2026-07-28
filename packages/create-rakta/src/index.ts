@@ -10,37 +10,36 @@ import { generateProjectFiles } from "./generator";
 import { promptProjectName, runPrompts } from "./prompts";
 import type { ProjectConfig } from "./types";
 import {
+	AUTH_STRATEGY_DISPLAY,
 	BACKEND_DISPLAY,
 	CSS_DISPLAY,
 	DATABASE_DISPLAY,
 	PROJECT_LANGUAGE_DISPLAY,
 	PROJECT_MODE_DISPLAY,
 	RENDER_MODE_DISPLAY,
+	SESSION_POLICY_DISPLAY,
 } from "./types";
 
 function getProjectNameFromArgs(
 	cliArgs: ReadonlyArray<string>,
 ): string | undefined {
 	const nameArg = cliArgs.find((arg) => !arg.startsWith("--"));
-
 	if (nameArg !== undefined && nameArg.trim().length > 0) {
 		return nameArg.trim();
 	}
-
 	return undefined;
 }
 
-function formatFullstackCommands(): string {
+function formatFullstackCommands(projectName: string): string {
 	return [
-		pc.dim("# Terminal 1"),
-		pc.cyan("cd frontend"),
+		pc.dim(`# Option A: start both with one command`),
+		pc.cyan(`cd ${projectName}`),
 		pc.cyan("bun install"),
 		pc.cyan("bun run dev"),
 		"",
-		pc.dim("# Terminal 2"),
-		pc.cyan("cd backend"),
-		pc.cyan("bun install"),
-		pc.cyan("bun run dev"),
+		pc.dim("# Option B: start separately"),
+		pc.cyan(`cd ${projectName}/frontend && bun install && bun run dev`),
+		pc.cyan(`cd ${projectName}/backend  && bun install && bun run dev`),
 	]
 		.map((line) => (line.length === 0 ? "" : `        ${line}`))
 		.join("\n");
@@ -60,39 +59,40 @@ function printSuccessMessage(projectConfig: ProjectConfig): void {
 	const autoImportLabel = projectConfig.autoImport ? "Enabled" : "Disabled";
 	const isFullstack = projectConfig.projectMode === "fullstack";
 
+	const authStrategy = projectConfig.authStrategy ?? "none";
+	const sessionPolicy = projectConfig.sessionPolicy ?? "none";
+
 	const backendLine = isFullstack
-		? `${pc.dim("Backend:")} ${BACKEND_DISPLAY[projectConfig.backendFramework]}`
+		? `\n      ${pc.dim("Backend:")} ${BACKEND_DISPLAY[projectConfig.backendFramework]}`
 		: "";
 
 	const databaseLine = isFullstack
-		? `${pc.dim("DB:")} ${DATABASE_DISPLAY[projectConfig.database]}`
+		? `\n      ${pc.dim("DB:")} ${DATABASE_DISPLAY[projectConfig.database]}`
 		: "";
 
+	const authLine =
+		isFullstack && authStrategy !== "none"
+			? `\n      ${pc.dim("Auth:")} ${AUTH_STRATEGY_DISPLAY[authStrategy]}${sessionPolicy !== "none" ? ` · ${SESSION_POLICY_DISPLAY[sessionPolicy]}` : ""}`
+			: "";
+
 	const nextSteps = isFullstack
-		? formatFullstackCommands()
+		? formatFullstackCommands(projectConfig.projectName)
 		: formatFrontendOnlyCommands(projectConfig.projectName);
 
 	console.log(`
       ${pc.bold(pc.green("Project created!"))}
 
-      ${pc.dim("Mode:")}    ${modeLabel}
-      ${pc.dim("Lang:")}    ${languageLabel}
-      ${pc.dim("CSS:")}     ${cssLabel}
-      ${pc.dim("Render:")}  ${renderLabel}
-      ${pc.dim("AutoImport:")} ${autoImportLabel}
-      ${backendLine}
-      ${databaseLine}
+      ${pc.dim("Mode:")}       ${modeLabel}
+      ${pc.dim("Lang:")}       ${languageLabel}
+      ${pc.dim("CSS:")}        ${cssLabel}
+      ${pc.dim("Render:")}     ${renderLabel}
+      ${pc.dim("AutoImport:")} ${autoImportLabel}${backendLine}${databaseLine}${authLine}
 
       ${pc.bold("Next steps:")}
 
 ${nextSteps}
 
-      ${pc.bold("Frontend:")} ${pc.cyan("http://localhost:3000")}
-      ${
-				isFullstack
-					? `${pc.bold("Backend:")}  ${pc.cyan("http://localhost:4000")}`
-					: ""
-			}
+      ${pc.bold("Frontend:")} ${pc.cyan("http://localhost:3000")}${isFullstack ? `\n      ${pc.bold("Backend:")}  ${pc.cyan("http://localhost:4000")}` : ""}
     `);
 }
 
@@ -126,11 +126,9 @@ async function main(): Promise<void> {
 		loadingSpinner.stop(pc.green("Project files generated."));
 	} catch (caughtError) {
 		loadingSpinner.stop(pc.red("File generation failed."));
-
 		if (caughtError instanceof Error) {
 			console.error(pc.red(caughtError.message));
 		}
-
 		process.exit(1);
 	}
 
@@ -140,7 +138,6 @@ async function main(): Promise<void> {
 main().catch((caughtError: unknown) => {
 	const errorMessage =
 		caughtError instanceof Error ? caughtError.message : String(caughtError);
-
 	console.error(pc.red(`\nError: ${errorMessage}\n`));
 	process.exit(1);
 });

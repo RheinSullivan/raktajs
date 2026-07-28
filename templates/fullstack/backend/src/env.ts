@@ -21,4 +21,5 @@ export const env = {
 		"change-this-development-secret-32-chars",
 	),
 	sessionMode: optionalEnv("SESSION_MODE", "single"),
+	authStrategy: optionalEnv("AUTH_STRATEGY", "jwt"),
 } as const;

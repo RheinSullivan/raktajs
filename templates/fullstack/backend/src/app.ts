@@ -1,76 +1,74 @@
-import { Gaman, type GamanContext, type HTTP } from "gaman";
+import { Gaman, composeRouter } from "gaman";
+import type { Context } from "gaman";
 import { runMigrations } from "./database/migrations";
 import { env } from "./env";
-import { requestFromGamanContext, sendGamanResponse } from "./http/gaman";
 import { apiRouter } from "./routes/api";
 import { seedCmsPosts } from "./services/cms.service";
 import { seedUsers } from "./services/user.service";
 
-const app = new Gaman<HTTP>();
+const CORS_HEADERS = {
+	"Access-Control-Allow-Origin": env.corsOrigin,
+	"Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+	"Access-Control-Allow-Headers": "Content-Type, Authorization",
+	"Access-Control-Allow-Credentials": "true",
+};
 
 await runMigrations();
 await seedUsers();
 seedCmsPosts();
 
-function setCorsHeaders(context: GamanContext): void {
-	context.setHeader("Access-Control-Allow-Origin", env.corsOrigin);
-	context.setHeader(
-		"Access-Control-Allow-Methods",
-		"GET, POST, PUT, PATCH, DELETE, OPTIONS",
-	);
-	context.setHeader(
-		"Access-Control-Allow-Headers",
-		"Content-Type, Authorization",
-	);
-	context.setHeader("Access-Control-Allow-Credentials", "true");
-}
-
-async function handle(context: GamanContext): Promise<unknown> {
-	// Handle CORS preflight requests
-	if ((context.method ?? "").toUpperCase() === "OPTIONS") {
-		setCorsHeaders(context);
-		return context.status(204).send(undefined);
+async function handle(c: Context): Promise<Response> {
+	// OPTIONS preflight
+	if (c.request.method.toUpperCase() === "OPTIONS") {
+		return new Response(null, { status: 204, headers: CORS_HEADERS });
 	}
 
-	const response = await apiRouter(requestFromGamanContext(context));
+	// Build a standard Request from the Gaman context
+	// context.request is a Bun Request in Gaman v2.x
+	const req: Request =
+		c.request instanceof Request
+			? c.request
+			: new Request(
+				`http://localhost:${env.port}${c.path ?? "/"}`,
+				{ method: c.request.method ?? "GET" },
+			);
+
+	const response = await apiRouter(req);
+
 	const headers = new Headers(response.headers);
+	for (const [key, value] of Object.entries(CORS_HEADERS)) {
+		headers.set(key, value);
+	}
 
-	headers.set("Access-Control-Allow-Origin", env.corsOrigin);
-	headers.set(
-		"Access-Control-Allow-Methods",
-		"GET, POST, PUT, PATCH, DELETE, OPTIONS",
-	);
-	headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-	headers.set("Access-Control-Allow-Credentials", "true");
-
-	return sendGamanResponse(
-		context,
-		new Response(response.body, {
-			status: response.status,
-			headers,
-		}),
-	);
+	return new Response(response.body, {
+		status: response.status,
+		headers,
+	});
 }
 
-app.get("/api/hello", handle);
-app.post("/api/auth/register", handle);
-app.post("/api/auth/login", handle);
-app.get("/api/auth/me", handle);
-app.post("/api/auth/logout", handle);
-app.post("/api/auth/forgot-password", handle);
-app.post("/api/auth/reset-password", handle);
-app.get("/api/users", handle);
-app.post("/api/users", handle);
-app.patch("/api/users/:id", handle);
-app.delete("/api/users/:id", handle);
-app.get("/api/cms/posts", handle);
-app.post("/api/cms/posts", handle);
-app.post("/api/cms/media", handle);
-app.patch("/api/cms/posts/:id", handle);
-app.delete("/api/cms/posts/:id", handle);
-
-app.mountServer({
-	http: env.port,
+const router = composeRouter((r) => {
+	r.get("/api/hello", handle);
+	r.post("/api/auth/register", handle);
+	r.post("/api/auth/login", handle);
+	r.get("/api/auth/me", handle);
+	r.post("/api/auth/logout", handle);
+	r.post("/api/auth/forgot-password", handle);
+	r.post("/api/auth/reset-password", handle);
+	r.get("/api/users", handle);
+	r.post("/api/users", handle);
+	r.patch("/api/users/:id", handle);
+	r.delete("/api/users/:id", handle);
+	r.get("/api/cms/posts", handle);
+	r.post("/api/cms/posts", handle);
+	r.post("/api/cms/media", handle);
+	r.patch("/api/cms/posts/:id", handle);
+	r.delete("/api/cms/posts/:id", handle);
 });
 
-console.log(`Rakta Gaman.js backend running at http://localhost:${env.port}`);
+const app = new Gaman();
+
+await app.mount(router);
+
+app.mountServer({ http: env.port });
+
+console.log(`\n  ⩛ Rakta.js Backend (Gaman.js) running at http://localhost:${env.port}\n`);

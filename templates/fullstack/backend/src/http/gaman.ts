@@ -1,39 +1,21 @@
-import type { GamanContext } from "gaman";
+import type { Context } from "gaman";
 
-export function requestFromGamanContext(context: GamanContext): Request {
-	if (context.req instanceof Request) {
-		return context.req;
+/**
+ * Extract a standard Web Request from a Gaman.js v2.x Context.
+ * Gaman v2.x exposes context.request as a Requester (Bun Request subclass).
+ */
+export function requestFromContext(c: Context): Request {
+	// context.request is Bun's Request in Gaman v2.x
+	if (c.request instanceof Request) {
+		return c.request;
 	}
 
-	if (context.request instanceof Request) {
-		return context.request;
-	}
+	// Fallback: reconstruct from path + method
+	const pathname = (c.path ?? "/").startsWith("http")
+		? c.path
+		: `http://localhost${c.path ?? "/"}`;
 
-	const pathname = context.path ?? context.url ?? "/";
-	const requestUrl = pathname.startsWith("http")
-		? pathname
-		: `http://localhost${pathname}`;
-
-	return new Request(requestUrl, {
-		method: context.method ?? "GET",
+	return new Request(pathname, {
+		method: (c.request as { method?: string }).method ?? "GET",
 	});
-}
-
-export async function sendGamanResponse(
-	context: GamanContext,
-	response: Response,
-): Promise<unknown> {
-	response.headers.forEach((value, key) => {
-		context.setHeader(key, value);
-	});
-
-	context.status(response.status);
-
-	const contentType = response.headers.get("content-type") ?? "";
-
-	if (contentType.includes("application/json")) {
-		return context.send(await response.json());
-	}
-
-	return context.send(await response.text());
 }

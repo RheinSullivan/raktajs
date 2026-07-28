@@ -210,7 +210,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^1.0.6",
+						raktajs: "^1.0.7",
 						gsap: "^3.12.7",
 						clsx: "^2.1.1",
 						"tailwind-merge": "^3.0.2",
@@ -385,7 +385,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^1.0.6",
+						raktajs: "^1.0.7",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						gsap: "^3.12.7",
@@ -671,6 +671,26 @@ function personalizeGamanTemplate(
 			"Rakta Gaman.js backend running",
 			`${projectConfig.projectName} Gaman.js backend running`,
 		);
+	}
+
+	if (filePath === "backend/src/env.ts") {
+		const authStrategy = projectConfig.authStrategy ?? "jwt";
+		const sessionMode =
+			projectConfig.sessionPolicy === "single-session" ||
+			projectConfig.sessionPolicy === "single-device" ||
+			projectConfig.sessionPolicy === "revoke-previous"
+				? "single"
+				: "multiple";
+		// Inject SESSION_MODE default based on chosen session policy
+		return content
+			.replace(
+				'sessionMode: optionalEnv("SESSION_MODE", "single")',
+				`sessionMode: optionalEnv("SESSION_MODE", "${sessionMode}")`,
+			)
+			.replace(
+				'authStrategy: optionalEnv("AUTH_STRATEGY", "jwt")',
+				`authStrategy: optionalEnv("AUTH_STRATEGY", "${authStrategy}")`,
+			);
 	}
 
 	return content;

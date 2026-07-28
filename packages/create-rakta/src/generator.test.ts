@@ -41,9 +41,13 @@ describe("create-rakta fullstack generator", () => {
 		);
 		expect(fileByPath.get("backend/package.json")).toContain('"gaman"');
 		expect(fileByPath.get("backend/src/app.ts")).toContain(
-			'import { Gaman, type GamanContext, type HTTP } from "gaman"',
+			'import { Gaman, composeRouter } from "gaman"',
 		);
-		expect(fileByPath.get("backend/src/app.ts")).toContain("new Gaman<HTTP>()");
+		expect(fileByPath.get("backend/src/app.ts")).toContain("new Gaman()");
+		expect(fileByPath.get("backend/src/app.ts")).toContain("composeRouter");
+		expect(fileByPath.get("backend/src/app.ts")).toContain(
+			"await app.mount(router)",
+		);
 		expect(fileByPath.get("frontend/package.json")).toContain('"gsap"');
 		expect(fileByPath.get("frontend/package.json")).toContain('"react-icons"');
 		expect(fileByPath.get("backend/src/app.ts")).toContain(

@@ -1,35 +1,4 @@
-declare module "gaman" {
-	export interface HTTP {
-		readonly protocol: "http";
-	}
-
-	export interface GamanContext {
-		readonly req?: Request;
-		readonly request?: Request;
-		readonly url?: string;
-		readonly path?: string;
-		readonly method?: string;
-		json(): Promise<unknown>;
-		send(data: unknown): unknown;
-		status(code: number): GamanContext;
-		setHeader(key: string, value: string): GamanContext;
-	}
-
-	export interface GamanApp {
-		get(path: string, handler: (context: GamanContext) => unknown): void;
-		post(path: string, handler: (context: GamanContext) => unknown): void;
-		patch(path: string, handler: (context: GamanContext) => unknown): void;
-		delete(path: string, handler: (context: GamanContext) => unknown): void;
-		options(path: string, handler: (context: GamanContext) => unknown): void;
-		mountServer(options: { readonly http: number }): void;
-	}
-
-	export class Gaman<TTransport> implements GamanApp {
-		get(path: string, handler: (context: GamanContext) => unknown): void;
-		post(path: string, handler: (context: GamanContext) => unknown): void;
-		patch(path: string, handler: (context: GamanContext) => unknown): void;
-		delete(path: string, handler: (context: GamanContext) => unknown): void;
-		options(path: string, handler: (context: GamanContext) => unknown): void;
-		mountServer(options: { readonly http: number }): void;
-	}
-}
+// This file provides TypeScript types for Gaman.js v2.1.5
+// Re-exporting the actual types from the package for IDE support.
+// Do NOT manually declare methods here — use the real package types.
+export * from "gaman";
