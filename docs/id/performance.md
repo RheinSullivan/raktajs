@@ -76,7 +76,7 @@ const { data, loading, error, refetch } = useRaktaData(
 
 ## HTTP Client Performance
 
-Peningkatan `PanturaFetch` (v1.0.6+):
+Peningkatan `PanturaFetch` (v1.0.7+):
 
 - **Default timeout**: 10 detik (sebelumnya 30 detik) - API lambat terdeteksi lebih cepat
 - **keepalive: true** - reuse koneksi TCP, eliminasi overhead handshake pada request sekuensial ke host yang sama
@@ -96,7 +96,7 @@ const data = await http.get<Laporan>("/api/laporan", { retries: 2 });
 
 ## Render Pipeline Performance
 
-Perubahan HTML shell Rakta.js v1.0.6:
+Perubahan HTML shell Rakta.js v1.0.7:
 
 - `<link rel="modulepreload">` untuk JS bundle - browser fetch+parse+compile paralel dengan HTML
 - `<link rel="preload">` untuk CSS - stylesheet tidak lagi memblokir render
@@ -115,7 +115,7 @@ Perubahan HTML shell Rakta.js v1.0.6:
 
 Semua pengukuran dari development lokal di Windows 11, Bun 1.3.11, React 19.
 
-| Metrik | Sebelum v1.0.6 | v1.0.6 |
+| Metrik | Sebelum v1.0.7 | v1.0.7 |
 |---|---|---|
 | Time to first byte (dev) | ~50ms | ~50ms |
 | Penemuan JS bundle | Setelah parse HTML | Saat parse HTML (modulepreload) |

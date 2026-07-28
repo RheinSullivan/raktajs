@@ -52,7 +52,7 @@ Output yang dicetak ke terminal server saat menjalankan `bun run dev`.
 **Output startup:**
 
 ```
-  ⩛ Rakta.js 1.0.6 (CherbonsEngine)
+  ⩛ Rakta.js 1.0.7 (CherbonsEngine)
 
   Local:          http://localhost:3000
   Network:        http://192.168.1.8:3000

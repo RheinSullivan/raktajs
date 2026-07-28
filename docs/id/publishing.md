@@ -61,7 +61,7 @@ Urutan langkah:
 1. Checkout (frozen)
 2. Setup Bun 1.3.11 + Node.js 22
 3. `bun install --frozen-lockfile`
-4. **Validasi versi** - git tag (misal `v1.0.5`) harus cocok dengan `packages/rakta/package.json` dan `packages/create-rakta/package.json`. Workflow gagal jika tidak cocok.
+4. **Validasi versi** - git tag (misal `v1.0.7`) harus cocok dengan `packages/rakta/package.json` dan `packages/create-rakta/package.json`. Workflow gagal jika tidak cocok.
 5. **Cek konflik versi** - query npm untuk memastikan versi belum pernah dipublish. Mencegah publish ulang yang tidak disengaja.
 6. typecheck → lint → test → build
 7. `npm pack --dry-run` untuk kedua package
@@ -168,7 +168,7 @@ Workflow publish menggunakan `environment: npm`. Kamu perlu membuat environment 
 
 4. **Buat GitHub Release:**
    - Buka https://github.com/RheinSullivan/raktajs/releases/new
-   - Tag: `vX.Y.Z` (misal `v1.0.5`)
+   - Tag: `vX.Y.Z` (misal `v1.0.7`)
    - Judul: `Rakta.js vX.Y.Z`
    - Tulis release notes
    - Klik **Publish release**
@@ -205,7 +205,7 @@ npm audit signatures create-rakta-app
 
 Kedua package saat ini menggunakan nomor versi yang sama. Saat merilis:
 
-- Tag `v1.0.5` harus cocok dengan `"version": "1.0.5"` di **kedua** `packages/rakta/package.json` dan `packages/create-rakta/package.json`.
+- Tag `v1.0.7` harus cocok dengan `"version": "1.0.7"` di **kedua** `packages/rakta/package.json` dan `packages/create-rakta/package.json`.
 - Jika tidak cocok, workflow gagal dengan error yang jelas sebelum mempublish apapun.
 
 ---
@@ -237,8 +237,8 @@ npm tidak mengizinkan unpublish versi yang lebih dari 72 jam. Untuk menangani re
 
 ```bash
 # Deprecate versi tertentu
-npm deprecate raktajs@1.0.5 "Bug kritis - gunakan 1.0.6"
-npm deprecate create-rakta-app@1.0.5 "Bug kritis - gunakan 1.0.6"
+npm deprecate raktajs@1.0.7 "Bug kritis - gunakan 1.0.7"
+npm deprecate create-rakta-app@1.0.7 "Bug kritis - gunakan 1.0.7"
 ```
 
 Kemudian segera rilis versi yang sudah diperbaiki.
@@ -253,7 +253,7 @@ Trusted Publisher belum dikonfigurasi di npmjs.com untuk package ini, atau nama 
 
 **Workflow gagal di validasi versi**
 
-Git tag (misal `v1.0.5`) tidak cocok dengan field `"version"` di salah satu atau kedua file `package.json`. Bump versi dan buat tag baru.
+Git tag (misal `v1.0.7`) tidak cocok dengan field `"version"` di salah satu atau kedua file `package.json`. Bump versi dan buat tag baru.
 
 **Workflow gagal di cek konflik versi**
 

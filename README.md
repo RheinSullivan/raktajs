@@ -985,6 +985,7 @@ rakta/vector        TrusmiVector - SVG state machine, useTrusmiVector, useMascot
 | **v1.0.1** | 2026-07 | Biome lint fix indentation in `plugin/official.ts` |
 | **v1.0.5** | 2026-07 | Add GSAP + ScrollTrigger, PanturaScroll smooth scroll (`<pantura>` / `<reborns>`), separate lib/helper files in templates, remove CSS from .tsx files, update documentation language |
 | **v1.0.6** | 2026-07 | Rakta Dev Indicator (floating browser panel, Rakta.js SVG, Performance/Diagnostics/Preferences, dev-only), Rakta Dev Terminal (⩛ glyph, LAN detection, env file detection, request timing, slow-request flag, NO_COLOR), middleware timing instrumentation, `useRaktaData` hook, HTML shell `modulepreload`/`preload` for faster first paint, HTTP client timeout 10s + keepalive + retry, `useRaktaData` cache+dedup+cancel, version 1.0.6 |
+| **v1.0.7** | 2026-07 | Fix Gaman.js v2.x API (`composeRouter` + `RouterBuilder`, removed `app.get/post` direct calls), auth generator (JWT / Session / JWT+Session prompts, session policy, OAuth provider prompt), CSRF protection, rate limiter, secure headers, `postcss.config.ts` in generated projects (replaces `.js`), 1-command fullstack dev (`bun run dev` starts both frontend + backend), CLI next-steps now shows correct `cd <project>/frontend` paths, dev terminal version read at runtime |
 
 ### All Systems Shipped / Semua Sistem yang Sudah Ada
 

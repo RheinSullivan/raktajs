@@ -76,7 +76,7 @@ const { data, loading, error, refetch } = useRaktaData(
 
 ## HTTP Client Performance
 
-`PanturaFetch` (v1.0.6+) improvements:
+`PanturaFetch` (v1.0.7+) improvements:
 
 - **Default timeout**: 10s (was 30s) - surfaces slow APIs faster
 - **keepalive: true** - reuses TCP connections, eliminates handshake overhead on sequential requests to the same host
@@ -96,7 +96,7 @@ const data = await http.get<Report>("/api/report", { retries: 2 });
 
 ## Render Pipeline Performance
 
-Rakta.js v1.0.6 HTML shell changes:
+Rakta.js v1.0.7 HTML shell changes:
 
 - `<link rel="modulepreload">` for JS bundle - browser fetches+parses+compiles in parallel with HTML
 - `<link rel="preload">` for CSS - stylesheet no longer blocks render
@@ -115,7 +115,7 @@ Rakta.js v1.0.6 HTML shell changes:
 
 All measurements from local development on Windows 11, Bun 1.3.11, React 19.
 
-| Metric | Before v1.0.6 | v1.0.6 |
+| Metric | Before v1.0.7 | v1.0.7 |
 |---|---|---|
 | Time to first byte (dev) | ~50ms | ~50ms |
 | JS bundle discovery | After HTML parse | During HTML parse (modulepreload) |

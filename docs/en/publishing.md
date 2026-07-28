@@ -61,7 +61,7 @@ Steps in order:
 1. Checkout (frozen)
 2. Setup Bun 1.3.11 + Node.js 22
 3. `bun install --frozen-lockfile`
-4. **Version validation** - git tag (e.g. `v1.0.5`) must match both `packages/rakta/package.json` and `packages/create-rakta/package.json`. Fails the workflow if they don't match.
+4. **Version validation** - git tag (e.g. `v1.0.7`) must match both `packages/rakta/package.json` and `packages/create-rakta/package.json`. Fails the workflow if they don't match.
 5. **Version conflict check** - queries npm to ensure neither version is already published. Prevents accidental re-publish.
 6. typecheck → lint → test → build
 7. `npm pack --dry-run` for both packages
@@ -168,7 +168,7 @@ The publish workflow uses `environment: npm`. You should create this environment
 
 4. **Create a GitHub Release:**
    - Go to https://github.com/RheinSullivan/raktajs/releases/new
-   - Tag: `vX.Y.Z` (e.g. `v1.0.5`)
+   - Tag: `vX.Y.Z` (e.g. `v1.0.7`)
    - Title: `Rakta.js vX.Y.Z`
    - Write release notes
    - Click **Publish release**
@@ -205,7 +205,7 @@ npm audit signatures create-rakta-app
 
 Both packages currently share the same version number. When you release:
 
-- Tag `v1.0.5` must match `"version": "1.0.5"` in **both** `packages/rakta/package.json` and `packages/create-rakta/package.json`.
+- Tag `v1.0.7` must match `"version": "1.0.7"` in **both** `packages/rakta/package.json` and `packages/create-rakta/package.json`.
 - If they don't match, the workflow fails with a clear error before publishing anything.
 
 ---
@@ -237,8 +237,8 @@ npm does not allow unpublishing versions older than 72 hours. To handle a bad re
 
 ```bash
 # Deprecate a specific version
-npm deprecate raktajs@1.0.5 "Critical bug - use 1.0.6"
-npm deprecate create-rakta-app@1.0.5 "Critical bug - use 1.0.6"
+npm deprecate raktajs@1.0.7 "Critical bug - use 1.0.7"
+npm deprecate create-rakta-app@1.0.7 "Critical bug - use 1.0.7"
 ```
 
 Then release a fixed version immediately.
@@ -253,7 +253,7 @@ OIDC Trusted Publisher is not configured on npmjs.com for this package, or the w
 
 **Workflow fails at version validation**
 
-The git tag (e.g. `v1.0.5`) does not match the `"version"` field in one or both `package.json` files. Bump the version and re-tag.
+The git tag (e.g. `v1.0.7`) does not match the `"version"` field in one or both `package.json` files. Bump the version and re-tag.
 
 **Workflow fails at version conflict check**
 

@@ -33,6 +33,71 @@ Kalau ada error TypeScript atau masalah runtime, cek bagian yang relevan di bawa
 
 ---
 
+## v1.0.6 → v1.0.7
+
+Rilis ini memperbaiki Gaman.js backend dan menambah auth generator.
+
+### Breaking changes
+
+Tidak ada. Semua API yang sudah ada tetap kompatibel.
+
+### Generated backend — Gaman.js v2.x API
+
+Jika kamu membuat fullstack project di v1.0.6 atau sebelumnya, backend-mu menggunakan `app.get()` / `app.post()` yang sudah tidak ada di Gaman.js v2.x.
+
+Buat project baru dengan v1.0.7, atau migrasi manual:
+
+```ts
+// Sebelum (v1.0.6 dan lebih lama — rusak di Gaman.js v2.x)
+import { Gaman, type GamanContext, type HTTP } from "gaman";
+const app = new Gaman<HTTP>();
+app.get("/api/hello", handle);
+
+// Sesudah (v1.0.7 — bekerja dengan Gaman.js v2.x)
+import { Gaman, composeRouter } from "gaman";
+import type { Context } from "gaman";
+
+const router = composeRouter((r) => {
+  r.get("/api/hello", (c: Context) => { /* ... */ });
+});
+const app = new Gaman();
+await app.mount(router);
+app.mountServer({ http: 4000 });
+```
+
+Handler signature juga berubah — dari `(context: GamanContext)` menjadi `(c: Context)`.
+
+### Baru: Authentication Generator
+
+Saat generate fullstack project, kamu akan ditanya:
+
+- Auth strategy: None / JWT / Session / JWT+Session
+- Session policy: single-session, multiple-sessions, single-device, revoke-previous, dll.
+- OAuth providers: Google, GitHub, Apple, Microsoft, Discord, GitLab (opsional)
+
+Auth sepenuhnya self-hosted. Tidak ada Clerk, NextAuth, Supabase, atau Firebase.
+
+### Baru: `postcss.config.ts` (sebelumnya `.js`)
+
+Project yang di-generate sekarang pakai `postcss.config.ts`.
+
+### Baru: 1-command fullstack dev
+
+```bash
+cd my-project
+bun run dev  # menjalankan frontend + backend sekaligus
+```
+
+### CLI next steps — path yang benar
+
+v1.0.7 sekarang menampilkan path yang benar termasuk nama folder project:
+
+```
+cd my-project/frontend && bun install && bun run dev
+```
+
+---
+
 ## v1.0.5 → v1.0.6
 
 Ini adalah rilis yang paling berdampak untuk performa aplikasi. Kalau aplikasimu mengalami UI lambat setelah response API (seperti yang RAUL laporkan - "response sudah muncul di Network tapi UI butuh 10 detik"), upgrade ke v1.0.6 langsung mengatasi masalah ini.

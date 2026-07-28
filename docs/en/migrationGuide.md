@@ -33,6 +33,89 @@ If you see TypeScript errors or runtime issues, check the relevant section below
 
 ---
 
+## v1.0.6 → v1.0.7
+
+This release fixes the Gaman.js backend and adds the authentication generator.
+
+### Breaking changes
+
+None. All existing APIs are backward-compatible.
+
+### Generated backend — Gaman.js v2.x API
+
+If you generated a fullstack project on v1.0.6 or earlier, your backend uses `app.get()` / `app.post()` which no longer exist in Gaman.js v2.x.
+
+Regenerate a new project with v1.0.7 to get the correct `composeRouter` pattern, or migrate manually:
+
+```ts
+// Before (v1.0.6 and earlier — broken on Gaman.js v2.x)
+import { Gaman, type GamanContext, type HTTP } from "gaman";
+const app = new Gaman<HTTP>();
+app.get("/api/hello", handle);
+
+// After (v1.0.7 — works with Gaman.js v2.x)
+import { Gaman, composeRouter } from "gaman";
+import type { Context } from "gaman";
+
+const router = composeRouter((r) => {
+  r.get("/api/hello", (c: Context) => { /* ... */ });
+});
+const app = new Gaman();
+await app.mount(router);
+app.mountServer({ http: 4000 });
+```
+
+Handler signature also changed — from `(context: GamanContext)` to `(c: Context)`:
+
+```ts
+// Before
+async function handle(context: GamanContext): Promise<unknown> {
+  return context.send({ ok: true });
+}
+
+// After — return data directly or a Response
+async function handle(c: Context): Promise<Response> {
+  const req = c.request instanceof Request ? c.request : new Request(`http://localhost${c.path}`);
+  return Response.json({ ok: true });
+}
+```
+
+### New: Authentication Generator
+
+When generating a fullstack project, you will now be prompted for:
+
+- Authentication strategy: None / JWT / Session / JWT+Session
+- Session policy: single-session, multiple-sessions, single-device, revoke-previous, etc.
+- OAuth providers: Google, GitHub, Apple, Microsoft, Discord, GitLab, Facebook (optional)
+
+Authentication is completely self-hosted. No Clerk, NextAuth, Supabase, or Firebase.
+
+### New: `postcss.config.ts` (was `.js`)
+
+Generated projects now include `postcss.config.ts` instead of `postcss.config.js`.
+
+### New: 1-command fullstack dev
+
+```bash
+# Start both frontend and backend with one command
+cd my-project
+bun run dev
+
+# Or separately
+bun run dev:frontend
+bun run dev:backend
+```
+
+### CLI next steps — correct paths
+
+v1.0.7 now shows the correct paths including the project folder name:
+
+```
+cd my-project/frontend && bun install && bun run dev
+```
+
+---
+
 ## v1.0.5 → v1.0.6
 
 This is the most impactful release for app performance. If your app had slow UI updates after API responses (like RAUL reported - "response shows in Network but UI takes 10 seconds"), upgrading to v1.0.6 directly addresses this.
