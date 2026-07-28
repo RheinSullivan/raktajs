@@ -3,6 +3,7 @@ import {
 	loginController,
 	logoutController,
 	meController,
+	refreshController,
 	registerController,
 	resetPasswordController,
 } from "../controllers/auth.controller";
@@ -46,6 +47,10 @@ export async function apiRouter(request: Request): Promise<Response> {
 
 	if (url.pathname === "/api/auth/logout" && request.method === "POST") {
 		return logoutController(request);
+	}
+
+	if (url.pathname === "/api/auth/refresh" && request.method === "POST") {
+		return refreshController(request);
 	}
 
 	if (

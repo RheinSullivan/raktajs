@@ -2,6 +2,7 @@ import {
 	authenticate,
 	login,
 	logout,
+	refreshTokens,
 	requestPasswordOtp,
 	resetPassword,
 } from "../auth/auth.service";
@@ -40,9 +41,11 @@ export async function registerController(request: Request): Promise<Response> {
 
 export async function loginController(request: Request): Promise<Response> {
 	const body = await readJson(request);
+	const rememberMe = body.rememberMe === true;
 	const result = await login(
 		requireString(body, "email", 5),
 		requireString(body, "password", 1),
+		rememberMe,
 	);
 
 	if (result === undefined) {
@@ -51,8 +54,27 @@ export async function loginController(request: Request): Promise<Response> {
 
 	return Response.json(
 		{ success: true, data: result },
-		{ headers: { "Set-Cookie": result.cookie } },
+		{
+			headers: [
+				["Set-Cookie", result.cookie],
+				["Set-Cookie", result.refreshCookie],
+			],
+		},
 	);
+}
+
+export async function refreshController(request: Request): Promise<Response> {
+	const result = await refreshTokens(request);
+
+	if (result === undefined) {
+		return fail("Invalid or expired refresh token.", 401);
+	}
+
+	return ok({
+		accessToken: result.accessToken,
+		refreshToken: result.refreshToken,
+		sessionId: result.sessionId,
+	});
 }
 
 export async function meController(request: Request): Promise<Response> {
@@ -70,10 +92,16 @@ export function logoutController(request: Request): Response {
 	return Response.json(
 		{ success: true },
 		{
-			headers: {
-				"Set-Cookie":
+			headers: [
+				[
+					"Set-Cookie",
 					"rakta_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0",
-			},
+				],
+				[
+					"Set-Cookie",
+					"rakta_refresh=; Path=/api/auth/refresh; HttpOnly; SameSite=Lax; Max-Age=0",
+				],
+			],
 		},
 	);
 }
@@ -83,7 +111,6 @@ export async function forgotPasswordController(
 ): Promise<Response> {
 	const body = await readJson(request);
 	const otp = await requestPasswordOtp(requireString(body, "email", 5));
-
 	return ok({ email: otp.email, expiresAt: otp.expiresAt });
 }
 
@@ -96,6 +123,5 @@ export async function resetPasswordController(
 		requireString(body, "otp", 6),
 		requireString(body, "password", 8),
 	);
-
 	return success ? ok({ reset: true }) : fail("Invalid OTP.", 422);
 }
