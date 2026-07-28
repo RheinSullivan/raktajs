@@ -1,4 +1,4 @@
-import { existsSync, statSync, watch } from "node:fs";
+import { existsSync, readFileSync, statSync, watch } from "node:fs";
 import { join, relative } from "node:path";
 import { createDevTerminal } from "../dx/terminal";
 import { resolveRouteMode } from "../render/modes";
@@ -115,8 +115,30 @@ export async function startDevServer(
 
 	// Development-only. Zero cost in production: this module is never imported
 	// by the production server path (tide/adapter.ts).
+	// Read version from the closest raktajs package.json at runtime
+	let _rVersion = "1.0.7";
+	try {
+		const _pkgCandidates = [
+			join(options.projectRoot, "node_modules", "raktajs", "package.json"),
+			join(__dirname, "..", "..", "package.json"),
+		];
+		for (const _p of _pkgCandidates) {
+			if (existsSync(_p)) {
+				const _pkg = JSON.parse(readFileSync(_p, "utf8")) as {
+					version?: string;
+				};
+				if (typeof _pkg.version === "string") {
+					_rVersion = _pkg.version;
+					break;
+				}
+			}
+		}
+	} catch {
+		// fall back to default
+	}
+
 	const terminal = createDevTerminal({
-		version: "1.0.6",
+		version: _rVersion,
 		projectRoot: options.projectRoot,
 		slowRequestThresholdMs: 1000,
 		detailedTiming: false,
