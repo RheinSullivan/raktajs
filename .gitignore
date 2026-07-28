@@ -1,4 +1,4 @@
-# Local history / editor backup
+# Local history | editor backup
 .history/
 .history/**
 
@@ -44,7 +44,7 @@ pnpm-debug.log*
 bun-debug.log*
 biome-errors.txt
 
-# Documentation draft / generated architecture notes
+# Documentation draft | generated architecture notes
 AGENTS.md
 RAKTA_ENHANCEMENT_SUMMARY.md
 RELEASE_READY_v1.0.5_REPORT.md
@@ -67,7 +67,7 @@ docs/GITHUB_RELEASE_DESCRIPTION.md
 .eslintcache
 .stylelintcache
 
-# Testing / coverage
+# Testing | coverage
 coverage/
 **/coverage/
 .nyc_output/
@@ -77,7 +77,7 @@ coverage/
 Thumbs.db
 desktop.ini
 
-# IDE / editor
+# IDE | editor
 .idea/
 *.suo
 *.ntvs*

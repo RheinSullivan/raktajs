@@ -1,6 +1,6 @@
-# Donasi & Transparansi Keuangan / Donations & Financial Transparency
+# Donasi & Transparansi Keuangan | Donations & Financial Transparency
 
-## Tentang Donasi / About Donations
+## Tentang Donasi | About Donations
 
 Rakta.js menerima donasi publik untuk dua tujuan:
 
@@ -15,7 +15,7 @@ Rakta.js menerima donasi publik untuk dua tujuan:
 
 ---
 
-## Transparansi 100% / 100% Transparency
+## Transparansi 100% | 100% Transparency
 
 Setiap rupiah yang masuk akan dilaporkan secara publik. Tidak ada pengurangan selain untuk:
 
@@ -88,16 +88,16 @@ Every rupiah donated will be publicly reported. No deductions except for:
 
 ---
 
-## Partner Distribution / Mitra Distribusi
+## Partner Distribution | Mitra Distribusi
 
 Lembaga resmi yang ingin menjadi mitra distribusi bantuan:
 
-**Requirements / Persyaratan:**
+**Requirements | Persyaratan:**
 1. Legal status jelas (yayasan/NGO/foundation terdaftar)
 2. Bersedia laporan transparan publik
 3. Program aktif untuk kaum dhuafa/yatim/lansia/Palestina
 
-**Application / Cara Daftar:**
+**Application | Cara Daftar:**
 1. Buka Issue di GitHub: https://github.com/RheinSullivan/raktajs
 2. Title: `[Mitra Distribusi] Nama Organisasi`
 3. Lampirkan:
@@ -111,7 +111,7 @@ Tim maintainer akan review dan koordinasi transfer dengan transparansi penuh.
 
 ---
 
-## Posisi Kemanusiaan / Humanitarian Stance
+## Posisi Kemanusiaan | Humanitarian Stance
 
 🇵🇸 **Free Palestine** - Rakta.js mendukung perdamaian, keadilan, dan kebebasan untuk semua manusia.
 
@@ -119,7 +119,7 @@ Kami percaya teknologi harus dibangun dengan hati nurani. Setiap baris kode yang
 
 ---
 
-## Verifikasi Donasi / Donation Verification
+## Verifikasi Donasi | Donation Verification
 
 **Cek laporan keuangan:**
 - File: `/docs/financial-reports/[year]/[month].md`

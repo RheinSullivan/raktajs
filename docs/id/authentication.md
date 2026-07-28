@@ -1,59 +1,145 @@
-# Authentication
+# Autentikasi
 
-## Gambaran umum
+Autentikasi self-hosted yang di-generate oleh Rakta.js fullstack generator. Tidak ada Clerk, NextAuth, Supabase, atau Firebase.
 
-Generator fullstack menyertakan starter authentication yang berjalan
-dengan JWT, cookie session HTTP-only, dan mode single session.
+---
 
-Starter memakai password hashing Bun, signature HMAC dari Web Crypto, dan
-middleware request yang bisa melindungi API route.
+## Strategi Autentikasi
 
-## Endpoint yang dihasilkan
+Saat generate fullstack project, pilih dari:
 
-| Endpoint | Method | Kegunaan |
-| --- | --- | --- |
-| `/api/auth/register` | `POST` | Membuat user |
-| `/api/auth/login` | `POST` | Mengembalikan JWT dan memasang `rakta_session` |
-| `/api/auth/me` | `GET` | Mengembalikan user yang sedang login |
-| `/api/auth/logout` | `POST` | Mencabut session saat ini |
-| `/api/auth/forgot-password` | `POST` | Membuat OTP reset password |
-| `/api/auth/reset-password` | `POST` | Reset password memakai OTP |
-| `/api/users` | `GET` / `POST` | Melihat daftar user atau membuat user |
-| `/api/users/:id` | `PATCH` / `DELETE` | Mengubah atau menghapus user |
-| `/api/cms/posts` | `GET` / `POST` | Melihat atau membuat post CMS |
-| `/api/cms/posts/:id` | `PATCH` / `DELETE` | Mengubah atau menghapus post CMS |
+| Strategi | Deskripsi |
+|---|---|
+| **None** | Tidak ada autentikasi yang di-generate |
+| **JWT** | Pasangan access + refresh token stateless |
+| **Session** | Session server-side dengan cookie |
+| **JWT + Session** | Kedua strategi sekaligus |
 
-## Contoh login
+---
+
+## Endpoint yang Di-generate
+
+| Endpoint | Method | Auth Diperlukan | Deskripsi |
+|---|---|---|---|
+| `/api/auth/register` | POST | Tidak | Buat akun |
+| `/api/auth/login` | POST | Tidak | Mengembalikan `accessToken` + set cookies |
+| `/api/auth/refresh` | POST | Tidak (refresh token) | Rotasi pasangan token |
+| `/api/auth/me` | GET | Ya | User saat ini |
+| `/api/auth/logout` | POST | Ya | Cabut session saat ini |
+| `/api/auth/logout-all` | POST | Ya | Cabut semua session |
+| `/api/auth/forgot-password` | POST | Tidak | Minta OTP |
+| `/api/auth/reset-password` | POST | Tidak | Reset dengan OTP |
+
+---
+
+## Login
 
 ```bash
 curl -X POST http://localhost:4000/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"admin@rakta.local","password":"rakta-password"}'
+  -d '{
+    "email": "admin@example.com",
+    "password": "password-kamu",
+    "rememberMe": true
+  }'
 ```
 
-## Mode session
+Response:
 
-Atur `SESSION_MODE=single` untuk mencabut session lama setiap kali user
-yang sama login lagi. Atur `SESSION_MODE=multi` untuk mengizinkan banyak
-session aktif.
+```json
+{
+  "success": true,
+  "data": {
+    "user": { "id": "...", "email": "admin@example.com", "role": "ADMIN" },
+    "accessToken": "<JWT berumur pendek>",
+    "sessionId": "<session-id>"
+  }
+}
+```
 
-## Catatan keamanan
+Dua cookie otomatis di-set:
+- `rakta_session` — session ID (HttpOnly, SameSite=Lax)
+- `rakta_refresh` — refresh token (HttpOnly, SameSite=Strict)
 
-- Gunakan `AUTH_SECRET` unik di setiap environment deployment.
-- Gunakan HTTPS di production agar cookie session aman saat dikirim.
-- Ganti demo user yang digenerate dengan tabel user dari database kalian.
+---
 
-## Template fullstack
+## Menggunakan Access Token
 
-Starter fisik `templates/fullStack` memakai sistem visual yang sama dengan
-`templates/frontendOnly`, lalu ditambah login, register, forgot password
-OTP, reset password, dashboard, route auth, dan controller user bergaya
-CRUD. Backend default-nya memakai Gaman.js dengan struktur seperti
-Laravel/Adonis: routes, controllers, services, models, middleware,
-validation, CRUD user berbasis role, dan CRUD post CMS.
+```bash
+# Bearer token (API client)
+curl http://localhost:4000/api/auth/me \
+  -H "Authorization: Bearer <accessToken>"
 
-## Dokumen terkait
+# Cookie (browser — otomatis setelah login)
+curl http://localhost:4000/api/auth/me --cookie "rakta_session=<sessionId>"
+```
 
-- [`templates.md`](./templates.md)
-- [`middleware.md`](./middleware.md)
-- [`deployment.md`](./deployment.md)
+---
+
+## Refresh Token Rotation
+
+Access token kadaluarsa dalam 1 jam. Refresh token berlaku 7 hari (30 hari dengan `rememberMe: true`). Setiap refresh yang berhasil mengeluarkan pasangan token baru dan mencabut session lama.
+
+---
+
+## Melindungi Route
+
+```ts
+import { requireAuth, requireRole, optionalAuth } from "../middlewares/auth.middleware";
+
+// Require user yang sudah login
+const rejected = await requireAuth(request);
+if (rejected) return rejected;
+
+// Require role tertentu
+const rejected = await requireRole(request, "ADMIN");
+if (rejected) return rejected;
+
+// Opsional — dapatkan user jika sudah login
+const user = await optionalAuth(request);
+```
+
+---
+
+## Session Policy
+
+| Policy | SESSION_MODE | Perilaku |
+|---|---|---|
+| Multiple Sessions | `multiple` | Default — login dari banyak device diizinkan |
+| Single Session | `single` | Login baru mencabut semua session sebelumnya |
+
+---
+
+## Keamanan Token
+
+- JWT ditandatangani dengan HMAC-SHA256 menggunakan `AUTH_SECRET`
+- Access token berisi: `{ sub, email, sessionId, type: "access", exp }`
+- Refresh token berisi: `{ sub, email, sessionId, type: "refresh", exp }`
+- Token dengan `type: "refresh"` ditolak oleh `authenticate()`
+
+---
+
+## Environment Variables
+
+```env
+AUTH_SECRET=ganti-dengan-secret-acak-32-karakter
+SESSION_MODE=multiple
+AUTH_STRATEGY=jwt
+CORS_ORIGIN=http://localhost:3000
+```
+
+---
+
+## OAuth Providers (Opsional)
+
+Saat generate project, kamu bisa memilih OAuth providers (Google, GitHub, Apple, dll.) secara opsional. Ini memperluas autentikasi Rakta.js — tidak menggantikannya.
+
+Konfigurasi OAuth dilakukan secara manual — tidak ada platform auth pihak ketiga yang digunakan.
+
+---
+
+## Terkait
+
+- [Panduan Upgrade](./migrationGuide.md)
+- [Performa](./performance.md)
+- [Dev Tools](./devtools.md)

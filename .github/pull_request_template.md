@@ -8,7 +8,7 @@
 - [ ] New feature
 - [ ] Documentation
 - [ ] Refactor (no behavior change)
-- [ ] Chore / tooling
+- [ ] Chore | tooling
 
 ## Related issue
 

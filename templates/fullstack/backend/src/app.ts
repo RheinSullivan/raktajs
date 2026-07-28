@@ -50,8 +50,10 @@ const router = composeRouter((r) => {
 	r.get("/api/hello", handle);
 	r.post("/api/auth/register", handle);
 	r.post("/api/auth/login", handle);
+	r.post("/api/auth/refresh", handle);
 	r.get("/api/auth/me", handle);
 	r.post("/api/auth/logout", handle);
+	r.post("/api/auth/logout-all", handle);
 	r.post("/api/auth/forgot-password", handle);
 	r.post("/api/auth/reset-password", handle);
 	r.get("/api/users", handle);

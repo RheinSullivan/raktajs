@@ -1,8 +1,10 @@
 import {
 	forgotPasswordController,
 	loginController,
+	logoutAllController,
 	logoutController,
 	meController,
+	refreshController,
 	registerController,
 	resetPasswordController,
 } from "../controllers/auth.controller";
@@ -27,82 +29,74 @@ export async function apiRouter(request: Request): Promise<Response> {
 	const url = new URL(request.url);
 	const userMatch = url.pathname.match(/^\/api\/users\/([^/]+)$/);
 	const cmsPostMatch = url.pathname.match(/^\/api\/cms\/posts\/([^/]+)$/);
+	const method = request.method.toUpperCase();
 
-	if (url.pathname === "/api/hello" && request.method === "GET") {
+	if (url.pathname === "/api/hello" && method === "GET") {
 		return ok(helloController());
 	}
 
-	if (url.pathname === "/api/auth/register" && request.method === "POST") {
+	// Auth routes
+	if (url.pathname === "/api/auth/register" && method === "POST") {
 		return registerController(request);
 	}
-
-	if (url.pathname === "/api/auth/login" && request.method === "POST") {
+	if (url.pathname === "/api/auth/login" && method === "POST") {
 		return loginController(request);
 	}
-
-	if (url.pathname === "/api/auth/me" && request.method === "GET") {
+	if (url.pathname === "/api/auth/refresh" && method === "POST") {
+		return refreshController(request);
+	}
+	if (url.pathname === "/api/auth/me" && method === "GET") {
 		return meController(request);
 	}
-
-	if (url.pathname === "/api/auth/logout" && request.method === "POST") {
+	if (url.pathname === "/api/auth/logout" && method === "POST") {
 		return logoutController(request);
 	}
-
-	if (
-		url.pathname === "/api/auth/forgot-password" &&
-		request.method === "POST"
-	) {
+	if (url.pathname === "/api/auth/logout-all" && method === "POST") {
+		return logoutAllController(request);
+	}
+	if (url.pathname === "/api/auth/forgot-password" && method === "POST") {
 		return forgotPasswordController(request);
 	}
-
-	if (
-		url.pathname === "/api/auth/reset-password" &&
-		request.method === "POST"
-	) {
+	if (url.pathname === "/api/auth/reset-password" && method === "POST") {
 		return resetPasswordController(request);
 	}
 
-	if (url.pathname === "/api/users" && request.method === "GET") {
+	// User routes (protected)
+	if (url.pathname === "/api/users" && method === "GET") {
 		const rejected = await requireAuth(request);
 		return rejected ?? indexUsersController();
 	}
-
-	if (url.pathname === "/api/users" && request.method === "POST") {
+	if (url.pathname === "/api/users" && method === "POST") {
 		const rejected = await requireAuth(request);
 		return rejected ?? storeUserController(request);
 	}
-
-	if (userMatch?.[1] !== undefined && request.method === "PATCH") {
+	if (userMatch?.[1] !== undefined && method === "PATCH") {
 		const rejected = await requireAuth(request);
 		return rejected ?? updateUserController(userMatch[1], request);
 	}
-
-	if (userMatch?.[1] !== undefined && request.method === "DELETE") {
+	if (userMatch?.[1] !== undefined && method === "DELETE") {
 		const rejected = await requireAuth(request);
 		return rejected ?? destroyUserController(userMatch[1]);
 	}
 
-	if (url.pathname === "/api/cms/posts" && request.method === "GET") {
+	// CMS routes (protected)
+	if (url.pathname === "/api/cms/posts" && method === "GET") {
 		const rejected = await requireAuth(request);
 		return rejected ?? indexCmsPostsController();
 	}
-
-	if (url.pathname === "/api/cms/posts" && request.method === "POST") {
+	if (url.pathname === "/api/cms/posts" && method === "POST") {
 		const rejected = await requireAuth(request);
 		return rejected ?? storeCmsPostController(request);
 	}
-
-	if (url.pathname === "/api/cms/media" && request.method === "POST") {
+	if (url.pathname === "/api/cms/media" && method === "POST") {
 		const rejected = await requireAuth(request);
 		return rejected ?? uploadCmsMediaController(request);
 	}
-
-	if (cmsPostMatch?.[1] !== undefined && request.method === "PATCH") {
+	if (cmsPostMatch?.[1] !== undefined && method === "PATCH") {
 		const rejected = await requireAuth(request);
 		return rejected ?? updateCmsPostController(cmsPostMatch[1], request);
 	}
-
-	if (cmsPostMatch?.[1] !== undefined && request.method === "DELETE") {
+	if (cmsPostMatch?.[1] !== undefined && method === "DELETE") {
 		const rejected = await requireAuth(request);
 		return rejected ?? destroyCmsPostController(cmsPostMatch[1]);
 	}

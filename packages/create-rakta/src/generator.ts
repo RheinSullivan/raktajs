@@ -681,7 +681,6 @@ function personalizeGamanTemplate(
 			projectConfig.sessionPolicy === "revoke-previous"
 				? "single"
 				: "multiple";
-		// Inject SESSION_MODE default based on chosen session policy
 		return content
 			.replace(
 				'sessionMode: optionalEnv("SESSION_MODE", "single")',
@@ -691,6 +690,23 @@ function personalizeGamanTemplate(
 				'authStrategy: optionalEnv("AUTH_STRATEGY", "jwt")',
 				`authStrategy: optionalEnv("AUTH_STRATEGY", "${authStrategy}")`,
 			);
+	}
+
+	// Add OAuth env hints when providers are selected
+	if (
+		filePath === "backend/.env.example" &&
+		projectConfig.oauthProviders &&
+		projectConfig.oauthProviders.length > 0 &&
+		!projectConfig.oauthProviders.includes("none")
+	) {
+		const oauthLines = projectConfig.oauthProviders
+			.filter((p) => p !== "none")
+			.map((p) => {
+				const upper = p.toUpperCase();
+				return `\n# ${p.charAt(0).toUpperCase() + p.slice(1)} OAuth\n${upper}_CLIENT_ID=\n${upper}_CLIENT_SECRET=\n${upper}_REDIRECT_URI=http://localhost:4000/api/auth/callback/${p}`;
+			})
+			.join("\n");
+		return content + oauthLines + "\n";
 	}
 
 	return content;
