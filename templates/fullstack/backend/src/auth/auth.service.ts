@@ -2,7 +2,6 @@ import { env } from "../env";
 import type { PublicUser } from "../models/user.model";
 import { toPublicUser } from "../models/user.model";
 import {
-	rotateRefreshToken,
 	signAccessToken,
 	signRefreshToken,
 	verifyJwt,
@@ -37,7 +36,7 @@ export async function login(
 	);
 
 	const accessExpiry = 60 * 60; // 1 hour
-	const refreshExpiry = rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60;
+	const refreshExpiry = rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60; // 30d or 7d
 
 	const accessToken = await signAccessToken(
 		user.id,
@@ -64,25 +63,6 @@ export async function login(
 	};
 }
 
-export async function refreshTokens(request: Request) {
-	// Accept refresh token from Authorization header or HttpOnly cookie
-	const authHeader = request.headers.get("authorization");
-	const bearerRefresh = authHeader?.startsWith("Bearer ")
-		? authHeader.slice(7)
-		: undefined;
-	const cookieRefresh = request.headers
-		.get("cookie")
-		?.split(";")
-		.map((c) => c.trim())
-		.find((c) => c.startsWith("rakta_refresh="))
-		?.slice("rakta_refresh=".length);
-
-	const oldToken = bearerRefresh ?? cookieRefresh;
-	if (!oldToken) return undefined;
-
-	return rotateRefreshToken(oldToken);
-}
-
 export async function authenticate(
 	request: Request,
 ): Promise<PublicUser | undefined> {
@@ -96,13 +76,11 @@ export async function authenticate(
 		.map((cookie) => cookie.trim())
 		.find((cookie) => cookie.startsWith("rakta_session="))
 		?.slice("rakta_session=".length);
-
 	const payload =
 		bearerToken === undefined ? undefined : await verifyJwt(bearerToken);
 	const sessionId = payload?.sessionId ?? cookieSessionId;
 	const session = sessionId === undefined ? undefined : readSession(sessionId);
-	const user =
-		session === undefined ? undefined : findUserById(session.userId);
+	const user = session === undefined ? undefined : findUserById(session.userId);
 
 	return user === undefined ? undefined : toPublicUser(user);
 }
@@ -120,10 +98,15 @@ export async function resetPassword(
 	code: string,
 	password: string,
 ): Promise<boolean> {
-	if (!verifyOtp(email, code)) return false;
+	if (!verifyOtp(email, code)) {
+		return false;
+	}
 
 	const user = findUserByEmail(email);
-	if (user === undefined) return false;
+
+	if (user === undefined) {
+		return false;
+	}
 
 	await updateUser(user.id, { password });
 	return true;
