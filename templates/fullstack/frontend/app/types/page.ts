@@ -1,5 +1,3 @@
-
-
 export type AestheticUnit = "LENIS-MODERN" | "RETRO-CYBER" | "NEO-BRUTALIST";
 export type SimSpeed = "NORMAL" | "FAST" | "TURBO";
 export type ObstaclePosition = "TOP" | "BOTTOM";

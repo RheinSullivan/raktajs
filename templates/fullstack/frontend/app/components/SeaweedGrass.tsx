@@ -5,10 +5,7 @@ export default function SeaweedGrass() {
 	return (
 		<div className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none overflow-hidden z-0">
 			{/* Left grass cluster */}
-			<svg
-				className="absolute bottom-0 left-[8%] w-8 h-12"
-				viewBox="0 0 32 48"
-			>
+			<svg className="absolute bottom-0 left-[8%] w-8 h-12" viewBox="0 0 32 48">
 				<path
 					d="M 10 48 Q 8 36, 12 24 Q 10 12, 8 0"
 					fill="none"

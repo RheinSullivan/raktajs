@@ -41,9 +41,7 @@ describe("create-rakta fullstack generator", () => {
 			true,
 		);
 		expect(fileByPath.get("backend/package.json")).toContain('"gaman"');
-		expect(fileByPath.get("backend/src/index.ts")).toContain(
-			"Bun.serve",
-		);
+		expect(fileByPath.get("backend/src/index.ts")).toContain("Bun.serve");
 		expect(fileByPath.get("backend/src/index.ts")).toContain(
 			"appRouter.handle",
 		);

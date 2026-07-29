@@ -27,11 +27,11 @@ export default function DashboardPage() {
 			apiGet<UserRow[]>("/api/users"),
 			apiGet<CmsPostRow[]>("/api/cms/posts"),
 		])
-		.then(([usersResponse, postsResponse]) => {
-			setUsers(usersResponse);
-			setPosts(postsResponse);
-			setStatus("Backend resources loaded.");
-		})
+			.then(([usersResponse, postsResponse]) => {
+				setUsers(usersResponse);
+				setPosts(postsResponse);
+				setStatus("Backend resources loaded.");
+			})
 			.catch((error: unknown) => {
 				setStatus(
 					error instanceof Error

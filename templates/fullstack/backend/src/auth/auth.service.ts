@@ -74,10 +74,10 @@ export async function login(
  */
 export async function refreshTokens(refreshToken: string): Promise<
 	| {
-		accessToken: string;
-		refreshToken: string;
-		sessionId: string;
-	}
+			accessToken: string;
+			refreshToken: string;
+			sessionId: string;
+	  }
 	| undefined
 > {
 	return rotateRefreshToken(refreshToken);

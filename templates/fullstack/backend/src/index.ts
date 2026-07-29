@@ -1,12 +1,10 @@
 import { runMigrations } from "./database/migrations/index";
+import { runDatabaseSeeders } from "./database/seeders/index";
 import { env } from "./env";
 import { createAppRouter } from "./modules/app/AppRouter";
-import { seedCmsPosts } from "./services/cms.service";
-import { seedUsers } from "./services/user.service";
 
 await runMigrations();
-await seedUsers();
-seedCmsPosts();
+await runDatabaseSeeders();
 
 const appRouter = createAppRouter({
 	corsOrigin: env.corsOrigin,

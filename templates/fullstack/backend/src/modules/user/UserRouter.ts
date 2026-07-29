@@ -5,7 +5,9 @@ import {
 	updateUserController,
 } from "./controllers/UserController";
 
-export async function userRouter(request: Request): Promise<Response | undefined> {
+export async function userRouter(
+	request: Request,
+): Promise<Response | undefined> {
 	const url = new URL(request.url);
 	const method = request.method.toUpperCase();
 	const userMatch = url.pathname.match(/^\/api\/users\/([^/]+)$/);

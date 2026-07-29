@@ -1,15 +1,12 @@
 {
-  "recommendations": [
-    "biomejs.biome",
-    "bradlc.vscode-tailwindcss",
-    "oven.bun-vscode",
-    "dbaeumer.vscode-eslint",
-    "editorconfig.editorconfig",
+	"recommendations": [
+		"biomejs.biome",
+		"bradlc.vscode-tailwindcss",
+		"oven.bun-vscode",
+		"dbaeumer.vscode-eslint",
+		"editorconfig.editorconfig",
 		"yoavbls.pretty-ts-errors",
 		"pkief.material-icon-theme"
-  ],
-  "unwantedRecommendations": [
-    "esbenp.prettier-vscode",
-    "hookyqr.beautify"
-  ]
+	],
+	"unwantedRecommendations": ["esbenp.prettier-vscode", "hookyqr.beautify"]
 }

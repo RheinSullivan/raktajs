@@ -80,7 +80,7 @@ describe("Rakta testing package", () => {
 		expect(response.status).toBe(200);
 		expect(response.ok).toBe(true);
 		const responseData = (await response.json()) as Record<string, unknown>;
-		expect(responseData["pong"]).toBe(true);
+		expect(responseData.pong).toBe(true);
 
 		const missing = await client.get("/missing");
 		expect(missing.status).toBe(404);

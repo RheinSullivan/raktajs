@@ -227,8 +227,6 @@ export default function ShrimpCharacter({
 					opacity="0.6"
 				/>
 			</svg>
-
-
 		</div>
 	);
 }

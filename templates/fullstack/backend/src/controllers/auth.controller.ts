@@ -144,9 +144,7 @@ export function logoutController(request: Request): Response {
 	);
 }
 
-export async function logoutAllController(
-	request: Request,
-): Promise<Response> {
+export async function logoutAllController(request: Request): Promise<Response> {
 	const user = await authenticate(request);
 	if (!user) return fail("Unauthorized.", 401);
 

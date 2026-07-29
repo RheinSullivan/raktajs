@@ -50,8 +50,7 @@ export const OAUTH_PROVIDERS = {
 			"MICROSOFT_REDIRECT_URI",
 			"http://localhost:4000/api/auth/callback/microsoft",
 		),
-		authUrl:
-			"https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+		authUrl: "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
 		tokenUrl: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
 		userInfoUrl: "https://graph.microsoft.com/v1.0/me",
 		scopes: ["openid", "email", "profile"],

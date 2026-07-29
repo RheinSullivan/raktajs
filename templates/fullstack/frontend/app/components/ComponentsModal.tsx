@@ -131,7 +131,8 @@ export default function ComponentsModal({
 	if (!isOpen) return null;
 
 	const activeMeta =
-		COMPONENT_METADATA[activeCompId] ?? COMPONENT_METADATA[DEFAULT_COMPONENT_ID];
+		COMPONENT_METADATA[activeCompId] ??
+		COMPONENT_METADATA[DEFAULT_COMPONENT_ID];
 	const activePreview =
 		COMPONENT_PREVIEWS[activeCompId] ??
 		COMPONENT_PREVIEWS[DEFAULT_COMPONENT_ID];
@@ -182,10 +183,11 @@ export default function ComponentsModal({
 								<button
 									key={id}
 									onClick={() => setActiveCompId(id)}
-									className={`w-full text-left p-4 transition-colors font-mono text-xs uppercase cursor-pointer ${isSelected
-										? "bg-brand-pink text-white font-bold"
-										: "text-gray-400 hover:bg-white/5 hover:text-white"
-										}`}
+									className={`w-full text-left p-4 transition-colors font-mono text-xs uppercase cursor-pointer ${
+										isSelected
+											? "bg-brand-pink text-white font-bold"
+											: "text-gray-400 hover:bg-white/5 hover:text-white"
+									}`}
 								>
 									{meta.name}
 								</button>

@@ -131,7 +131,8 @@ export default function ComponentsModal({
 	if (!isOpen) return null;
 
 	const activeMeta =
-		COMPONENT_METADATA[activeCompId] ?? COMPONENT_METADATA[DEFAULT_COMPONENT_ID];
+		COMPONENT_METADATA[activeCompId] ??
+		COMPONENT_METADATA[DEFAULT_COMPONENT_ID];
 	const activePreview =
 		COMPONENT_PREVIEWS[activeCompId] ??
 		COMPONENT_PREVIEWS[DEFAULT_COMPONENT_ID];

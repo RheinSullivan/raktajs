@@ -50,7 +50,9 @@ export interface CmsPost {
 }
 
 async function parseEnvelope<TData>(response: Response): Promise<TData> {
-	const payload = (await response.json().catch(() => ({}))) as ApiEnvelope<TData>;
+	const payload = (await response
+		.json()
+		.catch(() => ({}))) as ApiEnvelope<TData>;
 
 	if (!response.ok || payload.success === false) {
 		throw new Error(

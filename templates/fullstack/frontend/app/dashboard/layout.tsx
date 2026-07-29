@@ -2,7 +2,12 @@ export const metadata: Metadata = {
 	title: "Dashboard | Rakta.js Administration & System Core",
 	description:
 		"Rakta.js Dashboard portal - Manage system resources, CMS posts, active users, and real-time framework metrics.",
-	keywords: ["Rakta.js Dashboard", "System Core", "Rhein Sullivan", "Cirebon Developer"],
+	keywords: [
+		"Rakta.js Dashboard",
+		"System Core",
+		"Rhein Sullivan",
+		"Cirebon Developer",
+	],
 };
 
 export interface DashboardLayoutProps {
@@ -17,7 +22,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 					<span className="text-brand-pink font-bold">RAKTA::DASHBOARD</span>
 					<span>/ ADMIN PORTAL</span>
 				</div>
-				<click to="/" className="text-gray-400 hover:text-white transition-colors cursor-pointer">
+				<click
+					to="/"
+					className="text-gray-400 hover:text-white transition-colors cursor-pointer"
+				>
 					Return to App
 				</click>
 			</div>

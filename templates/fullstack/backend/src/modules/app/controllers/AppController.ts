@@ -1,22 +1,19 @@
+import { ok } from "../../../http/response";
+
 export class AppController {
 	index(): Response {
-		return Response.json({
-			success: true,
-			data: {
-				name: "Rakta.js Backend",
-				runtime: "Bun",
-				framework: "Gaman.js profile",
-			},
+		return ok({
+			name: "Rakta.js Backend (Gaman.js Profile)",
+			version: "0.1.3",
+			status: "online",
 		});
 	}
 
 	health(): Response {
-		return Response.json({
-			success: true,
-			data: {
-				status: "ok",
-				timestamp: new Date().toISOString(),
-			},
+		return ok({
+			status: "ok",
+			uptime: process.uptime(),
+			timestamp: new Date().toISOString(),
 		});
 	}
 }

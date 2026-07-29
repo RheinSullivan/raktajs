@@ -208,9 +208,7 @@ function applyHookImportMode(sourceCode: string, autoImport: boolean): string {
 	return `import { ${imports} } from "raktajs/hooks";\n${transformedCode}`;
 }
 
-function findTemplateUrl(
-	candidateUrls: ReadonlyArray<URL>,
-): URL | undefined {
+function findTemplateUrl(candidateUrls: ReadonlyArray<URL>): URL | undefined {
 	return candidateUrls.find((candidateUrl) => existsSync(candidateUrl));
 }
 
@@ -239,11 +237,18 @@ function getFrontendTemplateFiles(
 
 		return {
 			...file,
-			content: personalizeFrontendTemplate(file.path, file.content, projectConfig),
+			content: personalizeFrontendTemplate(
+				file.path,
+				file.content,
+				projectConfig,
+			),
 		};
 	});
 
-	return processFilesForLanguage(personalizedFiles, projectConfig.useTypeScript);
+	return processFilesForLanguage(
+		personalizedFiles,
+		projectConfig.useTypeScript,
+	);
 }
 
 function personalizeFrontendTemplate(
@@ -253,7 +258,10 @@ function personalizeFrontendTemplate(
 ): string {
 	const normalizedPath = filePath.replaceAll("\\", "/");
 
-	if (normalizedPath === "package.json" || normalizedPath === "frontend/package.json") {
+	if (
+		normalizedPath === "package.json" ||
+		normalizedPath === "frontend/package.json"
+	) {
 		const packageJson = JSON.parse(content) as {
 			name?: string;
 			scripts?: Record<string, string>;
@@ -320,7 +328,10 @@ function personalizeFrontendTemplate(
 	) {
 		return content
 			.replace(/appName:\s*"[^"]*"/, `appName: "${projectConfig.projectName}"`)
-			.replace(/enabled:\s*(true|false)/, `enabled: ${projectConfig.autoImport}`)
+			.replace(
+				/enabled:\s*(true|false)/,
+				`enabled: ${projectConfig.autoImport}`,
+			)
 			.replace(
 				/defaultTitle:\s*"[^"]*"/,
 				`defaultTitle: "${DEFAULT_METADATA_TITLE}"`,
@@ -339,10 +350,7 @@ function personalizeFrontendTemplate(
 		return applyHookImportMode(content, false);
 	}
 
-	if (
-		!projectConfig.autoImport &&
-		normalizedPath.startsWith("frontend/app/")
-	) {
+	if (!projectConfig.autoImport && normalizedPath.startsWith("frontend/app/")) {
 		return applyHookImportMode(content, false);
 	}
 
@@ -802,6 +810,14 @@ function readTemplateFiles(
 		);
 
 		if (entry.isDirectory()) {
+			if (
+				entry.name === "node_modules" ||
+				entry.name === ".rakta" ||
+				entry.name === ".git" ||
+				entry.name === "dist"
+			) {
+				continue;
+			}
 			files.push(...readTemplateFiles(baseRootPath, entryPath, outputRoot));
 			continue;
 		}
@@ -816,7 +832,8 @@ function readTemplateFiles(
 		);
 
 		files.push({
-			path: outputRoot.length > 0 ? `${outputRoot}/${relativePath}` : relativePath,
+			path:
+				outputRoot.length > 0 ? `${outputRoot}/${relativePath}` : relativePath,
 			content: isBinaryTemplateFile(relativePath)
 				? readFileSync(entryPath)
 				: readFileSync(entryPath, "utf-8"),

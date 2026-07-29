@@ -98,7 +98,10 @@ export default function RegisterPage() {
 					Gender (Checkbox / Radio)
 					<div className="flex items-center gap-6 mt-1 border border-surface-stroke bg-black p-3">
 						{(["MALE", "FEMALE", "OTHER"] as const).map((g) => (
-							<label key={g} className="flex items-center gap-2 cursor-pointer text-xs text-white">
+							<label
+								key={g}
+								className="flex items-center gap-2 cursor-pointer text-xs text-white"
+							>
 								<input
 									type="radio"
 									name="gender"

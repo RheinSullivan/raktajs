@@ -12,8 +12,7 @@ const COPY = {
 				<strong className="text-white">Vyagra Nexus™</strong>), pengembang
 				perangkat lunak asal Cirebon & Jakarta Selatan, Rakta.js hadir sebagai
 				solusi terpadu yang menyatukan{" "}
-				<em className="text-brand-pink not-italic">File-based App Routing</em>
-				,{" "}
+				<em className="text-brand-pink not-italic">File-based App Routing</em>,{" "}
 				<em className="text-brand-pink not-italic">
 					Auto Import tanpa satu pun pernyataan import
 				</em>

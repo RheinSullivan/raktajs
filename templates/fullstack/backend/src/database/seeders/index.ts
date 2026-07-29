@@ -1,2 +1,3 @@
-export { seedCmsPosts } from "../../services/cms.service";
-export { seedUsers } from "../../services/user.service";
+export { seedCmsPosts } from "./CmsSeeder";
+export { seedUsers } from "./UserSeeder";
+export { runDatabaseSeeders } from "./DatabaseSeeder";
