@@ -114,60 +114,64 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 							</h1>
 
 							<div className="prose prose-invert max-w-none text-sm text-gray-300 leading-relaxed font-sans space-y-4">
-								{activeArticle.content.split("\n\n").map((paragraph, idx) => {
-									if (paragraph.startsWith("###")) {
-										return (
-											<h3
-												key={idx}
-												className="text-lg font-bold font-mono text-white pt-4 border-b border-surface-stroke pb-1 uppercase"
-											>
-												{paragraph.replace("###", "").trim()}
-											</h3>
-										);
-									}
-									if (paragraph.startsWith("-")) {
-										return (
-											<ul
-												key={idx}
-												className="list-disc pl-5 space-y-2 text-gray-300 font-sans my-2"
-											>
-												{paragraph.split("\n").map((li, liIdx) => (
-													<li key={liIdx}>{li.replace("-", "").trim()}</li>
-												))}
-											</ul>
-										);
-									}
-									if (
-										paragraph.startsWith("1.") ||
-										paragraph.startsWith("2.")
-									) {
-										return (
-											<ol
-												key={idx}
-												className="list-decimal pl-5 space-y-2 text-gray-300 font-sans my-2"
-											>
-												{paragraph.split("\n").map((li, liIdx) => (
-													<li key={liIdx}>
-														{li.replace(/^\d+\.\s*/, "").trim()}
-													</li>
-												))}
-											</ol>
-										);
-									}
-									if (paragraph.startsWith("```")) {
-										const lines = paragraph.split("\n");
-										const code = lines.slice(1, -1).join("\n");
-										return (
-											<pre
-												key={idx}
-												className="bg-surface-card border border-surface-stroke p-4 font-mono text-xs text-brand-green overflow-x-auto whitespace-pre-wrap leading-5"
-											>
-												<code>{code}</code>
-											</pre>
-										);
-									}
-									return <p key={idx}>{paragraph}</p>;
-								})}
+								{activeArticle.content
+									.split("\n\n")
+									.map((paragraph, paragraphIndex) => {
+										if (paragraph.startsWith("###")) {
+											return (
+												<h3
+													key={paragraphIndex}
+													className="text-lg font-bold font-mono text-white pt-4 border-b border-surface-stroke pb-1 uppercase"
+												>
+													{paragraph.replace("###", "").trim()}
+												</h3>
+											);
+										}
+										if (paragraph.startsWith("-")) {
+											return (
+												<ul
+													key={paragraphIndex}
+													className="list-disc pl-5 space-y-2 text-gray-300 font-sans my-2"
+												>
+													{paragraph.split("\n").map((li, listItemIndex) => (
+														<li key={listItemIndex}>
+															{li.replace("-", "").trim()}
+														</li>
+													))}
+												</ul>
+											);
+										}
+										if (
+											paragraph.startsWith("1.") ||
+											paragraph.startsWith("2.")
+										) {
+											return (
+												<ol
+													key={paragraphIndex}
+													className="list-decimal pl-5 space-y-2 text-gray-300 font-sans my-2"
+												>
+													{paragraph.split("\n").map((li, listItemIndex) => (
+														<li key={listItemIndex}>
+															{li.replace(/^\d+\.\s*/, "").trim()}
+														</li>
+													))}
+												</ol>
+											);
+										}
+										if (paragraph.startsWith("```")) {
+											const lines = paragraph.split("\n");
+											const code = lines.slice(1, -1).join("\n");
+											return (
+												<pre
+													key={paragraphIndex}
+													className="bg-surface-card border border-surface-stroke p-4 font-mono text-xs text-brand-green overflow-x-auto whitespace-pre-wrap leading-5"
+												>
+													<code>{code}</code>
+												</pre>
+											);
+										}
+										return <p key={paragraphIndex}>{paragraph}</p>;
+									})}
 							</div>
 
 							{/* Bottom manual navigation */}

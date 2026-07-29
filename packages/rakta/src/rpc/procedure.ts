@@ -25,21 +25,21 @@ export class ProcedureBuilder<TInput = void> {
 
 	/** Define a read procedure (CarubanWire query). */
 	query<TOutput>(
-		handler: (ctx: { readonly input: TInput }) => Promise<TOutput>,
+		handler: (context: { readonly input: TInput }) => Promise<TOutput>,
 	): ProcedureDefinition<TInput, TOutput> {
 		return this.build("query", handler);
 	}
 
 	/** Define a write procedure (CarubanWire mutation). */
 	mutation<TOutput>(
-		handler: (ctx: { readonly input: TInput }) => Promise<TOutput>,
+		handler: (context: { readonly input: TInput }) => Promise<TOutput>,
 	): ProcedureDefinition<TInput, TOutput> {
 		return this.build("mutation", handler);
 	}
 
 	private build<TOutput>(
 		kind: ProcedureKind,
-		handler: (ctx: { readonly input: TInput }) => Promise<TOutput>,
+		handler: (context: { readonly input: TInput }) => Promise<TOutput>,
 	): ProcedureDefinition<TInput, TOutput> {
 		if (this.inputSchema !== undefined) {
 			return {

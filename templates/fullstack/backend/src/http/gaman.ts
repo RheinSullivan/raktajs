@@ -1,3 +1,4 @@
+// @ts-ignore - gaman is installed in the generated project, not in the monorepo workspace
 import type { Context } from "gaman";
 
 /**

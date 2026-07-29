@@ -1,8 +1,55 @@
 export const RAKTA_NAME = "Rakta.js";
-export const RAKTA_VERSION = "1.0.5";
+export const RAKTA_VERSION = "1.0.8";
 export const RAKTA_TAGLINE =
 	"Small in size. Fierce in speed. Alive in every route.";
 
+export type {
+	GraphQLHandlerOptions,
+	GraphQLSchemaDefinition,
+	OpenApiInfo,
+	OpenApiOperation,
+	OpenApiParameter,
+	OpenApiParameterLocation,
+	OpenApiPathItem,
+	OpenApiResponseEntry,
+	OpenApiSpec,
+	PaginatedResponseBody,
+	ParsedRouteParams,
+} from "./api/index";
+
+// API - REST helpers, GraphQL adapter, OpenAPI generation
+export {
+	BadRequestResponse,
+	createGraphQLHandler,
+	defineOpenApiOperation,
+	ForbiddenResponse,
+	generateOpenApiSpec,
+	InternalErrorResponse,
+	introspectionEnabled,
+	jsonError,
+	jsonSuccess,
+	NotFoundResponse,
+	paginatedResponse,
+	parsePagination,
+	parseQueryString,
+	parseRouteParams,
+	serveSwaggerUI,
+	UnauthorizedResponse,
+	ValidationErrorResponse,
+} from "./api/index";
+export type { MagicLinkEmail, MagicLinkPayload } from "./auth/index";
+
+// Auth - magic links + TOTP 2FA
+export {
+	createMagicLinkEmail,
+	generateBackupCodes,
+	generateMagicLinkToken,
+	generateTotpSecret,
+	generateTotpUri,
+	verifyBackupCode,
+	verifyMagicLinkToken,
+	verifyTotp,
+} from "./auth/index";
 export type {
 	AutoImportGeneratorOptions,
 	AutoImportKind,
@@ -17,6 +64,34 @@ export {
 	printAutoImportSummary,
 	scanForExports,
 } from "./auto-import/index";
+
+// CLI
+export type {
+	AnalyzeReport,
+	BenchmarkResult,
+	CheckResult,
+	DoctorCheck,
+	DoctorReport,
+	GenerateOptions,
+	GenerateResult,
+	GenerateTarget,
+	InspectReport,
+	TelemetryConfig,
+} from "./cli/index";
+export {
+	analyzeCommand,
+	benchmarkCommand,
+	buildCommand,
+	checkCommand,
+	doctorCommand,
+	generateCommand,
+	inspectCommand,
+	readTelemetryConfig,
+	setTelemetryEnabled,
+	startCommand,
+} from "./cli/index";
+
+// Components - ShrimpStep, TrusmiFrame, PanturaScroll, RaktaAlert, RaktaToast
 export type {
 	AlertType,
 	ClickProps,
@@ -29,7 +104,6 @@ export type {
 	ToastItem,
 	ToastType,
 } from "./components/index";
-// Components - ShrimpStep, TrusmiFrame, PanturaScroll, RaktaAlert, RaktaToast
 export {
 	Alert,
 	Click,
@@ -44,6 +118,8 @@ export {
 	usePantura,
 	useToast,
 } from "./components/index";
+
+// Config
 export type {
 	AutoImportConfig,
 	BuildConfig,
@@ -54,8 +130,6 @@ export type {
 	SeoConfig,
 	ServerConfig,
 } from "./config/index";
-
-// Config
 export {
 	defaultConfig,
 	defineConfig,
@@ -63,7 +137,11 @@ export {
 	loadConfig,
 	mergeConfig,
 } from "./config/index";
+
+// Data
 export type {
+	IsrOptions,
+	IsrResult,
 	RaktaCacheEntry,
 	RaktaCacheOptions,
 	RaktaDataResult,
@@ -72,27 +150,36 @@ export type {
 	RaktaRenderRuntime,
 	RaktaRouteDataStrategy,
 } from "./data/index";
-// Data
 export {
+	cache,
 	createDataCache,
+	defer,
 	defineRouteDataStrategy,
 	isIncrementalRoute,
+	isr,
+	lazy,
+	prefetch,
 	RaktaDataCache,
+	resolveRenderRuntime,
+	revalidate,
 	shouldPrefetchRoute,
 	shouldStreamRoute,
 	useRaktaData,
 } from "./data/index";
+
+// Deployment
 export type {
 	DeploymentAdapter,
 	DeploymentAdapterOptions,
 	DeploymentFile,
 	DeploymentTarget,
 } from "./deployment/index";
-// Deployment
 export {
 	createDeploymentAdapter,
 	listDeploymentTargets,
 } from "./deployment/index";
+
+// Docs
 export type {
 	RaktaDocsManifest,
 	RaktaDocsOptions,
@@ -101,8 +188,9 @@ export type {
 	RaktaDocsSidebarItem,
 	RaktaVitePressConfig,
 } from "./docs/index";
-// Docs
 export { createVitePressConfig, scanMarkdownDocs } from "./docs/index";
+
+// DX
 export type {
 	DevIndicatorOptions,
 	DevTerminalOptions,
@@ -113,7 +201,6 @@ export type {
 	RaktaSourceModule,
 	RequestLogEntry,
 } from "./dx/index";
-// DX
 export {
 	analyzeBundle,
 	analyzeRoutes,
@@ -127,6 +214,52 @@ export {
 	mountDevIndicator,
 	RAKTA_TERMINAL_GLYPH,
 } from "./dx/index";
+
+// Ecosystem - @rakta/auth, @rakta/forms, @rakta/database, @rakta/storage
+export type {
+	AuthConfig,
+	AuthTokenPair,
+	AuthUser,
+	PasswordHasher,
+} from "./ecosystem/auth";
+export {
+	createPasswordHasher,
+	createTokenPair,
+	signToken,
+	verifyToken,
+} from "./ecosystem/auth";
+export type {
+	DatabaseAdapter,
+	DatabaseConfig,
+	DatabaseDriver,
+	QueryResult,
+	Repository,
+} from "./ecosystem/database";
+export {
+	buildConnectionString,
+	createInMemoryRepository,
+} from "./ecosystem/database";
+export type {
+	FieldError,
+	FormErrors,
+	FormState,
+	FormValidator,
+	SubmitHandler,
+	ValidationRules,
+} from "./ecosystem/forms";
+export {
+	createFormState,
+	parseFormData,
+	rules as formRules,
+	validateForm,
+} from "./ecosystem/forms";
+export type {
+	StorageAdapter,
+	StorageConfig,
+	StorageDriver,
+	StorageObject,
+} from "./ecosystem/storage";
+export { createMemoryStorage } from "./ecosystem/storage";
 export type {
 	ArtifactKind,
 	ForgeBuildArtifact,
@@ -137,13 +270,6 @@ export type {
 	ForgeInspectReport,
 	ForgeRouteModeEntry,
 	InspectOptions,
-} from "./forge/index";
-// Forge - CherbonsEngine
-export {
-	buildProject,
-	inspectBuild,
-	printInspectReport,
-	startDevServer,
 } from "./forge/index";
 export {
 	batuLawangInsertionEffect,
@@ -172,6 +298,8 @@ export {
 	tarlingRef,
 	topengEffect,
 } from "./hooks/index";
+
+// HTTP - PanturaFetch
 export type {
 	HttpClientConfig,
 	HttpJsonArray,
@@ -186,7 +314,6 @@ export type {
 	RequestInterceptorFn,
 	ResponseInterceptorFn,
 } from "./http/index";
-// HTTP - PanturaFetch
 export {
 	createRaktaHttp,
 	HttpNetworkError,
@@ -194,7 +321,11 @@ export {
 	HttpTimeoutError,
 	RaktaHttpClient,
 } from "./http/index";
+
+// Kernel
 export type {
+	PipelinePhase,
+	PipelineTask,
 	RaktaEnvironment,
 	RaktaEnvironmentName,
 	RaktaFeatureRegistration,
@@ -202,28 +333,45 @@ export type {
 	RaktaKernelOptions,
 	RaktaKernelSnapshot,
 	RaktaLifecycleHook,
+	RaktaModuleLoader,
+	RaktaModuleLoaderOptions,
+	RaktaModuleRecord,
+	RaktaPipeline,
 	RaktaPlugin,
 	RaktaPluginContext,
 	RaktaServiceContainer,
 	RaktaServiceFactory,
 	RaktaServiceKey,
 	RaktaServiceRegistration,
+	StartupPipelineResult,
 } from "./kernel/index";
-// Kernel
 export {
+	createModuleLoader,
 	createRaktaEnvironment,
 	createRaktaKernel,
 	createServiceContainer,
+	createStartupPipeline,
 } from "./kernel/index";
+
+// Layout
 export type {
 	RaktaLayoutEntry,
 	RaktaLayoutFile,
 	RaktaLayoutKind,
 	RaktaLayoutManifest,
+	ResolvedLayoutChain,
 } from "./layout/index";
-// Layout
-export { createLayoutManifest, matchLayouts } from "./layout/index";
+export {
+	createLayoutManifest,
+	isSpecialLayout,
+	matchLayouts,
+	resolveLayoutChain,
+} from "./layout/index";
+
+// Middleware
 export type {
+	MiddlewareComposer,
+	NamedMiddleware,
 	RaktaMiddleware,
 	RaktaMiddlewareContext,
 	RaktaMiddlewareNext,
@@ -233,16 +381,20 @@ export type {
 	RaktaMiddlewareStackOptions,
 	RaktaRewriteResult,
 } from "./middleware/index";
-// Middleware
 export {
 	abort,
 	after,
 	before,
+	compose,
+	createMiddlewareComposer,
 	createMiddlewareStack,
 	defineMiddleware,
 	redirect,
 	rewrite,
+	routeMiddleware,
 } from "./middleware/index";
+
+// Motion - IndonesiaMotion (page transitions, interactions, typography)
 export {
 	useCursorFollower,
 	useDrag,
@@ -251,7 +403,6 @@ export {
 	useSpotlight,
 	useTilt,
 } from "./motion/interactions";
-// Motion - IndonesiaMotion (page transitions, interactions, typography)
 export {
 	createMotionTimeline,
 	definePageTransition,
@@ -273,20 +424,39 @@ export {
 	splitText,
 	useKineticText,
 } from "./motion/typography";
+
+// Operations
 export type {
+	CookieOptions,
 	RaktaCronTask,
 	RaktaEvent,
 	RaktaJob,
 	RaktaQueuedJob,
 	RaktaRequestContext,
+	ServerActionResult,
 } from "./ops/index";
-// Operations
 export {
 	createRequestContext,
+	createServerActionHandler,
+	// server actions
+	defineServerAction,
+	deleteCookie,
+	getCookie,
+	headersToRecord,
+	jsonResponse,
+	// headers
+	mergeHeaders,
+	// cookies
+	parseCookies,
 	RaktaEventBus,
 	RaktaQueue,
+	redirectResponse,
 	runCronTask,
+	serializeCookie,
+	setCookie,
 } from "./ops/index";
+
+// Performance
 export type {
 	RaktaBenchmarkKind,
 	RaktaBenchmarkReport,
@@ -294,29 +464,35 @@ export type {
 	RaktaBuildCacheEntry,
 	RaktaBundleSizeReport,
 	RaktaIncrementalBuildPlan,
+	RaktaMemorySnapshot,
+	RaktaPerformanceSuite,
 } from "./performance/index";
-// Performance
 export {
 	benchmark,
+	captureMemorySnapshot,
 	createBenchmarkReport,
 	createBuildCache,
 	createBundleSizeReport,
 	createIncrementalBuildPlan,
+	createPerformanceSuite,
 	RaktaBuildCache,
 } from "./performance/index";
+
+// Plugin
 export type {
 	RaktaOfficialPlugin,
 	RaktaPluginCapability,
 	RaktaPluginManifest,
 	RaktaPluginTemplate,
 } from "./plugin/index";
-// Plugin
 export {
 	createOfficialPlugins,
 	createPluginRegistry,
 	createPluginTemplate,
 	RaktaPluginRegistry,
 } from "./plugin/index";
+
+// PWA - ShrimpHarbor
 export type {
 	CacheStrategyOptions,
 	ManifestDisplayMode,
@@ -324,7 +500,6 @@ export type {
 	ManifestOptions,
 	ServiceWorkerOptions,
 } from "./pwa/index";
-// PWA - ShrimpHarbor
 export {
 	buildCacheName,
 	createManifestHandler,
@@ -333,6 +508,8 @@ export {
 	generateServiceWorkerSource,
 	resolvePrecacheList,
 } from "./pwa/index";
+
+// Render
 export type {
 	HybridRouteEntry,
 	RenderConfig,
@@ -348,7 +525,6 @@ export type {
 	RouteRenderMap,
 	StaticEntry,
 } from "./render/index";
-// Render
 export {
 	getModeDescriptor,
 	isBuildTimeMode,
@@ -360,6 +536,8 @@ export {
 	requiresServer,
 	resolveRouteMode,
 } from "./render/index";
+
+// Router
 export type {
 	ApiMethod,
 	ApiRouteHandler,
@@ -374,7 +552,6 @@ export type {
 	RouteManifestEntry,
 	RouteSegment,
 } from "./router/index";
-// Router
 export {
 	findLayoutsForPathname,
 	findSpecialRoute,
@@ -385,6 +562,8 @@ export {
 	scanRoutes,
 	writeManifest,
 } from "./router/index";
+
+// RPC
 export type {
 	InferInput,
 	InferOutput,
@@ -398,7 +577,6 @@ export type {
 	RpcPayload,
 	RpcSuccessEnvelope,
 } from "./rpc/index";
-// RPC
 export {
 	createRaktaClient,
 	createRaktaRouter,
@@ -407,8 +585,9 @@ export {
 	publicProcedure,
 	RaktaRpcError,
 } from "./rpc/index";
-export { clearAssetCache, loadGLTF, loadTexture } from "./scene/loader";
+
 // Scene - MegaScape (optional 3D layer, requires three as peer dep)
+export { clearAssetCache, loadGLTF, loadTexture } from "./scene/loader";
 export {
 	createMegaScape,
 	detectDeviceQuality,
@@ -425,6 +604,8 @@ export type {
 	ScrollSceneConfig,
 	TrusmiMaterialConfig,
 } from "./scene/types";
+
+// Schema
 export type {
 	Infer,
 	InferShape,
@@ -434,7 +615,6 @@ export type {
 	ShapeRecord,
 	ValidationError,
 } from "./schema/index";
-// Schema
 export {
 	ArrayType,
 	array,
@@ -451,21 +631,28 @@ export {
 	StringType,
 	string,
 } from "./schema/index";
+
+// Security
 export type {
+	CspDirectives,
 	RateLimitState,
 	SecretRecord,
 	SecureHeadersOptions,
 } from "./security/index";
-// Security
 export {
+	buildCsp,
 	createCsrfToken,
 	createSecureHeaders,
 	decryptCookieValue,
+	defaultCsp,
 	encryptCookieValue,
+	generateCspNonce,
 	RateLimiter,
 	SecretManager,
 	verifyCsrfToken,
 } from "./security/index";
+
+// SEO
 export type {
 	AlternateLinks,
 	HeadProps,
@@ -482,7 +669,6 @@ export type {
 	SitemapOptions,
 	TwitterCard,
 } from "./seo/index";
-// SEO
 export {
 	createRobotsHandler,
 	createSitemapHandler,
@@ -494,6 +680,8 @@ export {
 	resolveRobotsContent,
 	resolveTitle,
 } from "./seo/index";
+
+// Store
 export type {
 	GetStateFn,
 	ListenerFn,
@@ -504,22 +692,32 @@ export type {
 	StoreApi,
 	UnsubscribeFn,
 } from "./store/index";
-// Store
 export { createRaktaStore } from "./store/index";
+
+// Testing
 export type {
+	ComponentTestOptions,
+	E2EClient,
+	E2EResponse,
 	RaktaCoverageReport,
 	RaktaMockRoute,
 	RaktaTestCase,
 	RaktaTestKind,
 	RaktaTestResult,
+	RenderedComponent,
 } from "./testing/index";
-// Testing
 export {
 	createCoverageReport,
+	createE2EClient,
 	createMockServer,
 	createSnapshot,
+	expectTestId,
+	expectText,
+	renderComponent,
 	runRaktaTests,
 } from "./testing/index";
+
+// Tide - NorthCoastFlow
 export type {
 	TideAdapter,
 	TideAdapterConfig,
@@ -529,7 +727,6 @@ export type {
 	TideResponseBlueprint,
 	TideRuntimeContext,
 } from "./tide/index";
-// Tide - NorthCoastFlow
 export {
 	buildErrorResponse,
 	buildHtmlResponse,
@@ -538,8 +735,9 @@ export {
 	createBunAdapter,
 	createRuntimeContext,
 } from "./tide/index";
-export { useImageZoom, useTrusmiGallery } from "./vector/imageExperience";
+
 // Vector - TrusmiVector (SVG state machine, mascot, image zoom)
+export { useImageZoom, useTrusmiGallery } from "./vector/imageExperience";
 export {
 	createStateMachine,
 	SHRIMP_MASCOT_STATES,

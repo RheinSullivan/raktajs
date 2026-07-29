@@ -92,6 +92,54 @@ describe("create-rakta fullstack generator", () => {
 		expect(config?.content).toContain("enabled: false");
 	});
 
+	test("generates refresh endpoint and logout-all route in fullstack app", () => {
+		const files = generateProjectFiles(fullstackConfig);
+		const fileByPath = new Map(
+			files.map((file) => [
+				file.path,
+				typeof file.content === "string" ? file.content : "",
+			]),
+		);
+
+		const appTs = fileByPath.get("backend/src/app.ts") ?? "";
+		expect(appTs).toContain("/api/auth/refresh");
+		expect(appTs).toContain("/api/auth/logout");
+
+		const authService =
+			fileByPath.get("backend/src/auth/auth.service.ts") ?? "";
+		expect(authService).toContain("refreshTokens");
+		expect(authService).toContain("logoutAll");
+
+		const jwt = fileByPath.get("backend/src/security/jwt.ts") ?? "";
+		expect(jwt).toContain("signAccessToken");
+		expect(jwt).toContain("signRefreshToken");
+		expect(jwt).toContain("rotateRefreshToken");
+	});
+
+	test("generates OAuth config when providers are selected", () => {
+		const configWithOAuth: ProjectConfig = {
+			...fullstackConfig,
+			oauthProviders: ["google", "github"],
+		};
+		const files = generateProjectFiles(configWithOAuth);
+		const fileByPath = new Map(
+			files.map((file) => [
+				file.path,
+				typeof file.content === "string" ? file.content : "",
+			]),
+		);
+
+		const oauthConfig =
+			fileByPath.get("backend/src/auth/oauth.config.ts") ?? "";
+		expect(oauthConfig).toContain("google");
+		expect(oauthConfig).toContain("github");
+		expect(oauthConfig).toContain("buildOAuthUrl");
+
+		const envExample = fileByPath.get("backend/.env.example") ?? "";
+		expect(envExample).toContain("GOOGLE_CLIENT_ID");
+		expect(envExample).toContain("GITHUB_CLIENT_ID");
+	});
+
 	test("ships the Gaman.js backend template in the built package", () => {
 		const distPath =
 			"packages/create-rakta/dist/templates/fullStack/backend/src/app.ts";

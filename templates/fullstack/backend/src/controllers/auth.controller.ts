@@ -80,12 +80,18 @@ export async function refreshController(request: Request): Promise<Response> {
 		.find((c) => c.startsWith("rakta_refresh="))
 		?.slice("rakta_refresh=".length);
 
-	const body = request.headers.get("content-type")?.includes("application/json")
+	const body: Record<string, unknown> = request.headers
+		.get("content-type")
+		?.includes("application/json")
 		? await readJson(request).catch(() => ({}))
 		: {};
 
-	const refreshToken =
-		cookieRefresh ?? (body.refreshToken as string | undefined);
+	const bodyRefreshToken =
+		typeof body["refreshToken"] === "string"
+			? (body["refreshToken"] as string)
+			: undefined;
+
+	const refreshToken = cookieRefresh ?? bodyRefreshToken;
 
 	if (!refreshToken) {
 		return fail("Refresh token required.", 401);

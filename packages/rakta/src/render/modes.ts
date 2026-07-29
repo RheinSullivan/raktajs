@@ -88,12 +88,12 @@ function pathMatchesPattern(pathname: string, pattern: string): boolean {
 
 	if (patternParts.length !== pathParts.length) return false;
 
-	for (let i = 0; i < patternParts.length; i++) {
-		const pp = patternParts[i];
-		const path = pathParts[i];
-		if (pp === undefined || path === undefined) return false;
-		if (pp.startsWith(":")) continue; // dynamic segment - always matches
-		if (pp !== path) return false;
+	for (let index = 0; index < patternParts.length; index++) {
+		const patternPart = patternParts[index];
+		const pathPart = pathParts[index];
+		if (patternPart === undefined || pathPart === undefined) return false;
+		if (patternPart.startsWith(":")) continue; // dynamic segment - always matches
+		if (patternPart !== pathPart) return false;
 	}
 
 	return true;

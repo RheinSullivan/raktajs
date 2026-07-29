@@ -27,6 +27,13 @@ const SUBPATH_MODULES: readonly string[] = [
 	"performance",
 	"security",
 	"ops",
+	"ecosystem",
+	"motion",
+	"scene",
+	"vector",
+	"cli",
+	"api",
+	"auth",
 ];
 
 const OUT_DIR = "./dist";

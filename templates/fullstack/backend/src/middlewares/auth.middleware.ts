@@ -2,7 +2,7 @@ import { authenticate } from "../auth/auth.service";
 import type { UserRole } from "../models/user.model";
 
 /**
- * requireAuth — rejects unauthenticated requests with 401.
+ * requireAuth - rejects unauthenticated requests with 401.
  * Returns undefined if authenticated (let the handler continue).
  */
 export async function requireAuth(
@@ -21,7 +21,7 @@ export async function requireAuth(
 }
 
 /**
- * requireRole — rejects requests where the user does not have one of the
+ * requireRole - rejects requests where the user does not have one of the
  * allowed roles. Combines authentication + authorization in one call.
  *
  * @example
@@ -52,7 +52,7 @@ export async function requireRole(
 }
 
 /**
- * optionalAuth — resolves the user if a valid token/session exists,
+ * optionalAuth - resolves the user if a valid token/session exists,
  * but does NOT reject the request if unauthenticated.
  * Useful for public endpoints that show extra data to logged-in users.
  */

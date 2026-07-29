@@ -138,7 +138,8 @@ export default function ComponentsModal({
 		COMPONENT_METADATA[activeCompId as keyof typeof COMPONENT_METADATA] ??
 		COMPONENT_METADATA[COMPONENT_IDS[0]];
 	const activePreview =
-		COMPONENT_PREVIEWS[activeCompId] ?? COMPONENT_PREVIEWS[COMPONENT_IDS[0]];
+		COMPONENT_PREVIEWS[activeCompId] ??
+		COMPONENT_PREVIEWS[COMPONENT_IDS[0] ?? "button"];
 	const activeState = componentStates[activeCompId] ?? {};
 
 	const handleSetState = (newState: Record<string, unknown>) => {
@@ -214,7 +215,7 @@ export default function ComponentsModal({
 							<span className="absolute top-2 left-2 text-[8px] font-mono text-gray-600 uppercase tracking-widest">
 								LIVE PLAYGROUND
 							</span>
-							{activePreview(activeState, handleSetState)}
+							{activePreview?.(activeState, handleSetState)}
 						</div>
 
 						{/* Output kode */}

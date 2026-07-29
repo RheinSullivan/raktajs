@@ -34,8 +34,17 @@ export function detectDeviceQuality(): Exclude<QualityPreset, "auto"> {
 function resolveQuality(
 	config: MegaScapeConfig,
 ): Exclude<QualityPreset, "auto"> {
-	const q = config.quality ?? "auto";
-	return q === "auto" ? detectDeviceQuality() : q;
+	const quality = config.quality ?? "auto";
+	return quality === "auto" ? detectDeviceQuality() : quality;
+}
+
+export interface SceneHandle {
+	scene: unknown;
+	camera: unknown;
+	renderer: unknown;
+	render: () => void;
+	dispose: () => void;
+	getDiagnostics: () => { fps: number; drawCalls: number; memoryMB: number };
 }
 
 /**
@@ -44,14 +53,7 @@ function resolveQuality(
 export async function createMegaScape(
 	canvas: HTMLCanvasElement,
 	config: MegaScapeConfig = {},
-): Promise<{
-	scene: unknown;
-	camera: unknown;
-	renderer: unknown;
-	render: () => void;
-	dispose: () => void;
-	getDiagnostics: () => { fps: number; drawCalls: number; memoryMB: number };
-}> {
+): Promise<SceneHandle> {
 	let three: typeof import("three");
 	try {
 		three = await import("three");
@@ -61,7 +63,7 @@ export async function createMegaScape(
 		);
 	}
 
-	const quality = resolveQuality(config);
+	const resolvedQuality = resolveQuality(config);
 	const pixelRatioMap: Record<Exclude<QualityPreset, "auto">, number> = {
 		low: 1,
 		medium: 1.5,
@@ -73,24 +75,31 @@ export async function createMegaScape(
 
 	const renderer = new three.WebGLRenderer({
 		canvas,
-		antialias: quality !== "low",
+		antialias: resolvedQuality !== "low",
 		alpha: config.background == null,
-		powerPreference: quality === "high" ? "high-performance" : "default",
+		powerPreference:
+			resolvedQuality === "high" ? "high-performance" : "default",
 	});
-	renderer.setPixelRatio(pixelRatioMap[quality]);
+	renderer.setPixelRatio(pixelRatioMap[resolvedQuality]);
 	renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 	if (config.background != null) renderer.setClearColor(config.background);
 
-	const cam = config.camera ?? {};
+	const cameraConfig = config.camera ?? {};
 	const camera = new three.PerspectiveCamera(
-		cam.fov ?? 60,
+		cameraConfig.fov ?? 60,
 		canvas.clientWidth / Math.max(canvas.clientHeight, 1),
-		cam.near ?? 0.1,
-		cam.far ?? 1000,
+		cameraConfig.near ?? 0.1,
+		cameraConfig.far ?? 1000,
 	);
-	const pos = cam.position ?? ([0, 0, 5] as const);
-	camera.position.set(pos[0], pos[1], pos[2]);
-	if (cam.target) camera.lookAt(cam.target[0], cam.target[1], cam.target[2]);
+	const position = cameraConfig.position ?? ([0, 0, 5] as const);
+	camera.position.set(position[0], position[1], position[2]);
+	if (cameraConfig.target) {
+		camera.lookAt(
+			cameraConfig.target[0],
+			cameraConfig.target[1],
+			cameraConfig.target[2],
+		);
+	}
 
 	const scene = new three.Scene();
 
@@ -115,9 +124,7 @@ export async function createMegaScape(
 				fps = Math.round((frameCount * 1000) / (now - lastFpsTime));
 				frameCount = 0;
 				lastFpsTime = now;
-				if (typeof performance !== "undefined") {
-					performance.mark("rakta:scene-fps", { detail: { fps } });
-				}
+				performance.mark("rakta:scene-fps", { detail: { fps } });
 			}
 		}
 		rafId = requestAnimationFrame(tick);
@@ -125,17 +132,17 @@ export async function createMegaScape(
 
 	rafId = requestAnimationFrame(tick);
 
-	const ro = new ResizeObserver(() => {
+	const resizeObserver = new ResizeObserver(() => {
 		renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 		camera.aspect = canvas.clientWidth / Math.max(canvas.clientHeight, 1);
 		camera.updateProjectionMatrix();
 		render();
 	});
-	ro.observe(canvas);
+	resizeObserver.observe(canvas);
 
 	const dispose = (): void => {
 		cancelAnimationFrame(rafId);
-		ro.disconnect();
+		resizeObserver.disconnect();
 		renderer.dispose();
 	};
 
@@ -162,12 +169,7 @@ export async function createMegaScape(
  */
 export function useMegaScapeScene(
 	config: MegaScapeConfig = {},
-	setupCallback?: (ctx: {
-		scene: unknown;
-		camera: unknown;
-		renderer: unknown;
-		render: () => void;
-	}) => undefined | (() => void),
+	setupCallback?: (sceneContext: SceneHandle) => undefined | (() => void),
 ): { ref: React.RefObject<HTMLCanvasElement | null> } {
 	const ref = useRef<HTMLCanvasElement | null>(null);
 
@@ -177,18 +179,18 @@ export function useMegaScapeScene(
 		if (!canvas) return;
 
 		let cleanup: (() => void) | undefined;
-		let sceneCtx: Awaited<ReturnType<typeof createMegaScape>> | undefined;
+		let sceneHandle: SceneHandle | undefined;
 
 		createMegaScape(canvas, config)
-			.then((ctx) => {
-				sceneCtx = ctx;
-				if (setupCallback) cleanup = setupCallback(ctx) ?? undefined;
+			.then((sceneContext) => {
+				sceneHandle = sceneContext;
+				if (setupCallback) cleanup = setupCallback(sceneContext) ?? undefined;
 			})
 			.catch(console.error);
 
 		return () => {
 			cleanup?.();
-			sceneCtx?.dispose();
+			sceneHandle?.dispose();
 		};
 	}, []);
 
@@ -201,10 +203,7 @@ export function useMegaScapeScene(
  */
 export function useScrollScene(
 	config: ScrollSceneConfig,
-	onProgress: (
-		progress: number,
-		ctx: { scene: unknown; camera: unknown; render: () => void },
-	) => void,
+	onProgress: (progress: number, sceneContext: SceneHandle) => void,
 ): { ref: React.RefObject<HTMLCanvasElement | null> } {
 	const ref = useRef<HTMLCanvasElement | null>(null);
 
@@ -213,37 +212,41 @@ export function useScrollScene(
 		const canvas = ref.current;
 		if (!canvas) return;
 
-		let sceneCtx: Awaited<ReturnType<typeof createMegaScape>> | undefined;
+		let sceneHandle: SceneHandle | undefined;
 
 		createMegaScape(canvas, { ...config, renderMode: "on-demand" })
-			.then((ctx) => {
-				sceneCtx = ctx;
+			.then((sceneContext) => {
+				sceneHandle = sceneContext;
 
 				const handleScroll = (): void => {
 					const rect = canvas.getBoundingClientRect();
-					const viewH = window.innerHeight;
+					const viewportHeight = window.innerHeight;
 					const progress = Math.max(
 						0,
-						Math.min(1, (viewH - rect.top) / (viewH + rect.height)),
+						Math.min(
+							1,
+							(viewportHeight - rect.top) / (viewportHeight + rect.height),
+						),
 					);
-					onProgress(progress, ctx);
+					onProgress(progress, sceneContext);
 				};
 
 				window.addEventListener("scroll", handleScroll, { passive: true });
 				handleScroll();
 
-				(sceneCtx as unknown as { _scrollCleanup: () => void })._scrollCleanup =
-					() => {
-						window.removeEventListener("scroll", handleScroll);
-					};
+				(
+					sceneHandle as unknown as { _scrollCleanup: () => void }
+				)._scrollCleanup = () => {
+					window.removeEventListener("scroll", handleScroll);
+				};
 			})
 			.catch(console.error);
 
 		return () => {
 			(
-				sceneCtx as unknown as { _scrollCleanup?: () => void }
+				sceneHandle as unknown as { _scrollCleanup?: () => void }
 			)?._scrollCleanup?.();
-			sceneCtx?.dispose();
+			sceneHandle?.dispose();
 		};
 	}, []);
 

@@ -58,8 +58,8 @@ Response:
 ```
 
 Dua cookie otomatis di-set:
-- `rakta_session` — session ID (HttpOnly, SameSite=Lax)
-- `rakta_refresh` — refresh token (HttpOnly, SameSite=Strict)
+- `rakta_session` - session ID (HttpOnly, SameSite=Lax)
+- `rakta_refresh` - refresh token (HttpOnly, SameSite=Strict)
 
 ---
 
@@ -70,7 +70,7 @@ Dua cookie otomatis di-set:
 curl http://localhost:4000/api/auth/me \
   -H "Authorization: Bearer <accessToken>"
 
-# Cookie (browser — otomatis setelah login)
+# Cookie (browser - otomatis setelah login)
 curl http://localhost:4000/api/auth/me --cookie "rakta_session=<sessionId>"
 ```
 
@@ -95,7 +95,7 @@ if (rejected) return rejected;
 const rejected = await requireRole(request, "ADMIN");
 if (rejected) return rejected;
 
-// Opsional — dapatkan user jika sudah login
+// Opsional - dapatkan user jika sudah login
 const user = await optionalAuth(request);
 ```
 
@@ -105,7 +105,7 @@ const user = await optionalAuth(request);
 
 | Policy | SESSION_MODE | Perilaku |
 |---|---|---|
-| Multiple Sessions | `multiple` | Default — login dari banyak device diizinkan |
+| Multiple Sessions | `multiple` | Default - login dari banyak device diizinkan |
 | Single Session | `single` | Login baru mencabut semua session sebelumnya |
 
 ---
@@ -132,9 +132,9 @@ CORS_ORIGIN=http://localhost:3000
 
 ## OAuth Providers (Opsional)
 
-Saat generate project, kamu bisa memilih OAuth providers (Google, GitHub, Apple, dll.) secara opsional. Ini memperluas autentikasi Rakta.js — tidak menggantikannya.
+Saat generate project, kamu bisa memilih OAuth providers (Google, GitHub, Apple, dll.) secara opsional. Ini memperluas autentikasi Rakta.js - tidak menggantikannya.
 
-Konfigurasi OAuth dilakukan secara manual — tidak ada platform auth pihak ketiga yang digunakan.
+Konfigurasi OAuth dilakukan secara manual - tidak ada platform auth pihak ketiga yang digunakan.
 
 ---
 

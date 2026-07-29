@@ -210,7 +210,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^1.0.7",
+						raktajs: "^1.0.8",
 						gsap: "^3.12.7",
 						clsx: "^2.1.1",
 						"tailwind-merge": "^3.0.2",
@@ -304,7 +304,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 		},
 		{
 			path: "postcss.config.ts",
-			content: `import type { Config } from "postcss-load-config";\n\nconst config: Config = {\n\tplugins: {\n\t\t"@tailwindcss/postcss": {},\n\t\tautoprefixer: {},\n\t},\n};\n\nexport default config;\n`,
+			content: `// PostCSS config\nconst config = {\n\tplugins: {\n\t\t"@tailwindcss/postcss": {},\n\t\tautoprefixer: {},\n\t},\n};\n\nexport default config;\n`,
 		},
 		{
 			path: "public/.gitkeep",
@@ -385,7 +385,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^1.0.7",
+						raktajs: "^1.0.8",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						gsap: "^3.12.7",
@@ -502,7 +502,7 @@ function getFullstackFrontendFiles(
 		},
 		{
 			path: "frontend/postcss.config.ts",
-			content: `import type { Config } from "postcss-load-config";\n\nconst config: Config = {\n\tplugins: {\n\t\t"@tailwindcss/postcss": {},\n\t\tautoprefixer: {},\n\t},\n};\n\nexport default config;\n`,
+			content: `// PostCSS config\nconst config = {\n\tplugins: {\n\t\t"@tailwindcss/postcss": {},\n\t\tautoprefixer: {},\n\t},\n};\n\nexport default config;\n`,
 		},
 		{
 			path: "frontend/public/.gitkeep",
@@ -706,7 +706,7 @@ function personalizeGamanTemplate(
 				return `\n# ${p.charAt(0).toUpperCase() + p.slice(1)} OAuth\n${upper}_CLIENT_ID=\n${upper}_CLIENT_SECRET=\n${upper}_REDIRECT_URI=http://localhost:4000/api/auth/callback/${p}`;
 			})
 			.join("\n");
-		return content + oauthLines + "\n";
+		return `${content + oauthLines}\n`;
 	}
 
 	return content;

@@ -1,4 +1,4 @@
-// CSRF protection — double-submit cookie pattern.
+// CSRF protection - double-submit cookie pattern.
 // Stateless, no server storage required.
 
 const CSRF_HEADER = "x-csrf-token";

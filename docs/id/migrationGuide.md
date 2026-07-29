@@ -33,6 +33,46 @@ Kalau ada error TypeScript atau masalah runtime, cek bagian yang relevan di bawa
 
 ---
 
+## v1.0.7 → v1.0.8
+
+Rilis ini memperbaiki konflik versi npm, menaikkan semua versi package, dan menghasilkan build yang bersih dari lint.
+
+### Breaking changes
+
+Tidak ada. Semua API yang sudah ada tetap kompatibel.
+
+### Apa yang berubah
+
+#### Konflik versi diselesaikan
+
+v1.0.7 sudah di-publish ke npm. v1.0.8 adalah rilis lanjutan. Upgrade dengan:
+
+```bash
+bun update raktajs
+bun update create-rakta-app
+```
+
+#### Generator bersih dari lint
+
+Fungsi `personalizeGamanTemplate` di generator fullstack sekarang menggunakan template literal untuk injeksi env OAuth (sebelumnya string concatenation). Tidak ada perubahan fungsional - output identik.
+
+#### Backend `.env.example` diperluas
+
+Project fullstack yang di-generate sekarang menyertakan semua env var auth di `.env.example`:
+
+```env
+AUTH_SECRET=change-this-development-secret-32-chars
+AUTH_STRATEGY=jwt
+SESSION_MODE=multiple
+
+# Google OAuth (uncomment untuk mengaktifkan)
+# GOOGLE_CLIENT_ID=
+# GOOGLE_CLIENT_SECRET=
+# GOOGLE_REDIRECT_URI=http://localhost:4000/api/auth/callback/google
+```
+
+---
+
 ## v1.0.6 → v1.0.7
 
 Rilis ini memperbaiki Gaman.js backend dan menambah auth generator.
@@ -41,19 +81,19 @@ Rilis ini memperbaiki Gaman.js backend dan menambah auth generator.
 
 Tidak ada. Semua API yang sudah ada tetap kompatibel.
 
-### Generated backend — Gaman.js v2.x API
+### Generated backend - Gaman.js v2.x API
 
 Jika kamu membuat fullstack project di v1.0.6 atau sebelumnya, backend-mu menggunakan `app.get()` / `app.post()` yang sudah tidak ada di Gaman.js v2.x.
 
 Buat project baru dengan v1.0.7, atau migrasi manual:
 
 ```ts
-// Sebelum (v1.0.6 dan lebih lama — rusak di Gaman.js v2.x)
+// Sebelum (v1.0.6 dan lebih lama - rusak di Gaman.js v2.x)
 import { Gaman, type GamanContext, type HTTP } from "gaman";
 const app = new Gaman<HTTP>();
 app.get("/api/hello", handle);
 
-// Sesudah (v1.0.7 — bekerja dengan Gaman.js v2.x)
+// Sesudah (v1.0.7 - bekerja dengan Gaman.js v2.x)
 import { Gaman, composeRouter } from "gaman";
 import type { Context } from "gaman";
 
@@ -65,7 +105,7 @@ await app.mount(router);
 app.mountServer({ http: 4000 });
 ```
 
-Handler signature juga berubah — dari `(context: GamanContext)` menjadi `(c: Context)`.
+Handler signature juga berubah - dari `(context: GamanContext)` menjadi `(c: Context)`.
 
 ### Baru: Authentication Generator
 
@@ -88,7 +128,7 @@ cd my-project
 bun run dev  # menjalankan frontend + backend sekaligus
 ```
 
-### CLI next steps — path yang benar
+### CLI next steps - path yang benar
 
 v1.0.7 sekarang menampilkan path yang benar termasuk nama folder project:
 

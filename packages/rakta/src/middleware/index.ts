@@ -1,3 +1,5 @@
+export type { MiddlewareComposer, NamedMiddleware } from "./compose";
+export { compose, createMiddlewareComposer, routeMiddleware } from "./compose";
 export {
 	abort,
 	after,

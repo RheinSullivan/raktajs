@@ -84,6 +84,8 @@ export class SecretManager {
 	}
 }
 
+export type { CspDirectives } from "./csp";
+export { buildCsp, defaultCsp, generateCspNonce } from "./csp";
 export type {
 	RateLimitState,
 	SecretRecord,

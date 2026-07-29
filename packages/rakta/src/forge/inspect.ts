@@ -64,11 +64,11 @@ export function inspectBuild(options: InspectOptions): ForgeInspectReport {
 	};
 
 	const routeModes: ForgeRouteModeEntry[] = (manifest ?? emptyManifest).routes
-		.filter((r) => r.kind === "page" || r.kind === "api")
-		.map((r) => {
-			const resolved = resolveRouteMode(r.urlPattern, options.renderConfig);
+		.filter((route) => route.kind === "page" || route.kind === "api")
+		.map((route) => {
+			const resolved = resolveRouteMode(route.urlPattern, options.renderConfig);
 			return {
-				pattern: r.urlPattern,
+				pattern: route.urlPattern,
 				mode: resolved.mode,
 				source: resolved.source,
 			};

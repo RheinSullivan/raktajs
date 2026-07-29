@@ -71,7 +71,7 @@ export async function verifyJwt(
 	return payload.exp > Math.floor(Date.now() / 1000) ? payload : undefined;
 }
 
-/** Access token — short-lived (1 hour by default) */
+/** Access token - short-lived (1 hour by default) */
 export async function signAccessToken(
 	sub: string,
 	email: string,
@@ -87,7 +87,7 @@ export async function signAccessToken(
 	});
 }
 
-/** Refresh token — long-lived (7 days by default) */
+/** Refresh token - long-lived (7 days by default) */
 export async function signRefreshToken(
 	sub: string,
 	email: string,
@@ -104,85 +104,34 @@ export async function signRefreshToken(
 }
 
 /**
- * Rotate refresh token — verifies old token and issues a new pair.
+ * Rotate refresh token - verifies old token and issues a new pair.
  * Old session is revoked and replaced with a new one.
  */
 export async function rotateRefreshToken(
 	oldRefreshToken: string,
-): Promise<{ accessToken: string; refreshToken: string; sessionId: string } | undefined> {
+): Promise<
+	{ accessToken: string; refreshToken: string; sessionId: string } | undefined
+> {
 	const payload = await verifyJwt(oldRefreshToken);
 	if (!payload || payload.type !== "refresh") return undefined;
 
 	// Import here to avoid circular dependency
-	const { revokeSession, createSession } = await import("../auth/session.store");
+	const { revokeSession, createSession } = await import(
+		"../auth/session.store"
+	);
 	revokeSession(payload.sessionId);
 	const newSession = createSession(payload.sub, payload.email, false);
 
-	const accessToken = await signAccessToken(payload.sub, payload.email, newSession.id);
-	const refreshToken = await signRefreshToken(payload.sub, payload.email, newSession.id);
+	const accessToken = await signAccessToken(
+		payload.sub,
+		payload.email,
+		newSession.id,
+	);
+	const refreshToken = await signRefreshToken(
+		payload.sub,
+		payload.email,
+		newSession.id,
+	);
 
 	return { accessToken, refreshToken, sessionId: newSession.id };
-}
-
-function encodeBase64Url(value: string | ArrayBuffer): string {
-	const bytes =
-		typeof value === "string"
-			? new TextEncoder().encode(value)
-			: new Uint8Array(value);
-
-	return btoa(String.fromCharCode(...bytes))
-		.replaceAll("+", "-")
-		.replaceAll("/", "_")
-		.replaceAll("=", "");
-}
-
-function decodeBase64Url(value: string): string {
-	const normalized = value.replaceAll("-", "+").replaceAll("_", "/");
-	const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
-	return atob(padded);
-}
-
-async function signingKey(): Promise<CryptoKey> {
-	return crypto.subtle.importKey(
-		"raw",
-		new TextEncoder().encode(env.authSecret),
-		{ name: "HMAC", hash: "SHA-256" },
-		false,
-		["sign"],
-	);
-}
-
-export async function signJwt(payload: JwtPayload): Promise<string> {
-	const header = encodeBase64Url(JSON.stringify({ alg: "HS256", typ: "JWT" }));
-	const body = encodeBase64Url(JSON.stringify(payload));
-	const signature = await crypto.subtle.sign(
-		"HMAC",
-		await signingKey(),
-		new TextEncoder().encode(`${header}.${body}`),
-	);
-
-	return `${header}.${body}.${encodeBase64Url(signature)}`;
-}
-
-export async function verifyJwt(
-	token: string,
-): Promise<JwtPayload | undefined> {
-	const [header, body, signature] = token.split(".");
-
-	if (header === undefined || body === undefined || signature === undefined) {
-		return undefined;
-	}
-
-	const expectedSignature = await crypto.subtle.sign(
-		"HMAC",
-		await signingKey(),
-		new TextEncoder().encode(`${header}.${body}`),
-	);
-
-	if (encodeBase64Url(expectedSignature) !== signature) {
-		return undefined;
-	}
-
-	const payload = JSON.parse(decodeBase64Url(body)) as JwtPayload;
-	return payload.exp > Math.floor(Date.now() / 1000) ? payload : undefined;
 }

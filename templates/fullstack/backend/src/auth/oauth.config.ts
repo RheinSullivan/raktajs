@@ -1,7 +1,7 @@
 // OAuth Provider Configuration
 // All providers are optional and self-hosted.
 // Configure environment variables for the providers you want to use.
-// These providers EXTEND Rakta.js authentication — they do not replace it.
+// These providers EXTEND Rakta.js authentication - they do not replace it.
 
 function env(key: string, fallback = ""): string {
 	return process.env[key] ?? fallback;

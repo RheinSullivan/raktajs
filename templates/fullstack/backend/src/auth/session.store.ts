@@ -1,4 +1,4 @@
-// Session store — in-memory for development.
+// Session store - in-memory for development.
 // Replace with Redis, PostgreSQL, or any persistent store in production.
 
 export interface Session {

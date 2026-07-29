@@ -1,4 +1,14 @@
 export { createDataCache, RaktaDataCache } from "./cache";
+export type { IsrOptions, IsrResult } from "./fetch";
+export {
+	cache,
+	defer,
+	isr,
+	lazy,
+	prefetch,
+	resolveRenderRuntime,
+	revalidate,
+} from "./fetch";
 export {
 	defineRouteDataStrategy,
 	isIncrementalRoute,

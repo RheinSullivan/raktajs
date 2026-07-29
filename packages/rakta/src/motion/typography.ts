@@ -80,16 +80,17 @@ export function animateText(
 	}
 
 	// CSS fallback
-	for (let i = 0; i < elements.length; i++) {
-		const el = elements[i];
-		if (!el) continue;
-		el.style.opacity = "0";
-		el.style.transform = preset === "fade-up" ? "translateY(20px)" : "none";
-		el.style.transition = `opacity ${duration}s ${ease}, transform ${duration}s ${ease}`;
-		el.style.transitionDelay = `${i * stagger}s`;
+	for (let index = 0; index < elements.length; index++) {
+		const element = elements[index];
+		if (!element) continue;
+		element.style.opacity = "0";
+		element.style.transform =
+			preset === "fade-up" ? "translateY(20px)" : "none";
+		element.style.transition = `opacity ${duration}s ${ease}, transform ${duration}s ${ease}`;
+		element.style.transitionDelay = `${index * stagger}s`;
 		requestAnimationFrame(() => {
-			el.style.opacity = "1";
-			el.style.transform = "none";
+			element.style.opacity = "1";
+			element.style.transform = "none";
 		});
 	}
 }

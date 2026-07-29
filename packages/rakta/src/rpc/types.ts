@@ -33,7 +33,7 @@ export interface ProcedureDefinition<TInput, TOutput> {
 		}>;
 		parse(value: unknown): TInput;
 	};
-	readonly handler: (ctx: { readonly input: TInput }) => Promise<TOutput>;
+	readonly handler: (context: { readonly input: TInput }) => Promise<TOutput>;
 }
 
 /** A record of named procedure definitions forming a router. */

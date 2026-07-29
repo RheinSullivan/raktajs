@@ -1,0 +1,15 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"rootDir": "./src",
+		"jsx": "react-jsx",
+		"types": ["node", "bun", "react", "react-dom"],
+		"noEmit": true,
+		"paths": {
+			"rakta": ["./src/index.ts"],
+			"rakta/*": ["./src/*/index.ts"]
+		}
+	},
+	"include": ["src/**/*.test.ts", "src/**/*.spec.ts", "src/**/*.test.tsx"],
+	"exclude": ["node_modules", "dist"]
+}

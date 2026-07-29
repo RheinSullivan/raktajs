@@ -33,6 +33,46 @@ If you see TypeScript errors or runtime issues, check the relevant section below
 
 ---
 
+## v1.0.7 → v1.0.8
+
+This release fixes the npm publish version conflict, bumps all package versions, and ships the final lint-clean build.
+
+### Breaking changes
+
+None. All existing APIs are backward-compatible.
+
+### What changed
+
+#### Version conflict resolved
+
+v1.0.7 was already published to npm. v1.0.8 is the continuation release. Upgrade by running:
+
+```bash
+bun update raktajs
+bun update create-rakta-app
+```
+
+#### Generator lint clean
+
+The fullstack generator `personalizeGamanTemplate` function now uses a template literal for OAuth env injection (was a string concatenation). No functional change - output is identical.
+
+#### Backend `.env.example` expanded
+
+Generated fullstack projects now include all auth-related env vars in `.env.example`:
+
+```env
+AUTH_SECRET=change-this-development-secret-32-chars
+AUTH_STRATEGY=jwt
+SESSION_MODE=multiple
+
+# Google OAuth (uncomment to enable)
+# GOOGLE_CLIENT_ID=
+# GOOGLE_CLIENT_SECRET=
+# GOOGLE_REDIRECT_URI=http://localhost:4000/api/auth/callback/google
+```
+
+---
+
 ## v1.0.6 → v1.0.7
 
 This release fixes the Gaman.js backend and adds the authentication generator.
@@ -41,19 +81,19 @@ This release fixes the Gaman.js backend and adds the authentication generator.
 
 None. All existing APIs are backward-compatible.
 
-### Generated backend — Gaman.js v2.x API
+### Generated backend - Gaman.js v2.x API
 
 If you generated a fullstack project on v1.0.6 or earlier, your backend uses `app.get()` / `app.post()` which no longer exist in Gaman.js v2.x.
 
 Regenerate a new project with v1.0.7 to get the correct `composeRouter` pattern, or migrate manually:
 
 ```ts
-// Before (v1.0.6 and earlier — broken on Gaman.js v2.x)
+// Before (v1.0.6 and earlier - broken on Gaman.js v2.x)
 import { Gaman, type GamanContext, type HTTP } from "gaman";
 const app = new Gaman<HTTP>();
 app.get("/api/hello", handle);
 
-// After (v1.0.7 — works with Gaman.js v2.x)
+// After (v1.0.7 - works with Gaman.js v2.x)
 import { Gaman, composeRouter } from "gaman";
 import type { Context } from "gaman";
 
@@ -65,7 +105,7 @@ await app.mount(router);
 app.mountServer({ http: 4000 });
 ```
 
-Handler signature also changed — from `(context: GamanContext)` to `(c: Context)`:
+Handler signature also changed - from `(context: GamanContext)` to `(c: Context)`:
 
 ```ts
 // Before
@@ -73,7 +113,7 @@ async function handle(context: GamanContext): Promise<unknown> {
   return context.send({ ok: true });
 }
 
-// After — return data directly or a Response
+// After - return data directly or a Response
 async function handle(c: Context): Promise<Response> {
   const req = c.request instanceof Request ? c.request : new Request(`http://localhost${c.path}`);
   return Response.json({ ok: true });
@@ -106,7 +146,7 @@ bun run dev:frontend
 bun run dev:backend
 ```
 
-### CLI next steps — correct paths
+### CLI next steps - correct paths
 
 v1.0.7 now shows the correct paths including the project folder name:
 

@@ -58,8 +58,8 @@ Response:
 ```
 
 Two cookies are set automatically:
-- `rakta_session` — session ID (HttpOnly, SameSite=Lax)
-- `rakta_refresh` — refresh token (HttpOnly, SameSite=Strict, scoped to `/api/auth/refresh`)
+- `rakta_session` - session ID (HttpOnly, SameSite=Lax)
+- `rakta_refresh` - refresh token (HttpOnly, SameSite=Strict, scoped to `/api/auth/refresh`)
 
 ---
 
@@ -70,7 +70,7 @@ Two cookies are set automatically:
 curl http://localhost:4000/api/auth/me \
   -H "Authorization: Bearer <accessToken>"
 
-# Cookie (browser — automatic after login)
+# Cookie (browser - automatic after login)
 curl http://localhost:4000/api/auth/me --cookie "rakta_session=<sessionId>"
 ```
 
@@ -86,7 +86,7 @@ curl -X POST http://localhost:4000/api/auth/refresh \
   -d '{ "refreshToken": "<refresh-token>" }'
 ```
 
-Or pass via `rakta_refresh` cookie — the endpoint reads both.
+Or pass via `rakta_refresh` cookie - the endpoint reads both.
 
 Every successful refresh issues a **new access + refresh token pair** and revokes the old session (refresh rotation).
 
@@ -105,7 +105,7 @@ if (rejected) return rejected;
 const rejected = await requireRole(request, "ADMIN");
 if (rejected) return rejected;  // 403 if wrong role, 401 if unauthenticated
 
-// Optional — get user if logged in, null otherwise
+// Optional - get user if logged in, null otherwise
 const user = await optionalAuth(request);
 ```
 
@@ -117,7 +117,7 @@ Configured via `SESSION_MODE` environment variable or selected during generation
 
 | Policy | SESSION_MODE | Behavior |
 |---|---|---|
-| Multiple Sessions | `multiple` | Default — users can be logged in from multiple devices |
+| Multiple Sessions | `multiple` | Default - users can be logged in from multiple devices |
 | Single Session | `single` | New login revokes all previous sessions |
 | Revoke Previous | `single` | Same as single |
 
@@ -140,7 +140,7 @@ await verifyPassword("my-password", hash);  // → boolean
 - JWT signed with HMAC-SHA256 using `AUTH_SECRET`
 - Access token payload: `{ sub, email, sessionId, type: "access", exp }`
 - Refresh token payload: `{ sub, email, sessionId, type: "refresh", exp }`
-- Tokens with `type: "refresh"` are rejected by `authenticate()` — cannot be used as access tokens
+- Tokens with `type: "refresh"` are rejected by `authenticate()` - cannot be used as access tokens
 
 ---
 
@@ -188,9 +188,9 @@ CORS_ORIGIN=http://localhost:3000
 
 ## OAuth Providers (Optional)
 
-When generating a project, you can optionally select OAuth providers (Google, GitHub, Apple, etc.). These extend Rakta.js authentication — they never replace it.
+When generating a project, you can optionally select OAuth providers (Google, GitHub, Apple, etc.). These extend Rakta.js authentication - they never replace it.
 
-OAuth configuration is manual — no hosted auth platforms are used.
+OAuth configuration is manual - no hosted auth platforms are used.
 
 Generated file: `backend/src/auth/oauth.config.ts`
 
@@ -213,6 +213,6 @@ export const OAUTH_PROVIDERS = {
 
 ## Related
 
-- [Migration Guide](./migrationGuide.md) — upgrading from older versions
-- [Performance](./performance.md) — response timing diagnostics
-- [Dev Tools](./devtools.md) — dev terminal and browser indicator
+- [Migration Guide](./migrationGuide.md) - upgrading from older versions
+- [Performance](./performance.md) - response timing diagnostics
+- [Dev Tools](./devtools.md) - dev terminal and browser indicator

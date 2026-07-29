@@ -1,4 +1,11 @@
-export type RaktaBenchmarkKind = "startup" | "routing" | "hydration" | "build";
+export type RaktaBenchmarkKind =
+	| "startup"
+	| "routing"
+	| "hydration"
+	| "build"
+	| "hmr"
+	| "memory"
+	| "bundle";
 
 export interface RaktaBenchmarkSample {
 	readonly kind: RaktaBenchmarkKind;
@@ -30,4 +37,19 @@ export interface RaktaBuildCacheEntry {
 export interface RaktaIncrementalBuildPlan {
 	readonly changed: readonly string[];
 	readonly reused: readonly string[];
+}
+
+export interface RaktaMemorySnapshot {
+	readonly label: string;
+	readonly heapUsedBytes: number;
+	readonly heapTotalBytes: number;
+	readonly externalBytes: number;
+	readonly capturedAt: number;
+}
+
+export interface RaktaPerformanceSuite {
+	readonly name: string;
+	readonly benchmarks: readonly RaktaBenchmarkReport[];
+	readonly memory?: RaktaMemorySnapshot;
+	readonly totalDurationMs: number;
 }

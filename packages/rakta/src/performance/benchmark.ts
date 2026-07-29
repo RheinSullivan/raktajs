@@ -5,6 +5,8 @@ import type {
 	RaktaBuildCacheEntry,
 	RaktaBundleSizeReport,
 	RaktaIncrementalBuildPlan,
+	RaktaMemorySnapshot,
+	RaktaPerformanceSuite,
 } from "./types";
 
 export async function benchmark(
@@ -86,4 +88,78 @@ export function createIncrementalBuildPlan(
 	}
 
 	return { changed, reused };
+}
+
+/**
+ * Capture current process memory usage as a named snapshot.
+ * Returns zeros in environments where `process.memoryUsage` is unavailable.
+ */
+export function captureMemorySnapshot(label: string): RaktaMemorySnapshot {
+	const capturedAt = Date.now();
+
+	try {
+		if (
+			typeof process !== "undefined" &&
+			typeof process.memoryUsage === "function"
+		) {
+			const usage = process.memoryUsage();
+			return {
+				label,
+				heapUsedBytes: usage.heapUsed,
+				heapTotalBytes: usage.heapTotal,
+				externalBytes: usage.external,
+				capturedAt,
+			};
+		}
+	} catch {
+		// Not available in edge runtimes
+	}
+
+	return {
+		label,
+		heapUsedBytes: 0,
+		heapTotalBytes: 0,
+		externalBytes: 0,
+		capturedAt,
+	};
+}
+
+/**
+ * Run a named performance suite - multiple benchmark families + optional memory snapshot.
+ */
+export async function createPerformanceSuite(
+	name: string,
+	suites: ReadonlyArray<{
+		readonly kind: RaktaBenchmarkKind;
+		readonly label: string;
+		readonly iterations?: number;
+		readonly task: () => Promise<void> | void;
+	}>,
+	captureMemory = false,
+): Promise<RaktaPerformanceSuite> {
+	const startAll = Date.now();
+	const benchmarkReports: RaktaBenchmarkReport[] = [];
+
+	for (const suite of suites) {
+		const iterations = suite.iterations ?? 10;
+		const samples: RaktaBenchmarkSample[] = [];
+
+		for (let iteration = 0; iteration < iterations; iteration++) {
+			const sample = await benchmark(suite.kind, suite.label, suite.task);
+			samples.push(sample);
+		}
+
+		benchmarkReports.push(createBenchmarkReport(samples));
+	}
+
+	const memorySnapshot = captureMemory
+		? captureMemorySnapshot(`${name}:end`)
+		: undefined;
+
+	return {
+		name,
+		benchmarks: benchmarkReports,
+		...(memorySnapshot !== undefined ? { memory: memorySnapshot } : {}),
+		totalDurationMs: Date.now() - startAll,
+	};
 }

@@ -1,6 +1,7 @@
+// @ts-ignore - gaman is installed in the generated project, not in the monorepo workspace
 import { Gaman, composeRouter } from "gaman";
-import type { Context } from "gaman";
-import { runMigrations } from "./database/migrations";
+// @ts-ignore
+import type { Context } from "gaman"; import { runMigrations } from "./database/migrations";
 import { env } from "./env";
 import { apiRouter } from "./routes/api";
 import { seedCmsPosts } from "./services/cms.service";
@@ -46,25 +47,26 @@ async function handle(c: Context): Promise<Response> {
 	});
 }
 
-const router = composeRouter((r) => {
-	r.get("/api/hello", handle);
-	r.post("/api/auth/register", handle);
-	r.post("/api/auth/login", handle);
-	r.post("/api/auth/refresh", handle);
-	r.get("/api/auth/me", handle);
-	r.post("/api/auth/logout", handle);
-	r.post("/api/auth/logout-all", handle);
-	r.post("/api/auth/forgot-password", handle);
-	r.post("/api/auth/reset-password", handle);
-	r.get("/api/users", handle);
-	r.post("/api/users", handle);
-	r.patch("/api/users/:id", handle);
-	r.delete("/api/users/:id", handle);
-	r.get("/api/cms/posts", handle);
-	r.post("/api/cms/posts", handle);
-	r.post("/api/cms/media", handle);
-	r.patch("/api/cms/posts/:id", handle);
-	r.delete("/api/cms/posts/:id", handle);
+// biome-ignore lint/suspicious/noExplicitAny: routerBuilder is RouterBuilder from gaman - typed at runtime
+const router = composeRouter((routerBuilder: any) => {
+	routerBuilder.get("/api/hello", handle);
+	routerBuilder.post("/api/auth/register", handle);
+	routerBuilder.post("/api/auth/login", handle);
+	routerBuilder.post("/api/auth/refresh", handle);
+	routerBuilder.get("/api/auth/me", handle);
+	routerBuilder.post("/api/auth/logout", handle);
+	routerBuilder.post("/api/auth/logout-all", handle);
+	routerBuilder.post("/api/auth/forgot-password", handle);
+	routerBuilder.post("/api/auth/reset-password", handle);
+	routerBuilder.get("/api/users", handle);
+	routerBuilder.post("/api/users", handle);
+	routerBuilder.patch("/api/users/:id", handle);
+	routerBuilder.delete("/api/users/:id", handle);
+	routerBuilder.get("/api/cms/posts", handle);
+	routerBuilder.post("/api/cms/posts", handle);
+	routerBuilder.post("/api/cms/media", handle);
+	routerBuilder.patch("/api/cms/posts/:id", handle);
+	routerBuilder.delete("/api/cms/posts/:id", handle);
 });
 
 const app = new Gaman();
