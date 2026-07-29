@@ -1,3 +1,16 @@
+type AestheticUnit = "LENIS-MODERN" | "RETRO-CYBER" | "NEO-BRUTALIST";
+
+interface HeaderProps {
+	lang: "ID" | "EN";
+	onLangToggle: () => void;
+	isMuted: boolean;
+	onMuteToggle: () => void;
+	aestheticUnit: AestheticUnit;
+	onAestheticChange: (unit: AestheticUnit) => void;
+	lowLatencyMode: boolean;
+	onLowLatencyToggle: () => void;
+}
+
 export default function Header({
 	lang,
 	onLangToggle,
@@ -32,11 +45,10 @@ export default function Header({
 									key={unit}
 									type="button"
 									onClick={() => onAestheticChange(unit)}
-									className={`px-2 py-1 uppercase transition-colors cursor-pointer ${
-										aestheticUnit === unit
+									className={`px-2 py-1 uppercase transition-colors cursor-pointer ${aestheticUnit === unit
 											? "bg-brand-pink text-white font-bold"
 											: "text-gray-400 hover:text-white"
-									}`}
+										}`}
 								>
 									{unit.replace("-", " ")}
 								</button>
@@ -47,11 +59,10 @@ export default function Header({
 					<button
 						type="button"
 						onClick={onLowLatencyToggle}
-						className={`hidden lg:flex items-center gap-1.5 border px-2.5 py-1 font-mono text-[10px] uppercase transition-colors cursor-pointer ${
-							lowLatencyMode
+						className={`hidden lg:flex items-center gap-1.5 border px-2.5 py-1 font-mono text-[10px] uppercase transition-colors cursor-pointer ${lowLatencyMode
 								? "border-emerald-500/50 bg-emerald-950/20 text-emerald-400"
 								: "border-surface-stroke bg-zinc-900 text-gray-400"
-						}`}
+							}`}
 					>
 						<span
 							className={`w-1.5 h-1.5 rounded-full ${lowLatencyMode ? "bg-emerald-400 animate-pulse" : "bg-gray-600"}`}

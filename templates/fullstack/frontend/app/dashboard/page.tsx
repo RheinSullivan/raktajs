@@ -1,4 +1,3 @@
-
 interface UserRow {
 	id: string;
 	name: string;
@@ -25,14 +24,14 @@ export default function DashboardPage() {
 
 	useEffect(() => {
 		Promise.all([
-			apiGet<{ readonly data: UserRow[] }>("/api/users"),
-			apiGet<{ readonly data: CmsPostRow[] }>("/api/cms/posts"),
+			apiGet<UserRow[]>("/api/users"),
+			apiGet<CmsPostRow[]>("/api/cms/posts"),
 		])
-			.then(([usersResponse, postsResponse]) => {
-				setUsers(usersResponse.data);
-				setPosts(postsResponse.data);
-				setStatus("Backend resources loaded.");
-			})
+		.then(([usersResponse, postsResponse]) => {
+			setUsers(usersResponse);
+			setPosts(postsResponse);
+			setStatus("Backend resources loaded.");
+		})
 			.catch((error: unknown) => {
 				setStatus(
 					error instanceof Error

@@ -1,8 +1,5 @@
 // Data komponen demo untuk ComponentsModal (Component Library)
-// Dipisah dari komponen supaya ComponentsModal.tsx fokus pada UI dan interaksi.
-// NOTE: Preview functions pakai JSX , pastikan file ini diproses sebagai .tsx jika perlu JSX.
-
-import type { ReactNode } from "react";
+// NOTE: Rakta.js Auto Import menyediakan ReactNode secara global.
 
 export interface ComponentItem {
 	id: string;

@@ -1,23 +1,6 @@
 // Hook utama ShrimpRun , mengelola state game, fisika, dan collision.
 // Logic fisika dan konstanta dipisah ke app/lib/gameData.ts dan app/lib/gameUtils.ts.
-// NOTE: useState, useEffect, useRef di-auto-import oleh Rakta.js.
-
-import {
-	GAME_PHYSICS,
-	HIGH_SCORE_KEY,
-	OBSTACLE_CONFIG,
-	type ObstaclePosition,
-	type ObstacleSizeClass,
-	SIM_SPEED_MULTIPLIER,
-	type SimSpeed,
-} from "../lib/gameData";
-import {
-	calculateObstacleSpeed,
-	checkCollision,
-	getRandomObstacleSize,
-	readHighScore,
-	saveHighScore,
-} from "../lib/gameUtils";
+// NOTE: useState, useEffect, useRef, gameData, dan gameUtils di-auto-import oleh Rakta.js.
 
 export function useShrimpRun() {
 	const [isPlaying, setIsPlaying] = useState(false);

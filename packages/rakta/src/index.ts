@@ -3,6 +3,7 @@ export const RAKTA_VERSION = "1.0.8";
 export const RAKTA_TAGLINE =
 	"Small in size. Fierce in speed. Alive in every route.";
 
+// API - REST helpers, GraphQL adapter, OpenAPI generation
 export type {
 	GraphQLHandlerOptions,
 	GraphQLSchemaDefinition,
@@ -16,8 +17,6 @@ export type {
 	PaginatedResponseBody,
 	ParsedRouteParams,
 } from "./api/index";
-
-// API - REST helpers, GraphQL adapter, OpenAPI generation
 export {
 	BadRequestResponse,
 	createGraphQLHandler,
@@ -37,9 +36,9 @@ export {
 	UnauthorizedResponse,
 	ValidationErrorResponse,
 } from "./api/index";
-export type { MagicLinkEmail, MagicLinkPayload } from "./auth/index";
 
 // Auth - magic links + TOTP 2FA
+export type { MagicLinkEmail, MagicLinkPayload } from "./auth/index";
 export {
 	createMagicLinkEmail,
 	generateBackupCodes,
@@ -50,6 +49,8 @@ export {
 	verifyMagicLinkToken,
 	verifyTotp,
 } from "./auth/index";
+
+// Auto Import - TrusmiThread
 export type {
 	AutoImportGeneratorOptions,
 	AutoImportKind,
@@ -57,8 +58,6 @@ export type {
 	DiscoveredExport,
 	ScanForExportsOptions,
 } from "./auto-import/index";
-
-// Auto Import - TrusmiThread
 export {
 	generateAutoImports,
 	printAutoImportSummary,

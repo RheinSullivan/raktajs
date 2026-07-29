@@ -1,5 +1,3 @@
-
-
 export default function ResetPasswordPage() {
 	const [email, setEmail] = useState("admin@rakta.local");
 	const [otp, setOtp] = useState("");

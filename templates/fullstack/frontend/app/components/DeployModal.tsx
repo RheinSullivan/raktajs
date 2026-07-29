@@ -1,12 +1,6 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
 // biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
-// NOTE: useState, useEffect, useRef di-auto-import oleh Rakta.js.
-
-import {
-	DEPLOY_LOGS,
-	type DeployLog,
-	getLogTextClass,
-} from "../lib/deployData";
+// NOTE: Rakta.js Auto Import mengimpor useState, useEffect, useRef, DEPLOY_LOGS, getLogTextClass, dan ikon secara otomatis.
 
 interface DeployModalProps {
 	isOpen: boolean;

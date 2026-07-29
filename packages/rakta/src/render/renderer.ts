@@ -17,7 +17,7 @@ export interface RendererOptions {
 	readonly lang: string;
 }
 
-// ─── HTML Shell ───────────────────────────────────────────────────────────────
+// HTML Shell
 // Key performance choices:
 //
 // 1. <link rel="preload"> for CSS - tells the browser to fetch the stylesheet
@@ -106,7 +106,7 @@ function buildHtmlShell(options: RendererOptions): string {
 </html>`;
 }
 
-// ─── Result helpers ───────────────────────────────────────────────────────────
+// Result helpers
 
 function makeSuccess(
 	html: string,
@@ -141,7 +141,7 @@ function makeFailure(
 	return { kind: "failure", reason, mode, httpStatus };
 }
 
-// ─── Render ───────────────────────────────────────────────────────────────────
+// Render
 
 /**
  * Render a page using the resolved mode from the context.

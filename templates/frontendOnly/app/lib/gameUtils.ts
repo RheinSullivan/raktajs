@@ -1,14 +1,6 @@
 // Utility functions untuk ShrimpRun game logic
 // Tidak bergantung pada React , bisa ditest secara independen.
-
-import {
-	OBSTACLE_CONFIG,
-	OBSTACLE_SIZES,
-	type ObstaclePosition,
-	type ObstacleSizeClass,
-	SHRIMP_HITBOX,
-	SIZE_THRESHOLDS,
-} from "./gameData";
+// NOTE: Rakta.js Auto Import menyediakan konstanta gameData secara global.
 
 export interface ObstacleSize {
 	height: number;

@@ -1,7 +1,8 @@
 // Head
-
 export type { HeadProps } from "./head";
-export { RaktaHead } from "./head";
+import { RaktaHead } from "./head";
+
+// Metadata
 export type {
 	AlternateLinks,
 	FormatDetection,
@@ -15,29 +16,42 @@ export type {
 	TitleMetadata,
 	TwitterCard,
 } from "./metadata";
-// Metadata
-export {
+import {
 	mergeMetadata,
 	resolveRobotsContent,
 	resolveTitle,
 } from "./metadata";
+
+// Robots
 export type {
 	RobotsOptions,
 	RobotsRule,
 } from "./robots";
-// Robots
-export {
+import {
 	createRobotsHandler,
 	generateRobotsTxt,
 } from "./robots";
+
+// Sitemap
 export type {
 	SitemapEntry,
 	SitemapIndexEntry,
 	SitemapOptions,
 } from "./sitemap";
-// Sitemap
-export {
+import {
 	createSitemapHandler,
 	generateSitemapIndexXml,
 	generateSitemapXml,
 } from "./sitemap";
+
+export {
+	RaktaHead,
+	createRobotsHandler,
+	createSitemapHandler,
+	generateRobotsTxt,
+	generateSitemapIndexXml,
+	generateSitemapXml,
+	mergeMetadata,
+	resolveRobotsContent,
+	resolveTitle,
+};

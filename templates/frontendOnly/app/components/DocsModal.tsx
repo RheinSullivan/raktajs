@@ -1,8 +1,6 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
 // biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
-// NOTE: useState di-auto-import oleh Rakta.js.
-
-import { ARTICLES } from "../lib/docsData";
+// NOTE: Rakta.js Auto Import mengimpor useState, ARTICLES, dan ikon secara otomatis.
 
 interface DocsModalProps {
 	isOpen: boolean;

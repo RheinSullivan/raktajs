@@ -253,6 +253,58 @@ declare global {
 		sizeClass: ObstacleSizeClass;
 	}
 
+	interface GamePhysicsConfig {
+		readonly gravity: number;
+		readonly jumpVelocity: number;
+		readonly startVelocity: number;
+		readonly playerStartY: number;
+		readonly playerMinY: number;
+		readonly playerMaxY: number;
+		readonly playerBounceVelocity: number;
+	}
+
+	interface ObstacleRuntimeConfig {
+		readonly startX: number;
+		readonly resetX: number;
+		readonly baseSpeed: number;
+		readonly maxSpeedMultiplier: number;
+		readonly speedScoreInterval: number;
+		readonly speedIncrement: number;
+	}
+
+	interface ObstacleSizeRange {
+		readonly heightMin: number;
+		readonly heightRange: number;
+		readonly widthMin: number;
+		readonly widthRange: number;
+	}
+
+	const GAME_PHYSICS: GamePhysicsConfig;
+	const OBSTACLE_CONFIG: ObstacleRuntimeConfig;
+	const SIM_SPEED_MULTIPLIER: Record<SimSpeed, number>;
+	const OBSTACLE_SIZES: Record<ObstacleSizeClass, ObstacleSizeRange>;
+	const SIZE_THRESHOLDS: { readonly small: number; readonly medium: number };
+	const SHRIMP_HITBOX: {
+		readonly xPercent: number;
+		readonly widthPercent: number;
+		readonly heightPx: number;
+	};
+	const HIGH_SCORE_KEY: string;
+	const calculateObstacleSpeed: (
+		score: number,
+		simSpeedMultiplier: number,
+	) => number;
+	const checkCollision: (
+		playerY: number,
+		obstacleX: number,
+		obstacleWidth: number,
+		obstacleHeight: number,
+		obstaclePos: ObstaclePosition,
+	) => boolean;
+	const getRandomObstacleSize: (_pos: ObstaclePosition) => ObstacleSize;
+	const readHighScore: (key: string) => number;
+	const saveHighScore: (key: string, score: number) => void;
+
 	interface HeaderProps {
 		lang: "ID" | "EN";
 		onLangToggle: () => void;
@@ -375,16 +427,19 @@ declare global {
 	const X: import("react").ComponentType<Record<string, unknown>>;
 
 	// ── App Components (auto-resolved from app/ directory) ──
+	const BackgroundFish: import("react").ComponentType<Record<string, unknown>>;
+	const BubbleLayer: import("react").ComponentType<Record<string, unknown>>;
 	const ComponentsModal: import("react").ComponentType<ModalProps>;
 	const CoralObstacle: import("react").ComponentType<Record<string, unknown>>;
 	const DeployModal: import("react").ComponentType<ModalProps>;
 	const DocsModal: import("react").ComponentType<ModalProps>;
-	const ShrimpCharacter: import("react").ComponentType<Record<string, unknown>>;
-	const Header: import("react").ComponentType<HeaderProps>;
-	const HeroSection: import("react").ComponentType<HeroSectionProps>;
-	const ShrimpRunGame: import("react").ComponentType<ShrimpRunGameProps>;
 	const FeatureGrid: import("react").ComponentType<Record<string, unknown>>;
 	const Footer: import("react").ComponentType<Record<string, unknown>>;
+	const Header: import("react").ComponentType<HeaderProps>;
+	const HeroSection: import("react").ComponentType<HeroSectionProps>;
+	const SeaweedGrass: import("react").ComponentType<Record<string, unknown>>;
+	const ShrimpCharacter: import("react").ComponentType<Record<string, unknown>>;
+	const ShrimpRunGame: import("react").ComponentType<ShrimpRunGameProps>;
 	const AuthShell: import("react").ComponentType<AuthShellProps>;
 
 	// ── Custom Hooks ──
@@ -434,4 +489,51 @@ declare global {
 	const playJumpSound: () => void;
 	const playScoreSound: () => void;
 	const setMute: (muted: boolean) => void;
+
+	// ── App Lib Data (auto-imported from app/lib/) ──
+	// fishData
+	interface Fish {
+		id: number;
+		size: "small" | "medium";
+		speed: number;
+		startY: number;
+		delay: number;
+		direction: "left" | "right";
+	}
+	const FISH_CONFIG: readonly Fish[];
+
+	// componentData
+	type ComponentId = "button" | "badge" | "switch" | "slider" | "input";
+	const COMPONENT_IDS: readonly ComponentId[];
+	const COMPONENT_METADATA: Record<
+		ComponentId,
+		{ name: string; description: string; code: string }
+	>;
+
+	// deployData
+	type DeployLogType = "system" | "info" | "success";
+	interface DeployLog {
+		readonly text: string;
+		readonly type: DeployLogType;
+	}
+	const DEPLOY_LOGS: readonly DeployLog[];
+	const getLogTextClass: (type: DeployLogType) => string;
+
+	// docsData
+	interface Article {
+		id: string;
+		title: string;
+		category: string;
+		content: string;
+	}
+	const ARTICLES: Article[];
+
+	// featureData
+	interface RaktaFeature {
+		id: string;
+		title: string;
+		desc: string;
+		code: string;
+	}
+	const RAKTA_FEATURES: readonly RaktaFeature[];
 }

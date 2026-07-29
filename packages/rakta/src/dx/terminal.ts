@@ -168,6 +168,7 @@ export interface RequestLogEntry {
 	readonly pathname: string;
 	readonly status: number;
 	readonly totalMs: number;
+	readonly kind?: "api" | "page" | "asset";
 	/** Time spent in Rakta framework layer (router + middleware) */
 	readonly frameworkMs?: number;
 	/** Time spent in application handler */
@@ -250,7 +251,15 @@ export class RaktaDevTerminal {
 	 *             total:   42.0ms
 	 */
 	logRequest(entry: RequestLogEntry): void {
-		const method = pad(entry.method, 6);
+		const requestKind =
+			entry.kind ?? (entry.pathname.startsWith("/api/") ? "api" : "page");
+		const kindLabel =
+			requestKind === "api"
+				? cyan("API")
+				: requestKind === "asset"
+					? dim("ASSET")
+					: dim("PAGE");
+		const method = pad(entry.method.toUpperCase(), 6);
 		const pathname = pad(entry.pathname, 30);
 		const status = colorStatus(entry.status);
 		const sym = statusSymbol(entry.status);
@@ -267,7 +276,7 @@ export class RaktaDevTerminal {
 		const slowTag = isSlow ? ` ${yellow("[slow]")}` : "";
 
 		console.log(
-			`  ${sym} ${dim(method)} ${pathname} ${status} ${timeStr}${slowTag}`,
+			`  ${sym} ${kindLabel} ${dim(method)} ${pathname} ${status} ${dim("in")} ${timeStr}${slowTag}`,
 		);
 
 		if (

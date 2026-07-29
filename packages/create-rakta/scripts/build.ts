@@ -17,6 +17,28 @@ const backendTemplateTarget = resolve(
 const backendTemplateSource = backendTemplateSources.find((candidatePath) =>
 	existsSync(candidatePath),
 );
+const frontendOnlyTemplateSources = [
+	resolve(workspaceRoot, "templates/frontendOnly"),
+	resolve(workspaceRoot, "templates/frontendonly"),
+];
+const frontendOnlyTemplateTarget = resolve(
+	outDirectory,
+	"templates/frontendOnly",
+);
+const frontendOnlyTemplateSource = frontendOnlyTemplateSources.find(
+	(candidatePath) => existsSync(candidatePath),
+);
+const fullstackFrontendTemplateSources = [
+	resolve(workspaceRoot, "templates/fullStack/frontend"),
+	resolve(workspaceRoot, "templates/fullstack/frontend"),
+];
+const fullstackFrontendTemplateTarget = resolve(
+	outDirectory,
+	"templates/fullStack/frontend",
+);
+const fullstackFrontendTemplateSource = fullstackFrontendTemplateSources.find(
+	(candidatePath) => existsSync(candidatePath),
+);
 
 rmSync(outDirectory, { recursive: true, force: true });
 
@@ -45,4 +67,24 @@ cpSync(backendTemplateSource, backendTemplateTarget, {
 	recursive: true,
 });
 
-console.log("Bundled create-rakta-app and the Gaman.js backend template.");
+if (frontendOnlyTemplateSource === undefined) {
+	throw new Error(
+		`Failed to find the frontend-only template. Checked: ${frontendOnlyTemplateSources.join(", ")}`,
+	);
+}
+
+cpSync(frontendOnlyTemplateSource, frontendOnlyTemplateTarget, {
+	recursive: true,
+});
+
+if (fullstackFrontendTemplateSource === undefined) {
+	throw new Error(
+		`Failed to find the fullstack frontend template. Checked: ${fullstackFrontendTemplateSources.join(", ")}`,
+	);
+}
+
+cpSync(fullstackFrontendTemplateSource, fullstackFrontendTemplateTarget, {
+	recursive: true,
+});
+
+console.log("Bundled create-rakta-app templates.");

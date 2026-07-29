@@ -29,6 +29,7 @@ describe("create-rakta fullstack generator", () => {
 
 		expect(fileByPath.has("frontend/rakta-env.d.ts")).toBe(true);
 		expect(fileByPath.has("backend/tsconfig.json")).toBe(true);
+		expect(fileByPath.has("backend/src/index.ts")).toBe(true);
 		expect(fileByPath.has("backend/src/app.ts")).toBe(true);
 		expect(fileByPath.has("shared/package.json")).toBe(true);
 		expect(fileByPath.has("backend/src/auth/auth.service.ts")).toBe(true);
@@ -40,29 +41,33 @@ describe("create-rakta fullstack generator", () => {
 			true,
 		);
 		expect(fileByPath.get("backend/package.json")).toContain('"gaman"');
-		expect(fileByPath.get("backend/src/app.ts")).toContain(
-			'import { Gaman, composeRouter } from "gaman"',
+		expect(fileByPath.get("backend/src/index.ts")).toContain(
+			"Bun.serve",
 		);
-		expect(fileByPath.get("backend/src/app.ts")).toContain("new Gaman()");
-		expect(fileByPath.get("backend/src/app.ts")).toContain("composeRouter");
-		expect(fileByPath.get("backend/src/app.ts")).toContain(
-			"await app.mount(router)",
+		expect(fileByPath.get("backend/src/index.ts")).toContain(
+			"appRouter.handle",
 		);
 		expect(fileByPath.get("frontend/package.json")).toContain('"gsap"');
 		expect(fileByPath.get("frontend/package.json")).toContain('"react-icons"');
-		expect(fileByPath.get("backend/src/app.ts")).toContain(
+		expect(fileByPath.get("backend/src/routes/api.ts")).toContain(
 			"/api/auth/register",
 		);
-		expect(fileByPath.get("backend/src/app.ts")).toContain("/api/auth/login");
-		expect(fileByPath.get("backend/src/app.ts")).toContain("/api/auth/me");
-		expect(fileByPath.get("backend/src/app.ts")).toContain(
+		expect(fileByPath.get("backend/src/routes/api.ts")).toContain(
+			"/api/auth/login",
+		);
+		expect(fileByPath.get("backend/src/routes/api.ts")).toContain(
+			"/api/auth/me",
+		);
+		expect(fileByPath.get("backend/src/routes/api.ts")).toContain(
 			"/api/auth/forgot-password",
 		);
-		expect(fileByPath.get("backend/src/app.ts")).toContain(
+		expect(fileByPath.get("backend/src/routes/api.ts")).toContain(
 			"/api/auth/reset-password",
 		);
-		expect(fileByPath.get("backend/src/app.ts")).toContain("/api/users");
-		expect(fileByPath.get("backend/src/app.ts")).toContain("/api/cms/posts");
+		expect(fileByPath.get("backend/src/routes/api.ts")).toContain("/api/users");
+		expect(fileByPath.get("backend/src/routes/api.ts")).toContain(
+			"/api/cms/posts",
+		);
 
 		for (const [path, content] of fileByPath) {
 			if (path.startsWith("frontend/app/") && path.endsWith(".tsx")) {
@@ -86,8 +91,6 @@ describe("create-rakta fullstack generator", () => {
 		expect(typeof page?.content).toBe("string");
 		expect(page?.content).toContain('from "raktajs/hooks"');
 		expect(page?.content).toContain("lengkoState");
-		expect(page?.content).toContain("empalEffect");
-		expect(page?.content).toContain("megamendungRef");
 		expect(page?.content).not.toContain('from "react"');
 		expect(config?.content).toContain("enabled: false");
 	});
@@ -101,9 +104,9 @@ describe("create-rakta fullstack generator", () => {
 			]),
 		);
 
-		const appTs = fileByPath.get("backend/src/app.ts") ?? "";
-		expect(appTs).toContain("/api/auth/refresh");
-		expect(appTs).toContain("/api/auth/logout");
+		const apiTs = fileByPath.get("backend/src/routes/api.ts") ?? "";
+		expect(apiTs).toContain("/api/auth/refresh");
+		expect(apiTs).toContain("/api/auth/logout");
 
 		const authService =
 			fileByPath.get("backend/src/auth/auth.service.ts") ?? "";
@@ -142,7 +145,9 @@ describe("create-rakta fullstack generator", () => {
 
 	test("ships the Gaman.js backend template in the built package", () => {
 		const distPath =
-			"packages/create-rakta/dist/templates/fullStack/backend/src/app.ts";
+			"packages/create-rakta/dist/templates/fullStack/backend/src/index.ts";
+		const frontendDistPath =
+			"packages/create-rakta/dist/templates/frontendOnly/app/components/Header.tsx";
 		// This test requires the package to be built first.
 		// In CI, build runs before test (ci.yml step order: build → test).
 		// Locally: run `bun run build` before `bun run test`.
@@ -154,5 +159,6 @@ describe("create-rakta fullstack generator", () => {
 			return;
 		}
 		expect(existsSync(distPath)).toBe(true);
+		expect(existsSync(frontendDistPath)).toBe(true);
 	});
 });

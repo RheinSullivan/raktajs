@@ -250,6 +250,7 @@ export async function startDevServer(
 						pathname,
 						status: 405,
 						totalMs: ms,
+						kind: "api",
 					});
 					return new Response("Method not allowed", { status: 405 });
 				}
@@ -261,6 +262,7 @@ export async function startDevServer(
 					pathname,
 					status: apiResponse.status,
 					totalMs: ms,
+					kind: "api",
 				});
 				return apiResponse;
 			}
@@ -304,6 +306,7 @@ export async function startDevServer(
 					pathname,
 					status: result.httpStatus,
 					totalMs: ms,
+					kind: "page",
 				});
 				return new Response(result.reason, { status: result.httpStatus });
 			}
@@ -325,6 +328,7 @@ export async function startDevServer(
 				pathname,
 				status: result.httpStatus,
 				totalMs: ms,
+				kind: "page",
 			});
 
 			return new Response(finalHtml, {

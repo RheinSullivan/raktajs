@@ -4,9 +4,9 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "bun run --watch src/app.ts",
-		"build": "bun build src/app.ts --outfile dist/app.js --target bun",
-		"start": "bun run dist/app.js",
+		"dev": "bun run --watch src/index.ts",
+		"build": "bun build src/index.ts --outfile dist/index.js --target bun",
+		"start": "bun run dist/index.js",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {

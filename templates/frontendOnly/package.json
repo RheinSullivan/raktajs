@@ -8,10 +8,11 @@
 		"build": "rakta build",
 		"start": "rakta start",
 		"routes": "rakta routes",
+		"imports:generate": "rakta imports:generate",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"raktajs": "^1.0.7",
+		"raktajs": "^1.0.8",
 		"gsap": "^3.12.7",
 		"clsx": "^2.1.1",
 		"tailwind-merge": "^3.0.2",

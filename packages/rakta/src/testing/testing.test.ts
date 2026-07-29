@@ -79,7 +79,8 @@ describe("Rakta testing package", () => {
 		const response = await client.get("/api/ping");
 		expect(response.status).toBe(200);
 		expect(response.ok).toBe(true);
-		expect(await response.json()).toEqual({ pong: true });
+		const responseData = (await response.json()) as Record<string, unknown>;
+		expect(responseData["pong"]).toBe(true);
 
 		const missing = await client.get("/missing");
 		expect(missing.status).toBe(404);

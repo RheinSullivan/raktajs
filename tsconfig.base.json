@@ -20,13 +20,8 @@
 		"declarationMap": true,
 		"sourceMap": true,
 		"verbatimModuleSyntax": true,
-		"isolatedModules": true
+		"isolatedModules": true,
+		"types": ["node", "bun", "react", "react-dom"]
 	},
-	"exclude": [
-		"node_modules",
-		"dist",
-		"**/dist/**",
-		"**/*.test.ts",
-		"**/*.spec.ts"
-	]
+	"exclude": ["node_modules", "dist", "**/dist/**"]
 }

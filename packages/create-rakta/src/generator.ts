@@ -41,6 +41,30 @@ const BACKEND_TEMPLATE_URLS = [
 	pathToFileURL(`${process.cwd()}/templates/fullStack/backend/`),
 	pathToFileURL(`${process.cwd()}/templates/fullstack/backend/`),
 ];
+const FRONTEND_ONLY_TEMPLATE_URLS = [
+	new URL("../templates/frontendOnly/", import.meta.url),
+	new URL("../templates/frontendonly/", import.meta.url),
+	new URL("./templates/frontendOnly/", import.meta.url),
+	new URL("./templates/frontendonly/", import.meta.url),
+	new URL("../../../../templates/frontendOnly/", import.meta.url),
+	new URL("../../../../templates/frontendonly/", import.meta.url),
+	new URL("../../../templates/frontendOnly/", import.meta.url),
+	new URL("../../../templates/frontendonly/", import.meta.url),
+	pathToFileURL(`${process.cwd()}/templates/frontendOnly/`),
+	pathToFileURL(`${process.cwd()}/templates/frontendonly/`),
+];
+const FULLSTACK_FRONTEND_TEMPLATE_URLS = [
+	new URL("../templates/fullStack/frontend/", import.meta.url),
+	new URL("../templates/fullstack/frontend/", import.meta.url),
+	new URL("./templates/fullStack/frontend/", import.meta.url),
+	new URL("./templates/fullstack/frontend/", import.meta.url),
+	new URL("../../../../templates/fullStack/frontend/", import.meta.url),
+	new URL("../../../../templates/fullstack/frontend/", import.meta.url),
+	new URL("../../../templates/fullStack/frontend/", import.meta.url),
+	new URL("../../../templates/fullstack/frontend/", import.meta.url),
+	pathToFileURL(`${process.cwd()}/templates/fullStack/frontend/`),
+	pathToFileURL(`${process.cwd()}/templates/fullstack/frontend/`),
+];
 
 //  Root files
 function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
@@ -184,8 +208,159 @@ function applyHookImportMode(sourceCode: string, autoImport: boolean): string {
 	return `import { ${imports} } from "raktajs/hooks";\n${transformedCode}`;
 }
 
+function findTemplateUrl(
+	candidateUrls: ReadonlyArray<URL>,
+): URL | undefined {
+	return candidateUrls.find((candidateUrl) => existsSync(candidateUrl));
+}
+
+function getFrontendTemplateFiles(
+	projectConfig: ProjectConfig,
+	candidateUrls: ReadonlyArray<URL>,
+	outputRoot: string,
+): ProjectFile[] | undefined {
+	const templateUrl = findTemplateUrl(candidateUrls);
+
+	if (templateUrl === undefined) {
+		return undefined;
+	}
+
+	const templateRootPath = fileURLToPath(templateUrl);
+	const templateFiles = readTemplateFiles(
+		templateRootPath,
+		templateRootPath,
+		outputRoot,
+	);
+
+	const personalizedFiles = templateFiles.map((file) => {
+		if (typeof file.content !== "string") {
+			return file;
+		}
+
+		return {
+			...file,
+			content: personalizeFrontendTemplate(file.path, file.content, projectConfig),
+		};
+	});
+
+	return processFilesForLanguage(personalizedFiles, projectConfig.useTypeScript);
+}
+
+function personalizeFrontendTemplate(
+	filePath: string,
+	content: string,
+	projectConfig: ProjectConfig,
+): string {
+	const normalizedPath = filePath.replaceAll("\\", "/");
+
+	if (normalizedPath === "package.json" || normalizedPath === "frontend/package.json") {
+		const packageJson = JSON.parse(content) as {
+			name?: string;
+			scripts?: Record<string, string>;
+			dependencies?: Record<string, string>;
+			devDependencies?: Record<string, string>;
+		};
+		const isFullstackFrontend = normalizedPath.startsWith("frontend/");
+
+		return JSON.stringify(
+			{
+				...packageJson,
+				name: isFullstackFrontend
+					? `${projectConfig.projectName}-frontend`
+					: projectConfig.projectName,
+				version: "0.1.0",
+				private: true,
+				type: "module",
+				scripts: {
+					dev: "rakta dev",
+					build: "rakta build",
+					start: "rakta start",
+					routes: "rakta routes",
+					"imports:generate": "rakta imports:generate",
+					...(isFullstackFrontend ? { "rpc:types": "rakta rpc:types" } : {}),
+					...(projectConfig.useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
+					...(packageJson.scripts ?? {}),
+				},
+				dependencies: {
+					...(packageJson.dependencies ?? {}),
+					raktajs: "^1.0.8",
+					react: "^19.2.7",
+					"react-dom": "^19.2.7",
+					gsap: "^3.12.7",
+					clsx: "^2.1.1",
+					"tailwind-merge": "^3.0.2",
+					"react-icons": "^5.7.0",
+					...getCssDependencies(projectConfig.cssFramework),
+				},
+				devDependencies: {
+					...(packageJson.devDependencies ?? {}),
+					...(projectConfig.useTypeScript
+						? {
+								"@types/react": "^19.2.17",
+								"@types/react-dom": "^19.2.3",
+								typescript: "^6.0.3",
+							}
+						: {}),
+					autoprefixer: "^10.4.20",
+					postcss: "^8.5.3",
+					prettier: "^3.5.3",
+					...getCssDevDependencies(projectConfig.cssFramework),
+				},
+			},
+			null,
+			2,
+		);
+	}
+
+	if (
+		normalizedPath === "rakta.config.ts" ||
+		normalizedPath === "rakta.config.js" ||
+		normalizedPath === "frontend/rakta.config.ts" ||
+		normalizedPath === "frontend/rakta.config.js"
+	) {
+		return content
+			.replace(/appName:\s*"[^"]*"/, `appName: "${projectConfig.projectName}"`)
+			.replace(/enabled:\s*(true|false)/, `enabled: ${projectConfig.autoImport}`)
+			.replace(
+				/defaultTitle:\s*"[^"]*"/,
+				`defaultTitle: "${DEFAULT_METADATA_TITLE}"`,
+			);
+	}
+
+	if (
+		projectConfig.cssFramework !== "tailwind" &&
+		(normalizedPath === "styles/globals.css" ||
+			normalizedPath === "frontend/styles/globals.css")
+	) {
+		return getFrontendOnlyCssGlobals(projectConfig.cssFramework);
+	}
+
+	if (!projectConfig.autoImport && normalizedPath.startsWith("app/")) {
+		return applyHookImportMode(content, false);
+	}
+
+	if (
+		!projectConfig.autoImport &&
+		normalizedPath.startsWith("frontend/app/")
+	) {
+		return applyHookImportMode(content, false);
+	}
+
+	return content;
+}
+
 //  Frontend-only starter (ShrimpRun game)
 function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
+	const templateFiles = getFrontendTemplateFiles(
+		projectConfig,
+		FRONTEND_ONLY_TEMPLATE_URLS,
+		"",
+	);
+
+	if (templateFiles !== undefined) {
+		return templateFiles;
+	}
+
 	const { projectName, cssFramework, useTypeScript, autoImport } =
 		projectConfig;
 	const styleFileName =
@@ -363,6 +538,16 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 function getFullstackFrontendFiles(
 	projectConfig: ProjectConfig,
 ): ProjectFile[] {
+	const templateFiles = getFrontendTemplateFiles(
+		projectConfig,
+		FULLSTACK_FRONTEND_TEMPLATE_URLS,
+		"frontend",
+	);
+
+	if (templateFiles !== undefined) {
+		return templateFiles;
+	}
+
 	const { projectName, cssFramework } = projectConfig;
 	const styleFileName =
 		cssFramework === "sass" ? "globals.scss" : "globals.css";
@@ -555,6 +740,13 @@ function processFilesForLanguage(
 			if (path.endsWith(".tsx")) path = path.replace(/\.tsx$/, ".jsx");
 			else if (path.endsWith(".ts")) path = path.replace(/\.ts$/, ".js");
 
+			if (!file.path.endsWith(".tsx") && !file.path.endsWith(".ts")) {
+				return {
+					path,
+					content: file.content,
+				};
+			}
+
 			return {
 				path,
 				content: stripTypeScriptSyntax(file.content),
@@ -624,12 +816,18 @@ function readTemplateFiles(
 		);
 
 		files.push({
-			path: `${outputRoot}/${relativePath}`,
-			content: readFileSync(entryPath, "utf-8"),
+			path: outputRoot.length > 0 ? `${outputRoot}/${relativePath}` : relativePath,
+			content: isBinaryTemplateFile(relativePath)
+				? readFileSync(entryPath)
+				: readFileSync(entryPath, "utf-8"),
 		});
 	}
 
 	return files;
+}
+
+function isBinaryTemplateFile(filePath: string): boolean {
+	return /\.(?:ico|png|jpe?g|webp|gif|avif|woff2?|ttf|otf)$/i.test(filePath);
 }
 
 function personalizeGamanTemplate(
@@ -666,7 +864,7 @@ function personalizeGamanTemplate(
 			.replace('framework: "Rakta.js"', 'framework: "Gaman.js"');
 	}
 
-	if (filePath === "backend/src/app.ts") {
+	if (filePath === "backend/src/index.ts") {
 		return content.replace(
 			"Rakta Gaman.js backend running",
 			`${projectConfig.projectName} Gaman.js backend running`,

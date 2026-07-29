@@ -1,26 +1,21 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
 // biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
-// NOTE: useState di-auto-import oleh Rakta.js.
-//
-// Catatan arsitektur:
-// - Metadata komponen (name, description, code) ada di app/lib/componentData.ts
-// - Preview function (JSX interaktif) tetap di sini karena butuh JSX transform
-
-import { COMPONENT_IDS, COMPONENT_METADATA } from "../lib/componentData";
+// NOTE: Rakta.js Auto Import mengimpor useState, COMPONENT_IDS, COMPONENT_METADATA, dan ikon secara otomatis.
 
 interface ComponentsModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 }
 
+type ComponentPreviewRenderer = (
+	state: Record<string, unknown>,
+	setState: (s: Record<string, unknown>) => void,
+) => ReactNode;
+
+const DEFAULT_COMPONENT_ID: ComponentId = "button";
+
 // Preview functions , dipisah dari metadata tapi tetap di file .tsx karena pakai JSX
-const COMPONENT_PREVIEWS: Record<
-	string,
-	(
-		state: Record<string, unknown>,
-		setState: (s: Record<string, unknown>) => void,
-	) => ReactNode
-> = {
+const COMPONENT_PREVIEWS: Record<ComponentId, ComponentPreviewRenderer> = {
 	button: (state, setState) => (
 		<button
 			onClick={() => {
@@ -126,7 +121,8 @@ export default function ComponentsModal({
 	isOpen,
 	onClose,
 }: ComponentsModalProps) {
-	const [activeCompId, setActiveCompId] = useState<string>(COMPONENT_IDS[0]);
+	const [activeCompId, setActiveCompId] =
+		useState<ComponentId>(DEFAULT_COMPONENT_ID);
 	const [componentStates, setComponentStates] = useState<
 		Record<string, Record<string, unknown>>
 	>({});
@@ -135,10 +131,10 @@ export default function ComponentsModal({
 	if (!isOpen) return null;
 
 	const activeMeta =
-		COMPONENT_METADATA[activeCompId as keyof typeof COMPONENT_METADATA] ??
-		COMPONENT_METADATA[COMPONENT_IDS[0]];
+		COMPONENT_METADATA[activeCompId] ?? COMPONENT_METADATA[DEFAULT_COMPONENT_ID];
 	const activePreview =
-		COMPONENT_PREVIEWS[activeCompId] ?? COMPONENT_PREVIEWS[COMPONENT_IDS[0] ?? "button"];
+		COMPONENT_PREVIEWS[activeCompId] ??
+		COMPONENT_PREVIEWS[DEFAULT_COMPONENT_ID];
 	const activeState = componentStates[activeCompId] ?? {};
 
 	const handleSetState = (newState: Record<string, unknown>) => {

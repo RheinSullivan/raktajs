@@ -182,18 +182,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="en">
-			<head>
-				<meta charSet="utf-8" />
-				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-				{/* mask-icon untuk Safari pinned tab, pakai logo udang Rakta.js */}
-				<link rel="mask-icon" href="/rakta-logo.svg" color="#e11d48" />
-				<RaktaHead metadata={metadata} />
-			</head>
-			<body className="min-h-screen bg-black text-white antialiased">
-				<RaktaToast position="top-right" />
-				{children}
-			</body>
-		</html>
+		<div className="min-h-screen bg-black text-white antialiased">
+			<RaktaHead metadata={metadata} />
+			<RaktaToast position="top-right" />
+			{children}
+		</div>
 	);
 }

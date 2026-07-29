@@ -1,5 +1,3 @@
-
-
 export default function RegisterPage() {
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");

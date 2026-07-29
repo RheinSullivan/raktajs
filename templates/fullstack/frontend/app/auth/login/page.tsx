@@ -1,5 +1,3 @@
-
-
 export default function LoginPage() {
 	const [email, setEmail] = useState("admin@rakta.local");
 	const [password, setPassword] = useState("rakta-password");

@@ -217,6 +217,10 @@ function buildClientEntrySource(
 	const logoDataUrlSafe = logoDataUrl
 		.replace(/\\/g, "\\\\")
 		.replace(/`/g, "\\`");
+	const layoutPath = findExistingModule(join(options.appDir, "layout"));
+	const layoutImport = layoutPath
+		? `import RootLayout from "${toModuleSpecifier(entryPath, layoutPath)}";\n`
+		: "const RootLayout = null;\n";
 
 	return `import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
@@ -224,6 +228,18 @@ import * as ReactHooks from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { RaktaHead } from "raktajs/seo";
+import {
+	RaktaToast,
+	Toaster,
+	RaktaAlert,
+	Alert,
+	Pantura,
+	Reborns,
+	usePantura,
+	toast,
+	useToast,
+} from "raktajs/components";
 import {
 	LuArrowRight as ArrowRight,
 	LuBook as Book,
@@ -248,10 +264,22 @@ import {
 	LuX as X,
 } from "react-icons/lu";
 ${cssImport}
+${layoutImport}
 (globalThis as typeof globalThis & Record<string, unknown>).useCallback = ReactHooks.useCallback;
 (globalThis as typeof globalThis & Record<string, unknown>).useEffect = ReactHooks.useEffect;
+(globalThis as typeof globalThis & Record<string, unknown>).useMemo = ReactHooks.useMemo;
 (globalThis as typeof globalThis & Record<string, unknown>).useRef = ReactHooks.useRef;
 (globalThis as typeof globalThis & Record<string, unknown>).useState = ReactHooks.useState;
+(globalThis as typeof globalThis & Record<string, unknown>).RaktaHead = RaktaHead;
+(globalThis as typeof globalThis & Record<string, unknown>).RaktaToast = RaktaToast;
+(globalThis as typeof globalThis & Record<string, unknown>).Toaster = Toaster;
+(globalThis as typeof globalThis & Record<string, unknown>).RaktaAlert = RaktaAlert;
+(globalThis as typeof globalThis & Record<string, unknown>).Alert = Alert;
+(globalThis as typeof globalThis & Record<string, unknown>).Pantura = Pantura;
+(globalThis as typeof globalThis & Record<string, unknown>).Reborns = Reborns;
+(globalThis as typeof globalThis & Record<string, unknown>).usePantura = usePantura;
+(globalThis as typeof globalThis & Record<string, unknown>).toast = toast;
+(globalThis as typeof globalThis & Record<string, unknown>).useToast = useToast;
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 (globalThis as typeof globalThis & Record<string, unknown>).gsap = gsap;
 (globalThis as typeof globalThis & Record<string, unknown>).ScrollTrigger = ScrollTrigger;
@@ -579,7 +607,11 @@ function App(): React.ReactElement {
     }, "Loading Rakta.js...");
   }
 
-  return React.createElement(Page);
+  const pageElement = React.createElement(Page);
+  if (typeof RootLayout === "function") {
+    return React.createElement(RootLayout, null, pageElement);
+  }
+  return pageElement;
 }
 
 const rootElement = document.getElementById("rakta-root");

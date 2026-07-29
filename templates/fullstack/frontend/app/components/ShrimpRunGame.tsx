@@ -1,6 +1,4 @@
-import BackgroundFish from "./BackgroundFish";
-import BubbleLayer from "./BubbleLayer";
-import SeaweedGrass from "./SeaweedGrass";
+// NOTE: Rakta.js Auto Import mengimpor BackgroundFish, BubbleLayer, dan SeaweedGrass secara otomatis.
 
 export default function ShrimpRunGame({
 	isPlaying,

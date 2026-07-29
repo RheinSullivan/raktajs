@@ -2,8 +2,6 @@
 // Dipisah dari komponen supaya HeroSection.tsx fokus pada render saja.
 // Kalau mau ubah teks, cukup edit file ini.
 
-import type { ReactNode } from "react";
-
 export type Lang = "ID" | "EN";
 
 export interface HeroCopy {

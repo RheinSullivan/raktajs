@@ -11,13 +11,13 @@ import React, {
 	useRef,
 } from "react";
 
-// ─────────────────────────────────────────────────────────────────────────────
+//
 // Rakta.js PanturaScroll - Named after Jalur Pantura (Pantai Utara / North
 // Coast Road), the legendary highway connecting coastal cities of Java.
 // Smooth scroll navigation: <pantura to="section-id"> and <reborns id="section-id">
-// ─────────────────────────────────────────────────────────────────────────────
+//
 
-// ─── GSAP Type Reference ─────────────────────────────────────────────────────
+// GSAP Type Reference
 
 interface GSAPInstance {
 	to: (
@@ -31,7 +31,7 @@ interface GSAPInstance {
 	) => void;
 }
 
-// ─── Options ─────────────────────────────────────────────────────────────────
+// Options
 
 export interface PanturaOptions {
 	/** Offset in pixels from the top of the target element (default: 0) */
@@ -44,7 +44,7 @@ export interface PanturaOptions {
 	readonly updateHash?: boolean;
 }
 
-// ─── Component Props ──────────────────────────────────────────────────────────
+// Component Props
 
 export interface PanturaProps
 	extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
@@ -70,7 +70,7 @@ export interface RebornsProps extends HTMLAttributes<HTMLElement> {
 	readonly style?: CSSProperties;
 }
 
-// ─── Scroll Utility ───────────────────────────────────────────────────────────
+// Scroll Utility
 
 function getScrollTarget(id: string): Element | null {
 	if (typeof document === "undefined") return null;
@@ -159,7 +159,7 @@ function smoothScrollTo(
 	}
 }
 
-// ─── usePantura Hook ──────────────────────────────────────────────────────────
+// usePantura Hook
 
 /**
  * usePantura ,  programmatic smooth scroll hook.
@@ -188,7 +188,7 @@ export function usePantura(
 	);
 }
 
-// ─── <pantura to=""> Component ────────────────────────────────────────────────
+// <pantura to=""> Component
 
 type PanturaElementAttributes = Omit<
 	AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -288,7 +288,7 @@ export function Pantura({
 	return React.createElement("pantura", attrs, children);
 }
 
-// ─── <reborns id=""> Component ────────────────────────────────────────────────
+// <reborns id=""> Component
 
 /**
  * Reborns ,  scroll target marker. Place this around the section you want

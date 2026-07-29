@@ -1,7 +1,5 @@
 // Grid modul inti Rakta.js
-// Data fitur dipisah ke app/lib/featureData.ts supaya komponen ini hanya bertugas render.
-
-import { RAKTA_FEATURES } from "../lib/featureData";
+// NOTE: Rakta.js Auto Import mengimpor RAKTA_FEATURES secara otomatis.
 
 export default function FeatureGrid() {
 	return (
