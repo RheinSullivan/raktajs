@@ -488,9 +488,71 @@ function openExternalTo(to: string, target: string | null): void {
   window.location.assign(to);
 }
 
-function App(): React.ReactElement {
+class RaktaErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error("[Rakta.js Runtime Error]:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      const msg = this.state.error?.message || "An unknown error occurred.";
+      const stack = this.state.error?.stack || "";
+      return React.createElement(
+        "div",
+        {
+          style: {
+            minHeight: "100vh",
+            background: "#050505",
+            color: "#f43f5e",
+            padding: "2rem",
+            fontFamily: "ui-monospace, SFMono-Regular, Consolas, monospace",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        },
+        React.createElement("div", {
+          style: {
+            maxWidth: "750px",
+            width: "100%",
+            background: "#09090b",
+            border: "1px solid #27272a",
+            borderRadius: "1rem",
+            padding: "1.5rem",
+            boxShadow: "0 20px 25px -5px rgba(0,0,0,0.5)",
+          },
+        },
+          React.createElement("h2", { style: { fontSize: "1.25rem", color: "#ef4444", marginBottom: "0.75rem", display: "flex", alignItems: "center", gap: "0.5rem" } }, "⚠️ Rakta.js Application Error"),
+          React.createElement("p", { style: { color: "#e2e8f0", fontSize: "0.95rem", marginBottom: "1rem" } }, msg),
+          stack ? React.createElement("pre", { style: { background: "#18181b", padding: "1rem", borderRadius: "0.5rem", color: "#a1a1aa", fontSize: "0.8rem", overflowX: "auto", maxHeight: "250px" } }, stack) : null,
+          React.createElement("button", {
+            onClick: () => window.location.reload(),
+            style: { marginTop: "1rem", padding: "0.5rem 1.25rem", background: "#dc2626", color: "#fff", border: "none", borderRadius: "0.375rem", cursor: "pointer", fontWeight: 600 }
+          }, "Reload Application")
+        )
+      );
+    }
+    return this.props.children;
+  }
+}
+
+function RaktaAppShell(): React.ReactElement {
   const [pathname, setPathname] = useState(() => window.location.pathname);
   const [Page, setPage] = useState<React.ComponentType | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     function handlePopState(): void {
@@ -574,10 +636,22 @@ function App(): React.ReactElement {
 
   useEffect(() => {
     let isCurrent = true;
+    setLoadError(null);
 
-    resolveRouteLoader(pathname)().then((pageModule) => {
+    const loader = resolveRouteLoader(pathname);
+    if (typeof loader !== "function") {
+      setLoadError(\`Route loader not found for pathname \${pathname}\`);
+      return;
+    }
+
+    loader().then((pageModule) => {
       if (isCurrent) {
         setPage(() => pageModule.default);
+      }
+    }, (err) => {
+      console.error("[Rakta.js Route Import Error]:", err);
+      if (isCurrent) {
+        setLoadError(err instanceof Error ? err.message : String(err));
       }
     });
 
@@ -593,6 +667,20 @@ function App(): React.ReactElement {
       window.cancelAnimationFrame(animationFrameId);
     };
   }, [Page, pathname]);
+
+  if (loadError) {
+    return React.createElement("main", {
+      style: {
+        minHeight: "100vh",
+        display: "grid",
+        placeItems: "center",
+        background: "#050505",
+        color: "#ef4444",
+        fontFamily: "ui-monospace, SFMono-Regular, Consolas, monospace",
+        padding: "2rem",
+      },
+    }, \`Failed to load route: \${loadError}\`);
+  }
 
   if (!Page) {
     return React.createElement("main", {
@@ -620,7 +708,9 @@ if (!rootElement) {
   throw new Error("Rakta.js root element #rakta-root was not found.");
 }
 
-createRoot(rootElement).render(React.createElement(App));
+createRoot(rootElement).render(
+  React.createElement(RaktaErrorBoundary, null, React.createElement(RaktaAppShell))
+);
 
 // Notify the HTML shell that the app has mounted so the loading overlay
 // can be dismissed. This fires after React's first commit.

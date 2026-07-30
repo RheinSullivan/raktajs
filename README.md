@@ -655,6 +655,20 @@ export default defineConfig({
 
 ---
 
+## Donations & Humanitarian Support | Donasi & Bantuan Kemanusiaan
+
+**English** Rakta.js accepts public donations with 100% financial transparency. Minimum 70% of all funds are allocated to humanitarian aid (Palestine 🇵🇸 relief, orphanages, low-income families, elderly care, disaster relief) and up to 30% for framework operations (server, CDN, domain).
+
+- **Official Donation Link:** [buymeacoffee.com/rheinsullivan](https://buymeacoffee.com/rheinsullivan)
+- See detailed transparency reports in [docs/en/donations.md](docs/en/donations.md) & [docs/id/donasi.md](docs/id/donasi.md).
+
+**Bahasa Indonesia** Rakta.js menerima donasi publik dengan transparansi keuangan 100%. Minimal 70% dana dialokasikan untuk bantuan kemanusiaan (bantuan Palestina 🇵🇸, panti asuhan, dhuafa, panti jompo, bencana alam) dan maksimal 30% untuk operasional framework (server, CDN, domain).
+
+- **Link Donasi Resmi:** [buymeacoffee.com/rheinsullivan](https://buymeacoffee.com/rheinsullivan)
+- Lihat laporan transparansi lengkap di [docs/id/donasi.md](docs/id/donasi.md).
+
+---
+
 ## Author | Penulis
 
 Built by **Muhammad Rizky Ramadhan**, also known as **Rhein Sullivan**, from **Cirebon & South Jakarta, Indonesia**.
@@ -665,4 +679,5 @@ Dibuat oleh **Muhammad Rizky Ramadhan**, dikenal juga sebagai **Rhein Sullivan**
 
 ## License | Lisensi
 
-MIT License. See [LICENCE](LICENCE).
+MIT - Rakta.js | Vyagra Nexus™ ❤️ 🇮🇩 Indonesian & 🇵🇸 Palestine
+[LICENSE](./LICENSE).*

@@ -1,5 +1,5 @@
 export const RAKTA_NAME = "Rakta.js";
-export const RAKTA_VERSION = "1.0.9";
+export const RAKTA_VERSION = "1.1.1";
 export const RAKTA_TAGLINE =
 	"Small in size. Fierce in speed. Alive in every route.";
 

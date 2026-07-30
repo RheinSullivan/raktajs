@@ -134,6 +134,19 @@ export function scanForExports(
 		const files = walkDirectory(directoryAbs, extensions);
 
 		for (const filePath of files) {
+			const fileBase = basename(filePath).toLowerCase();
+			if (
+				fileBase.startsWith("page.") ||
+				fileBase.startsWith("layout.") ||
+				fileBase.startsWith("loading.") ||
+				fileBase.startsWith("error.") ||
+				fileBase.startsWith("notfound.") ||
+				fileBase.startsWith("not-found.") ||
+				fileBase.startsWith("route.")
+			) {
+				continue;
+			}
+
 			const relativeFromOutput = relative(outputAbs, filePath)
 				.replace(/\\/g, "/")
 				.replace(/\.(ts|tsx)$/, "");
