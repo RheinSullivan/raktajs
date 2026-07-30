@@ -76,7 +76,7 @@ Assalamu'alaikum Warahmatullahi Wabarakatuh · Shalom · Om Swastiastu · Namo B
 
   Rakta.js was created by **Muhammad Rizky Ramadhan**, a software developer from **Cirebon & South Jakarta, Indonesia**, known in the developer community as **Rhein Sullivan**, lead of **Vyagra Nexus™**.
 
-  The vision behind Rakta.js is simple: stop repeating the same setup across every project. Features like *file-based routing*, *auto-import with zero manual import statements*, *type-safe RPC*, an integrated *frontend-backend monolith* architecture, and *built-in authentication* are all available in one unified package—no fragmentation, no layered configuration, no fighting your tools.
+  The vision behind Rakta.js is simple: stop repeating the same setup across every project. Features like *file-based routing*, *auto-import with zero manual import statements*, *type-safe RPC*, an integrated *frontend-backend monolith* architecture, and *built-in authentication* are all available in one unified package-no fragmentation, no layered configuration, no fighting your tools.
 
   Rakta.js does not aim to replace frameworks like Next.js, Nuxt, or Remix. It is a different take: **a framework that feels clean, fast, and has its own identity**, built by an Indonesian developer who wanted something simpler and more honest.
 
@@ -87,7 +87,7 @@ Assalamu'alaikum Warahmatullahi Wabarakatuh · Shalom · Om Swastiastu · Namo B
 
   Rakta.js diciptakan oleh **Muhammad Rizky Ramadhan**, pengembang perangkat lunak asal **Cirebon & Jakarta Selatan, Indonesia**, yang dikenal di komunitas developer sebagai **Rhein Sullivan**, ketua dari tim **Vyagra Nexus™**.
 
-  Visi di balik Rakta.js sederhana: berhenti mengulang setup yang sama di setiap project. Fitur-fitur seperti *routing berbasis file*, *auto-import tanpa satu pun pernyataan import manual*, *RPC type-safe*, arsitektur *monolith frontend-backend*, dan *autentikasi bawaan* tersedia dalam satu paket terpadu—tanpa fragmentasi, tanpa konfigurasi berlapis, tanpa bersaing dengan tools sendiri.
+  Visi di balik Rakta.js sederhana: berhenti mengulang setup yang sama di setiap project. Fitur-fitur seperti *routing berbasis file*, *auto-import tanpa satu pun pernyataan import manual*, *RPC type-safe*, arsitektur *monolith frontend-backend*, dan *autentikasi bawaan* tersedia dalam satu paket terpadu-tanpa fragmentasi, tanpa konfigurasi berlapis, tanpa bersaing dengan tools sendiri.
 
   Rakta.js tidak hadir untuk menggantikan Next.js, Nuxt, atau Remix. Ini adalah perspektif berbeda: **framework yang terasa bersih, cepat, dan punya identitas sendiri**, dibuat oleh developer Indonesia yang ingin sesuatu yang lebih sederhana dan lebih jujur.
 
@@ -101,19 +101,19 @@ Assalamu'alaikum Warahmatullahi Wabarakatuh · Shalom · Om Swastiastu · Namo B
 
 **English**
 
-Rakta.js is a lightweight, composable frontend framework built on React, Bun, and TypeScript. It provides file-based routing, flexible rendering modes (CSR, SSR, SSG, SPA, Hybrid), SEO tooling, PWA support, type-safe RPC, state management, schema validation, an HTTP client, and a project generator—all in one package.
+Rakta.js is a lightweight, composable frontend framework built on React, Bun, and TypeScript. It provides file-based routing, flexible rendering modes (CSR, SSR, SSG, SPA, Hybrid), SEO tooling, PWA support, type-safe RPC, state management, schema validation, an HTTP client, and a project generator-all in one package.
 
-The name **Rakta** comes from Sanskrit. It means red, life energy, courage, strength, identity, and movement. There is also a quiet reminder inside this name: when ordinary people carry heavy days in silence, every small tool should help them build something that truly belongs to them—not something that keeps them waiting at the gate.
+The name **Rakta** comes from Sanskrit. It means red, life energy, courage, strength, identity, and movement. There is also a quiet reminder inside this name: when ordinary people carry heavy days in silence, every small tool should help them build something that truly belongs to them-not something that keeps them waiting at the gate.
 
-The shrimp mascot represents Cirebon, a coastal city in West Java, Indonesia. Cirebon is known for its shrimp culture, the *Trusmi* batik craftsmanship, *Mega Mendung* cloud motifs, and its royal kraton heritage. Rakta.js uses this identity as a living foundation—not as decoration, but as a real part of who built it and why.
+The shrimp mascot represents Cirebon, a coastal city in West Java, Indonesia. Cirebon is known for its shrimp culture, the *Trusmi* batik craftsmanship, *Mega Mendung* cloud motifs, and its royal kraton heritage. Rakta.js uses this identity as a living foundation-not as decoration, but as a real part of who built it and why.
 
 **Bahasa Indonesia**
 
-Rakta.js adalah Frontend Framework ringan yang dibangun di atas React, Bun, dan TypeScript. Tersedia routing berbasis file, berbagai mode rendering (CSR, SSR, SSG, SPA, Hybrid), SEO tooling, PWA, RPC type-safe, state management, validasi schema, HTTP client, dan generator project—semuanya dalam satu paket.
+Rakta.js adalah Frontend Framework ringan yang dibangun di atas React, Bun, dan TypeScript. Tersedia routing berbasis file, berbagai mode rendering (CSR, SSR, SSG, SPA, Hybrid), SEO tooling, PWA, RPC type-safe, state management, validasi schema, HTTP client, dan generator project-semuanya dalam satu paket.
 
-Nama **Rakta** berasal dari bahasa Sansekerta. Artinya merah, energi hidup, keberanian, kekuatan, identitas, dan gerak. Di dalam nama ini juga ada pengingat kecil: ketika orang biasa menanggung hari yang berat dalam diam, setiap tool kecil seharusnya membantu mereka membangun sesuatu yang benar-benar milik mereka—bukan sesuatu yang membuat mereka terus menunggu di depan gerbang.
+Nama **Rakta** berasal dari bahasa Sansekerta. Artinya merah, energi hidup, keberanian, kekuatan, identitas, dan gerak. Di dalam nama ini juga ada pengingat kecil: ketika orang biasa menanggung hari yang berat dalam diam, setiap tool kecil seharusnya membantu mereka membangun sesuatu yang benar-benar milik mereka-bukan sesuatu yang membuat mereka terus menunggu di depan gerbang.
 
-Maskot udang mewakili Cirebon, kota pesisir di Jawa Barat. Cirebon dikenal dengan budaya udangnya, kerajinan batik Trusmi, motif Mega Mendung, dan warisan keraton. Rakta.js menggunakan identitas ini sebagai fondasi yang hidup—bukan sekadar hiasan, melainkan bagian nyata dari siapa yang membangunnya dan mengapa.
+Maskot udang mewakili Cirebon, kota pesisir di Jawa Barat. Cirebon dikenal dengan budaya udangnya, kerajinan batik Trusmi, motif Mega Mendung, dan warisan keraton. Rakta.js menggunakan identitas ini sebagai fondasi yang hidup-bukan sekadar hiasan, melainkan bagian nyata dari siapa yang membangunnya dan mengapa.
 
 ---
 
@@ -142,9 +142,9 @@ Maskot udang mewakili Cirebon, kota pesisir di Jawa Barat. Cirebon dikenal denga
 
 ## Feature Identity | Identitas Fitur
 
-**English** Rakta.js uses its own naming system for all public features. The names are inspired by the cultural heritage of Cirebon and the wider Indonesia region, so they are memorable, unique, and carry real meaning—not just generic tech names.
+**English** Rakta.js uses its own naming system for all public features. The names are inspired by the cultural heritage of Cirebon and the wider Indonesia region, so they are memorable, unique, and carry real meaning-not just generic tech names.
 
-**Bahasa Indonesia** Rakta.js menggunakan sistem penamaan sendiri untuk semua fitur publik. Nama-nama ini terinspirasi dari warisan budaya Cirebon dan Indonesia, sehingga mudah diingat, unik, dan punya makna nyata—bukan sekadar nama teknologi generik.
+**Bahasa Indonesia** Rakta.js menggunakan sistem penamaan sendiri untuk semua fitur publik. Nama-nama ini terinspirasi dari warisan budaya Cirebon dan Indonesia, sehingga mudah diingat, unik, dan punya makna nyata-bukan sekadar nama teknologi generik.
 
 | Feature | Fitur | Purpose (EN) | Fungsi (ID) |
 | --- | --- | --- | --- |
@@ -268,9 +268,9 @@ Mode ini **tidak** menghasilkan: `backend/`, `database/`, `schema/`, `prisma/`, 
 
 ### Fullstack App
 
-**English** Use this when you need both a frontend and a backend in one monorepo. The backend uses **Gaman.js**—a Cirebon-named lightweight Express-like server framework included with Rakta.js. This mode gives you authentication, database adapter contracts, data seeders for testing, and shared types out of the box.
+**English** Use this when you need both a frontend and a backend in one monorepo. The backend uses **Gaman.js**-a Cirebon-named lightweight Express-like server framework included with Rakta.js. This mode gives you authentication, database adapter contracts, data seeders for testing, and shared types out of the box.
 
-**Bahasa Indonesia** Gunakan ini saat kamu butuh frontend dan backend sekaligus dalam satu monorepo. Backend menggunakan **Gaman.js**—framework server ringan bergaya Express yang dinamai dari Cirebon, sudah termasuk dalam Rakta.js. Mode ini memberikan autentikasi, kontrak adapter database, data seeder untuk testing, dan shared types langsung siap pakai.
+**Bahasa Indonesia** Gunakan ini saat kamu butuh frontend dan backend sekaligus dalam satu monorepo. Backend menggunakan **Gaman.js**-framework server ringan bergaya Express yang dinamai dari Cirebon, sudah termasuk dalam Rakta.js. Mode ini memberikan autentikasi, kontrak adapter database, data seeder untuk testing, dan shared types langsung siap pakai.
 
 ```bash
 bun create rakta-app@latest my-fullstack
@@ -599,4 +599,5 @@ Dibuat dengan bangga oleh **Muhammad Rizky Ramadhan**, dikenal juga sebagai **Rh
 
 ## License | Lisensi
 
-MIT. See [LICENCE](LICENCE).
+MIT - Rakta.js | Vyagra Nexus™ ❤️ 🇮🇩 Indonesian & 🇵🇸 Palestine
+[LICENSE](./LICENSE).*

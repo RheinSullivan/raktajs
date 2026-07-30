@@ -13,7 +13,7 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"raktajs": "^1.0.8",
+		"raktajs": "^1.0.9",
 		"react": "^19.2.7",
 		"react-dom": "^19.2.7",
 		"gsap": "^3.12.7",

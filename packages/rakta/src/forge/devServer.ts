@@ -116,7 +116,7 @@ export async function startDevServer(
 	// Development-only. Zero cost in production: this module is never imported
 	// by the production server path (tide/adapter.ts).
 	// Read version from the closest raktajs package.json at runtime
-	let _rVersion = "1.0.8";
+	let _rVersion = "1.0.9";
 	try {
 		const _pkgCandidates = [
 			join(options.projectRoot, "node_modules", "raktajs", "package.json"),
