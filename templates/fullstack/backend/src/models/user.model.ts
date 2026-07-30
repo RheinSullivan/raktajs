@@ -1,4 +1,10 @@
-export type UserRole = "ADMIN" | "USER" | "GUEST";
+export type UserRole =
+	| "Super Admin"
+	| "Organization"
+	| "Administrator"
+	| "ADMIN"
+	| "USER"
+	| "GUEST";
 export type Gender = "MALE" | "FEMALE" | "OTHER";
 
 export interface User {

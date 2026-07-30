@@ -7,6 +7,10 @@
 		"dev": "bun run --watch src/index.ts",
 		"build": "bun build src/index.ts --outfile dist/index.js --target bun",
 		"start": "bun run dist/index.js",
+		"migration": "bun run src/database/migrations/index.ts",
+		"migrate": "bun run src/database/migrations/index.ts",
+		"seed": "bun run src/database/seeders/index.ts",
+		"db:seed": "bun run src/database/seeders/index.ts",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {

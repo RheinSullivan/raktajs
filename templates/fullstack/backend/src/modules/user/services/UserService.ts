@@ -1,29 +1,12 @@
 import { database } from "../../../database/client";
+import { seedUsers as seedUsersFn } from "../../../database/seeders/UserSeeder";
 import { hashPassword } from "../../../security/password";
 import type { Gender, PublicUser, User, UserRole } from "../models/UserModel";
 import { toPublicUser } from "../models/UserModel";
 
 export class UserService {
 	async seedUsers(): Promise<void> {
-		if (database.users.all().length > 0) {
-			return;
-		}
-
-		const now = new Date().toISOString();
-		const admin: User = {
-			id: "user_demo",
-			firstName: "Rakta",
-			lastName: "Admin",
-			name: "Rakta Admin",
-			email: "admin@rakta.local",
-			passwordHash: await hashPassword("rakta-password"),
-			role: "ADMIN",
-			gender: "MALE",
-			createdAt: now,
-			updatedAt: now,
-		};
-
-		database.users.create(admin);
+		await seedUsersFn();
 	}
 
 	listUsers(): PublicUser[] {

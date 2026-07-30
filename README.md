@@ -76,7 +76,7 @@ Assalamu'alaikum Warahmatullahi Wabarakatuh · Shalom · Om Swastiastu · Namo B
 
   Rakta.js was created by **Muhammad Rizky Ramadhan**, a software developer from **Cirebon & South Jakarta, Indonesia**, known in the developer community as **Rhein Sullivan**, lead of **Vyagra Nexus™**.
 
-  The vision behind Rakta.js is simple: stop repeating the same setup across every project. Features like *file-based routing*, *auto-import with zero manual import statements*, *type-safe RPC*, an integrated *frontend-backend monolith* architecture, and *built-in authentication* are all available in one unified package-no fragmentation, no layered configuration, no fighting your tools.
+  The vision behind Rakta.js is simple: stop repeating the same setup across every project. Features like *file-based routing*, *auto-import with zero manual import statements*, *type-safe RPC*, an integrated *frontend-backend monolith* architecture, and *built-in authentication* are all available in one unified package no fragmentation, no layered configuration, no fighting your tools.
 
   Rakta.js does not aim to replace frameworks like Next.js, Nuxt, or Remix. It is a different take: **a framework that feels clean, fast, and has its own identity**, built by an Indonesian developer who wanted something simpler and more honest.
 
@@ -87,7 +87,7 @@ Assalamu'alaikum Warahmatullahi Wabarakatuh · Shalom · Om Swastiastu · Namo B
 
   Rakta.js diciptakan oleh **Muhammad Rizky Ramadhan**, pengembang perangkat lunak asal **Cirebon & Jakarta Selatan, Indonesia**, yang dikenal di komunitas developer sebagai **Rhein Sullivan**, ketua dari tim **Vyagra Nexus™**.
 
-  Visi di balik Rakta.js sederhana: berhenti mengulang setup yang sama di setiap project. Fitur-fitur seperti *routing berbasis file*, *auto-import tanpa satu pun pernyataan import manual*, *RPC type-safe*, arsitektur *monolith frontend-backend*, dan *autentikasi bawaan* tersedia dalam satu paket terpadu-tanpa fragmentasi, tanpa konfigurasi berlapis, tanpa bersaing dengan tools sendiri.
+  Visi di balik Rakta.js sederhana: berhenti mengulang setup yang sama di setiap project. Fitur-fitur seperti *routing berbasis file*, *auto-import tanpa satu pun pernyataan import manual*, *RPC type-safe*, arsitektur *monolith frontend-backend*, dan *autentikasi bawaan* tersedia dalam satu paket terpadu tanpa fragmentasi, tanpa konfigurasi berlapis, tanpa bersaing dengan tools sendiri.
 
   Rakta.js tidak hadir untuk menggantikan Next.js, Nuxt, atau Remix. Ini adalah perspektif berbeda: **framework yang terasa bersih, cepat, dan punya identitas sendiri**, dibuat oleh developer Indonesia yang ingin sesuatu yang lebih sederhana dan lebih jujur.
 
@@ -101,19 +101,19 @@ Assalamu'alaikum Warahmatullahi Wabarakatuh · Shalom · Om Swastiastu · Namo B
 
 **English**
 
-Rakta.js is a lightweight, composable frontend framework built on React, Bun, and TypeScript. It provides file-based routing, flexible rendering modes (CSR, SSR, SSG, SPA, Hybrid), SEO tooling, PWA support, type-safe RPC, state management, schema validation, an HTTP client, and a project generator-all in one package.
+Rakta.js is a lightweight, composable frontend framework built on React, Bun, and TypeScript. It provides file-based routing, flexible rendering modes (CSR, SSR, SSG, SPA, Hybrid), SEO tooling, PWA support, type-safe RPC, state management, schema validation, an HTTP client, and a project generator all in one package.
 
-The name **Rakta** comes from Sanskrit. It means red, life energy, courage, strength, identity, and movement. There is also a quiet reminder inside this name: when ordinary people carry heavy days in silence, every small tool should help them build something that truly belongs to them-not something that keeps them waiting at the gate.
+The name **Rakta** comes from Sanskrit. It means red, life energy, courage, strength, identity, and movement. There is also a quiet reminder inside this name: when ordinary people carry heavy days in silence, every small tool should help them build something that truly belongs to them not something that keeps them waiting at the gate.
 
-The shrimp mascot represents Cirebon, a coastal city in West Java, Indonesia. Cirebon is known for its shrimp culture, the *Trusmi* batik craftsmanship, *Mega Mendung* cloud motifs, and its royal kraton heritage. Rakta.js uses this identity as a living foundation-not as decoration, but as a real part of who built it and why.
+The shrimp mascot represents Cirebon, a coastal city in West Java, Indonesia. Cirebon is known for its shrimp culture, the *Trusmi* batik craftsmanship, *Mega Mendung* cloud motifs, and its royal kraton heritage. Rakta.js uses this identity as a living foundation not as decoration, but as a real part of who built it and why.
 
 **Bahasa Indonesia**
 
-Rakta.js adalah Frontend Framework ringan yang dibangun di atas React, Bun, dan TypeScript. Tersedia routing berbasis file, berbagai mode rendering (CSR, SSR, SSG, SPA, Hybrid), SEO tooling, PWA, RPC type-safe, state management, validasi schema, HTTP client, dan generator project-semuanya dalam satu paket.
+Rakta.js adalah Frontend Framework ringan yang dibangun di atas React, Bun, dan TypeScript. Tersedia routing berbasis file, berbagai mode rendering (CSR, SSR, SSG, SPA, Hybrid), SEO tooling, PWA, RPC type-safe, state management, validasi schema, HTTP client, dan generator project semuanya dalam satu paket.
 
-Nama **Rakta** berasal dari bahasa Sansekerta. Artinya merah, energi hidup, keberanian, kekuatan, identitas, dan gerak. Di dalam nama ini juga ada pengingat kecil: ketika orang biasa menanggung hari yang berat dalam diam, setiap tool kecil seharusnya membantu mereka membangun sesuatu yang benar-benar milik mereka-bukan sesuatu yang membuat mereka terus menunggu di depan gerbang.
+Nama **Rakta** berasal dari bahasa Sansekerta. Artinya merah, energi hidup, keberanian, kekuatan, identitas, dan gerak. Di dalam nama ini juga ada pengingat kecil: ketika orang biasa menanggung hari yang berat dalam diam, setiap tool kecil seharusnya membantu mereka membangun sesuatu yang benar-benar milik mereka bukan sesuatu yang membuat mereka terus menunggu di depan gerbang.
 
-Maskot udang mewakili Cirebon, kota pesisir di Jawa Barat. Cirebon dikenal dengan budaya udangnya, kerajinan batik Trusmi, motif Mega Mendung, dan warisan keraton. Rakta.js menggunakan identitas ini sebagai fondasi yang hidup-bukan sekadar hiasan, melainkan bagian nyata dari siapa yang membangunnya dan mengapa.
+Maskot udang mewakili Cirebon, kota pesisir di Jawa Barat. Cirebon dikenal dengan budaya udangnya, kerajinan batik Trusmi, motif Mega Mendung, dan warisan keraton. Rakta.js menggunakan identitas ini sebagai fondasi yang hidup bukan sekadar hiasan, melainkan bagian nyata dari siapa yang membangunnya dan mengapa.
 
 ---
 
@@ -142,29 +142,29 @@ Maskot udang mewakili Cirebon, kota pesisir di Jawa Barat. Cirebon dikenal denga
 
 ## Feature Identity | Identitas Fitur
 
-**English** Rakta.js uses its own naming system for all public features. The names are inspired by the cultural heritage of Cirebon and the wider Indonesia region, so they are memorable, unique, and carry real meaning-not just generic tech names.
+**English** Rakta.js uses its own naming system for all public features. The names are inspired by the cultural heritage of Cirebon and the wider Indonesia region, so they are memorable, unique, and carry real meaning not just generic tech names.
 
-**Bahasa Indonesia** Rakta.js menggunakan sistem penamaan sendiri untuk semua fitur publik. Nama-nama ini terinspirasi dari warisan budaya Cirebon dan Indonesia, sehingga mudah diingat, unik, dan punya makna nyata-bukan sekadar nama teknologi generik.
+**Bahasa Indonesia** Rakta.js menggunakan sistem penamaan sendiri untuk semua fitur publik. Nama-nama ini terinspirasi dari warisan budaya Cirebon dan Indonesia, sehingga mudah diingat, unik, dan punya makna nyata bukan sekadar nama teknologi generik.
 
 | Feature | Fitur | Purpose (EN) | Fungsi (ID) |
 | --- | --- | --- | --- |
-| **MegaWeave** | File-based routing layer; pages are discovered automatically from the `app/` folder | Layer routing berbasis file; halaman ditemukan otomatis dari folder `app/` |
-| **ShrimpStep** | Navigation component using `<click to="">` syntax, handles SPA routing without full page reload | Komponen navigasi dengan sintaks `<click to="">`, mengelola routing SPA tanpa reload halaman |
-| **TrusmiFrame** | Optimized image component using `<picture path="">`, named after Trusmi batik | Komponen gambar teroptimasi dengan `<picture path="">`, dinamai dari batik Trusmi |
-| **PanturaScroll** | Smooth scroll and in-page section navigation using `<pantura to="">` / `<reborns id="">` | Smooth scroll dan navigasi bagian halaman menggunakan `<pantura to="">` / `<reborns id="">` |
-| **KasepuhanGate** | File-based API endpoint system, named after Kasepuhan Palace in Cirebon | Sistem endpoint API berbasis file, dinamai dari Keraton Kasepuhan Cirebon |
-| **KanomanShield** | Route protection and authentication guard layer, named after Kanoman Palace | Layer proteksi route dan autentikasi, dinamai dari Keraton Kanoman |
-| **SunyaragiCrown** | Metadata and `<head>` manager for SEO, named after Taman Sari Gua Sunyaragi | Manajer metadata dan `<head>` untuk SEO, dinamai dari Taman Sari Gua Sunyaragi |
-| **NagaLimanWire** | Type-safe RPC connecting backend to frontend, named after Paksi Naga Liman | RPC type-safe yang menghubungkan backend ke frontend, dinamai dari Paksi Naga Liman |
-| **TrusmiThread** | Auto-import scanner that generates typed declarations for components and utilities | Scanner auto-import yang menghasilkan deklarasi bertype untuk komponen dan utility |
-| **CherbonsEngine** | Build and dev engine powered by Bun, Vite, and esbuild | Engine build dan dev berbasis Bun, Vite, dan esbuild |
-| **NorthCoastFlow** | Runtime rendering flow manager controls SSR, CSR, SSG, and hybrid strategies | Manajer alur rendering runtime mengontrol strategi SSR, CSR, SSG, dan hybrid |
-| **MegaSignal** | Full SEO layer: sitemap, robots.txt, RSS, JSON-LD, Open Graph, Twitter card | Layer SEO lengkap: sitemap, robots.txt, RSS, JSON-LD, Open Graph, Twitter card |
-| **ShrimpHarbor** | PWA and offline layer: service worker, web manifest, cache strategies, install prompt | Layer PWA dan offline: service worker, web manifest, strategi cache, install prompt |
-| **JatiLens** | DX diagnostics: bundle analyzer, route inspector, dependency graph, performance profiler | Diagnostik DX: bundle analyzer, route inspector, dependency graph, performance profiler |
-| **RaktaKernel** | Dependency injection container, service registry, environment manager, plugin system | Container dependency injection, registry service, manajer environment, dan sistem plugin |
-| **RaktaMiddleware** | Async request middleware pipeline with full lifecycle control | Pipeline middleware request async dengan kontrol lifecycle penuh |
-| **RaktaDocs** | Markdown documentation manifest generator and VitePress bridge | Generator manifest dokumentasi Markdown dan jembatan VitePress |
+| **MegaWeave** | Routing Berbasis File | File-based routing layer pages are discovered automatically from the `app/` folder | Layer routing berbasis file halaman ditemukan otomatis dari folder `app/` |
+| **ShrimpStep** | Navigasi SPA | Navigation component using `<click to="">` syntax, handles SPA routing without full page reload | Komponen navigasi dengan sintaks `<click to="">`, mengelola routing SPA tanpa reload halaman |
+| **TrusmiFrame** | Gambar Teroptimasi | Optimized image component using `<picture path="">`, named after Trusmi batik | Komponen gambar teroptimasi dengan `<picture path="">`, dinamai dari batik Trusmi |
+| **PanturaScroll** | Smooth Scroll | Smooth scroll and in-page section navigation using `<pantura to="">` and `<reborns id="">` | Smooth scroll dan navigasi bagian halaman menggunakan `<pantura to="">` dan `<reborns id="">` |
+| **KasepuhanGate** | API Endpoint System | File-based API endpoint system, named after Kasepuhan Palace in Cirebon | Sistem endpoint API berbasis file, dinamai dari Keraton Kasepuhan Cirebon |
+| **KanomanShield** | Auth Protection Layer | Route protection and authentication guard layer, named after Kanoman Palace | Layer proteksi route dan autentikasi, dinamai dari Keraton Kanoman |
+| **SunyaragiCrown** | SEO & Head Manager | Metadata and `<head>` manager for SEO, named after Taman Sari Gua Sunyaragi | Manajer metadata dan `<head>` untuk SEO, dinamai dari Taman Sari Gua Sunyaragi |
+| **NagaLimanWire** | Type-Safe RPC | Type-safe RPC connecting backend to frontend, named after Paksi Naga Liman | RPC type-safe yang menghubungkan backend ke frontend, dinamai dari Paksi Naga Liman |
+| **TrusmiThread** | Auto-Import Scanner | Auto-import scanner that generates typed declarations for components and utilities | Scanner auto-import yang menghasilkan deklarasi bertype untuk komponen dan utility |
+| **CherbonsEngine** | Build Engine | Build and dev engine powered by Bun, Vite, and esbuild | Engine build dan dev berbasis Bun, Vite, dan esbuild |
+| **NorthCoastFlow** | Rendering Flow Manager | Runtime rendering flow manager controls SSR, CSR, SSG, and hybrid strategies | Manajer alur rendering runtime mengontrol strategi SSR, CSR, SSG, dan hybrid |
+| **MegaSignal** | SEO Suite | Full SEO layer: sitemap, robots.txt, RSS, JSON-LD, Open Graph, Twitter card | Layer SEO lengkap: sitemap, robots.txt, RSS, JSON-LD, Open Graph, Twitter card |
+| **ShrimpHarbor** | PWA Layer | PWA and offline layer: service worker, web manifest, cache strategies, install prompt | Layer PWA dan offline: service worker, web manifest, strategi cache, install prompt |
+| **JatiLens** | DX Diagnostics | DX diagnostics: bundle analyzer, route inspector, dependency graph, profiler | Diagnostik DX: bundle analyzer, route inspector, dependency graph, profiler |
+| **RaktaKernel** | Kernel Framework | Dependency injection container, service registry, environment manager, plugin system | Container dependency injection, registry service, manajer environment, sistem plugin |
+| **RaktaMiddleware** | Pipeline Middleware | Async request middleware pipeline with full lifecycle control | Pipeline middleware request async dengan kontrol lifecycle penuh |
+| **RaktaDocs** | Documentation Engine | Markdown documentation manifest generator and VitePress bridge | Generator manifest dokumentasi Markdown dan jembatan VitePress |
 
 ---
 
@@ -198,7 +198,7 @@ pnpm create rakta-app@latest my-app
 yarn create rakta-app my-app
 ```
 
-### Using bunx | npx directly
+### Using bunx / npx directly
 
 ```bash
 # Bun
@@ -246,31 +246,31 @@ Generated structure | Struktur yang dihasilkan:
 ```txt
 my-frontend/
 ├─ app/
-│  ├─ page.tsx          Halaman utama | Main page
-│  ├─ layout.tsx        Layout wrapper global
-│  ├─ loading.tsx       Tampilan loading
-│  ├─ error.tsx         Tampilan error
-│  └─ not-found.tsx     Halaman 404
-├─ app/components/      Komponen UI
-├─ app/lib/             Helper, utilities, data
-├─ app/hooks/           Custom React hooks
-├─ public/              Static assets
+│  ├─ page.tsx          # Halaman utama | Main page
+│  ├─ layout.tsx        # Layout wrapper global
+│  ├─ loading.tsx       # Tampilan loading
+│  ├─ error.tsx         # Tampilan error
+│  └─ not-found.tsx     # Halaman 404
+├─ app/components/      # Komponen UI
+├─ app/lib/             # Helper, utilities, data
+├─ app/hooks/           # Custom React hooks
+├─ public/              # Static assets
 ├─ styles/
-│  └─ globals.css       Global CSS
-├─ rakta.config.ts      Konfigurasi framework
+│  └─ globals.css       # Global CSS
+├─ rakta.config.ts      # Konfigurasi framework
 ├─ package.json
 └─ tsconfig.json
 ```
 
-This mode does **not** generate: `backend/`, `database/`, `schema/`, `prisma/`, `shared/`, or any server-only files.
+This mode does **not** generate server-only files.
 
-Mode ini **tidak** menghasilkan: `backend/`, `database/`, `schema/`, `prisma/`, `shared/`, atau file server-only apapun.
+Mode ini **tidak** menghasilkan file server-only.
 
-### Fullstack App
+### Fullstack App (Powered by Gaman.js)
 
-**English** Use this when you need both a frontend and a backend in one monorepo. The backend uses **Gaman.js**-a Cirebon-named lightweight Express-like server framework included with Rakta.js. This mode gives you authentication, database adapter contracts, data seeders for testing, and shared types out of the box.
+**English** Use this when you need both a frontend and a backend in one monorepo. The backend uses **Gaman.js** a Cirebon-named lightweight Express-like server framework included with Rakta.js. This mode gives you authentication, database adapter contracts, data seeders for testing, and shared types out of the box.
 
-**Bahasa Indonesia** Gunakan ini saat kamu butuh frontend dan backend sekaligus dalam satu monorepo. Backend menggunakan **Gaman.js**-framework server ringan bergaya Express yang dinamai dari Cirebon, sudah termasuk dalam Rakta.js. Mode ini memberikan autentikasi, kontrak adapter database, data seeder untuk testing, dan shared types langsung siap pakai.
+**Bahasa Indonesia** Gunakan ini saat kamu butuh frontend dan backend sekaligus dalam satu monorepo. Backend menggunakan **Gaman.js** framework server ringan bergaya Express yang dinamai dari Cirebon, sudah termasuk dalam Rakta.js. Mode ini memberikan autentikasi, kontrak adapter database, data seeder untuk pengujian, dan shared types langsung siap pakai.
 
 ```bash
 bun create rakta-app@latest my-fullstack
@@ -282,35 +282,78 @@ Generated structure | Struktur yang dihasilkan:
 ```txt
 my-fullstack/
 ├─ frontend/
-│  ├─ app/              Halaman dan routing | Pages and routing
-│  ├─ app/components/   Komponen UI | UI components
-│  ├─ app/lib/          Helper dan data | Helpers and data
-│  ├─ app/hooks/        Custom hooks
-│  ├─ public/           Static assets
+│  ├─ app/              # Halaman dan routing
+│  ├─ app/components/   # Komponen UI
+│  ├─ app/lib/          # Helper dan data
+│  ├─ app/hooks/        # Custom hooks
+│  ├─ public/
 │  ├─ styles/
-│  └─ rakta.config.ts   Frontend configuration
+│  └─ rakta.config.ts
 ├─ backend/
 │  ├─ src/
-│  │  ├─ index.ts                 # Orchestrator (Entry Point)
-│  │  ├─ console/                 # Helper tool for custom commands
+│  │  ├─ index.ts                 # The Orchestrator (Entry Point)
+│  │  ├─ console/                 # Helper tool for adding custom commands
+│  │  │  ├─ commands.ts
+│  │  │  └─ index.ts
 │  │  ├─ database/                # Database Configuration
-│  │  │  ├─ models/               # Global model and schema databases
-│  │  │  ├─ migrations/           # Database migration files
-│  │  │  └─ seeders/              # Database seeders files (Testing data)
+│  │  │  ├─ client.ts
+│  │  │  ├─ models/              # Global model and schema databases
+│  │  │  │  └─ index.ts
+│  │  │  ├─ migrations/          # Database migration files
+│  │  │  │  └─ index.ts
+│  │  │  └─ seeders/             # Database seeders files
+│  │  │     ├─ index.ts
+│  │  │     ├─ DatabaseSeeder.ts
+│  │  │     ├─ UserSeeder.ts
+│  │  │     └─ CmsSeeder.ts
 │  │  └─ modules/                 # Powerhouse of your Application
-│  │     ├─ app/                  # Infrastructure Module (Global/Shared)
-│  │     │  ├─ controllers/       # Handlers for Global Requests (AppController.ts)
-│  │     │  ├─ services/          # Shared Utilities (AppService.ts)
-│  │     │  └─ AppRouter.ts       # Global Middleware & Base Routing
-│  │     └─ user/                 # Feature Module (User Management)
-│  │        ├─ controllers/       # Request Handlers (UserController.ts)
-│  │        ├─ services/          # Business Logic & Auth (UserService.ts)
-│  │        ├─ models/            # Data Access Layer (UserModel.ts)
-│  │        └─ UserRouter.ts      # Scoped Routes & Feature Middleware
+│  │     ├─ app/                 # Infrastructure Module (Global/Shared)
+│  │     │  ├─ controllers/     # Handlers for Global Requests (Health, Index)
+│  │     │  │  └─ AppController.ts
+│  │     │  ├─ services/        # Shared Utilities & System Services
+│  │     │  │  └─ AppService.ts
+│  │     │  └─ AppRouter.ts     # Global Middleware & Base Routing
+│  │     │
+│  │     └─ user/                # Feature Module (Example: User Management)
+│  │        ├─ controllers/     # Request Handlers (Login, Register, Profile)
+│  │        │  └─ UserController.ts
+│  │        ├─ services/        # Business Logic (Auth Logic, User CRUD)
+│  │        │  └─ UserService.ts
+│  │        ├─ models/          # Data Access Layer (Powered by @gaman/db)
+│  │        │  └─ UserModel.ts
+│  │        └─ UserRouter.ts    # Scoped Routes & Feature Middleware
 │  └─ package.json
-├─ shared/              Shared types and contracts
+├─ shared/              # Types dan contracts bersama
+├─ docs/
 ├─ package.json
 └─ tsconfig.base.json
+```
+
+---
+
+## Data Seeders for Testing | Data Seeder untuk Pengujian
+
+**English** Gaman.js backend includes built-in database seeders located in `backend/src/database/seeders/`. Seeders automatically populate initial mock users, CMS posts, and test data during startup or on-demand testing commands.
+
+**Bahasa Indonesia** Backend Gaman.js memiliki seeder database bawaan di folder `backend/src/database/seeders/`. Seeder secara otomatis mengisi mock data user, artikel CMS, dan data pengujian saat aplikasi startup atau saat menjalankan perintah testing.
+
+Run database seeders manually:
+
+Jalankan data seeder secara manual:
+
+```bash
+cd backend
+bun run db:seed
+```
+
+Or via code in your entry point:
+
+Atau via kode di entry point:
+
+```ts
+import { runDatabaseSeeders } from "./database/seeders/index";
+
+await runDatabaseSeeders();
 ```
 
 ---
@@ -354,11 +397,15 @@ export default defineConfig({
 
 ## Public Components | Komponen Publik
 
-**English** Rakta.js provides its own custom HTML elements for navigation and images. These are compiled during build so your code stays clean and framework-native.
+**English** Rakta.js provides its own custom HTML elements for navigation and images. These are not standard HTML tags they are Rakta.js framework elements that get compiled during the build. This means your code stays clean and framework-native.
 
-**Bahasa Indonesia** Rakta.js menyediakan elemen HTML kustom sendiri untuk navigasi dan gambar yang dikompilasi saat build.
+**Bahasa Indonesia** Rakta.js menyediakan elemen HTML kustom sendiri untuk navigasi dan gambar. Ini bukan tag HTML standar melainkan elemen framework Rakta.js yang dikompilasi saat build. Artinya kode kamu tetap bersih dan native terhadap framework.
 
 ### `<click>` Navigation | Navigasi
+
+**English** Use `<click to="">` instead of `<a href="">` for internal navigation. It handles SPA routing automatically, supports active state detection, prefetching, and keyboard accessibility out of the box.
+
+**Bahasa Indonesia** Gunakan `<click to="">` sebagai ganti `<a href="">` untuk navigasi internal. Ini mengelola routing SPA secara otomatis, mendukung deteksi status aktif, prefetching, dan aksesibilitas keyboard tanpa konfigurasi tambahan.
 
 ```tsx
 // Navigasi sederhana | Simple navigation
@@ -374,13 +421,17 @@ export default defineConfig({
   Products
 </click>
 
-// Link eksternal | External link
+// Link eksternal (otomatis buka tab baru) | External link (automatically opens new tab)
 <click to="https://github.com/RheinSullivan/raktajs">
   GitHub
 </click>
 ```
 
 ### `<picture>` Optimized Image | Gambar Teroptimasi
+
+**English** Use `<picture path="">` for images. It handles responsive sizing, lazy loading, and format optimization.
+
+**Bahasa Indonesia** Gunakan `<picture path="">` untuk gambar. Ini mengelola ukuran responsif, lazy loading, dan optimasi format.
 
 ```tsx
 <picture path="/shrimp.png" alt="Rakta.js shrimp mascot" />
@@ -391,11 +442,15 @@ export default defineConfig({
 
 ### `<pantura>` | `<reborns>` Smooth Scroll
 
+**English** Use `<pantura to="">` for smooth in-page navigation to a specific section, and `<reborns id="">` to mark the target. Named after Jalur Pantura (Pantai Utara), the iconic north coast highway of Java that connects cities along the coastline.
+
+**Bahasa Indonesia** Gunakan `<pantura to="">` untuk navigasi halus ke bagian tertentu di halaman yang sama, dan `<reborns id="">` untuk menandai target. Dinamai dari Jalur Pantura (Pantai Utara), jalan pantai utara Jawa yang ikonik dan menghubungkan kota-kota pesisir.
+
 ```tsx
 // Scroll ke section | Scroll to section
 <pantura to="contact">Contact Us</pantura>
 
-// Dengan offset | With offset
+// Dengan offset (berguna jika ada sticky navbar) | With offset (useful with sticky navbar)
 <pantura to="features" offset={80} duration={600}>
   See Features
 </pantura>
@@ -426,9 +481,14 @@ function Navbar() {
 
 ## Schema Validation | Validasi Schema
 
+**English** Rakta.js includes a built-in schema validation layer. You can validate user input, API responses, form data, or any data structure without adding a separate library like Zod or Yup. The API is designed to be readable and composable.
+
+**Bahasa Indonesia** Rakta.js punya layer validasi schema bawaan. Kamu bisa memvalidasi input pengguna, respons API, data form, atau struktur data apapun tanpa menambahkan library terpisah seperti Zod atau Yup. API-nya dirancang agar mudah dibaca dan bisa dikombinasikan.
+
 ```ts
 import { object, string, number, array, boolean } from "rakta/schema";
 
+// Definisikan schema | Define schema
 const userSchema = object({
   name: string().min(1).max(100),
   email: string().email(),
@@ -437,6 +497,7 @@ const userSchema = object({
   tags: array(string()),
 });
 
+// Validasi data | Validate data
 const result = userSchema.safeParse({
   name: "Rhein Sullivan",
   email: "rhein@example.com",
@@ -446,8 +507,10 @@ const result = userSchema.safeParse({
 });
 
 if (result.kind === "success") {
-  console.log(result.data.name);
+  // result.data sudah bertype penuh | result.data is fully typed
+  console.log(result.data.name); // "Rhein Sullivan"
 } else {
+  // result.errors berisi detail error per field | result.errors contains per-field error details
   console.error(result.errors);
 }
 ```
@@ -456,20 +519,26 @@ if (result.kind === "success") {
 
 ## Type-Safe RPC | RPC Type-Safe
 
-**Server Define procedures | Definisikan prosedur:**
+**English** **NagaLimanWire** is Rakta.js's built-in RPC system. It lets you define server-side procedures and call them from the frontend as if they were local functions with full TypeScript type safety across the network boundary. No manual API route writing, no type duplication, no `fetch` boilerplate.
+
+**Bahasa Indonesia** **NagaLimanWire** adalah sistem RPC bawaan Rakta.js. Ini memungkinkan kamu mendefinisikan prosedur sisi server dan memanggilnya dari frontend seolah-olah seperti fungsi lokal dengan type safety TypeScript penuh melewati batas jaringan. Tidak perlu menulis route API manual, tidak ada duplikasi type, tidak ada boilerplate `fetch`.
+
+**Server Procedures | Definisikan Prosedur Sisi Server:**
 
 ```ts
-// backend/src/modules/user/UserRouter.ts / router
+// backend/src/router.ts
 import { createRaktaRouter, publicProcedure, protectedProcedure } from "rakta/rpc";
 import { object, string } from "rakta/schema";
 
 export const appRouter = createRaktaRouter({
+  // Prosedur publik siapa saja bisa akses | Public procedure anyone can access
   getUser: publicProcedure
     .input(object({ id: string() }))
     .query(async ({ input }) => {
       return { id: input.id, name: "Rhein", role: "admin" };
     }),
 
+  // Prosedur dengan mutation | Mutation procedure
   createPost: protectedProcedure
     .input(object({
       title: string().min(1),
@@ -483,12 +552,12 @@ export const appRouter = createRaktaRouter({
 export type AppRouter = typeof appRouter;
 ```
 
-**Client Call procedures | Panggil prosedur:**
+**Client Call | Panggil Prosedur di Client:**
 
 ```ts
 // frontend/app/page.tsx
 import { createRaktaClient } from "rakta/rpc";
-import type { AppRouter } from "../../backend/src/modules/user/UserRouter";
+import type { AppRouter } from "../../backend/src/router";
 
 const api = createRaktaClient<AppRouter>({
   baseUrl: "http://localhost:3000/rpc",
@@ -496,11 +565,20 @@ const api = createRaktaClient<AppRouter>({
 
 const user = await api.getUser.query({ id: "user-123" });
 console.log(user.name);
+
+const post = await api.createPost.mutate({
+  title: "Hello Rakta.js",
+  content: "This is my first post using Rakta.js RPC.",
+});
 ```
 
 ---
 
 ## Kernel & Plugin System | Sistem Kernel & Plugin
+
+**English** The **RaktaKernel** is the dependency injection and service container at the core of Rakta.js. It manages your app's services (database connections, auth adapters, config values), controls the environment, and provides a predictable lifecycle for plugins.
+
+**Bahasa Indonesia** **RaktaKernel** adalah dependency injection dan service container di inti Rakta.js. Ini mengelola services aplikasi kamu (koneksi database, auth adapter, nilai konfigurasi), mengontrol environment, dan menyediakan lifecycle yang bisa diprediksi untuk plugin.
 
 ```ts
 import { createRaktaKernel } from "rakta/kernel";
@@ -535,69 +613,56 @@ kernel.use({
 await kernel.start();
 ```
 
-**Plugin Lifecycle | Lifecycle Plugin:**
-
-| Phase | Kapan berjalan | Purpose (EN) | Tujuan (ID) |
-| --- | --- | --- | --- |
-| `configure` | Saat kernel start | Register features, capabilities, and options | Daftarkan fitur, kapabilitas, dan opsi |
-| `ready` | Setelah semua plugin configure | Perform async initialization tasks | Jalankan inisialisasi async |
-| `shutdown` | Saat kernel dihentikan | Cleanup resources and connections | Bersihkan resource dan koneksi |
-
 ---
 
-## Developer Experience & Diagnostics | Diagnostik & DX
+## Auto Import
 
-**English** **JatiLens** provides build and runtime diagnostics out of the box:
-- Route Inspector
-- Dependency Graph
-- Bundle Analyzer
-- Dev Terminal with live request logging and color-coded status
+**English** Auto Import scans configured directories and injects runtime globals for components, hooks, utility functions, and data modules. Template app files are written cleanly without manual imports.
 
-**Bahasa Indonesia** **JatiLens** menyediakan diagnostik build dan runtime langsung bawaan:
-- Route Inspector
-- Dependency Graph
-- Bundle Analyzer
-- Dev Terminal dengan log request langsung dan warna status
+**Bahasa Indonesia** Auto Import memindai direktori yang dikonfigurasi dan menyuntikkan global runtime untuk komponen, hook, fungsi utilitas, dan modul data. File template app ditulis dengan bersih tanpa import manual.
 
-```bash
-# Run inspect CLI helper
-bun run dev:rakta --inspect
+```ts
+export default defineConfig({
+  autoImport: {
+    enabled: true,
+    directories: ["app", "components", "lib", "stores", "schemas"],
+    outputDirectory: ".rakta",
+    dts: true,
+  },
+});
 ```
 
 ---
 
 ## Roadmap
 
-| Priority | Focus |
-| --- | --- |
-| Core | Kernel, lifecycle, DI, plugin registry |
-| Middleware | Global, route, layout, API, edge middleware |
-| Layout | Nested, persistent, loading, error, not-found layouts |
-| Data | Streaming, defer, cache, revalidate, ISR |
-| Deployment | Node, Bun, Deno, Cloudflare, Vercel, Netlify, Docker |
-| DX | HMR, overlay, analyzer, devtools, type generator |
+| Priority | Focus (EN) | Fokus (ID) |
+| --- | --- | --- |
+| Core | Kernel, lifecycle, DI, plugin registry | Kernel, lifecycle, DI, registry plugin |
+| Middleware | Global, route, layout, API, edge middleware | Middleware global, route, layout, API, edge |
+| Layout | Nested, persistent, loading, error, not-found layouts | Layout bersarang, persisten, loading, error, not-found |
+| Data | Streaming, defer, cache, revalidate, ISR | Streaming, defer, cache, revalidate, ISR |
+| Deployment | Node, Bun, Deno, Cloudflare, Vercel, Netlify, Docker | Provider deployment Node, Bun, Cloudflare, Vercel, dll |
+| DX | HMR, overlay, analyzer, devtools, type generator | HMR, overlay error, analyzer, devtools, generator tipe |
 
 ---
 
 ## Contributing | Kontribusi
 
-**English** Contributions are welcome. Keep changes focused, typed, tested, and aligned with Rakta.js goals: performance, simplicity, DX, tree shaking, edge runtime compatibility, and production readiness.
+**English** Contributions are welcome! Please ensure your changes remain focused, typed, tested, and aligned with Rakta.js core principles: performance, simplicity, DX, tree shaking, edge runtime compatibility, and production readiness. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-**Bahasa Indonesia** Kontribusi terbuka. Jaga perubahan tetap fokus, bertipe, dites, dan selaras dengan tujuan Rakta.js: performa, kesederhanaan, DX, tree shaking, kompatibilitas edge runtime, dan kesiapan produksi.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+**Bahasa Indonesia** Kontribusi sangat terbuka! Pastikan perubahan kamu tetap fokus, bertipe, dites, dan selaras dengan prinsip utama Rakta.js: performa, kesederhanaan, DX, tree shaking, kompatibilitas edge runtime, dan kesiapan produksi. Lihat [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
 ## Author | Penulis
 
-Built with pride by **Muhammad Rizky Ramadhan**, also known as **Rhein Sullivan**, lead of **Vyagra Nexus™**, from Cirebon & South Jakarta, Indonesia.
+Built by **Muhammad Rizky Ramadhan**, also known as **Rhein Sullivan**, from **Cirebon & South Jakarta, Indonesia**.
 
-Dibuat dengan bangga oleh **Muhammad Rizky Ramadhan**, dikenal juga sebagai **Rhein Sullivan**, ketua dari **Vyagra Nexus™**, dari Cirebon & Jakarta Selatan, Indonesia.
+Dibuat oleh **Muhammad Rizky Ramadhan**, dikenal juga sebagai **Rhein Sullivan**, dari **Cirebon & Jakarta Selatan, Indonesia**.
 
 ---
 
 ## License | Lisensi
 
-MIT - Rakta.js | Vyagra Nexus™ ❤️ 🇮🇩 Indonesian & 🇵🇸 Palestine
-[LICENSE](./LICENSE).*
+MIT License. See [LICENCE](LICENCE).

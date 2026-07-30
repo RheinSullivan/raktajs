@@ -20,3 +20,11 @@ export async function runMigrations(): Promise<readonly string[]> {
 
 	return applied;
 }
+
+if (import.meta.main) {
+	console.log("Running database migrations...");
+	const applied = await runMigrations();
+	console.log(
+		`Database migrations completed. Applied ${applied.length} migration(s).`,
+	);
+}
