@@ -41,7 +41,7 @@ export default function App() {
 				isMuted={isMuted}
 				onMuteToggle={() => setIsMuted((prev) => !prev)}
 				aestheticUnit={aestheticUnit}
-				onAestheticChange={(unit) => setAestheticUnit(unit)}
+				onAestheticChange={(unit: AestheticUnit) => setAestheticUnit(unit)}
 				lowLatencyMode={lowLatencyMode}
 				onLowLatencyToggle={() => setLowLatencyMode((prev) => !prev)}
 			/>
@@ -78,6 +78,9 @@ export default function App() {
 
 			{/* Sub-component: Unified Core Modules Grid */}
 			<FeatureGrid />
+
+			{/* Sub-component: Donations & Humanitarian Support */}
+			<DonationSection />
 
 			{/* Sub-component: Footer */}
 			<Footer />

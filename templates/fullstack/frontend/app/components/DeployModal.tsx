@@ -1,7 +1,3 @@
-// biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
-// biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
-// NOTE: Rakta.js Auto Import mengimpor useState, useEffect, useRef, DEPLOY_LOGS, getLogTextClass, dan ikon secara otomatis.
-
 interface DeployModalProps {
 	isOpen: boolean;
 	onClose: () => void;
@@ -78,6 +74,7 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 						</h2>
 					</div>
 					<button
+						type="button"
 						onClick={onClose}
 						className="p-2 border border-surface-stroke hover:bg-brand-pink hover:text-white transition-colors cursor-pointer"
 						id="close-deploy-btn"
@@ -118,6 +115,7 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 					<div className="flex items-center gap-3">
 						{status === "idle" && (
 							<button
+								type="button"
 								onClick={startDeployment}
 								className="bg-brand-pink hover:bg-white text-white hover:text-black px-6 py-2.5 font-mono text-xs font-bold uppercase transition-all duration-150 border border-transparent active:scale-95 flex items-center gap-2 cursor-pointer"
 							>
@@ -134,6 +132,7 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 						)}
 						{status === "success" && (
 							<button
+								type="button"
 								onClick={resetDeploy}
 								className="border border-white hover:bg-white hover:text-black px-4 py-2.5 font-mono text-xs uppercase transition-all duration-150 flex items-center gap-1.5 cursor-pointer"
 							>
@@ -145,9 +144,9 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 
 				{/* Terminal Log */}
 				<div className="flex-1 bg-black p-5 font-mono text-xs overflow-y-auto flex flex-col gap-2 select-text">
-					{logs.map((log, index) => (
+					{logs.map((log) => (
 						<div
-							key={index}
+							key={`${log.type}-${log.text}`}
 							className={`leading-relaxed whitespace-pre-wrap ${getLogTextClass(log.type)}`}
 						>
 							{log.text}

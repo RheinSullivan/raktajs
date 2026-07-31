@@ -215,7 +215,7 @@ declare module "react" {
 
 // Rakta.js auto-imported globals - zero explicit import needed in component files
 declare global {
-	// Core Types
+	// ── Core Types ──
 	type AestheticUnit = "LENIS-MODERN" | "RETRO-CYBER" | "NEO-BRUTALIST";
 	type ReactNode = import("react").ReactNode;
 	type ReactElement = import("react").ReactElement;
@@ -226,7 +226,7 @@ declare global {
 	type ObstaclePosition = "TOP" | "BOTTOM";
 	type ObstacleSizeClass = "KECIL" | "SEDANG" | "BESAR";
 
-	// React event/utility types - available without any import
+	// ── React event/utility types ──
 	const React: typeof import("react");
 	type FormEvent<T = Element> = import("react").FormEvent<T>;
 	type ChangeEvent<T = Element> = import("react").ChangeEvent<T>;
@@ -235,6 +235,7 @@ declare global {
 	type FocusEvent<T = Element> = import("react").FocusEvent<T>;
 	type CSSProperties = import("react").CSSProperties;
 
+	// ── Game Physics Types ──
 	interface ObstacleSize {
 		height: number;
 		width: number;
@@ -293,6 +294,7 @@ declare global {
 	const readHighScore: (key: string) => number;
 	const saveHighScore: (key: string, score: number) => void;
 
+	// ── Component Prop Interfaces ──
 	interface HeaderProps {
 		lang: "ID" | "EN";
 		onLangToggle: () => void;
@@ -337,20 +339,20 @@ declare global {
 		onClose: () => void;
 	}
 
-	// React Hooks
+	// ── React Hooks ──
 	const useCallback: typeof import("react").useCallback;
 	const useEffect: typeof import("react").useEffect;
 	const useMemo: typeof import("react").useMemo;
 	const useRef: typeof import("react").useRef;
 	const useState: typeof import("react").useState;
 
-	// GSAP
+	// ── GSAP ──
 	const gsap: typeof import("gsap").default;
 
-	// Rakta.js SEO
+	// ── Rakta.js SEO ──
 	const RaktaHead: typeof import("raktajs/seo").RaktaHead;
 
-	// Rakta.js Components
+	// ── Rakta.js Components ──
 	const RaktaToast: typeof import("raktajs/components").RaktaToast;
 	const Toaster: typeof import("raktajs/components").Toaster;
 	const RaktaAlert: typeof import("raktajs/components").RaktaAlert;
@@ -361,36 +363,161 @@ declare global {
 	const toast: typeof import("raktajs/components").toast;
 	const useToast: typeof import("raktajs/components").useToast;
 
-	// Icons
-	const ArrowRight: import("react").ComponentType<Record<string, unknown>>;
-	const Book: import("react").ComponentType<Record<string, unknown>>;
-	const Check: import("react").ComponentType<Record<string, unknown>>;
-	const CheckCircle2: import("react").ComponentType<Record<string, unknown>>;
-	const Cloud: import("react").ComponentType<Record<string, unknown>>;
-	const Code: import("react").ComponentType<Record<string, unknown>>;
-	const Coffee: import("react").ComponentType<Record<string, unknown>>;
-	const Copy: import("react").ComponentType<Record<string, unknown>>;
-	const Cpu: import("react").ComponentType<Record<string, unknown>>;
-	const Github: import("react").ComponentType<Record<string, unknown>>;
-	const Globe: import("react").ComponentType<Record<string, unknown>>;
-	const Heart: import("react").ComponentType<Record<string, unknown>>;
-	const Info: import("react").ComponentType<Record<string, unknown>>;
-	const Play: import("react").ComponentType<Record<string, unknown>>;
-	const RotateCcw: import("react").ComponentType<Record<string, unknown>>;
-	const Search: import("react").ComponentType<Record<string, unknown>>;
-	const Server: import("react").ComponentType<Record<string, unknown>>;
-	const Terminal: import("react").ComponentType<Record<string, unknown>>;
-	const Volume2: import("react").ComponentType<Record<string, unknown>>;
-	const VolumeX: import("react").ComponentType<Record<string, unknown>>;
-	const X: import("react").ComponentType<Record<string, unknown>>;
+	// ── Icons (react-icons/fa6 - auto-imported by Rakta.js build scanner) ──
+	const FaArrowRight: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaArrowRotateRight: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaBook: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaCheck: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaCircleCheck: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaCloud: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaCode: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaCopy: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaHandHoldingHeart: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaHeart: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaMagnifyingGlass: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaMicrochip: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaPlay: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaRibbon: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaXmark: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	// ── Lu icon aliases (react-icons/lu injected by clientEntry) ──
+	const ArrowRight: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Book: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Check: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const CheckCircle2: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Cloud: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Code: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Coffee: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Copy: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Cpu: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Github: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Globe: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Heart: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Info: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Play: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const RotateCcw: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Search: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Server: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Terminal: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const Volume2: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const VolumeX: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const X: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
 
-	// App Components (auto-resolved from app/ directory)
+	// ── App Components (auto-resolved from app/ directory) ──
 	const BackgroundFish: import("react").ComponentType<Record<string, unknown>>;
 	const BubbleLayer: import("react").ComponentType<Record<string, unknown>>;
 	const ComponentsModal: import("react").ComponentType<ModalProps>;
 	const CoralObstacle: import("react").ComponentType<Record<string, unknown>>;
 	const DeployModal: import("react").ComponentType<ModalProps>;
 	const DocsModal: import("react").ComponentType<ModalProps>;
+	const DonationSection: import("react").ComponentType<Record<string, unknown>>;
 	const FeatureGrid: import("react").ComponentType<Record<string, unknown>>;
 	const Footer: import("react").ComponentType<Record<string, unknown>>;
 	const Header: import("react").ComponentType<HeaderProps>;
@@ -399,7 +526,7 @@ declare global {
 	const ShrimpCharacter: import("react").ComponentType<Record<string, unknown>>;
 	const ShrimpRunGame: import("react").ComponentType<ShrimpRunGameProps>;
 
-	// Custom Hooks
+	// ── Custom Hooks ──
 	const useShrimpRun: () => {
 		isPlaying: boolean;
 		score: number;
@@ -421,14 +548,15 @@ declare global {
 		triggerJump: () => void;
 	};
 
-	// Audio Helpers
+	// ── Audio Helpers ──
 	const getMuteState: () => boolean;
 	const playGameOverSound: () => void;
 	const playJumpSound: () => void;
 	const playScoreSound: () => void;
 	const setMute: (muted: boolean) => void;
 
-	// App Lib Data (auto-imported from app/lib/)
+	// ── App Lib Data (auto-imported from app/lib/) ──
+
 	// fishData
 	interface Fish {
 		id: number;

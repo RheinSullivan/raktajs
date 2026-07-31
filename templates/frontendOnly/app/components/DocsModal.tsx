@@ -1,7 +1,3 @@
-// biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
-// biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
-// NOTE: Rakta.js Auto Import mengimpor useState, ARTICLES, dan ikon secara otomatis.
-
 interface DocsModalProps {
 	isOpen: boolean;
 	onClose: () => void;
@@ -19,8 +15,60 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 			article.content.toLowerCase().includes(searchQuery.toLowerCase()),
 	);
 
-	const activeArticle = (ARTICLES.find((a) => a.id === activeArticleId) ??
-		ARTICLES[0])!;
+	const activeArticle =
+		ARTICLES.find((article) => article.id === activeArticleId) ?? ARTICLES[0];
+
+	if (!activeArticle) return null;
+
+	const renderParagraph = (paragraph: string): ReactNode => {
+		if (paragraph.startsWith("###")) {
+			return (
+				<h3
+					key={paragraph}
+					className="text-lg font-bold font-mono text-white pt-4 border-b border-surface-stroke pb-1 uppercase"
+				>
+					{paragraph.replace("###", "").trim()}
+				</h3>
+			);
+		}
+		if (paragraph.startsWith("-")) {
+			return (
+				<ul
+					key={paragraph}
+					className="list-disc pl-5 space-y-2 text-gray-300 font-sans my-2"
+				>
+					{paragraph.split("\n").map((li: string) => (
+						<li key={li}>{li.replace("-", "").trim()}</li>
+					))}
+				</ul>
+			);
+		}
+		if (paragraph.startsWith("1.") || paragraph.startsWith("2.")) {
+			return (
+				<ol
+					key={paragraph}
+					className="list-decimal pl-5 space-y-2 text-gray-300 font-sans my-2"
+				>
+					{paragraph.split("\n").map((li: string) => (
+						<li key={li}>{li.replace(/^\d+\.\s*/, "").trim()}</li>
+					))}
+				</ol>
+			);
+		}
+		if (paragraph.startsWith("```")) {
+			const lines = paragraph.split("\n");
+			const code = lines.slice(1, -1).join("\n");
+			return (
+				<pre
+					key={paragraph}
+					className="bg-surface-card border border-surface-stroke p-4 font-mono text-xs text-brand-green overflow-x-auto whitespace-pre-wrap leading-5"
+				>
+					<code>{code}</code>
+				</pre>
+			);
+		}
+		return <p key={paragraph}>{paragraph}</p>;
+	};
 
 	return (
 		<div
@@ -37,9 +85,11 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 						</h2>
 					</div>
 					<button
+						type="button"
 						onClick={onClose}
 						className="p-2 border border-surface-stroke hover:bg-brand-pink hover:text-white transition-colors cursor-pointer"
 						id="close-docs-btn"
+						aria-label="Tutup manual"
 					>
 						<X className="w-5 h-5" />
 					</button>
@@ -70,6 +120,7 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 								return (
 									<button
 										key={article.id}
+										type="button"
 										onClick={() => setActiveArticleId(article.id)}
 										className={`w-full text-left p-4 flex items-center gap-3 transition-colors cursor-pointer ${
 											isSelected
@@ -114,73 +165,22 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 							<div className="prose prose-invert max-w-none text-sm text-gray-300 leading-relaxed font-sans space-y-4">
 								{activeArticle.content
 									.split("\n\n")
-									.map((paragraph, paragraphIndex) => {
-										if (paragraph.startsWith("###")) {
-											return (
-												<h3
-													key={paragraphIndex}
-													className="text-lg font-bold font-mono text-white pt-4 border-b border-surface-stroke pb-1 uppercase"
-												>
-													{paragraph.replace("###", "").trim()}
-												</h3>
-											);
-										}
-										if (paragraph.startsWith("-")) {
-											return (
-												<ul
-													key={paragraphIndex}
-													className="list-disc pl-5 space-y-2 text-gray-300 font-sans my-2"
-												>
-													{paragraph.split("\n").map((li, listItemIndex) => (
-														<li key={listItemIndex}>
-															{li.replace("-", "").trim()}
-														</li>
-													))}
-												</ul>
-											);
-										}
-										if (
-											paragraph.startsWith("1.") ||
-											paragraph.startsWith("2.")
-										) {
-											return (
-												<ol
-													key={paragraphIndex}
-													className="list-decimal pl-5 space-y-2 text-gray-300 font-sans my-2"
-												>
-													{paragraph.split("\n").map((li, listItemIndex) => (
-														<li key={listItemIndex}>
-															{li.replace(/^\d+\.\s*/, "").trim()}
-														</li>
-													))}
-												</ol>
-											);
-										}
-										if (paragraph.startsWith("```")) {
-											const lines = paragraph.split("\n");
-											const code = lines.slice(1, -1).join("\n");
-											return (
-												<pre
-													key={paragraphIndex}
-													className="bg-surface-card border border-surface-stroke p-4 font-mono text-xs text-brand-green overflow-x-auto whitespace-pre-wrap leading-5"
-												>
-													<code>{code}</code>
-												</pre>
-											);
-										}
-										return <p key={paragraphIndex}>{paragraph}</p>;
-									})}
+									.map((paragraph: string) => renderParagraph(paragraph))}
 							</div>
 
 							{/* Bottom manual navigation */}
 							<div className="mt-12 pt-6 border-t border-surface-stroke flex justify-end">
 								<button
+									type="button"
 									onClick={() => {
 										const currentIndex = ARTICLES.findIndex(
-											(a) => a.id === activeArticleId,
+											(article) => article.id === activeArticleId,
 										);
 										const nextIndex = (currentIndex + 1) % ARTICLES.length;
-										setActiveArticleId(ARTICLES[nextIndex]!.id);
+										const nextArticle = ARTICLES[nextIndex];
+										if (nextArticle) {
+											setActiveArticleId(nextArticle.id);
+										}
 									}}
 									className="flex items-center gap-2 border border-white hover:bg-white hover:text-black transition-colors px-4 py-2 font-mono text-xs uppercase cursor-pointer"
 								>

@@ -67,11 +67,11 @@ declare module "raktajs/seo" {
 	}
 	export interface JsonLdObject {
 		readonly [key: string]:
-			| string
-			| number
-			| boolean
-			| JsonLdObject
-			| readonly (string | number | boolean | JsonLdObject)[];
+		| string
+		| number
+		| boolean
+		| JsonLdObject
+		| readonly (string | number | boolean | JsonLdObject)[];
 	}
 	export interface JsonLd extends JsonLdObject {
 		"@context": string;
@@ -433,6 +433,7 @@ declare global {
 	const CoralObstacle: import("react").ComponentType<Record<string, unknown>>;
 	const DeployModal: import("react").ComponentType<ModalProps>;
 	const DocsModal: import("react").ComponentType<ModalProps>;
+	const DonationSection: import("react").ComponentType<Record<string, unknown>>;
 	const FeatureGrid: import("react").ComponentType<Record<string, unknown>>;
 	const Footer: import("react").ComponentType<Record<string, unknown>>;
 	const Header: import("react").ComponentType<HeaderProps>;

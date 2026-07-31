@@ -3,10 +3,8 @@ const OG_IMAGE = `${SITE_URL}/og/rakta-banner.png`;
 
 export const metadata: Metadata = {
 	metadataBase: SITE_URL,
-	title: {
-		default: "Rakta.js, Ultra-Fast Fullstack Framework | Cirebon · Indonesia",
-		template: "%s | Rakta.js",
-	},
+	title:
+		"Rakta.js - A lightweight, composable frontend framework built on Bun, React, and TypeScript",
 	description:
 		"Rakta.js is a lightweight fullstack React framework by Muhammad Rizky Ramadhan (Rhein Sullivan / Vyagra Nexus™) from Cirebon & South Jakarta, Indonesia. File-based App Routing, zero-import Auto Import, end-to-end Type-Safe RPC, integrated frontend-backend monolith, and built-in Authentication, all in one Bun + TypeScript ecosystem.",
 	keywords: [
@@ -56,7 +54,8 @@ export const metadata: Metadata = {
 	openGraph: {
 		type: "website",
 		url: SITE_URL,
-		title: "Rakta.js, Ultra-Fast Fullstack Framework | Cirebon · Indonesia",
+		title:
+			"Rakta.js - A lightweight, composable frontend framework built on Bun, React, and TypeScript",
 		description:
 			"Lightweight fullstack React framework with zero-import Auto Import, file-based routing, type-safe RPC, and built-in auth. Crafted in Indonesia by Rhein Sullivan.",
 		siteName: "Rakta.js",
@@ -75,7 +74,8 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		site: "@RheinSullivan",
 		creator: "@RheinSullivan",
-		title: "Rakta.js, Ultra-Fast Fullstack Framework",
+		title:
+			"Rakta.js - A lightweight, composable frontend framework built on Bun, React, and TypeScript",
 		description:
 			"Zero-import Auto Import · File-based Routing · Type-Safe RPC · Built-in Auth. By Rhein Sullivan / Vyagra Nexus™ from Cirebon, Indonesia.",
 		image: OG_IMAGE,

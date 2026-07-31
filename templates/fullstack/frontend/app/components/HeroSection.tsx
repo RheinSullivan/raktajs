@@ -4,9 +4,9 @@ const COPY = {
 		headline: ["Kecil Ukuran.", "Ganas Kecepatan.", "Hidup di Setiap Route."],
 		body: (
 			<>
-				Dirancang oleh{" "}
+				Dirancang oleh:{" "}
 				<strong className="font-bold text-white">
-					Muhammad Rizky Ramadhan
+					Muhammad Rizky Ramadhan, S.Tehjus Gula Batu
 				</strong>{" "}
 				(<strong className="text-white">Rhein Sullivan</strong> /{" "}
 				<strong className="text-white">Vyagra Nexus™</strong>), pengembang
@@ -30,15 +30,15 @@ const COPY = {
 		headline: ["Small in Size.", "Fierce in Speed.", "Alive in Every Route."],
 		body: (
 			<>
-				Crafted by{" "}
+				Crafted by:{" "}
 				<strong className="font-bold text-white">
-					Muhammad Rizky Ramadhan
+					Muhammad Rizky Ramadhan, S.Tehjus Gula Batu
 				</strong>{" "}
 				(<strong className="text-white">Rhein Sullivan</strong> /{" "}
 				<strong className="text-white">Vyagra Nexus™</strong>), a software
 				developer from Cirebon & South Jakarta, Rakta.js is a unified solution
 				bringing{" "}
-				<em className="text-brand-pink not-italic">file-based App Routing</em>,{" "}
+				<em className="text-brand-pink not-italic">File-based App Routing</em>,{" "}
 				<em className="text-brand-pink not-italic">
 					Auto Import with zero import statements
 				</em>

@@ -25,15 +25,16 @@ export default function Header({
 		<header className="sticky top-0 z-40 border-b border-surface-stroke bg-black/90 backdrop-blur-md">
 			<div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
 				<div className="flex items-center gap-3">
-					<span className="flex h-3 w-3 relative">
-						<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-pink opacity-75"></span>
-						<span className="relative inline-flex rounded-full h-3 w-3 bg-brand-pink"></span>
-					</span>
-					<span className="font-mono text-sm font-bold uppercase tracking-wider text-white">
-						RAKTA<span className="text-brand-pink">.JS</span>
+					<photo
+						path="/rakta-logo.svg"
+						alt="Rakta.js Logo"
+						className="h-6 w-6"
+					/>
+					<span className="font-mono text-sm font-bold tracking-wider text-white">
+						Rakta<span className="text-brand-pink">.js</span>
 					</span>
 					<span className="hidden sm:inline-block border border-surface-stroke bg-zinc-900/80 px-2 py-0.5 font-mono text-[10px] uppercase text-gray-400">
-						v1.0.5 • CORE ENGINE
+						v1.0.5 • FULLSTACK ENGINE
 					</span>
 				</div>
 
@@ -68,7 +69,7 @@ export default function Header({
 					>
 						<span
 							className={`w-1.5 h-1.5 rounded-full ${lowLatencyMode ? "bg-emerald-400 animate-pulse" : "bg-gray-600"}`}
-						></span>
+						/>
 						LATENCY: {lowLatencyMode ? "LOW" : "STD"}
 					</button>
 

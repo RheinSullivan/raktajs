@@ -1,7 +1,3 @@
-// biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
-// biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
-// NOTE: Rakta.js Auto Import mengimpor useState, COMPONENT_IDS, COMPONENT_METADATA, dan ikon secara otomatis.
-
 interface ComponentsModalProps {
 	isOpen: boolean;
 	onClose: () => void;
@@ -14,10 +10,10 @@ type ComponentPreviewRenderer = (
 
 const DEFAULT_COMPONENT_ID: ComponentId = "button";
 
-// Preview functions , dipisah dari metadata tapi tetap di file .tsx karena pakai JSX
 const COMPONENT_PREVIEWS: Record<ComponentId, ComponentPreviewRenderer> = {
 	button: (state, setState) => (
 		<button
+			type="button"
 			onClick={() => {
 				playJumpSound();
 				setState({
@@ -46,6 +42,7 @@ const COMPONENT_PREVIEWS: Record<ComponentId, ComponentPreviewRenderer> = {
 		return (
 			<div className="flex items-center gap-4">
 				<button
+					type="button"
 					onClick={() => {
 						playScoreSound();
 						setState({ ...state, isChecked: !isChecked });
@@ -80,7 +77,7 @@ const COMPONENT_PREVIEWS: Record<ComponentId, ComponentPreviewRenderer> = {
 					max="200"
 					value={value}
 					onChange={(e) =>
-						setState({ ...state, sliderVal: parseInt(e.target.value) })
+						setState({ ...state, sliderVal: parseInt(e.target.value, 10) })
 					}
 					className="accent-brand-pink bg-zinc-900 h-2 w-full border border-zinc-700 appearance-none cursor-pointer"
 				/>
@@ -97,10 +94,14 @@ const COMPONENT_PREVIEWS: Record<ComponentId, ComponentPreviewRenderer> = {
 		const text = (state.inputValue as string) ?? "";
 		return (
 			<div className="w-full max-w-xs font-mono text-xs">
-				<label className="block text-gray-500 uppercase mb-1.5">
+				<label
+					htmlFor="node-config-input"
+					className="block text-gray-500 uppercase mb-1.5"
+				>
 					Konfigurasi Node
 				</label>
 				<input
+					id="node-config-input"
 					type="text"
 					placeholder="MASUKKAN NAMA NODE..."
 					value={text}
@@ -163,6 +164,7 @@ export default function ComponentsModal({
 						</h2>
 					</div>
 					<button
+						type="button"
 						onClick={onClose}
 						className="p-2 border border-surface-stroke hover:bg-brand-pink hover:text-white transition-colors cursor-pointer"
 						id="close-components-btn"
@@ -182,6 +184,7 @@ export default function ComponentsModal({
 							return (
 								<button
 									key={id}
+									type="button"
 									onClick={() => setActiveCompId(id)}
 									className={`w-full text-left p-4 transition-colors font-mono text-xs uppercase cursor-pointer ${
 										isSelected
@@ -221,6 +224,7 @@ export default function ComponentsModal({
 									<Code className="w-3.5 h-3.5" /> HTML/Tailwind Markup
 								</span>
 								<button
+									type="button"
 									onClick={() => handleCopyCode(activeMeta.code)}
 									className="flex items-center gap-1.5 text-[10px] font-mono text-brand-pink hover:text-white transition-colors cursor-pointer"
 								>

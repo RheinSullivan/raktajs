@@ -659,12 +659,24 @@ export default defineConfig({
 
 **English** Rakta.js accepts public donations with 100% financial transparency. Minimum 70% of all funds are allocated to humanitarian aid (Palestine 🇵🇸 relief, orphanages, low-income families, elderly care, disaster relief) and up to 30% for framework operations (server, CDN, domain).
 
-- **Official Donation Link:** [buymeacoffee.com/rheinsullivan](https://buymeacoffee.com/rheinsullivan)
-- See detailed transparency reports in [docs/en/donations.md](docs/en/donations.md) & [docs/id/donasi.md](docs/id/donasi.md).
+- **Official Donation Link:**
+  <p align="center">
+    <a href="https://buymeacoffee.com/rheinsullivan" target="_blank">
+      <img src="https://img.shields.io/badge/Support-Buy%20Me%20A%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee" />
+    </a>
+  </p>
+
+- See detailed transparency reports in [docs/en/donations.md](docs/en/donations.md).
 
 **Bahasa Indonesia** Rakta.js menerima donasi publik dengan transparansi keuangan 100%. Minimal 70% dana dialokasikan untuk bantuan kemanusiaan (bantuan Palestina 🇵🇸, panti asuhan, dhuafa, panti jompo, bencana alam) dan maksimal 30% untuk operasional framework (server, CDN, domain).
 
-- **Link Donasi Resmi:** [buymeacoffee.com/rheinsullivan](https://buymeacoffee.com/rheinsullivan)
+- **Link Donasi Resmi:**
+  <p align="center">
+    <a href="https://buymeacoffee.com/rheinsullivan" target="_blank">
+      <img src="https://img.shields.io/badge/Support-Buy%20Me%20A%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee" />
+    </a>
+  </p>
+
 - Lihat laporan transparansi lengkap di [docs/id/donasi.md](docs/id/donasi.md).
 
 ---

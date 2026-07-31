@@ -93,6 +93,6 @@ export function saveHighScore(key: string, score: number): void {
 	try {
 		localStorage.setItem(key, score.toString());
 	} catch {
-		// localStorage tidak tersedia , abaikan
+		// localStorage tidak tersedia, abaikan
 	}
 }
