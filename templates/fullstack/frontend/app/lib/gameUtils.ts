@@ -96,3 +96,4 @@ export function saveHighScore(key: string, score: number): void {
 		// localStorage tidak tersedia, abaikan
 	}
 }
+// Berdasarkan -> Berdasar kepada, Memeperoleh -> Memeroleh

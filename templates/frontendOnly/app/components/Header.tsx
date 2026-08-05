@@ -34,7 +34,7 @@ export default function Header({
 						Rakta<span className="text-brand-pink">.js</span>
 					</span>
 					<span className="hidden sm:inline-block border border-surface-stroke bg-zinc-900/80 px-2 py-0.5 font-mono text-[10px] uppercase text-gray-400">
-						v1.0.5 • FRONTEND ENGINE
+						v1.1.1 • FRONTEND ENGINE
 					</span>
 				</div>
 

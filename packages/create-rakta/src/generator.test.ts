@@ -62,7 +62,9 @@ describe("create-rakta fullstack generator", () => {
 		expect(fileByPath.get("backend/src/routes/api.ts")).toContain(
 			"/api/auth/reset-password",
 		);
-		expect(fileByPath.get("backend/src/routes/api.ts")).toContain("/api/users");
+		expect(fileByPath.get("backend/src/modules/user/UserRouter.ts")).toContain(
+			"/api/users",
+		);
 		expect(fileByPath.get("backend/src/routes/api.ts")).toContain(
 			"/api/cms/posts",
 		);

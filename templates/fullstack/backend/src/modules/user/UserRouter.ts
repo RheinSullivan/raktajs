@@ -4,6 +4,7 @@ import {
 	storeUserController,
 	updateUserController,
 } from "./controllers/UserController";
+import { requireAuth } from "../../middlewares/auth.middleware";
 
 export async function userRouter(
 	request: Request,
@@ -13,19 +14,23 @@ export async function userRouter(
 	const userMatch = url.pathname.match(/^\/api\/users\/([^/]+)$/);
 
 	if (url.pathname === "/api/users" && method === "GET") {
-		return indexUsersController();
+		const rejectedResponse = await requireAuth(request);
+		return rejectedResponse ?? indexUsersController();
 	}
 
 	if (url.pathname === "/api/users" && method === "POST") {
-		return storeUserController(request);
+		const rejectedResponse = await requireAuth(request);
+		return rejectedResponse ?? storeUserController(request);
 	}
 
 	if (userMatch?.[1] !== undefined && method === "PATCH") {
-		return updateUserController(userMatch[1], request);
+		const rejectedResponse = await requireAuth(request);
+		return rejectedResponse ?? updateUserController(userMatch[1], request);
 	}
 
 	if (userMatch?.[1] !== undefined && method === "DELETE") {
-		return destroyUserController(userMatch[1]);
+		const rejectedResponse = await requireAuth(request);
+		return rejectedResponse ?? destroyUserController(userMatch[1]);
 	}
 
 	return undefined;

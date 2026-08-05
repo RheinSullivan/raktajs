@@ -533,8 +533,8 @@ declare global {
 	interface RaktaFeature {
 		id: string;
 		title: string;
-		desc: string;
+		desc: string | { id: string; en: string };
 		code: string;
 	}
-	const RAKTA_FEATURES: readonly RaktaFeature[];
+	const raktaFeatures: readonly RaktaFeature[];
 }

@@ -16,18 +16,12 @@ import {
 	uploadCmsMediaController,
 } from "../controllers/cms.controller";
 import { helloController } from "../controllers/hello.controller";
-import {
-	destroyUserController,
-	indexUsersController,
-	storeUserController,
-	updateUserController,
-} from "../controllers/user.controller";
 import { fail, ok } from "../http/response";
 import { requireAuth } from "../middlewares/auth.middleware";
+import { userRouter } from "../modules/user/UserRouter";
 
 export async function apiRouter(request: Request): Promise<Response> {
 	const url = new URL(request.url);
-	const userMatch = url.pathname.match(/^\/api\/users\/([^/]+)$/);
 	const cmsPostMatch = url.pathname.match(/^\/api\/cms\/posts\/([^/]+)$/);
 	const method = request.method.toUpperCase();
 
@@ -61,23 +55,8 @@ export async function apiRouter(request: Request): Promise<Response> {
 		return resetPasswordController(request);
 	}
 
-	// User routes (protected)
-	if (url.pathname === "/api/users" && method === "GET") {
-		const rejected = await requireAuth(request);
-		return rejected ?? indexUsersController();
-	}
-	if (url.pathname === "/api/users" && method === "POST") {
-		const rejected = await requireAuth(request);
-		return rejected ?? storeUserController(request);
-	}
-	if (userMatch?.[1] !== undefined && method === "PATCH") {
-		const rejected = await requireAuth(request);
-		return rejected ?? updateUserController(userMatch[1], request);
-	}
-	if (userMatch?.[1] !== undefined && method === "DELETE") {
-		const rejected = await requireAuth(request);
-		return rejected ?? destroyUserController(userMatch[1]);
-	}
+	const userResponse = await userRouter(request);
+	if (userResponse !== undefined) return userResponse;
 
 	// CMS routes (protected)
 	if (url.pathname === "/api/cms/posts" && method === "GET") {

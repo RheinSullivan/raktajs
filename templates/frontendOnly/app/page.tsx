@@ -11,6 +11,7 @@ export default function App() {
 		useState<AestheticUnit>("LENIS-MODERN");
 	const [lowLatencyMode, setLowLatencyMode] = useState(true);
 
+	// Game physics hook (144 FPS ref-based physics loop)
 	const {
 		isPlaying,
 		score,
@@ -32,12 +33,14 @@ export default function App() {
 		triggerJump,
 	} = useShrimpRun();
 
+	const onLangToggle = () => setLang((prev) => (prev === "ID" ? "EN" : "ID"));
+
 	return (
 		<div className="min-h-screen bg-black font-sans text-white antialiased">
-			{/* Sub-component: Navigation Header */}
+			{/* Navigation Header — contains lang toggle */}
 			<Header
 				lang={lang}
-				onLangToggle={() => setLang((prev) => (prev === "ID" ? "EN" : "ID"))}
+				onLangToggle={onLangToggle}
 				isMuted={isMuted}
 				onMuteToggle={() => setIsMuted((prev) => !prev)}
 				aestheticUnit={aestheticUnit}
@@ -46,7 +49,7 @@ export default function App() {
 				onLowLatencyToggle={() => setLowLatencyMode((prev) => !prev)}
 			/>
 
-			{/* Sub-component: Hero Banner */}
+			{/* Hero Banner — bilingual */}
 			<HeroSection
 				lang={lang}
 				onOpenDocs={() => setIsDocsOpen(true)}
@@ -54,7 +57,7 @@ export default function App() {
 				onOpenDeploy={() => setIsDeployOpen(true)}
 			/>
 
-			{/* Sub-component: Interactive Physics Canvas */}
+			{/* Interactive Physics Canvas */}
 			<ShrimpRunGame
 				isPlaying={isPlaying}
 				score={score}
@@ -76,14 +79,14 @@ export default function App() {
 				onTriggerJump={triggerJump}
 			/>
 
-			{/* Sub-component: Unified Core Modules Grid */}
-			<FeatureGrid />
+			{/* Unified Core Modules — bilingual */}
+			<FeatureGrid lang={lang} />
 
-			{/* Sub-component: Donations & Humanitarian Support */}
-			<DonationSection />
+			{/* Donations & Humanitarian Support — bilingual */}
+			<DonationSection lang={lang} />
 
-			{/* Sub-component: Footer */}
-			<Footer />
+			{/* Footer — bilingual */}
+			<Footer lang={lang} />
 
 			{/* Modals */}
 			<DocsModal isOpen={isDocsOpen} onClose={() => setIsDocsOpen(false)} />

@@ -246,19 +246,23 @@ Generated structure | Struktur yang dihasilkan:
 ```txt
 my-frontend/
 ├─ app/
-│  ├─ page.tsx          # Halaman utama | Main page
-│  ├─ layout.tsx        # Layout wrapper global
-│  ├─ loading.tsx       # Tampilan loading
-│  ├─ error.tsx         # Tampilan error
-│  └─ not-found.tsx     # Halaman 404
-├─ app/components/      # Komponen UI
-├─ app/lib/             # Helper, utilities, data
-├─ app/hooks/           # Custom React hooks
-├─ public/              # Static assets
-├─ styles/
-│  └─ globals.css       # Global CSS
-├─ rakta.config.ts      # Konfigurasi framework
+│  ├─ page.tsx              # Halaman utama | Main page
+│  ├─ layout.tsx            # Layout global | Global layout
+│  ├─ components/           # Komponen UI | Reusable UI components
+│  ├─ hooks/                # Custom Hooks
+│  ├─ lib/                  # Helper, utilities, data
+│  ├─ loading.tsx           # Loading UI
+│  ├─ error.tsx             # Error UI
+│  └─ notFound.tsx          # 404 page
+│
+├─ public/                  # Static assets
+├─ styles/                  # Global styles
+│  └─ globals.css
+│
+├─ rakta-env.d.ts           # Auto Import Types
+├─ rakta.config.ts          # Rakta.js configuration
 ├─ package.json
+├─ postcss.config.ts
 └─ tsconfig.json
 ```
 
@@ -282,13 +286,35 @@ Generated structure | Struktur yang dihasilkan:
 ```txt
 my-fullstack/
 ├─ frontend/
-│  ├─ app/              # Halaman dan routing
-│  ├─ app/components/   # Komponen UI
-│  ├─ app/lib/          # Helper dan data
-│  ├─ app/hooks/        # Custom hooks
+│  ├─ app/
+│  │
+│  │  ├─ (root)/               # Public Website
+│  │  │  ├─ layout.tsx         # Dengan Header & Footer
+│  │  │  └─ page.tsx
+│  │  │
+│  │  ├─ (auth)/               # Authentication Pages
+│  │  │  ├─ layout.tsx         # Tanpa Header & Footer
+│  │  │  ├─ login/
+│  │  │  ├─ register/
+│  │  │  ├─ forgot-password/
+│  │  │  └─ reset-password/
+│  │  │
+│  │  ├─ (dashboard)/          # Protected Pages
+│  │  │  ├─ layout.tsx
+│  │  │  └─ dashboard/
+│  │  │
+│  │  ├─ components/           # UI Components
+│  │  ├─ hooks/                # Custom Hooks
+│  │  ├─ lib/                  # Helper & Utilities
+│  │  ├─ loading.tsx
+│  │  ├─ error.tsx
+│  │  └─ notFound.tsx
+│  │
 │  ├─ public/
 │  ├─ styles/
+│  ├─ rakta-env.d.ts
 │  └─ rakta.config.ts
+│
 ├─ backend/
 │  ├─ src/
 │  │  ├─ index.ts                 # The Orchestrator (Entry Point)
@@ -692,4 +718,5 @@ Dibuat oleh **Muhammad Rizky Ramadhan**, dikenal juga sebagai **Rhein Sullivan**
 ## License | Lisensi
 
 MIT - Rakta.js | Vyagra Nexus™ ❤️ 🇮🇩 Indonesian & 🇵🇸 Palestine
-[LICENSE](./LICENSE).*
+
+[LICENCE](./LICENCE)
