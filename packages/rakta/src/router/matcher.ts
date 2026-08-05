@@ -14,14 +14,21 @@ function buildPatternRegex(segments: RouteSegment[]): {
 } {
 	const paramNames: string[] = [];
 
-	const parts = segments.map((segment) => {
-		if (segment.isDynamic && segment.paramName) {
-			paramNames.push(segment.paramName);
-			// Match any non-slash sequence for the param
-			return "([^/]+)";
-		}
-		return escapeRegex(segment.raw);
-	});
+	const parts = segments
+		.filter((segment) => !segment.isGroup)
+		.map((segment) => {
+			if (segment.isDynamic && segment.paramName) {
+				paramNames.push(segment.paramName);
+				if (segment.isOptionalCatchAll) {
+					return "(.*)";
+				}
+				if (segment.isCatchAll) {
+					return "(.+)";
+				}
+				return "([^/]+)";
+			}
+			return escapeRegex(segment.raw);
+		});
 
 	const pattern = parts.length === 0 ? "" : `/${parts.join("/")}`;
 	const regex = new RegExp(`^${pattern || "/"}$`);
@@ -48,11 +55,13 @@ export function matchRoute(
 
 		if (!match) continue;
 
-		const params: Record<string, string> = {};
+		const params: Record<string, string | string[]> = {};
 		paramNames.forEach((name, index) => {
 			const captured = match[index + 1];
 			if (captured !== undefined) {
-				params[name] = decodeURIComponent(captured);
+				params[name] = captured.includes("/")
+					? captured.split("/").filter(Boolean).map(decodeURIComponent)
+					: decodeURIComponent(captured);
 			}
 		});
 

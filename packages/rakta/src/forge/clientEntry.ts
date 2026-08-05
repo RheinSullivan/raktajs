@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
-import { scanForExports } from "../auto-import/scanner";
+import { scanForExports } from "../autoImport/scanner";
 import type { RouteManifest, RouteManifestEntry } from "../router/types";
 
 export interface ClientEntryOptions {
@@ -171,9 +171,10 @@ function buildClientEntrySource(
 	// Embed the Rakta.js SVG logo as a base64 data URL so the dev indicator
 	// has no runtime filesystem dependency. Computed once at bundle time.
 	const svgCandidates = [
-		join(options.projectRoot, "docs", "assets", "Rakta.js.svg"),
-		join(options.projectRoot, "..", "..", "docs", "assets", "Rakta.js.svg"),
-		join(__dirname, "..", "..", "..", "..", "docs", "assets", "Rakta.js.svg"),
+		join(options.projectRoot, "public", "rakta-logo.svg"),
+		join(options.projectRoot, "public", "Rakta.js.svg"),
+		join(options.projectRoot, "..", "..", "public", "Rakta.js.svg"),
+		join(__dirname, "..", "..", "..", "..", "public", "Rakta.js.svg"),
 	];
 	const svgPath = svgCandidates.find((p) => existsSync(p));
 	const logoDataUrl = svgPath
@@ -183,7 +184,12 @@ function buildClientEntrySource(
 	// Resolve path to devIndicator module relative to the generated entry file.
 	// For browser bundles, we inline the devIndicator source directly from the
 	// built dist file so there is no dynamic filesystem import at runtime.
-	const devIndicatorDistPath = join(__dirname, "..", "dx", "devIndicator.js");
+	const devIndicatorDistPath = join(
+		__dirname,
+		"..",
+		"developerExperience",
+		"devIndicator.js",
+	);
 	const devIndicatorInline = existsSync(devIndicatorDistPath)
 		? readFileSync(devIndicatorDistPath, "utf8")
 				.replace(/^#!.*\n/, "") // strip shebang if any
@@ -202,7 +208,7 @@ function buildClientEntrySource(
 		"raktajs",
 		"package.json",
 	);
-	let rVersion = "1.0.6";
+	let rVersion = "1.1.2";
 	if (existsSync(pkgPath)) {
 		try {
 			const pkg = JSON.parse(readFileSync(pkgPath, "utf8")) as {
@@ -452,10 +458,44 @@ function normalizePathname(pathname: string): string {
   return pathname;
 }
 
+function escapeRoutePattern(pattern: string): string {
+  return pattern.replace(/[.*+?\\^\\$\\{\\}()|[\\]\\\\]/g, "\\\\$&");
+}
+
+function routePatternMatches(pattern: string, pathname: string): boolean {
+  if (pattern === pathname) {
+    return true;
+  }
+
+  const parts = pattern.split("/").filter(Boolean).map((part) => {
+    if (part.startsWith(":") && part.endsWith("*")) {
+      return "(.+)";
+    }
+
+    if (part.startsWith(":")) {
+      return "([^/]+)";
+    }
+
+    return escapeRoutePattern(part);
+  });
+
+  const regex = new RegExp(\`^/\${parts.join("/")}$\`);
+  return regex.test(pathname);
+}
+
 function resolveRouteLoader(pathname: string): () => Promise<PageModule> {
   const normalizedPathname = normalizePathname(pathname) as RoutePath;
+  const exactLoader = routes[normalizedPathname];
 
-  return routes[normalizedPathname] ?? routes["/"];
+  if (exactLoader) {
+    return exactLoader;
+  }
+
+  const matchedPattern = Object.keys(routes).find((pattern) =>
+    routePatternMatches(pattern, normalizedPathname),
+  ) as RoutePath | undefined;
+
+  return matchedPattern ? routes[matchedPattern] : routes["/"];
 }
 
 function navigate(to: string): void {

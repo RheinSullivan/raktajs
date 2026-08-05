@@ -87,8 +87,8 @@ export async function refreshController(request: Request): Promise<Response> {
 		: {};
 
 	const bodyRefreshToken =
-		typeof body["refreshToken"] === "string"
-			? (body["refreshToken"] as string)
+		typeof body.refreshToken === "string"
+			? (body.refreshToken as string)
 			: undefined;
 
 	const refreshToken = cookieRefresh ?? bodyRefreshToken;

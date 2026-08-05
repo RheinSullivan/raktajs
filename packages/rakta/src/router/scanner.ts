@@ -28,10 +28,32 @@ const FILE_TO_KIND: Record<string, RouteKind> = {
 };
 
 function parseSegment(raw: string): RouteSegment {
+	const isGroup = raw.startsWith("(") && raw.endsWith(")");
 	const isDynamic = raw.startsWith("[") && raw.endsWith("]");
-	const paramName = isDynamic ? raw.slice(1, -1) : "";
+	const inner = isDynamic ? raw.slice(1, -1) : "";
+	const isOptionalCatchAll = inner.startsWith("[...") && inner.endsWith("]");
+	const isCatchAll = inner.startsWith("...") || isOptionalCatchAll;
+	const paramName = isOptionalCatchAll
+		? inner.slice(4, -1)
+		: isCatchAll
+			? inner.slice(3)
+			: inner;
+	const pathPart =
+		isDynamic && paramName.length > 0
+			? isCatchAll
+				? `:${paramName}*`
+				: `:${paramName}`
+			: raw;
 
-	return { raw, isDynamic, paramName };
+	return {
+		raw,
+		pathPart,
+		isDynamic,
+		isCatchAll,
+		isOptionalCatchAll,
+		isGroup,
+		paramName,
+	};
 }
 
 function collectParamNames(segments: RouteSegment[]): string[] {
@@ -41,13 +63,21 @@ function collectParamNames(segments: RouteSegment[]): string[] {
 }
 
 function segmentsToUrlPattern(segments: RouteSegment[]): string {
-	if (segments.length === 0) return "/";
-	const parts = segments.map((segment) =>
-		segment.isDynamic && segment.paramName
-			? `:${segment.paramName}`
-			: segment.raw,
-	);
+	const parts = segments
+		.filter((segment) => !segment.isGroup)
+		.map((segment) => segment.pathPart);
+	if (parts.length === 0) return "/";
 	return `/${parts.join("/")}`;
+}
+
+function routeScore(route: RouteManifestEntry): number {
+	return route.segments.reduce((score, segment) => {
+		if (segment.isGroup) return score;
+		if (segment.isOptionalCatchAll) return score + 1;
+		if (segment.isCatchAll) return score + 2;
+		if (segment.isDynamic) return score + 4;
+		return score + 8;
+	}, 0);
 }
 
 function scanDirectory(
@@ -104,10 +134,11 @@ export function scanRoutes(options: ScanOptions): RouteManifestEntry[] {
 	const results: RouteManifestEntry[] = [];
 	scanDirectory(options.appDir, options.appDir, results);
 
-	// Sort: static routes before dynamic, shorter patterns first
+	// Sort: static and specific routes before dynamic/catch-all fallbacks.
 	results.sort((routeA, routeB) => {
-		if (routeA.isDynamic !== routeB.isDynamic) {
-			return routeA.isDynamic ? 1 : -1;
+		const scoreDifference = routeScore(routeB) - routeScore(routeA);
+		if (scoreDifference !== 0) {
+			return scoreDifference;
 		}
 		return routeA.urlPattern.localeCompare(routeB.urlPattern);
 	});

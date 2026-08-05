@@ -7,7 +7,8 @@ export default function App() {
 	// Settings states
 	const [lang, setLang] = useState<"ID" | "EN">("ID");
 	const [isMuted, setIsMuted] = useState(false);
-	const [aestheticUnit, setAestheticUnit] = useState<AestheticUnit>("LENIS-MODERN");
+	const [aestheticUnit, setAestheticUnit] =
+		useState<AestheticUnit>("LENIS-MODERN");
 	const [lowLatencyMode, setLowLatencyMode] = useState(true);
 
 	// Custom 144 FPS game physics hook

@@ -67,11 +67,11 @@ declare module "raktajs/seo" {
 	}
 	export interface JsonLdObject {
 		readonly [key: string]:
-		| string
-		| number
-		| boolean
-		| JsonLdObject
-		| readonly (string | number | boolean | JsonLdObject)[];
+			| string
+			| number
+			| boolean
+			| JsonLdObject
+			| readonly (string | number | boolean | JsonLdObject)[];
 	}
 	export interface JsonLd extends JsonLdObject {
 		"@context": string;
@@ -537,4 +537,5 @@ declare global {
 		code: string;
 	}
 	const raktaFeatures: readonly RaktaFeature[];
+	const RAKTA_FEATURES: readonly RaktaFeature[];
 }

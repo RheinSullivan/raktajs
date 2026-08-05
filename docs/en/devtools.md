@@ -52,7 +52,7 @@ Output printed to the server terminal when running `bun run dev`.
 **Startup output:**
 
 ```
-  ⩛ Rakta.js 1.0.7 (CherbonsEngine)
+  ⩛ Rakta.js 1.1.2 (CherbonsEngine)
 
   Local:          http://localhost:3000
   Network:        http://192.168.1.8:3000
@@ -86,7 +86,7 @@ Output printed to the server terminal when running `bun run dev`.
 
 Used as a fallback glyph representing the Vyagra Nexus shield/trident geometry. Works in Windows Terminal, PowerShell, Git Bash, Linux, macOS. No Nerd Font required.
 
-> If Vyagra Nexus defines an official terminal glyph, update `RAKTA_TERMINAL_GLYPH` in `packages/rakta/src/dx/terminal.ts`.
+> If Vyagra Nexus defines an official terminal glyph, update `RAKTA_TERMINAL_GLYPH` in `packages/rakta/src/developerExperience/terminal.ts`.
 
 **Configuration:**
 

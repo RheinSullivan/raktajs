@@ -602,4 +602,5 @@ declare global {
 		code: string;
 	}
 	const raktaFeatures: readonly RaktaFeature[];
+	const RAKTA_FEATURES: readonly RaktaFeature[];
 }

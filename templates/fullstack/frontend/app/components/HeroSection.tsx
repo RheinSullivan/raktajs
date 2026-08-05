@@ -72,7 +72,8 @@ export default function HeroSection({
 
 				<h1 className="font-mono text-4xl font-black uppercase leading-none tracking-tight text-white sm:text-6xl">
 					{currentCopy.headline[0]} <br />
-					<span className="text-brand-pink">{currentCopy.headline[1]}</span> <br />
+					<span className="text-brand-pink">{currentCopy.headline[1]}</span>{" "}
+					<br />
 					{currentCopy.headline[2]}
 				</h1>
 

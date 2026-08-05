@@ -4,7 +4,7 @@ Rakta.js menyertakan utilitas analyzer untuk dependency graph, laporan
 dependency route, dan inspeksi ukuran bundle.
 
 ```ts
-import { analyzeBundle, analyzeRoutes, createDependencyGraph } from "rakta/dx";
+import { analyzeBundle, analyzeRoutes, createDependencyGraph } from "rakta/developerExperience";
 
 const graph = createDependencyGraph([
 	{ id: "app/page.tsx", imports: ["lib/http.ts"], routePattern: "/", size: 42 },

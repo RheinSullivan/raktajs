@@ -47,4 +47,3 @@ export function seedCmsPosts(): void {
 		database.cmsPosts.create(post);
 	}
 }
-

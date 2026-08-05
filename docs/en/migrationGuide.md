@@ -33,7 +33,7 @@ If you see TypeScript errors or runtime issues, check the relevant section below
 
 ---
 
-## v1.0.7 → v1.1.1
+## v1.0.7 → v1.1.2
 
 This release fixes the npm publish version conflict, bumps all package versions, and ships the final lint-clean build.
 
@@ -45,7 +45,7 @@ None. All existing APIs are backward-compatible.
 
 #### Version conflict resolved
 
-v1.0.7 was already published to npm. v1.1.1 is the continuation release. Upgrade by running:
+v1.0.7 was already published to npm. v1.1.2 is the continuation release. Upgrade by running:
 
 ```bash
 bun update raktajs

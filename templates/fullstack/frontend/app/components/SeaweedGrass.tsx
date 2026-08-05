@@ -5,7 +5,11 @@ export default function SeaweedGrass() {
 	return (
 		<div className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none overflow-hidden z-0">
 			{/* Left grass cluster */}
-			<svg className="absolute bottom-0 left-[8%] w-8 h-12" viewBox="0 0 32 48">
+			<svg
+				aria-hidden="true"
+				className="absolute bottom-0 left-[8%] w-8 h-12"
+				viewBox="0 0 32 48"
+			>
 				<path
 					d="M 10 48 Q 8 36, 12 24 Q 10 12, 8 0"
 					fill="none"
@@ -26,6 +30,7 @@ export default function SeaweedGrass() {
 
 			{/* Center-left grass cluster */}
 			<svg
+				aria-hidden="true"
 				className="absolute bottom-0 left-[28%] w-10 h-14"
 				viewBox="0 0 40 56"
 			>
@@ -49,6 +54,7 @@ export default function SeaweedGrass() {
 
 			{/* Center grass cluster */}
 			<svg
+				aria-hidden="true"
 				className="absolute bottom-0 left-[48%] w-9 h-13"
 				viewBox="0 0 36 52"
 			>
@@ -72,6 +78,7 @@ export default function SeaweedGrass() {
 
 			{/* Center-right grass cluster */}
 			<svg
+				aria-hidden="true"
 				className="absolute bottom-0 left-[68%] w-8 h-12"
 				viewBox="0 0 32 48"
 			>
@@ -87,6 +94,7 @@ export default function SeaweedGrass() {
 
 			{/* Right grass cluster */}
 			<svg
+				aria-hidden="true"
 				className="absolute bottom-0 left-[88%] w-9 h-13"
 				viewBox="0 0 36 52"
 			>

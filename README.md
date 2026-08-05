@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/raktajs_benner.png" alt="Rakta.js banner" width="100%" />
+  <img src="public/raktajs_benner.png" alt="Rakta.js banner" width="100%" />
 </p>
 
 <h1 align="center">Rakta.js | React Framework</h1>
@@ -287,7 +287,6 @@ Generated structure | Struktur yang dihasilkan:
 my-fullstack/
 ├─ frontend/
 │  ├─ app/
-│  │
 │  │  ├─ (root)/               # Public Website
 │  │  │  ├─ layout.tsx         # Dengan Header & Footer
 │  │  │  └─ page.tsx
@@ -673,7 +672,19 @@ export default defineConfig({
 
 ---
 
+## All Contributors
+
+<a href="https://github.com/RheinSullivan/raktajs/graphs/contributors">
+  <img width="70" src="https://contrib.rocks/image?repo=RheinSullivan/raktajs" alt="A table of avatars from the project's contributors" />
+</a>
+
+---
+
 ## Contributing | Kontribusi
+
+**New contributors are welcome!** Check out our [Contributing Guide](CONTRIBUTING.md) for help getting started.
+
+**Kontributor baru sangat diterima!** Baca [Panduan Kontribusi](CONTRIBUTING.md) untuk mulai berkontribusi.
 
 **English** Contributions are welcome! Please ensure your changes remain focused, typed, tested, and aligned with Rakta.js core principles: performance, simplicity, DX, tree shaking, edge runtime compatibility, and production readiness. See [CONTRIBUTING.md](CONTRIBUTING.md).
 

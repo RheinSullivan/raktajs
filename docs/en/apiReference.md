@@ -15,6 +15,6 @@ Rakta.js public APIs are exported from the package root and stable subpaths:
 | `rakta/security` | Secure headers, CSRF, rate limiter, secrets |
 | `rakta/ops` | Request context, jobs, queues, cron, event bus |
 | `rakta/deployment` | Deployment adapter generation |
-| `rakta/dx` | Dependency graph, analyzer, overlay, profiler |
+| `rakta/developerExperience` | Dependency graph, analyzer, overlay, profiler |
 
 Every subpath is typed and included in the build output.

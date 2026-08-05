@@ -8,7 +8,11 @@ export type RouteKind =
 
 export interface RouteSegment {
 	raw: string;
+	pathPart: string;
 	isDynamic: boolean;
+	isCatchAll: boolean;
+	isOptionalCatchAll: boolean;
+	isGroup: boolean;
 	paramName: string;
 }
 
@@ -29,18 +33,18 @@ export interface RouteManifest {
 
 export interface MatchedRoute {
 	entry: RouteManifestEntry;
-	params: Record<string, string>;
+	params: Record<string, string | string[]>;
 }
 
 export interface RouteContext {
-	params: Record<string, string>;
+	params: Record<string, string | string[]>;
 	searchParams: URLSearchParams;
 	pathname: string;
 	url: URL;
 }
 
 export interface PageProps {
-	params: Record<string, string>;
+	params: Record<string, string | string[]>;
 	searchParams: Record<string, string>;
 }
 
@@ -66,7 +70,10 @@ export type ApiRouteHandler = (
 export type ApiRouteModule = Partial<Record<ApiMethod, ApiRouteHandler>>;
 
 export type GenerateMetadataFn<
-	TParams extends Record<string, string> = Record<string, string>,
+	TParams extends Record<string, string | string[]> = Record<
+		string,
+		string | string[]
+	>,
 > = (context: {
 	params: TParams;
 	searchParams?: Record<string, string>;

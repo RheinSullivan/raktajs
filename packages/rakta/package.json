@@ -1,6 +1,6 @@
 {
 	"name": "raktajs",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"description": "Rakta.js core framework package for React, Bun, TypeScript, app routing, rendering, SEO, components, RPC, store, schema, HTTP, PWA, and auto imports.",
 	"type": "module",
 	"license": "MIT",
@@ -35,7 +35,7 @@
 		"http",
 		"pwa",
 		"offline",
-		"auto-import",
+		"autoImport",
 		"plugin-system",
 		"service-container"
 	],
@@ -103,9 +103,9 @@
 			"types": "./dist/http/index.d.ts",
 			"import": "./dist/http/index.js"
 		},
-		"./auto-import": {
-			"types": "./dist/auto-import/index.d.ts",
-			"import": "./dist/auto-import/index.js"
+		"./autoImport": {
+			"types": "./dist/autoImport/index.d.ts",
+			"import": "./dist/autoImport/index.js"
 		},
 		"./pwa": {
 			"types": "./dist/pwa/index.d.ts",
@@ -139,9 +139,9 @@
 			"types": "./dist/data/index.d.ts",
 			"import": "./dist/data/index.js"
 		},
-		"./dx": {
-			"types": "./dist/dx/index.d.ts",
-			"import": "./dist/dx/index.js"
+		"./developerExperience": {
+			"types": "./dist/developerExperience/index.d.ts",
+			"import": "./dist/developerExperience/index.js"
 		},
 		"./plugin": {
 			"types": "./dist/plugin/index.d.ts",

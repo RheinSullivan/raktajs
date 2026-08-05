@@ -113,7 +113,7 @@ export async function rotateRefreshToken(
 	{ accessToken: string; refreshToken: string; sessionId: string } | undefined
 > {
 	const payload = await verifyJwt(oldRefreshToken);
-	if (!payload || payload.type !== "refresh") return undefined;
+	if (payload?.type !== "refresh") return undefined;
 
 	// Import here to avoid circular dependency
 	const { revokeSession, createSession } = await import(

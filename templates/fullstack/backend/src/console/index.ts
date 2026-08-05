@@ -1,7 +1,11 @@
-import { consoleCommands, defineCommand, type ConsoleCommand } from "./commands";
+import {
+	type ConsoleCommand,
+	consoleCommands,
+	defineCommand,
+} from "./commands";
 
-export { consoleCommands, defineCommand };
 export type { ConsoleCommand };
+export { consoleCommands, defineCommand };
 
 export async function runConsoleCommand(name: string): Promise<boolean> {
 	const command = consoleCommands.find((cmd) => cmd.name === name);

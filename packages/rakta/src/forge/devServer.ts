@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, statSync, watch } from "node:fs";
 import { join, relative } from "node:path";
-import { createDevTerminal } from "../dx/terminal";
+import { createDevTerminal } from "../developerExperience/terminal";
 import { resolveRouteMode } from "../render/modes";
 import { render } from "../render/renderer";
 import { generateManifest } from "../router/manifest";
@@ -91,7 +91,7 @@ interface ApiRouteExports {
  *
  * Terminal output (development only):
  *
- *   ⩛ Rakta.js 1.0.6 (CherbonsEngine)
+ *   ⩛ Rakta.js 1.1.2 (CherbonsEngine)
  *
  *     Local:        http://localhost:3000
  *     Network:      http://192.168.1.x:3000
@@ -116,7 +116,7 @@ export async function startDevServer(
 	// Development-only. Zero cost in production: this module is never imported
 	// by the production server path (tide/adapter.ts).
 	// Read version from the closest raktajs package.json at runtime
-	let _rVersion = "1.1.1";
+	let _rVersion = "1.1.2";
 	try {
 		const _pkgCandidates = [
 			join(options.projectRoot, "node_modules", "raktajs", "package.json"),

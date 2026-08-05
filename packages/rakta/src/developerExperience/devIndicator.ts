@@ -8,7 +8,7 @@
 // UX inspired by (but independently implemented from) common dev overlay
 // patterns. No competitor source code, CSS, branding, or naming is used.
 //
-// The Rakta.js SVG logo (docs/assets/Rakta.js.svg) is inlined as a data URL
+// The Rakta.js SVG logo (public/Rakta.js.svg) is inlined as a data URL
 // at build time so the indicator has no runtime filesystem dependency.
 
 export interface DevIndicatorOptions {

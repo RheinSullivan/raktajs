@@ -1,15 +1,5 @@
-type AestheticUnit = "LENIS-MODERN" | "RETRO-CYBER" | "NEO-BRUTALIST";
-
-interface HeaderProps {
-	lang: "ID" | "EN";
-	onLangToggle: () => void;
-	isMuted: boolean;
-	onMuteToggle: () => void;
-	aestheticUnit: AestheticUnit;
-	onAestheticChange: (unit: AestheticUnit) => void;
-	lowLatencyMode: boolean;
-	onLowLatencyToggle: () => void;
-}
+// biome-ignore-all lint: Template welcome starter Rakta.js
+// Header — uses Rakta.js: <photo>, toast, react-icons, gsap
 
 export default function Header({
 	lang,
@@ -21,24 +11,65 @@ export default function Header({
 	lowLatencyMode,
 	onLowLatencyToggle,
 }: HeaderProps) {
+	const headerRef = useRef<HTMLElement>(null);
+
+	useEffect(() => {
+		if (!headerRef.current) return;
+		gsap.fromTo(
+			headerRef.current,
+			{ y: -40, opacity: 0 },
+			{ y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+		);
+	}, []);
+
+	const handleLangToggle = useCallback(() => {
+		onLangToggle();
+		toast.info(
+			lang === "ID"
+				? "Switched to English 🇬🇧"
+				: "Berganti ke Bahasa Indonesia 🇮🇩",
+			{
+				title: "LANGUAGE",
+				duration: 2000,
+			},
+		);
+	}, [lang, onLangToggle]);
+
+	const handleMuteToggle = useCallback(() => {
+		onMuteToggle();
+		toast.info(isMuted ? "Audio enabled 🔊" : "Audio muted 🔇", {
+			title: "AUDIO",
+			duration: 1500,
+		});
+	}, [isMuted, onMuteToggle]);
+
 	return (
-		<header className="sticky top-0 z-40 border-b border-surface-stroke bg-black/90 backdrop-blur-md">
+		<header
+			ref={headerRef}
+			className="sticky top-0 z-40 border-b border-surface-stroke bg-black/90 backdrop-blur-md"
+		>
 			<div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-				<div className="flex items-center gap-3">
+				{/* Brand: [LOGO] Rakta.js */}
+				<click to="/" className="flex items-center gap-2.5 no-underline">
 					<photo
 						path="/rakta-logo.svg"
 						alt="Rakta.js Logo"
-						className="h-6 w-6"
+						width={26}
+						height={26}
+						className="h-6 w-6 flex-shrink-0 select-none"
 					/>
-					<span className="font-mono text-sm font-bold tracking-wider text-white">
+					<span className="font-mono text-sm font-bold tracking-wider text-white leading-none">
 						Rakta<span className="text-brand-pink">.js</span>
 					</span>
-					<span className="hidden sm:inline-block border border-surface-stroke bg-zinc-900/80 px-2 py-0.5 font-mono text-[10px] uppercase text-gray-400">
-						v1.1.1 • FRONTEND ENGINE
+					<span className="hidden sm:inline-flex items-center gap-1 border border-surface-stroke bg-zinc-900/80 px-2 py-0.5 font-mono text-[10px] uppercase text-gray-400 leading-none">
+						<Terminal className="h-2.5 w-2.5" />
+						v1.1.2 · FULLSTACK ENGINE
 					</span>
-				</div>
+				</click>
 
+				{/* Controls */}
 				<div className="flex items-center gap-3">
+					{/* Aesthetic switcher */}
 					<div className="hidden md:flex items-center gap-2 border border-surface-stroke bg-black p-1 font-mono text-[10px]">
 						{(["LENIS-MODERN", "RETRO-CYBER", "NEO-BRUTALIST"] as const).map(
 							(unit) => (
@@ -58,6 +89,7 @@ export default function Header({
 						)}
 					</div>
 
+					{/* Low-latency toggle */}
 					<button
 						type="button"
 						onClick={onLowLatencyToggle}
@@ -73,20 +105,27 @@ export default function Header({
 						LATENCY: {lowLatencyMode ? "LOW" : "STD"}
 					</button>
 
+					{/* Mute toggle with react-icon */}
 					<button
 						type="button"
-						onClick={onMuteToggle}
+						onClick={handleMuteToggle}
 						className="border border-surface-stroke bg-black p-2 font-mono text-xs text-gray-300 hover:border-white hover:text-white transition-colors cursor-pointer"
 						aria-label="Toggle Audio"
 					>
-						{isMuted ? "🔇" : "🔊"}
+						{isMuted ? (
+							<VolumeX className="h-3.5 w-3.5" />
+						) : (
+							<Volume2 className="h-3.5 w-3.5" />
+						)}
 					</button>
 
+					{/* Language toggle */}
 					<button
 						type="button"
-						onClick={onLangToggle}
-						className="border border-brand-pink bg-brand-pink/10 px-3 py-1 font-mono text-xs font-bold uppercase text-brand-pink hover:bg-brand-pink hover:text-white transition-colors cursor-pointer"
+						onClick={handleLangToggle}
+						className="border border-brand-pink bg-brand-pink/10 px-3 py-1 font-mono text-xs font-bold uppercase text-brand-pink hover:bg-brand-pink hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
 					>
+						<Globe className="h-3 w-3" />
 						{lang}
 					</button>
 				</div>

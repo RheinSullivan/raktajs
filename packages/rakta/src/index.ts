@@ -1,5 +1,5 @@
 export const RAKTA_NAME = "Rakta.js";
-export const RAKTA_VERSION = "1.1.1";
+export const RAKTA_VERSION = "1.1.2";
 export const RAKTA_TAGLINE =
 	"Small in size. Fierce in speed. Alive in every route.";
 
@@ -57,12 +57,12 @@ export type {
 	AutoImportManifest,
 	DiscoveredExport,
 	ScanForExportsOptions,
-} from "./auto-import/index";
+} from "./autoImport/index";
 export {
 	generateAutoImports,
 	printAutoImportSummary,
 	scanForExports,
-} from "./auto-import/index";
+} from "./autoImport/index";
 
 // CLI
 export type {
@@ -177,18 +177,6 @@ export {
 	createDeploymentAdapter,
 	listDeploymentTargets,
 } from "./deployment/index";
-
-// Docs
-export type {
-	RaktaDocsManifest,
-	RaktaDocsOptions,
-	RaktaDocsPage,
-	RaktaDocsSearchItem,
-	RaktaDocsSidebarItem,
-	RaktaVitePressConfig,
-} from "./docs/index";
-export { createVitePressConfig, scanMarkdownDocs } from "./docs/index";
-
 // DX
 export type {
 	DevIndicatorOptions,
@@ -199,7 +187,7 @@ export type {
 	RaktaRouteAnalysis,
 	RaktaSourceModule,
 	RequestLogEntry,
-} from "./dx/index";
+} from "./developerExperience/index";
 export {
 	analyzeBundle,
 	analyzeRoutes,
@@ -212,7 +200,17 @@ export {
 	inspectAutoImports,
 	mountDevIndicator,
 	RAKTA_TERMINAL_GLYPH,
-} from "./dx/index";
+} from "./developerExperience/index";
+// Docs
+export type {
+	RaktaDocsManifest,
+	RaktaDocsOptions,
+	RaktaDocsPage,
+	RaktaDocsSearchItem,
+	RaktaDocsSidebarItem,
+	RaktaVitePressConfig,
+} from "./docs/index";
+export { createVitePressConfig, scanMarkdownDocs } from "./docs/index";
 
 // Ecosystem - @rakta/auth, @rakta/forms, @rakta/database, @rakta/storage
 export type {

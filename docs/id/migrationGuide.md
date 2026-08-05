@@ -33,7 +33,7 @@ Kalau ada error TypeScript atau masalah runtime, cek bagian yang relevan di bawa
 
 ---
 
-## v1.0.7 → v1.1.1
+## v1.0.7 → v1.1.2
 
 Rilis ini memperbaiki konflik versi npm, menaikkan semua versi package, dan menghasilkan build yang bersih dari lint.
 
@@ -45,7 +45,7 @@ Tidak ada. Semua API yang sudah ada tetap kompatibel.
 
 #### Konflik versi diselesaikan
 
-v1.0.7 sudah di-publish ke npm. v1.1.1 adalah rilis lanjutan. Upgrade dengan:
+v1.0.7 sudah di-publish ke npm. v1.1.2 adalah rilis lanjutan. Upgrade dengan:
 
 ```bash
 bun update raktajs

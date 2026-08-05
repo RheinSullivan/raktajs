@@ -220,7 +220,7 @@ Development-only. Not in production builds.
 **Rakta Dev Terminal** - output when `bun run dev`:
 
 ```
-  ⩛ Rakta.js 1.0.6 (CherbonsEngine)
+  ⩛ Rakta.js 1.1.2 (CherbonsEngine)
 
   Local:         http://localhost:3000
   Network:       http://192.168.1.8:3000
@@ -278,7 +278,7 @@ raktajs/rpc           createRaktaRouter, publicProcedure, createRaktaClient
 raktajs/schema        string, number, boolean, object, array
 raktajs/http          createRaktaHttp
 raktajs/store         createRaktaStore
-raktajs/auto-import   scanForExports, generateAutoImports
+raktajs/autoImport    scanForExports, generateAutoImports
 raktajs/forge         buildProject, startDevServer, inspectBuild
 raktajs/tide          runtime adapter, request context
 raktajs/kernel        createRaktaKernel, createServiceContainer
@@ -290,7 +290,7 @@ raktajs/deployment    createDeploymentAdapter, listDeploymentTargets
 raktajs/testing       runRaktaTests, createMockServer
 raktajs/performance   benchmark, createBundleSizeReport
 raktajs/plugin        createPluginRegistry, createOfficialPlugins
-raktajs/dx            analyzeBundle, analyzeRoutes, createDependencyGraph, DevTerminal, DevIndicator
+raktajs/developerExperience analyzeBundle, analyzeRoutes, createDependencyGraph, DevTerminal, DevIndicator
 raktajs/docs          scanMarkdownDocs, createVitePressConfig
 raktajs/ops           RaktaQueue, RaktaEventBus, runCronTask
 raktajs/motion        definePageTransition, useSharedElement, useMagnetic, useTilt, useParallax, useDrag, useSpotlight, useCursorFollower, splitText, animateText

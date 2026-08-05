@@ -20,6 +20,56 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 
 	if (!activeArticle) return null;
 
+	const renderParagraph = (paragraph: string): ReactNode => {
+		if (paragraph.startsWith("###")) {
+			return (
+				<h3
+					key={paragraph}
+					className="text-lg font-bold font-mono text-white pt-4 border-b border-surface-stroke pb-1 uppercase"
+				>
+					{paragraph.replace("###", "").trim()}
+				</h3>
+			);
+		}
+		if (paragraph.startsWith("-")) {
+			return (
+				<ul
+					key={paragraph}
+					className="list-disc pl-5 space-y-2 text-gray-300 font-sans my-2"
+				>
+					{paragraph.split("\n").map((li: string) => (
+						<li key={li}>{li.replace("-", "").trim()}</li>
+					))}
+				</ul>
+			);
+		}
+		if (paragraph.startsWith("1.") || paragraph.startsWith("2.")) {
+			return (
+				<ol
+					key={paragraph}
+					className="list-decimal pl-5 space-y-2 text-gray-300 font-sans my-2"
+				>
+					{paragraph.split("\n").map((li: string) => (
+						<li key={li}>{li.replace(/^\d+\.\s*/, "").trim()}</li>
+					))}
+				</ol>
+			);
+		}
+		if (paragraph.startsWith("```")) {
+			const lines = paragraph.split("\n");
+			const code = lines.slice(1, -1).join("\n");
+			return (
+				<pre
+					key={paragraph}
+					className="bg-surface-card border border-surface-stroke p-4 font-mono text-xs text-brand-green overflow-x-auto whitespace-pre-wrap leading-5"
+				>
+					<code>{code}</code>
+				</pre>
+			);
+		}
+		return <p key={paragraph}>{paragraph}</p>;
+	};
+
 	return (
 		<div
 			className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
@@ -115,74 +165,7 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 							<div className="prose prose-invert max-w-none text-sm text-gray-300 leading-relaxed font-sans space-y-4">
 								{activeArticle.content
 									.split("\n\n")
-									.map((paragraph: string, paragraphIndex: number) => {
-										if (paragraph.startsWith("###")) {
-											return (
-												<h3
-													key={`h-${paragraphIndex}-${paragraph.slice(0, 20)}`}
-													className="text-lg font-bold font-mono text-white pt-4 border-b border-surface-stroke pb-1 uppercase"
-												>
-													{paragraph.replace("###", "").trim()}
-												</h3>
-											);
-										}
-										if (paragraph.startsWith("-")) {
-											return (
-												<ul
-													key={`ul-${paragraphIndex}-${paragraph.slice(0, 20)}`}
-													className="list-disc pl-5 space-y-2 text-gray-300 font-sans my-2"
-												>
-													{paragraph
-														.split("\n")
-														.map((li: string, listItemIndex: number) => (
-															<li
-																key={`li-${listItemIndex}-${li.slice(0, 15)}`}
-															>
-																{li.replace("-", "").trim()}
-															</li>
-														))}
-												</ul>
-											);
-										}
-										if (
-											paragraph.startsWith("1.") ||
-											paragraph.startsWith("2.")
-										) {
-											return (
-												<ol
-													key={`ol-${paragraphIndex}-${paragraph.slice(0, 20)}`}
-													className="list-decimal pl-5 space-y-2 text-gray-300 font-sans my-2"
-												>
-													{paragraph
-														.split("\n")
-														.map((li: string, listItemIndex: number) => (
-															<li
-																key={`oli-${listItemIndex}-${li.slice(0, 15)}`}
-															>
-																{li.replace(/^\d+\.\s*/, "").trim()}
-															</li>
-														))}
-												</ol>
-											);
-										}
-										if (paragraph.startsWith("```")) {
-											const lines = paragraph.split("\n");
-											const code = lines.slice(1, -1).join("\n");
-											return (
-												<pre
-													key={`pre-${paragraphIndex}-${paragraph.slice(0, 20)}`}
-													className="bg-surface-card border border-surface-stroke p-4 font-mono text-xs text-brand-green overflow-x-auto whitespace-pre-wrap leading-5"
-												>
-													<code>{code}</code>
-												</pre>
-											);
-										}
-										return (
-											<p key={`p-${paragraphIndex}-${paragraph.slice(0, 20)}`}>
-												{paragraph}
-											</p>
-										);
-									})}
+									.map((paragraph: string) => renderParagraph(paragraph))}
 							</div>
 
 							{/* Bottom manual navigation */}

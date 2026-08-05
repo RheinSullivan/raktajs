@@ -14,12 +14,13 @@ This is the public contract for Rakta.js development. Everything listed here is 
 | **v1.0.6** | 2026-07 | Rakta Dev Indicator (floating browser panel, Rakta.js SVG, Performance/Diagnostics/Preferences, dev-only), Rakta Dev Terminal (⩛ glyph, LAN detection, env file detection, request timing, slow-request flag, NO_COLOR), middleware timing instrumentation, `useRaktaData` hook, HTML shell `modulepreload`/`preload` for faster first paint, HTTP client timeout 10s + keepalive + retry. |
 | **v1.0.7** | 2026-07 | Fix Gaman.js v2.x API (`composeRouter` + `RouterBuilder`, removed `app.get/post` direct calls), auth generator (JWT / Session / JWT+Session prompts, session policy, OAuth provider prompt), CSRF protection, rate limiter, secure headers, `postcss.config.ts` in generated projects (replaces `.js`), 1-command fullstack dev (`bun run dev` starts both frontend + backend), CLI next-steps now shows correct `cd <project>/frontend` paths, dev terminal version read at runtime. |
 | **v1.1.1** | 2026-07 | Module loader + startup/shutdown pipeline (`RaktaModuleLoader`, `createStartupPipeline`), middleware composer with ordering + `routeMiddleware`, layout resolver (`resolveLayoutChain`), data fetching primitives (`cache`, `revalidate`, `isr`, `defer`, `lazy`, `prefetch`), ops layer (cookies, headers, `defineServerAction`), CLI extended commands (`doctor`, `analyze`, `benchmark`, `inspect`, `generate`, `check`, `telemetry`), plugin system upgraded (all 11 official plugins with lifecycle hooks), security CSP builder (`buildCsp`, `defaultCsp`, `generateCspNonce`), testing component/e2e utilities, ecosystem packages (`@rakta/auth`, `@rakta/forms`, `@rakta/database`, `@rakta/storage`), REST API helpers, GraphQL adapter, OpenAPI 3.1 generator, magic link auth, TOTP 2FA. |
+| **v1.1.2** | 2026-08 | Rebuilt frontend templates with bilingual English/Indonesian UI and language toggle, fixed auto-import declarations, restored Gaman.js backend migration compatibility wrapper, added database seeders for testing, refreshed release notes, moved shared assets to root `public/`, and tightened fullstack template lint/type safety. |
 
 ---
 
 ## Planned
 
-### v1.1.1 - Database Adapters
+### v1.1.x - Database Adapters
 
 - SQLite, PostgreSQL, MySQL, MariaDB, and edge KV adapters
 - Typed repository abstraction with `createInMemoryRepository` (already in `rakta/ecosystem`)
@@ -164,12 +165,12 @@ Every version must maintain:
 | KanomanShield | `rakta/middleware` | Kanoman Palace |
 | SunyaragiCrown | `rakta/seo` | Sunyaragi grotto |
 | NagaLimanWire | `rakta/rpc` | Paksi Naga Liman creature |
-| TrusmiThread | `rakta/auto-import` | Trusmi batik threads |
+| TrusmiThread | `rakta/autoImport` | Trusmi batik threads |
 | CherbonsEngine | `rakta/forge` | Cirebon (Cheribon) |
 | NorthCoastFlow | `rakta/render` | North coast Java |
 | MegaSignal | `rakta/seo` | Mega Mendung clouds |
 | ShrimpHarbor | `rakta/pwa` | Cirebon port |
-| JatiLens | `rakta/dx` | Jati (teak) clarity |
+| JatiLens | `rakta/developerExperience` | Jati (teak) clarity |
 | RaktaKernel | `rakta/kernel` | Rakta = life force |
 | RaktaMiddleware | `rakta/middleware` | Request pipeline |
 | RaktaDocs | `rakta/docs` | Documentation layer |
@@ -178,6 +179,6 @@ Every version must maintain:
 
 ---
 
-*Last updated: v1.1.1*
+*Last updated: v1.1.2*
 
 *Rakta.js is built by Rhein Sullivan (Muhammad Rizky Ramadhan) from Cirebon & South Jakarta, Indonesia - Vyagra Nexus™ 🇮🇩 · 🇵🇸 Free Palestine.*

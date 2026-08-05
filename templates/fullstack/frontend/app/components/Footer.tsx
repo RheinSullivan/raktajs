@@ -40,7 +40,7 @@ export default function Footer({ lang }: { lang: "ID" | "EN" }) {
 							<div className="flex items-center gap-2">
 								<span className="font-bold text-white text-sm">Rakta.js</span>
 								<span className="border border-surface-stroke px-1.5 py-0.5 text-[9px] uppercase text-gray-600">
-									v1.1.1
+									v1.1.2
 								</span>
 							</div>
 							<span className="text-gray-400 text-[11px]">

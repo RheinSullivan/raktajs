@@ -1,10 +1,10 @@
+import { requireAuth } from "../../middlewares/auth.middleware";
 import {
 	destroyUserController,
 	indexUsersController,
 	storeUserController,
 	updateUserController,
 } from "./controllers/UserController";
-import { requireAuth } from "../../middlewares/auth.middleware";
 
 export async function userRouter(
 	request: Request,

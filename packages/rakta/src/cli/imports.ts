@@ -3,7 +3,7 @@
 import {
 	generateAutoImports,
 	printAutoImportSummary,
-} from "../auto-import/generator";
+} from "../autoImport/generator";
 import { loadConfig } from "../config/loadConfig";
 
 export async function importsGenerateCommand(

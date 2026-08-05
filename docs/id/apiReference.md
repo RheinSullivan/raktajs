@@ -15,6 +15,6 @@ API publik Rakta.js diekspor dari root package dan subpath stabil:
 | `rakta/security` | Secure headers, CSRF, rate limiter, secrets |
 | `rakta/ops` | Request context, job, queue, cron, event bus |
 | `rakta/deployment` | Generator adapter deployment |
-| `rakta/dx` | Dependency graph, analyzer, overlay, profiler |
+| `rakta/developerExperience` | Dependency graph, analyzer, overlay, profiler |
 
 Setiap subpath sudah typed dan masuk ke output build.

@@ -85,7 +85,9 @@ describe("create-rakta fullstack generator", () => {
 			projectMode: "frontend-only",
 			autoImport: false,
 		});
-		const page = files.find((file) => file.path === "app/page.tsx");
+		const page = files.find(
+			(file) => file.path === "app/(root)/page.tsx" || file.path === "app/page.tsx",
+		);
 		const config = files.find((file) => file.path === "rakta.config.ts");
 
 		expect(typeof page?.content).toBe("string");

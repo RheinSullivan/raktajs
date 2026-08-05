@@ -14,12 +14,13 @@ Ini adalah kontrak publik untuk pengembangan Rakta.js. Semua yang tercantum di s
 | **v1.0.6** | 2026-07 | Rakta Dev Indicator (panel browser floating, SVG Rakta.js, Performance/Diagnostics/Preferences), Rakta Dev Terminal (glyph ⩛, deteksi LAN, deteksi file env, timing request, flag slow-request, NO_COLOR), instrumentasi timing middleware, hook `useRaktaData`, shell HTML dengan `modulepreload`/`preload` untuk first paint lebih cepat, HTTP client timeout 10s + keepalive + retry. |
 | **v1.0.7** | 2026-07 | Perbaikan API Gaman.js v2.x (`composeRouter` + `RouterBuilder`, hapus `app.get/post` langsung), auth generator (prompt JWT / Session / JWT+Session, session policy, OAuth provider), perlindungan CSRF, rate limiter, secure headers, `postcss.config.ts` di project yang di-generate, dev 1-perintah (`bun run dev` jalankan frontend + backend sekaligus), next-steps CLI menampilkan path yang benar `cd <project>/frontend`, versi dev terminal dibaca saat runtime. |
 | **v1.1.1** | 2026-07 | Module loader + pipeline startup/shutdown (`RaktaModuleLoader`, `createStartupPipeline`), middleware composer dengan ordering + `routeMiddleware`, layout resolver (`resolveLayoutChain`), primitif data fetching (`cache`, `revalidate`, `isr`, `defer`, `lazy`, `prefetch`), ops layer (cookies, headers, `defineServerAction`), perintah CLI diperluas (`doctor`, `analyze`, `benchmark`, `inspect`, `generate`, `check`, `telemetry`), sistem plugin diperbarui (11 plugin resmi dengan lifecycle hooks), security CSP builder (`buildCsp`, `defaultCsp`, `generateCspNonce`), utilitas testing component/e2e, paket ecosystem (`@rakta/auth`, `@rakta/forms`, `@rakta/database`, `@rakta/storage`), REST API helpers, GraphQL adapter, generator OpenAPI 3.1, magic link auth, TOTP 2FA. |
+| **v1.1.2** | 2026-08 | Template frontend dibangun ulang dengan UI bilingual Inggris/Indonesia dan toggle bahasa, deklarasi auto-import diperbaiki, wrapper kompatibilitas migration backend Gaman.js dipulihkan, data seeder testing ditambahkan, catatan rilis diperbarui, asset bersama dipindahkan ke root `public/`, dan template fullstack diperketat lint/type safety-nya. |
 
 ---
 
 ## Direncanakan
 
-### v1.1.1 - Database Adapters
+### v1.1.x - Database Adapters
 
 - Adapter SQLite, PostgreSQL, MySQL, MariaDB, dan edge KV
 - Abstraksi repository bertipe dengan `createInMemoryRepository`
@@ -152,6 +153,6 @@ Setiap versi harus mempertahankan:
 
 ---
 
-*Terakhir diperbarui: v1.1.1*
+*Terakhir diperbarui: v1.1.2*
 
 *Rakta.js dibuat oleh Rhein Sullivan (Muhammad Rizky Ramadhan) dari Cirebon & Jakarta Selatan, Indonesia - Vyagra Nexus™ 🇮🇩 · 🇵🇸 Free Palestine.*
