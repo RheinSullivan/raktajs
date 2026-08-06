@@ -51,23 +51,20 @@ export default function FeatureGrid({ lang }: { lang: "ID" | "EN" }) {
 		);
 	}, []);
 
-	const handleCopyCode = useCallback(
-		(code: string, title: string) => {
-			navigator.clipboard
-				.writeText(code)
-				.then(() => {
-					toast.success(`Copied ${title} snippet!`, { duration: 2000 });
-				})
-				.catch(() => {
-					toast.error("Failed to copy to clipboard.", { duration: 2000 });
-				});
-		},
-		[],
-	);
+	const handleCopyCode = useCallback((code: string, title: string) => {
+		navigator.clipboard
+			.writeText(code)
+			.then(() => {
+				toast.success(`Copied ${title} snippet!`, { duration: 2000 });
+			})
+			.catch(() => {
+				toast.error("Failed to copy to clipboard.", { duration: 2000 });
+			});
+	}, []);
 
-	const featuresList = (typeof RAKTA_FEATURES !== "undefined"
-		? RAKTA_FEATURES
-		: raktaFeatures) as readonly RaktaFeature[];
+	const featuresList = (
+		typeof RAKTA_FEATURES !== "undefined" ? RAKTA_FEATURES : raktaFeatures
+	) as readonly RaktaFeature[];
 
 	return (
 		<section className="bg-black py-16 px-4 sm:px-6" id="features">
