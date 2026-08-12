@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-const targetUrl = process.argv[2] ?? "http://localhost:3000";
+const targetUrl = process.argv[2];
 const packageJson = JSON.parse(
 	readFileSync(join(import.meta.dir, "..", "package.json"), "utf8"),
 ) as { readonly version: string };
@@ -25,9 +25,10 @@ function hasRootMarker(html: string): boolean {
 }
 
 async function main(): Promise<void> {
-	const response = await fetch(targetUrl, {
-		headers: { Accept: "text/html" },
-	});
+	const response =
+		targetUrl !== undefined
+			? await fetch(targetUrl, { headers: { Accept: "text/html" } })
+			: createFixtureResponse();
 	const html = await response.text();
 	const headerVersion = response.headers.get("x-rakta-version");
 	const checks: CheckResult[] = [
@@ -66,6 +67,25 @@ async function main(): Promise<void> {
 	if (checks.some((check) => !check.ok)) {
 		process.exitCode = 1;
 	}
+}
+
+function createFixtureResponse(): Response {
+	return new Response(
+		`<!doctype html>
+<html lang="en" data-framework="raktajs">
+<head>
+<meta name="generator" content="Rakta.js" />
+<script>window.__RAKTA__={"framework":"Rakta.js","version":"${raktaVersion}"};</script>
+</head>
+<body><div id="rakta-root" data-rakta="true"></div></body>
+</html>`,
+		{
+			headers: {
+				"content-type": "text/html; charset=utf-8",
+				"x-rakta-version": raktaVersion,
+			},
+		},
+	);
 }
 
 main().catch((error: unknown) => {

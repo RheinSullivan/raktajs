@@ -11,10 +11,16 @@ describe("Rakta SPA System", () => {
 	});
 
 	test("useNavigation provides fallback safe defaults when unmounted", () => {
-		const nav = useNavigation();
-		expect(nav.state.currentPath).toBe("/");
-		expect(nav.state.isLoading).toBe(false);
-		expect(typeof nav.navigate).toBe("function");
+		const originalConsoleError = console.error;
+		console.error = () => {};
+		try {
+			const nav = useNavigation();
+			expect(nav.state.currentPath).toBe("/");
+			expect(nav.state.isLoading).toBe(false);
+			expect(typeof nav.navigate).toBe("function");
+		} finally {
+			console.error = originalConsoleError;
+		}
 	});
 
 	test("SpaErrorBoundary is defined and exports class component", () => {

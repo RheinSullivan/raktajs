@@ -48,6 +48,12 @@
   <a href="https://www.typescriptlang.org">
     <img src="https://img.shields.io/badge/TypeScript-6.0.3-3178C6?style=flat&logo=typescript&logoColor=ffffff&labelColor=555" alt="TypeScript 6.0.3" />
   </a>
+  <a href="https://go.dev">
+    <img src="https://img.shields.io/badge/Go-1.22%2B-00ADD8?style=flat&logo=go&logoColor=ffffff&labelColor=555" alt="Go 1.22+" />
+  </a>
+  <a href="https://www.ruby-lang.org">
+    <img src="https://img.shields.io/badge/Ruby-3.4.10-CC342D?style=flat&logo=ruby&logoColor=ffffff&labelColor=555" alt="Ruby 3.4.10" />
+  </a>
   <a href="./LICENCE">
     <img src="https://img.shields.io/github/license/RheinSullivan/raktajs?style=flat&label=license&color=7CB342&labelColor=555" alt="MIT License" />
   </a>

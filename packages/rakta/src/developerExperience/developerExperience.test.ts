@@ -190,9 +190,17 @@ describe("Rakta Dev Terminal", () => {
 			version: "1.0.6",
 			projectRoot: process.cwd(),
 		});
-		expect(() => t.logError("test error")).not.toThrow();
-		expect(() => t.logError("test error", new Error("detail"))).not.toThrow();
-		expect(() => t.logError("test error", undefined)).not.toThrow();
+		const logs: string[] = [];
+		const originalConsoleError = console.error;
+		console.error = (...args: unknown[]) => logs.push(args.join(" "));
+		try {
+			expect(() => t.logError("test error")).not.toThrow();
+			expect(() => t.logError("test error", new Error("detail"))).not.toThrow();
+			expect(() => t.logError("test error", undefined)).not.toThrow();
+		} finally {
+			console.error = originalConsoleError;
+		}
+		expect(logs.some((line) => line.includes("test error"))).toBe(true);
 	});
 
 	test("logRebuild logs rebuild time", () => {
