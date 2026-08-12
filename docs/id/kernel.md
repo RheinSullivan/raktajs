@@ -1,24 +1,45 @@
-# Kernel dan sistem plugin
+# Kernel dan Sistem Plugin
 
-## Gambaran umum
+Kernel Rakta.js adalah fondasi production untuk service framework, akses environment, registrasi fitur, dan lifecycle plugin. Kernel tersedia dari `rakta/kernel` dan diekspor dari package utama `raktajs`.
 
-Kernel Rakta adalah fondasi production untuk service framework, akses
-environment, registrasi fitur, dan lifecycle plugin. Kernel tersedia dari
-`rakta/kernel` dan juga diekspor dari `rakta`.
+---
 
-Gunakan kernel ketika project atau integrasi membutuhkan service bersama,
-konfigurasi yang type-safe, proses startup, proses teardown, atau tempat
-yang rapi untuk mendaftarkan kapabilitas framework.
+## Arsitektur Kernel & Service Container
 
-## Instalasi
+```mermaid
+flowchart TD
+    Mulai((Mulai))
+    Mulai --> Init[createRaktaKernel\nOpsi: env / plugin / service]
+    Init --> EnvLoad[Manajer Environment\ncreateRaktaEnvironment]
+    EnvLoad --> Services[Kontainer Service\ncreateServiceContainer]
+    Services --> PluginReg[Registry Plugin\n& Penyimpanan Fitur]
+    PluginReg --> Phase1[Fase 1: configure\nDaftarkan fitur, service, middleware]
+    Phase1 --> Phase2[Fase 2: start\nKoneksi DB, jalankan background task]
+    Phase2 --> Phase3[Fase 3: ready\nLog kesiapan, jalankan cek kesehatan]
+    Phase3 --> Running[(Status Runtime Aktif)]
+    Running --> ShutCheck{Sinyal\nPenutupan?}
+    ShutCheck -->|Tidak| Running
+    ShutCheck -->|Ya| Phase4[Fase 4: shutdown\nUrutan LIFO - Pembersihan & flush]
+    Phase4 --> Selesai((Selesai))
 
-Kernel sudah termasuk di package inti:
-
-```bash
-bun add raktajs
+    classDef startEnd fill:#e63946,stroke:#c1121f,color:#ffffff,font-weight:bold
+    class Mulai,Selesai startEnd
 ```
 
-## Mulai cepat
+---
+
+## Arsitektur Layer
+
+| Layer | Tanggung jawab |
+| --- | --- |
+| Service container | Mendaftarkan value dan factory dengan lifetime singleton atau transient |
+| Environment | Membaca `RAKTA_ENV`, `NODE_ENV`, dan record environment eksplisit |
+| Feature registry | Membantu plugin mengumumkan kapabilitas framework |
+| Lifecycle plugin | Menjalankan hook `configure`, `start`, `ready`, dan `shutdown` |
+
+---
+
+## Mulai Cepat
 
 ```ts
 import { createRaktaKernel } from "rakta/kernel";
@@ -39,21 +60,11 @@ await kernel.start();
 const apiUrl = await kernel.services.resolve<string>("apiUrl");
 ```
 
-## Arsitektur project
+---
 
-Kernel sengaja dibuat kecil:
+## Sistem Plugin
 
-| Layer | Tanggung jawab |
-| --- | --- |
-| Service container | Mendaftarkan value dan factory dengan lifetime singleton atau transient |
-| Environment | Membaca `RAKTA_ENV`, `NODE_ENV`, dan record environment eksplisit |
-| Feature registry | Membantu plugin mengumumkan kapabilitas framework |
-| Lifecycle plugin | Menjalankan hook `configure`, `start`, `ready`, dan `shutdown` |
-
-## Sistem plugin
-
-Plugin adalah object TypeScript biasa. Plugin bisa mendaftarkan service,
-mengekspos fitur, dan menjalankan pekerjaan startup atau shutdown.
+Plugin adalah object TypeScript biasa. Plugin bisa mendaftarkan service, mengekspos fitur, dan menjalankan pekerjaan startup atau shutdown.
 
 ```ts
 import type { RaktaPlugin } from "rakta/kernel";
@@ -74,29 +85,7 @@ export const authPlugin: RaktaPlugin = {
 };
 ```
 
-Daftarkan plugin sebelum kernel berjalan:
-
-```ts
-const kernel = createRaktaKernel({
-  plugins: [authPlugin],
-});
-
-await kernel.start();
-```
-
-## Environment variable
-
-Gunakan helper environment daripada membaca global runtime secara langsung.
-Dengan begitu test, Bun, tooling yang kompatibel dengan Node, dan runtime
-bergaya edge tetap lebih mudah diprediksi.
-
-```ts
-const environment = kernel.environment;
-
-const port = environment.number("PORT", 3000);
-const debug = environment.boolean("DEBUG", false);
-const databaseUrl = environment.require("DATABASE_URL");
-```
+---
 
 ## Referensi API
 
@@ -114,38 +103,9 @@ const databaseUrl = environment.require("DATABASE_URL");
 | `services.resolve(key)` | Mengambil service atau melempar error yang jelas |
 | `services.tryResolve(key)` | Mengambil service atau mengembalikan `undefined` |
 
-## Testing
+---
 
-Kirim object `env` eksplisit di test agar test suite tidak bergantung pada
-environment mesin lokal.
-
-```ts
-const kernel = createRaktaKernel({
-  environmentName: "test",
-  env: {
-    FEATURE_ON: "true",
-  },
-});
-```
-
-## Praktik terbaik
-
-- Daftarkan plugin sebelum `kernel.start()`.
-- Gunakan service key berupa string stabil atau symbol yang diekspor.
-- Simpan secret di layer environment, bukan di source code plugin.
-- Gunakan `shutdown()` untuk koneksi, timer, dan subscription yang terbuka.
-- Pilih plugin kecil yang memiliki satu kapabilitas jelas.
-
-## Troubleshooting
-
-| Masalah | Perbaikan |
-| --- | --- |
-| Service belum terdaftar | Daftarkan sebelum resolve atau gunakan `tryResolve()` |
-| Error plugin duplikat | Pastikan nama plugin unik |
-| Error circular dependency | Pecah salah satu service menjadi factory atau kirim value eksplisit |
-| Environment variable hilang | Gunakan `environment.get()` untuk nilai opsional atau definisikan variabelnya |
-
-## Dokumen terkait
+## Dokumen Terkait
 
 - [`mulai.md`](./mulai.md)
 - [`templates.md`](./templates.md)

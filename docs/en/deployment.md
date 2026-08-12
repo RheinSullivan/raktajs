@@ -1,12 +1,53 @@
-# Deployment
+# Deployment & Target Adapters
 
-## Overview
+Rakta.js projects are powered by Bun and can be deployed as static frontends, Bun servers, Docker containers, or serverless/edge platforms for Vercel, Netlify, Cloudflare Workers/Pages, AWS Lambda, Railway, and Fly.io.
 
-Rakta projects are Bun-first and can be deployed as static frontend apps,
-Bun servers, or platform builds for Vercel, Netlify, and Cloudflare.
+---
 
-Rakta also exposes a first-class deployment adapter API through
-`rakta/deployment` and a CLI generator:
+## Deployment Pipeline Architecture
+
+```mermaid
+flowchart TD
+    Start((Start))
+    Start --> Src[App Code
+React / TypeScript / Bun]
+    Src --> Build[rakta build
+Bundler Engine]
+    Build --> Artifacts[(dist/ Output
+Static & Server Bundles)]
+    Artifacts --> AdapterSelect{Deployment
+Target?}
+
+    AdapterSelect -->|vercel| VercelSpec[Generate vercel.json
+& .vercel/project.json]
+    AdapterSelect -->|netlify| NetlifySpec[Generate netlify.toml
+& Edge Redirect Rules]
+    AdapterSelect -->|cloudflare| CFSpec[Generate wrangler.toml
+& _headers]
+    AdapterSelect -->|docker| DockerSpec[Generate Dockerfile
+& .dockerignore]
+    AdapterSelect -->|node| NodeSpec[Generate Server Entry
+Bun / Node Adapter]
+
+    VercelSpec --> Vercel[Vercel Edge Network]
+    NetlifySpec --> Netlify[Netlify CDN & Functions]
+    CFSpec --> CF[Cloudflare Workers / Pages]
+    DockerSpec --> Docker[Docker / Kubernetes / Railway]
+    NodeSpec --> Node[Node / Bun Server]
+
+    Vercel --> End((End))
+    Netlify --> End
+    CF --> End
+    Docker --> End
+    Node --> End
+
+    classDef startEnd fill:#e63946,stroke:#c1121f,color:#ffffff,font-weight:bold
+    class Start,End startEnd
+```
+
+---
+
+## CLI Generator Commands
 
 ```bash
 rakta generate deployment vercel
@@ -15,15 +56,13 @@ rakta generate deployment cloudflare-workers
 rakta generate deployment docker
 ```
 
-Generated files are intentionally small and platform-native. For example,
-the Vercel adapter writes `vercel.json`, the Netlify adapter writes
-`netlify.toml`, the Cloudflare adapter writes `wrangler.toml`, and the
-Docker adapter writes `Dockerfile` plus `.dockerignore`.
+Generated target specs are concise and adhere strictly to the target provider formats. The Vercel adapter emits `vercel.json` and `.vercel/project.json`, Netlify emits `netlify.toml`, Cloudflare emits `wrangler.toml`, and Docker emits `Dockerfile` plus `.dockerignore`.
 
-## Adapter API
+---
 
-Use the adapter API when a plugin, template, or internal tool needs to
-prepare deployment files without shelling out to the CLI:
+## Deployment Adapter API
+
+Use the programmatic API when plugins, templates, or internal tools need to generate target configuration files without running the CLI:
 
 ```ts
 import { createDeploymentAdapter } from "raktajs/deployment";
@@ -38,13 +77,13 @@ for (const file of adapter.files) {
 }
 ```
 
-Supported targets:
+### Supported Targets
 
 | Target | Runtime |
 | --- | --- |
-| `node` | Node-compatible server |
-| `bun` | Bun server |
-| `deno` | Deno server |
+| `node` | Node-compatible Server |
+| `bun` | Native Bun Server |
+| `deno` | Deno Server |
 | `cloudflare-workers` | Edge worker |
 | `cloudflare-pages` | Static edge hosting |
 | `netlify` | Static or edge hosting |
@@ -58,70 +97,21 @@ Supported targets:
 | `github-pages` | Static hosting |
 | `static` | Generic static export |
 
-## Static frontend
+---
 
-Use static export for SSG or SPA deployments:
-
-```bash
-bun run build
-```
-
-Upload the generated frontend output to any static host.
-
-## Vercel
-
-Use a project-level build command:
-
-```bash
-bun run build
-```
-
-For fullstack apps, deploy `frontend/` as the web project and deploy
-`backend/` separately as a Bun-compatible service.
-
-## Netlify
-
-Set the build command to:
-
-```bash
-bun run build
-```
-
-Set the publish directory to the frontend build output configured in
-`rakta.config.ts`.
-
-## Cloudflare
-
-For static sites, deploy the frontend build output to Cloudflare Pages.
-For Workers, keep handlers Fetch API compatible and avoid Node-only APIs
-inside request handlers.
-
-## Docker
-
-Fullstack apps can run with Bun in a small container:
-
-```dockerfile
-FROM oven/bun:1
-WORKDIR /app
-COPY . .
-RUN bun install --frozen-lockfile
-RUN bun run build
-CMD ["bun", "run", "start"]
-```
-
-## Environment variables
-
-Common fullstack variables:
+## Environment Variables
 
 | Variable | Purpose |
 | --- | --- |
 | `PORT` | Backend server port |
-| `CORS_ORIGIN` | Frontend origin allowed by the API |
+| `CORS_ORIGIN` | Allowed origin header for API requests |
 | `DATABASE_URL` | Database connection string |
-| `AUTH_SECRET` | JWT signing secret, at least 32 characters |
-| `SESSION_MODE` | `single` or `multi` session behavior |
+| `AUTH_SECRET` | Secret key for JWT signing (minimum 32 characters) |
+| `SESSION_MODE` | Session behavior: `single` or `multi` |
 
-## Related docs
+---
+
+## Related Documentation
 
 - [`templates.md`](./templates.md)
 - [`kernel.md`](./kernel.md)

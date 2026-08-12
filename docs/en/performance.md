@@ -1,43 +1,68 @@
 # Performance
 
-## "Network response is done but UI takes 10 seconds to update"
+## Browser Render Pipeline Breakdown
 
-This is the most common Rakta.js performance complaint. The server shows 200 in 18ms. The browser Network tab shows the response. But the UI does not update for several seconds.
+The most common Rakta.js performance complaint is "server already 200 but UI is slow." The bottleneck is always in the **browser pipeline**, not the server.
 
-**This is NOT a server problem.** The bottleneck is in the browser pipeline.
+```mermaid
+sequenceDiagram
+    participant App as Application Code
+    participant Browser as Browser Runtime
+    participant React as React Reconciler
+    participant DOM as DOM / Paint Engine
 
-### Timeline breakdown
-
+    App->>Browser: fetch() - Request sent (T0)
+    Browser->>Browser: Network transit (T1 - T2)
+    Note over Browser: Server response: 200 in 18ms (T2)
+    Browser->>Browser: Receive & buffer response body (T3)
+    Browser->>App: Response body parsed (T4) - JSON.parse()
+    App->>React: setState() triggered (T5)
+    React->>React: Component re-render & reconcile (T6)
+    React->>DOM: Commit changes to DOM (T7)
+    DOM->>Browser: Layout + Paint (T8)
+    Note over App,DOM: Gap T3-T8 = "response done, UI lagging" zone
 ```
-T0  request sent
-T1  server receives request
-T2  server sends response          ← terminal shows this as "200 in 18ms"
-T3  browser receives response
-T4  JavaScript parses response body
-T5  state update called
-T6  React render starts
-T7  React commit (DOM update)
-T8  browser paints
-```
 
-The 10-second gap is between **T3 and T8** - entirely in the browser.
+---
 
-### Common causes
+## Common Bottleneck Points
 
 | Stage | Cause | Fix |
 |---|---|---|
-| T3→T4 | Large JSON payload (>1MB) | Paginate, server-side filter |
-| T4→T5 | Expensive transform/sort on client | Move to server, memoize |
-| T5→T6 | State update triggers full tree render | `useMemo`, split context |
-| T6→T7 | Large component tree, no virtualization | Virtualize long lists |
-| T7→T8 | Heavy layout/paint (large DOM, shadows) | Reduce DOM size |
+| T3 to T4 | Large JSON payload (>1MB) | Paginate, server-side filter |
+| T4 to T5 | Expensive transform/sort on client | Move to server, memoize |
+| T5 to T6 | State update triggers full tree render | `useMemo`, split context |
+| T6 to T7 | Large component tree, no virtualization | Virtualize long lists |
+| T7 to T8 | Heavy layout/paint (large DOM, shadows) | Reduce DOM size |
 
-### Diagnosing with Rakta Dev Indicator
+---
+
+## HTML Shell Optimization Pipeline
+
+```mermaid
+flowchart TD
+    Start((Start))
+    Start --> HTMLShell[HTML Shell Generation\nForge Engine]
+    HTMLShell --> JSPreload[link rel=modulepreload\nBrowser parallel fetch, parse, & compile JS]
+    HTMLShell --> CSSPreload[link rel=preload CSS\nStylesheet does not block render]
+    HTMLShell --> CriticalCSS[Inline Critical CSS\nLoading indicator visible immediately without white flash]
+    CriticalCSS --> MountEvent[rakta:mounted Event\nRemove loading overlay after first React commit]
+    JSPreload --> End((End))
+    CSSPreload --> End
+    MountEvent --> End
+
+    classDef startEnd fill:#e63946,stroke:#c1121f,color:#ffffff,font-weight:bold
+    class Start,End startEnd
+```
+
+---
+
+## Diagnosing with Rakta Dev Indicator
 
 Open the Performance panel in the Dev Indicator (bottom-left logo). It shows:
 
 ```
-Network      18ms    ← matches terminal
+Network      18ms    <- matches terminal
 Parse         3ms
 State         2ms
 Render       21ms
@@ -45,11 +70,11 @@ Paint         4ms
 Total        48ms
 ```
 
-If `Response → UI gap` in Diagnostics shows >1s, check **State** and **Render** rows.
+If `Response -> UI gap` in Diagnostics shows >1s, check **State** and **Render** rows.
 
-### Large report/table applications
+---
 
-For applications that render large datasets:
+## Large Report/Table Applications
 
 **Server-side:**
 ```ts
@@ -94,20 +119,9 @@ const data = await http.get<Report>("/api/report", { retries: 2 });
 
 ---
 
-## Render Pipeline Performance
-
-Rakta.js v1.0.7 HTML shell changes:
-
-- `<link rel="modulepreload">` for JS bundle - browser fetches+parses+compiles in parallel with HTML
-- `<link rel="preload">` for CSS - stylesheet no longer blocks render
-- Inline critical CSS - loading indicator visible immediately, no blank white flash
-- Loading overlay removed after first React commit via `rakta:mounted` event
-
----
-
 ## Middleware Timing
 
-`createMiddlewareStack` now tracks per-middleware elapsed time. Total middleware time is attached as `X-Rakta-Middleware-Ms` response header in development for diagnostics.
+`createMiddlewareStack` tracks per-middleware elapsed time. Total middleware time is attached as `X-Rakta-Middleware-Ms` response header in development for diagnostics.
 
 ---
 

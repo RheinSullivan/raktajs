@@ -1,17 +1,45 @@
 # Pengambilan Data (Data Fetching)
 
-## Gambaran Umum
-
 Modul `rakta/data` menyediakan templat cache data ringan, kontrak strategi data rute, serta fungsi pembantu untuk mengidentifikasi rute ISR, streaming, dan prefetch. Primitif ini digunakan oleh mesin build Forge, runtime Tide, dan renderer kustom untuk menentukan bagaimana setiap rute diambil, disimpan di cache, dan dirender ulang.
 
-## Kapan Menggunakannya
+---
 
-Gunakan modul ini ketika Anda membutuhkan:
-- Cache berlingkup permintaan (request-scoped) yang menduplikasi panggilan paralel ke pemuat yang sama.
-- Anotasi strategi rendering per rute (server vs. client, prerender vs. dynamic, streaming, prefetch).
-- Logika ISR / revalidasi yang menentukan apakah halaman dalam cache sudah kadaluwarsa.
+## Arsitektur Lifecycle Pengambilan Data & Caching
 
-## API Cache
+```mermaid
+flowchart TD
+    Mulai((Mulai))
+    Mulai --> Req[Request Rute Masuk]
+    Req --> Strategy{Strategi Rute?}
+
+    Strategy -->|prerender + revalidate| ISRCache[(Penyimpanan Cache Inkremental)]
+    Strategy -->|stream = true| StreamShell[Shell Streaming\n& React Suspense]
+    Strategy -->|cache request| DataCache[createDataCache\nCache Scope-Request]
+
+    ISRCache --> FreshCheck{Usia Cache\nvs TTL?}
+    FreshCheck -->|Masih Segar| ServeStatic[Sajikan HTML Statis\ndari Cache]
+    FreshCheck -->|Kedaluwarsa| RevalBg[Revalidasi Latar Belakang\nAsync]
+    RevalBg --> UpdateStore[(Pembaruan Penyimpanan Cache)]
+    UpdateStore --> ServeStatic
+
+    DataCache --> TagCheck{Pencocokan Tag / TTL?}
+    TagCheck -->|Cache Cocok| ReturnCached[Kembalikan Data\ndari Cache]
+    TagCheck -->|Cache Meleset| FetchDB[Eksekusi Loader\nAsync / Query DB]
+    FetchDB --> StoreResult[(Tulis ke Cache)]
+    StoreResult --> ReturnCached
+
+    ServeStatic --> Resp[Response HTTP Dikirim]
+    StreamShell --> Resp
+    ReturnCached --> Resp
+    Resp --> Selesai((Selesai))
+
+    classDef startEnd fill:#e63946,stroke:#c1121f,color:#ffffff,font-weight:bold
+    class Mulai,Selesai startEnd
+```
+
+---
+
+## API Cache Data
 
 `createDataCache()` mengembalikan instans cache untuk satu siklus hidup permintaan. Entri disimpan dengan kata kunci string dan dapat dibatalkan berdasarkan tag.
 
@@ -39,6 +67,8 @@ cache.revalidate("cms:posts");
 | --- | --- | --- | --- |
 | `ttl` | `number` | `0` (tidak pernah kadaluwarsa) | Masa berlaku dalam milidetik |
 | `tags` | `string[]` | `[]` | Tag untuk pembatalan kelompok |
+
+---
 
 ## Strategi Data Rute
 
@@ -72,14 +102,10 @@ shouldStreamRoute(dashboardStrategy);  // true
 shouldPrefetchRoute(dashboardStrategy); // true
 ```
 
-## Kesalahan Umum
-
-- Berbagi instans cache di seluruh permintaan dalam handler server - setiap permintaan harus membuat instans `createDataCache()` tersendiri.
-- Mengatur `revalidate` tanpa mengatur `prerender: true` - ISR hanya berlaku untuk rute yang dipra-render.
-- Menggunakan `stream: true` pada rute dengan kueri basis data yang lambat tanpa pembatas `<Suspense>`.
+---
 
 ## Dokumentasi Terkait
 
-- [`routing.md`](./routing.md) - routing berbasis berkas MendungWeave
+- [`routing.md`](./routing.md) - routing berbasis berkas
 - [`layout.md`](./layout.md) - sistem layout dan status pemuatan
 - [`rpc.md`](./rpc.md) - panggilan API bertipe presisi

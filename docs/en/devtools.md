@@ -29,9 +29,9 @@ Paint      First Contentful Paint (FCP)
 Total      Full load event duration
 ```
 
-**Diagnosing the "response is done but UI is slow" issue:**
+**Diagnosing "response is done but UI is slow":**
 
-The Diagnostics panel calculates `Response → UI gap = FCP - networkMs`. If this number is large (>1s), the bottleneck is in the browser pipeline, not the server. Compare with the terminal server timing to isolate the stage.
+The Diagnostics panel calculates `Response - UI gap = FCP - networkMs`. If this number is large (>1s), the bottleneck is in the browser pipeline, not the server.
 
 **Production exclusion:**
 
@@ -59,17 +59,17 @@ Output printed to the server terminal when running `bun run dev`.
   Environments:   .env.local
   Mode:           development
 
-  ✓ Ready in 421ms
+  Ready in 421ms
 ```
 
 **Request logging:**
 
 ```
-  ✓ GET    /                              200  24ms
-  ✓ GET    /api/report                    200  17ms
-  ✓ POST   /api/report                    201  31ms
-  ⚠ GET    /api/report                    200  1.4s  [slow]
-  ✗ GET    /missing                       404   2ms
+  GET    /                              200  24ms
+  GET    /api/report                    200  17ms
+  POST   /api/report                    201  31ms
+  GET    /api/report                    200  1.4s  [slow]
+  GET    /missing                       404   2ms
 ```
 
 **Features:**
@@ -81,26 +81,6 @@ Output printed to the server terminal when running `bun run dev`.
 - Request timing: total server-side ms per request
 - Slow request flag: configurable threshold (default 1000ms)
 - `NO_COLOR` env variable respected
-
-**Terminal symbol `⩛`:**
-
-Used as a fallback glyph representing the Vyagra Nexus shield/trident geometry. Works in Windows Terminal, PowerShell, Git Bash, Linux, macOS. No Nerd Font required.
-
-> If Vyagra Nexus defines an official terminal glyph, update `RAKTA_TERMINAL_GLYPH` in `packages/rakta/src/developerExperience/terminal.ts`.
-
-**Configuration:**
-
-```ts
-// rakta.config.ts (planned - not yet available)
-export default defineConfig({
-  dev: {
-    terminal: {
-      slowRequestThresholdMs: 1000,
-      detailedTiming: false,
-    },
-  },
-});
-```
 
 ---
 

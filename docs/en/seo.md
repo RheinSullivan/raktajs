@@ -14,14 +14,7 @@ Use this on every public-facing page where search engines or social
 previews matter - almost always your marketing pages, rarely your
 authenticated dashboard pages.
 
-## Architecture
-
-Each route can export a `metadata` object (or a function that returns
-one) describing its `title`, `description`, Open Graph data, Twitter
-Card data, canonical URL, robots directives, and JSON-LD. `RaktaHead`
-renders all of this into proper `<title>`, `<meta>`, `<link>`, and
-`<script type="application/ld+json">` tags, using stable, content-derived
-React keys (not array indices) so re-renders stay correct.
+---
 
 `generateRobotsTxt` / `createRobotsHandler` produce a valid `robots.txt`
 response, including `Allow`, `Disallow`, `Crawl-delay`, `Sitemap`, and

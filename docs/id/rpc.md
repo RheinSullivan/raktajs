@@ -1,36 +1,46 @@
 # RPC - CarubanWire
 
-## Overview
+**CarubanWire** adalah layer RPC type-safe di Rakta.js, terinspirasi dari tRPC tapi diimplementasikan secara native untuk Rakta.js tanpa bergantung padanya. Kalian mendefinisikan procedure sekali di server; client mendapat inferensi tipe penuh tanpa proses code generation.
 
-**CarubanWire** adalah layer RPC type-safe di Rakta.js, terinspirasi dari
-tRPC tapi diimplementasikan secara native untuk Rakta.js tanpa bergantung
-padanya. Kalian mendefinisikan procedure sekali di server; client
-mendapat inferensi tipe penuh tanpa proses code generation.
+---
 
-## Kapan dipakai
+## Arsitektur Panggilan RPC & Inferensi Tipe
 
-Pakai CarubanWire kalau kalian ingin panggilan fungsi yang typed antara
-frontend dan backend, dibanding menulis manual panggilan `fetch` dan
-mengetik response secara manual. Untuk REST API yang tidak typed atau
-milik pihak ketiga, pakai [PanturaFetch](./http.md) saja.
+```mermaid
+flowchart TD
+    Mulai((Mulai))
+    Mulai --> ClientCall[Panggilan Client\nclient.getUser.query input]
+    ClientCall --> SchemaVal{Validasi Rakta\nSchema?}
 
-## Arsitektur
+    SchemaVal -->|Gagal| ErrResp[Lempar RaktaRpcError\nBAD_REQUEST / Input Tidak Valid]
+    SchemaVal -->|Valid| ExecuteProc[Jalankan Procedure Handler\nquery / mutation]
 
-- **Router** adalah object biasa yang nilainya adalah procedure yang
-  dibuat dengan `publicProcedure`.
-- **Procedure** dibangun secara fluent: `.input(schema)` melekatkan
-  validator Rakta Schema yang opsional, lalu `.query(handler)` atau
-  `.mutation(handler)` menyelesaikannya.
-- **Client**, dibuat dengan `createRaktaClient<AppRouter>()`, adalah
-  sebuah `Proxy` - memanggil `client.namaProcedure.query(input)` mengirim
-  request yang typed dan mengembalikan response yang typed, sepenuhnya
-  diinferensi dari tipe router server.
-- Error muncul sebagai `RaktaRpcError`, membawa `code` dan `details`
-  opsional untuk kegagalan validasi.
+    ErrResp --> Selesai((Selesai))
 
-## Contoh kode
+    ExecuteProc --> DBQuery[(Query Database / Service\nEksternal)]
+    DBQuery --> ProcResult[Hasil Diformat]
+    ProcResult --> HTTPTransport[Response Transport HTTP JSON]
+    HTTPTransport --> ClientType[Inferensi Tipe Tanpa Codegen\ndi Komponen React]
+    ClientType --> Selesai
 
-Server:
+    classDef startEnd fill:#e63946,stroke:#c1121f,color:#ffffff,font-weight:bold
+    class Mulai,Selesai startEnd
+```
+
+---
+
+## Ringkasan Komponen
+
+- **Router**: Object biasa yang nilainya adalah procedure yang dibuat dengan `publicProcedure`.
+- **Procedure**: Dibangun secara fluent: `.input(schema)` melekatkan validator Rakta Schema yang opsional, lalu `.query(handler)` atau `.mutation(handler)` menyelesaikannya.
+- **Client**: Dibuat dengan `createRaktaClient<AppRouter>()`, memanggil `client.namaProcedure.query(input)` mengirim request yang typed dan mengembalikan response yang typed, sepenuhnya diinferensi dari tipe router server.
+- **Error**: Error muncul sebagai `RaktaRpcError`, membawa `code` dan `details` opsional untuk kegagalan validasi.
+
+---
+
+## Contoh Kode
+
+### Server Definition
 ```ts
 // backend/src/rpc/router.ts
 import { publicProcedure } from "rakta/rpc";
@@ -45,7 +55,7 @@ export const appRouter = {
 export type AppRouter = typeof appRouter;
 ```
 
-Client:
+### Client Call
 ```ts
 // frontend/lib/rpc.ts
 import { createRaktaClient } from "rakta/rpc";
@@ -59,18 +69,9 @@ const result = await rpc.greet.query({ name: "Rakta" });
 // result.message: string - sudah typed, tanpa anotasi manual
 ```
 
-## Kesalahan umum
+---
 
-- Lupa `await` di `.query()` / `.mutate()` - keduanya mengembalikan
-  `Promise`.
-- Membagikan tipe router dengan re-export seluruh module backend ke
-  bundle frontend - sebaiknya export hanya `type AppRouter`, yang
-  ter-erase saat build dan tidak menambah beban runtime ke client.
-- Menangkap error dengan blok `catch` generik dan mengabaikan
-  `error.code` - `RaktaRpcError.code` membantu membedakan kegagalan
-  validasi dari error server lainnya.
-
-## Dokumen terkait
+## Dokumen Terkait
 
 - [`http.md`](./http.md) - PanturaFetch, untuk panggilan HTTP non-RPC
-- [`backendFrameworks.md`](./backendFrameworks.md) - menghubungkan CarubanWire ke Gaman.js, Express.js, Nest.js, atau Adonis.js
+- [`backendFramework.md`](./backendFramework.md) - menghubungkan CarubanWire ke backend

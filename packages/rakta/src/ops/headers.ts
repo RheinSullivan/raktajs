@@ -43,6 +43,7 @@ export function jsonResponse(
 ): Response {
 	const headers = new Headers(init.headers);
 	headers.set("Content-Type", "application/json");
+	headers.set("X-Powered-By", "Rakta.js");
 
 	return new Response(JSON.stringify(data), {
 		status: init.status ?? 200,

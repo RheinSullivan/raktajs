@@ -311,16 +311,100 @@ export async function startDevServer(
 				return new Response(result.reason, { status: result.httpStatus });
 			}
 
-			// Inject livereload WebSocket into dev HTML.
-			const liveReloadScript = `<script>
+			// Inject Rakta.js Fast Refresh & Hot Module Replacement (HMR) Client Engine.
+			// Fast Refresh: Automatically updates code changes in browser on save WITHOUT losing component state.
+			// HMR: Low-level WebSocket technology that swaps modules directly without full page reload.
+			const fastRefreshScript = `<script>
   (function(){
-    const ws=new WebSocket("ws://"+location.host+"/__livereload");
-    ws.onmessage=()=>location.reload();
+    if (window.__RAKTA_HMR_INITIALIZED__) return;
+    window.__RAKTA_HMR_INITIALIZED__ = true;
+    
+    let socket;
+    let reconnectAttempts = 0;
+    
+    function saveState() {
+      const state = {
+        scrollX: window.scrollX,
+        scrollY: window.scrollY,
+        activeId: document.activeElement ? document.activeElement.id : null,
+        inputs: {}
+      };
+      document.querySelectorAll("input, textarea, select").forEach((el, idx) => {
+        const key = el.id || el.name || "input_" + idx;
+        state.inputs[key] = el.value;
+      });
+      return state;
+    }
+
+    function restoreState(state) {
+      if (!state) return;
+      window.scrollTo(state.scrollX, state.scrollY);
+      if (state.inputs) {
+        document.querySelectorAll("input, textarea, select").forEach((el, idx) => {
+          const key = el.id || el.name || "input_" + idx;
+          if (state.inputs[key] !== undefined && el.value !== state.inputs[key]) {
+            el.value = state.inputs[key];
+          }
+        });
+      }
+      if (state.activeId) {
+        const active = document.getElementById(state.activeId);
+        if (active && typeof active.focus === "function") active.focus();
+      }
+    }
+
+    function connect() {
+      const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+      socket = new WebSocket(protocol + "//" + location.host + "/__livereload");
+
+      socket.onopen = () => {
+        reconnectAttempts = 0;
+        console.log("%c⩛ [Rakta Fast Refresh]%c HMR active & connected", "color:#f43f5e;font-weight:bold", "color:#a1a1aa");
+      };
+
+      socket.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === "fast-refresh" || data.type === "hmr:update") {
+            console.log("%c⩛ [Rakta Fast Refresh]%c Updating component: " + (data.file || "module"), "color:#f43f5e;font-weight:bold", "color:#38bdf8");
+            const saved = saveState();
+            // Fast Refresh: dispatch event for SPA shell to re-import modified component
+            window.dispatchEvent(new CustomEvent("rakta:fast-refresh", { detail: data }));
+            setTimeout(() => restoreState(saved), 50);
+            return;
+          }
+        } catch (_) {}
+
+        // Fallback reload if non-JSON or full-reload requested
+        console.log("%c⩛ [Rakta HMR]%c Code change detected, reloading page...", "color:#f43f5e;font-weight:bold", "color:#a1a1aa");
+        const saved = saveState();
+        try { sessionStorage.setItem("__rakta_state__", JSON.stringify(saved)); } catch(_){}
+        location.reload();
+      };
+
+      socket.onclose = () => {
+        if (reconnectAttempts++ < 10) {
+          setTimeout(connect, 1000);
+        }
+      };
+    }
+
+    // Restore state after page reload if applicable
+    try {
+      const savedRaw = sessionStorage.getItem("__rakta_state__");
+      if (savedRaw) {
+        sessionStorage.removeItem("__rakta_state__");
+        const saved = JSON.parse(savedRaw);
+        window.addEventListener("DOMContentLoaded", () => restoreState(saved), { once: true });
+      }
+    } catch(_){}
+
+    connect();
   })();
 </script>`;
 			const finalHtml = result.html.replace(
 				"</body>",
-				`${liveReloadScript}</body>`,
+				`${fastRefreshScript}</body>`,
 			);
 
 			terminal.logRequest({

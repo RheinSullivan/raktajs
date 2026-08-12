@@ -1,0 +1,384 @@
+{
+	"en": {
+		"language": "en",
+		"count": 37,
+		"sidebar": [
+			{
+				"id": "ReadMe",
+				"title": "Readme",
+				"path": "/en/ReadMe.md"
+			},
+			{
+				"id": "apiReference",
+				"title": "Apireference",
+				"path": "/en/apiReference.md"
+			},
+			{
+				"id": "architecture",
+				"title": "Architecture",
+				"path": "/en/architecture.md"
+			},
+			{
+				"id": "authentication",
+				"title": "Authentication",
+				"path": "/en/authentication.md"
+			},
+			{
+				"id": "autoImport",
+				"title": "Autoimport",
+				"path": "/en/autoImport.md"
+			},
+			{
+				"id": "backendFrameworks",
+				"title": "Backendframeworks",
+				"path": "/en/backendFrameworks.md"
+			},
+			{
+				"id": "cli",
+				"title": "Cli",
+				"path": "/en/cli.md"
+			},
+			{
+				"id": "compatibility",
+				"title": "Compatibility",
+				"path": "/en/compatibility.md"
+			},
+			{
+				"id": "data",
+				"title": "Data",
+				"path": "/en/data.md"
+			},
+			{
+				"id": "deployment",
+				"title": "Deployment",
+				"path": "/en/deployment.md"
+			},
+			{
+				"id": "developerExperience",
+				"title": "Developerexperience",
+				"path": "/en/developerExperience.md"
+			},
+			{
+				"id": "devtools",
+				"title": "Devtools",
+				"path": "/en/devtools.md"
+			},
+			{
+				"id": "docsSystem",
+				"title": "Docssystem",
+				"path": "/en/docsSystem.md"
+			},
+			{
+				"id": "donations",
+				"title": "Donations",
+				"path": "/en/donations.md"
+			},
+			{
+				"id": "gettingStarted",
+				"title": "Gettingstarted",
+				"path": "/en/gettingStarted.md"
+			},
+			{
+				"id": "golangEngine",
+				"title": "Golangengine",
+				"path": "/en/golangEngine.md"
+			},
+			{
+				"id": "hooks",
+				"title": "Hooks",
+				"path": "/en/hooks.md"
+			},
+			{
+				"id": "http",
+				"title": "Http",
+				"path": "/en/http.md"
+			},
+			{
+				"id": "kernel",
+				"title": "Kernel",
+				"path": "/en/kernel.md"
+			},
+			{
+				"id": "layout",
+				"title": "Layout",
+				"path": "/en/layout.md"
+			},
+			{
+				"id": "middleware",
+				"title": "Middleware",
+				"path": "/en/middleware.md"
+			},
+			{
+				"id": "migrationGuide",
+				"title": "Migrationguide",
+				"path": "/en/migrationGuide.md"
+			},
+			{
+				"id": "ops",
+				"title": "Ops",
+				"path": "/en/ops.md"
+			},
+			{
+				"id": "performance",
+				"title": "Performance",
+				"path": "/en/performance.md"
+			},
+			{
+				"id": "plugin",
+				"title": "Plugin",
+				"path": "/en/plugin.md"
+			},
+			{
+				"id": "publishing",
+				"title": "Publishing",
+				"path": "/en/publishing.md"
+			},
+			{
+				"id": "renderingModes",
+				"title": "Renderingmodes",
+				"path": "/en/renderingModes.md"
+			},
+			{
+				"id": "roadmap",
+				"title": "Roadmap",
+				"path": "/en/roadmap.md"
+			},
+			{
+				"id": "routing",
+				"title": "Routing",
+				"path": "/en/routing.md"
+			},
+			{
+				"id": "rpc",
+				"title": "Rpc",
+				"path": "/en/rpc.md"
+			},
+			{
+				"id": "rubyTooling",
+				"title": "Rubytooling",
+				"path": "/en/rubyTooling.md"
+			},
+			{
+				"id": "security",
+				"title": "Security",
+				"path": "/en/security.md"
+			},
+			{
+				"id": "seo",
+				"title": "Seo",
+				"path": "/en/seo.md"
+			},
+			{
+				"id": "spa",
+				"title": "Spa",
+				"path": "/en/spa.md"
+			},
+			{
+				"id": "store",
+				"title": "Store",
+				"path": "/en/store.md"
+			},
+			{
+				"id": "templates",
+				"title": "Templates",
+				"path": "/en/templates.md"
+			},
+			{
+				"id": "testing",
+				"title": "Testing",
+				"path": "/en/testing.md"
+			}
+		]
+	},
+	"id": {
+		"language": "id",
+		"count": 37,
+		"sidebar": [
+			{
+				"id": "BacaAku",
+				"title": "Bacaaku",
+				"path": "/id/BacaAku.md"
+			},
+			{
+				"id": "apiReference",
+				"title": "Apireference",
+				"path": "/id/apiReference.md"
+			},
+			{
+				"id": "arsitektur",
+				"title": "Arsitektur",
+				"path": "/id/arsitektur.md"
+			},
+			{
+				"id": "authentication",
+				"title": "Authentication",
+				"path": "/id/authentication.md"
+			},
+			{
+				"id": "autoImport",
+				"title": "Autoimport",
+				"path": "/id/autoImport.md"
+			},
+			{
+				"id": "backendFramework",
+				"title": "Backendframework",
+				"path": "/id/backendFramework.md"
+			},
+			{
+				"id": "cli",
+				"title": "Cli",
+				"path": "/id/cli.md"
+			},
+			{
+				"id": "compatibility",
+				"title": "Compatibility",
+				"path": "/id/compatibility.md"
+			},
+			{
+				"id": "data",
+				"title": "Data",
+				"path": "/id/data.md"
+			},
+			{
+				"id": "deployment",
+				"title": "Deployment",
+				"path": "/id/deployment.md"
+			},
+			{
+				"id": "developerExperience",
+				"title": "Developerexperience",
+				"path": "/id/developerExperience.md"
+			},
+			{
+				"id": "devtools",
+				"title": "Devtools",
+				"path": "/id/devtools.md"
+			},
+			{
+				"id": "docsSystem",
+				"title": "Docssystem",
+				"path": "/id/docsSystem.md"
+			},
+			{
+				"id": "donasi",
+				"title": "Donasi",
+				"path": "/id/donasi.md"
+			},
+			{
+				"id": "golangEngine",
+				"title": "Golangengine",
+				"path": "/id/golangEngine.md"
+			},
+			{
+				"id": "hooks",
+				"title": "Hooks",
+				"path": "/id/hooks.md"
+			},
+			{
+				"id": "http",
+				"title": "Http",
+				"path": "/id/http.md"
+			},
+			{
+				"id": "kernel",
+				"title": "Kernel",
+				"path": "/id/kernel.md"
+			},
+			{
+				"id": "layout",
+				"title": "Layout",
+				"path": "/id/layout.md"
+			},
+			{
+				"id": "middleware",
+				"title": "Middleware",
+				"path": "/id/middleware.md"
+			},
+			{
+				"id": "migrationGuide",
+				"title": "Migrationguide",
+				"path": "/id/migrationGuide.md"
+			},
+			{
+				"id": "mulai",
+				"title": "Mulai",
+				"path": "/id/mulai.md"
+			},
+			{
+				"id": "ops",
+				"title": "Ops",
+				"path": "/id/ops.md"
+			},
+			{
+				"id": "performance",
+				"title": "Performance",
+				"path": "/id/performance.md"
+			},
+			{
+				"id": "plugin",
+				"title": "Plugin",
+				"path": "/id/plugin.md"
+			},
+			{
+				"id": "publishing",
+				"title": "Publishing",
+				"path": "/id/publishing.md"
+			},
+			{
+				"id": "renderingModes",
+				"title": "Renderingmodes",
+				"path": "/id/renderingModes.md"
+			},
+			{
+				"id": "roadmap",
+				"title": "Roadmap",
+				"path": "/id/roadmap.md"
+			},
+			{
+				"id": "routing",
+				"title": "Routing",
+				"path": "/id/routing.md"
+			},
+			{
+				"id": "rpc",
+				"title": "Rpc",
+				"path": "/id/rpc.md"
+			},
+			{
+				"id": "rubyTooling",
+				"title": "Rubytooling",
+				"path": "/id/rubyTooling.md"
+			},
+			{
+				"id": "security",
+				"title": "Security",
+				"path": "/id/security.md"
+			},
+			{
+				"id": "seo",
+				"title": "Seo",
+				"path": "/id/seo.md"
+			},
+			{
+				"id": "spa",
+				"title": "Spa",
+				"path": "/id/spa.md"
+			},
+			{
+				"id": "store",
+				"title": "Store",
+				"path": "/id/store.md"
+			},
+			{
+				"id": "templates",
+				"title": "Templates",
+				"path": "/id/templates.md"
+			},
+			{
+				"id": "testing",
+				"title": "Testing",
+				"path": "/id/testing.md"
+			}
+		]
+	}
+}

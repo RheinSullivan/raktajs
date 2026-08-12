@@ -1,15 +1,41 @@
-# Middleware
+# Middleware Subsystem
 
-## Gambaran umum
+Middleware Rakta.js adalah pipeline request async untuk scope global, route, nested, layout, API, dan edge. Middleware diekspor dari `rakta/middleware`.
 
-Middleware Rakta adalah pipeline request async untuk scope global, route,
-nested, layout, API, dan edge. Middleware diekspor dari `rakta/middleware`.
+---
 
-Middleware bisa berjalan sebelum request sampai ke handler, setelah handler
-mengembalikan response, atau menghentikan request dengan redirect, rewrite,
-atau abort response.
+## Alur Eksekusi Middleware Pipeline
 
-## Mulai cepat
+```mermaid
+flowchart TD
+    Mulai((Mulai))
+    Mulai --> Req[HTTP / Edge Request Diterima]
+    Req --> Build[Bangun Middleware Stack\ncreateMiddlewareStack]
+    Build --> GlobalBefore[Jalankan Global before Hook]
+    GlobalBefore --> RouteBefore[Jalankan Route before Hook]
+    RouteBefore --> Signal{Sinyal Kontrol?}
+
+    Signal -->|redirect| Redir[Kembalikan 302 / 307\nRedirect Response]
+    Signal -->|abort| AbortRes[Kembalikan 401 / 403\nAbort Response]
+    Signal -->|rewrite| RewritePath[Terapkan x-rakta-rewrite\nPath Header]
+    Signal -->|next| Handler[Jalankan Route Handler]
+
+    Redir --> Selesai((Selesai))
+    AbortRes --> Selesai
+
+    RewritePath --> Handler
+    Handler --> RouteAfter[Jalankan Route after Hook]
+    RouteAfter --> GlobalAfter[Jalankan Global after Hook]
+    GlobalAfter --> Final[Kembalikan Final HTTP Response]
+    Final --> Selesai
+
+    classDef startEnd fill:#e63946,stroke:#c1121f,color:#ffffff,font-weight:bold
+    class Mulai,Selesai startEnd
+```
+
+---
+
+## Mulai Cepat
 
 ```ts
 import { before, createMiddlewareStack, redirect } from "rakta/middleware";
@@ -28,6 +54,8 @@ const stack = createMiddlewareStack([
 const response = await stack.handle(request, () => new Response("OK"));
 ```
 
+---
+
 ## Referensi API
 
 | API | Deskripsi |
@@ -40,30 +68,9 @@ const response = await stack.handle(request, () => new Response("OK"));
 | `rewrite(pathname)` | Mengembalikan instruksi rewrite dengan `x-rakta-rewrite` |
 | `abort(status, body)` | Menghentikan request dengan response |
 
-## Urutan
+---
 
-Middleware berjalan sesuai urutan array. Middleware `after()` menerima
-response setelah handler berikutnya selesai.
-
-```ts
-const stack = createMiddlewareStack([
-  before(() => console.log("before")),
-  after((_context, response) => {
-    const headers = new Headers(response.headers);
-    headers.set("x-rakta", "1");
-    return new Response(response.body, { status: response.status, headers });
-  }),
-]);
-```
-
-## Praktik terbaik
-
-- Buat middleware kecil dan fokus.
-- Daftarkan authentication sebelum analytics atau logging yang membutuhkan state user.
-- Gunakan `context.state` untuk data lokal per request.
-- Kembalikan `redirect()`, `rewrite()`, atau `abort()` untuk control flow normal.
-
-## Dokumen terkait
+## Dokumen Terkait
 
 - [`kernel.md`](./kernel.md)
 - [`templates.md`](./templates.md)

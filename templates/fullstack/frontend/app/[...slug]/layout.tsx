@@ -3,7 +3,8 @@
 
 export const metadata: Metadata = {
 	title: "Catch-All Route · Rakta.js Router",
-	description: "Dynamic catch-all pattern matching in Rakta.js file-based router.",
+	description:
+		"Dynamic catch-all pattern matching in Rakta.js file-based router.",
 };
 
 export default function CatchAllLayout({ children }: { children: ReactNode }) {

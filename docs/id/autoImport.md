@@ -1,16 +1,14 @@
 # Pengimporan Otomatis (Auto Import) - TrusmiThread
 
-## Gambaran Umum
-
 **TrusmiThread** adalah sistem pengimporan otomatis (Auto Import) pada Rakta.js yang terinspirasi oleh Vue.js dan Nuxt.js. Fitur ini memungkinkan Anda membangun aplikasi tanpa perlu menulis pernyataan `import` yang berulang-ulang di bagian atas setiap berkas.
 
-Ketika Anda membuat komponen antarmuka pengguna (seperti `<Navbar />`, `<Footer />`, `<Button />`), fungsi bantuan (helper), toko data (store), atau skema validasi di dalam proyek Anda, Rakta.js secara otomatis mendeteksi dan mendaftarkannya ke dalam cakupan TypeScript global serta lingkungan runtime peramban (browser).
+---
 
-## Cara Kerja
+## Gambaran Umum
 
-1. **Tanpa Pengimporan Eksplisit**: Cukup letakkan komponen di dalam direktori `components/` (misalnya, `components/Navbar.tsx` atau `components/ui/Button.tsx`). Anda dapat langsung menggunakan `<Navbar />` atau `<Button />` di dalam halaman atau layout mana pun tanpa menambahkan baris `import`.
-2. **Pendaftaran Runtime Global**: Saat tahap pengembangan dan proses pembangun aplikasi (build), Rakta.js mendaftarkan seluruh ekspor yang ditemukan ke dalam cakupan eksekusi global (`globalThis`), sehingga React dapat merender komponen JSX secara mulus.
-3. **Melengkapi Kode Otomatis (Autocomplete TypeScript)**: Rakta.js menghasilkan berkas `.rakta/auto-imports.d.ts` yang berisi deklarasi tipe global sehingga editor seperti VS Code memberikan bantuan autokomplit dan pengecekan tipe secara instan tanpa garis merah kesalahan.
+Ketika Anda membuat komponen antarmuka pengguna, fungsi bantuan, toko data, atau skema validasi di dalam proyek Anda, Rakta.js secara otomatis mendeteksi dan mendaftarkannya ke dalam cakupan TypeScript global serta lingkungan runtime peramban.
+
+---
 
 ## Contoh Kode
 
@@ -23,9 +21,9 @@ export default function Navbar() {
     <nav className="navbar">
       <h2>Portofolio Saya</h2>
       <div className="links">
-        <click to="/">Beranda</click>
-        <click to="/tentang">Tentang</click>
-        <click to="/proyek">Proyek</click>
+        <a href="/">Beranda</a>
+        <a href="/tentang">Tentang</a>
+        <a href="/proyek">Proyek</a>
       </div>
     </nav>
   );
@@ -48,6 +46,8 @@ export default function HomePage() {
   );
 }
 ```
+
+---
 
 ## Direktori Terkonfigurasi
 
@@ -74,6 +74,8 @@ export default defineRaktaConfig({
 | `stores/` | Pengelola kondisi (state store) | `useCounterStore()` |
 | `schemas/` | Skema validasi data | `userSchema` |
 
+---
+
 ## Memperbarui Pengimporan Otomatis Secara Manual
 
 Untuk memicu pemindaian ulang berkas pengimporan otomatis secara manual, jalankan perintah:
@@ -81,6 +83,8 @@ Untuk memicu pemindaian ulang berkas pengimporan otomatis secara manual, jalanka
 ```bash
 bun rakta imports:generate
 ```
+
+---
 
 ## Mematikan Pengimporan Otomatis
 
@@ -94,17 +98,21 @@ export default defineRaktaConfig({
 });
 ```
 
-Saat dimatikan, impor kait (hooks) dari `raktajs/hooks` secara eksplisit:
+Saat dimatikan, impor hooks dari `raktajs/hooks` secara eksplisit:
 
 ```tsx
 import { lengkoState, empalEffect } from "raktajs/hooks";
 ```
+
+---
 
 ## Praktik Terbaik
 
 - Biarkan `autoImport.enabled: true` untuk pengalaman pengembangan yang cepat dan modern seperti Nuxt.js.
 - Kelompokkan komponen UI di dalam `components/` atau `components/ui/`.
 - Jangan mengubah berkas di dalam direktori `.rakta/` secara manual.
+
+---
 
 ## Dokumen Terkait
 

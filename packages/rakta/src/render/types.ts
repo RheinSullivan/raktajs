@@ -1,5 +1,14 @@
 /** All supported rendering modes in Rakta.js. */
-export type RenderMode = "csr" | "ssr" | "ssg" | "csg" | "spa" | "hybrid";
+export type RenderMode =
+	| "csr"
+	| "ssr"
+	| "ssg"
+	| "csg"
+	| "spa"
+	| "hybrid"
+	| "isr"
+	| "streaming_ssr"
+	| "edge";
 
 /** Where the mode decision came from. */
 export type RenderSource = "route-override" | "default";

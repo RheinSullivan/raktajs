@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// FeatureGrid — Rakta.js: gsap, <reborns>, react-icons, toast, useMemo
+// FeatureGrid - Rakta.js: gsap, <reborns>, react-icons, toast, useMemo
 
 export default function FeatureGrid({ lang }: { lang: "ID" | "EN" }) {
 	const copy = {

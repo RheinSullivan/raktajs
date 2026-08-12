@@ -35,6 +35,45 @@ export {
 	rules as formRules,
 	validateForm,
 } from "./forms";
+// Image optimization
+export type {
+	BlurPlaceholder,
+	ImageBreakpoints,
+	ImageCdnKind,
+	ImageFormat,
+	ImageOptimizeOptions,
+	ResponsiveImageManifest,
+	SrcSetEntry,
+} from "./image";
+export {
+	buildOptimizedUrl,
+	generateBlurPlaceholder,
+	generateSrcSet,
+	getImageDimensions,
+	IMAGE_BREAKPOINTS,
+	isAnimatedGif,
+	normalizeFormat,
+} from "./image";
+// Mail
+export type {
+	MailAddress,
+	MailAttachment,
+	MailDriverKind,
+	MailMessage,
+	MailSendResult,
+	MailTransport,
+	MailTransportConfig,
+	MailVariables,
+} from "./mail";
+export {
+	buildHtmlEmail,
+	createMailer,
+	normalizeAddress,
+	normalizeAddressList,
+	renderMailTemplate,
+	sendMail,
+	sendTemplateMail,
+} from "./mail";
 export type {
 	StorageAdapter,
 	StorageConfig,

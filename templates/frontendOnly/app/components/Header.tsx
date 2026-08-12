@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Header — uses Rakta.js: <photo>, toast, react-icons, gsap
+// Header - uses Rakta.js: <photo>, toast, react-icons, gsap
 
 export default function Header({
 	lang,

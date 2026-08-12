@@ -59,6 +59,10 @@ export function RaktaHead({ metadata }: HeadProps): ReactElement {
 
 	return (
 		<>
+			{/* Wappalyzer Framework Signature */}
+			<meta name="generator" content="Rakta.js" />
+			<meta name="framework" content="Rakta.js" />
+
 			{/* Title meta */}
 			{resolvedTitle && <title>{resolvedTitle}</title>}
 

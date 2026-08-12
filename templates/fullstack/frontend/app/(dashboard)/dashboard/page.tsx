@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Dashboard Overview — Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert
+// Dashboard Overview - Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert
 
 const SEEDED_USERS = [
 	{
@@ -59,7 +59,11 @@ export default function DashboardOverviewPage() {
 		<div className="flex flex-col gap-8 max-w-6xl mx-auto">
 			{/* RaktaAlert */}
 			{alertMsg && (
-				<RaktaAlert type="success" title="SYNC" onClose={() => setAlertMsg(null)}>
+				<RaktaAlert
+					type="success"
+					title="SYNC"
+					onClose={() => setAlertMsg(null)}
+				>
 					{alertMsg}
 				</RaktaAlert>
 			)}
@@ -75,7 +79,8 @@ export default function DashboardOverviewPage() {
 						System Overview &amp; Analytics
 					</h1>
 					<p className="font-mono text-xs text-gray-400 mt-1">
-						Live diagnostics from Rakta.js Frontend and Gaman.js Backend Monolith.
+						Live diagnostics from Rakta.js Frontend and Gaman.js Backend
+						Monolith.
 					</p>
 				</div>
 				<div className="flex items-center gap-3">
@@ -102,12 +107,39 @@ export default function DashboardOverviewPage() {
 			</div>
 
 			{/* Metrics Grid */}
-			<div ref={metricsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+			<div
+				ref={metricsRef}
+				className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+			>
 				{[
-					{ label: "TOTAL USERS", value: "3", note: "Seeders Operational", icon: <Globe className="h-4 w-4 text-brand-pink" />, color: "text-white" },
-					{ label: "ACTIVE SESSIONS", value: "1", note: "HTTP-Only Cookie", icon: <Server className="h-4 w-4 text-brand-pink" />, color: "text-brand-pink" },
-					{ label: "DATABASE STATUS", value: "ONLINE", note: "@gaman/db SQLite", icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />, color: "text-emerald-400" },
-					{ label: "SERVER LATENCY", value: "0.42ms", note: "Bun Engine Speed", icon: <FaMicrochip className="h-4 w-4 text-brand-pink" />, color: "text-white" },
+					{
+						label: "TOTAL USERS",
+						value: "3",
+						note: "Seeders Operational",
+						icon: <Globe className="h-4 w-4 text-brand-pink" />,
+						color: "text-white",
+					},
+					{
+						label: "ACTIVE SESSIONS",
+						value: "1",
+						note: "HTTP-Only Cookie",
+						icon: <Server className="h-4 w-4 text-brand-pink" />,
+						color: "text-brand-pink",
+					},
+					{
+						label: "DATABASE STATUS",
+						value: "ONLINE",
+						note: "@gaman/db SQLite",
+						icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
+						color: "text-emerald-400",
+					},
+					{
+						label: "SERVER LATENCY",
+						value: "0.42ms",
+						note: "Bun Engine Speed",
+						icon: <FaMicrochip className="h-4 w-4 text-brand-pink" />,
+						color: "text-white",
+					},
 				].map((metric) => (
 					<div
 						key={metric.label}
@@ -119,7 +151,9 @@ export default function DashboardOverviewPage() {
 							</span>
 							{metric.icon}
 						</div>
-						<span className={`font-mono text-2xl font-extrabold ${metric.color}`}>
+						<span
+							className={`font-mono text-2xl font-extrabold ${metric.color}`}
+						>
 							{metric.value}
 						</span>
 						<span className="font-mono text-[10px] text-brand-green block mt-2">
@@ -130,10 +164,14 @@ export default function DashboardOverviewPage() {
 			</div>
 
 			{/* User Table (Seeders) */}
-			<div ref={tableRef} className="border border-surface-stroke bg-[#080808] p-6">
+			<div
+				ref={tableRef}
+				className="border border-surface-stroke bg-[#080808] p-6"
+			>
 				<div className="flex items-center justify-between mb-4 border-b border-surface-stroke pb-3">
 					<h2 className="font-mono text-base font-bold uppercase text-white flex items-center gap-2">
-						<Terminal className="h-4 w-4 text-brand-pink" /> Database Seeded Users
+						<Terminal className="h-4 w-4 text-brand-pink" /> Database Seeded
+						Users
 					</h2>
 					<span className="font-mono text-[10px] uppercase text-gray-500">
 						Gaman.js User Module
@@ -153,7 +191,10 @@ export default function DashboardOverviewPage() {
 						</thead>
 						<tbody className="divide-y divide-surface-stroke">
 							{SEEDED_USERS.map((user) => (
-								<tr key={user.id} className="hover:bg-white/5 transition-colors">
+								<tr
+									key={user.id}
+									className="hover:bg-white/5 transition-colors"
+								>
 									<td className="py-3 text-gray-400">#{user.id}</td>
 									<td className="py-3 font-bold text-white">{user.name}</td>
 									<td className="py-3 text-gray-300">{user.email}</td>

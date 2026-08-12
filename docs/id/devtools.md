@@ -6,7 +6,7 @@ Rakta.js menyertakan dua alat development-only: **Rakta Dev Indicator** (browser
 
 ## Rakta Dev Indicator
 
-Panel floating yang diinjeksikan ke browser saat mode development. Menggunakan logo SVG Rakta.js yang asli.
+Panel floating yang diinjeksikan ke browser saat mode development.
 
 **Fitur:**
 
@@ -31,7 +31,7 @@ Total      Durasi load event penuh
 
 **Mendiagnosis masalah "response selesai tapi UI lambat":**
 
-Panel Diagnostics menghitung `Response → UI gap = FCP - networkMs`. Jika angka ini besar (>1 detik), bottleneck ada di pipeline browser, bukan server. Bandingkan dengan timing terminal server untuk isolasi tahapnya.
+Panel Diagnostics menghitung `Response - UI gap = FCP - networkMs`. Jika angka ini besar (>1 detik), bottleneck ada di pipeline browser, bukan server.
 
 **Eksklusi production:**
 
@@ -59,17 +59,17 @@ Output yang dicetak ke terminal server saat menjalankan `bun run dev`.
   Environments:   .env.local
   Mode:           development
 
-  ✓ Ready in 421ms
+  Ready in 421ms
 ```
 
 **Request logging:**
 
 ```
-  ✓ GET    /                              200  24ms
-  ✓ GET    /api/report                    200  17ms
-  ✓ POST   /api/report                    201  31ms
-  ⚠ GET    /api/report                    200  1.4s  [slow]
-  ✗ GET    /missing                       404   2ms
+  GET    /                              200  24ms
+  GET    /api/report                    200  17ms
+  POST   /api/report                    201  31ms
+  GET    /api/report                    200  1.4s  [slow]
+  GET    /missing                       404   2ms
 ```
 
 **Fitur:**
@@ -81,12 +81,6 @@ Output yang dicetak ke terminal server saat menjalankan `bun run dev`.
 - Timing request: total ms sisi server per request
 - Flag slow request: threshold dapat dikonfigurasi (default 1000ms)
 - Environment variable `NO_COLOR` dihormati
-
-**Simbol terminal `⩛`:**
-
-Digunakan sebagai glyph fallback yang merepresentasikan geometri shield/trident Vyagra Nexus. Bekerja di Windows Terminal, PowerShell, Git Bash, Linux, macOS. Tidak membutuhkan Nerd Font.
-
-> Jika Vyagra Nexus mendefinisikan glyph terminal resmi, update `RAKTA_TERMINAL_GLYPH` di `packages/rakta/src/developerExperience/terminal.ts`.
 
 ---
 

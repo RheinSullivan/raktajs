@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Dashboard layout with sidebar — Rakta.js: gsap, <photo>, <click>, react-icons, toast
+// Dashboard layout with sidebar - Rakta.js: gsap, <photo>, <click>, react-icons, toast
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
 	const sidebarRef = useRef<HTMLElement>(null);
@@ -23,7 +23,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 				<div>
 					{/* Brand */}
 					<div className="flex items-center gap-3 mb-8">
-						<photo path="/rakta-logo.svg" alt="Rakta Logo" className="h-7 w-7" />
+						<photo
+							path="/rakta-logo.svg"
+							alt="Rakta Logo"
+							className="h-7 w-7"
+						/>
 						<div className="flex flex-col">
 							<span className="font-mono text-base font-bold text-white tracking-wider">
 								Rakta<span className="text-brand-pink">.js</span>

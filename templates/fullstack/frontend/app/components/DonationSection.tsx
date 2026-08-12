@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// DonationSection — Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert
+// DonationSection - Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert
 
 const donationCopyData = {
 	id: {

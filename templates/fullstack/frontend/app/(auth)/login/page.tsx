@@ -1,10 +1,12 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Login Page — Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert, useRef/useEffect
+// Login Page - Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert, useRef/useEffect
 
 export default function LoginPage() {
 	const [email, setEmail] = useState("rheinsullivan@raktajs.dev");
 	const [password, setPassword] = useState("rakta-password");
-	const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+	const [status, setStatus] = useState<
+		"idle" | "loading" | "success" | "error"
+	>("idle");
 	const formRef = useRef<HTMLFormElement>(null);
 
 	useEffect(() => {
@@ -29,7 +31,9 @@ export default function LoginPage() {
 				});
 			} catch {
 				setStatus("error");
-				toast.error("Authentication failed. Check credentials.", { duration: 3000 });
+				toast.error("Authentication failed. Check credentials.", {
+					duration: 3000,
+				});
 			}
 		},
 		[email],
@@ -47,12 +51,20 @@ export default function LoginPage() {
 				onSubmit={handleSubmit}
 			>
 				{status === "success" && (
-					<RaktaAlert type="success" title="AUTHENTICATED" onClose={() => setStatus("idle")}>
+					<RaktaAlert
+						type="success"
+						title="AUTHENTICATED"
+						onClose={() => setStatus("idle")}
+					>
 						Token issued. Session active via HTTP-only cookie.
 					</RaktaAlert>
 				)}
 				{status === "error" && (
-					<RaktaAlert type="error" title="AUTH FAILED" onClose={() => setStatus("idle")}>
+					<RaktaAlert
+						type="error"
+						title="AUTH FAILED"
+						onClose={() => setStatus("idle")}
+					>
 						Check credentials and try again.
 					</RaktaAlert>
 				)}
@@ -87,7 +99,13 @@ export default function LoginPage() {
 					<FaCircleCheck className="h-3 w-3 flex-shrink-0" />
 					<span>
 						<span className="font-bold">STATUS:</span>{" "}
-						{status === "loading" ? "Authenticating..." : status === "success" ? "Authenticated." : status === "error" ? "Auth failed." : "Ready to authenticate."}
+						{status === "loading"
+							? "Authenticating..."
+							: status === "success"
+								? "Authenticated."
+								: status === "error"
+									? "Auth failed."
+									: "Ready to authenticate."}
 					</span>
 				</div>
 
@@ -101,10 +119,16 @@ export default function LoginPage() {
 				</button>
 
 				<div className="flex flex-wrap items-center justify-between border-t border-surface-stroke pt-4 font-mono text-xs uppercase text-gray-500">
-					<click to="/register" className="hover:text-brand-pink transition-colors flex items-center gap-1">
+					<click
+						to="/register"
+						className="hover:text-brand-pink transition-colors flex items-center gap-1"
+					>
 						<FaArrowRight className="h-2.5 w-2.5" /> Create account
 					</click>
-					<click to="/forgotPassword" className="hover:text-brand-pink transition-colors">
+					<click
+						to="/forgotPassword"
+						className="hover:text-brand-pink transition-colors"
+					>
 						Forgot password?
 					</click>
 				</div>

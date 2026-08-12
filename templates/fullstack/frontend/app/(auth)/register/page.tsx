@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Register Page — Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert
+// Register Page - Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert
 
 export default function RegisterPage() {
 	const [name, setName] = useState("Rhein Sullivan");
@@ -7,7 +7,9 @@ export default function RegisterPage() {
 	const [password, setPassword] = useState("rakta-password");
 	const [confirmPassword, setConfirmPassword] = useState("rakta-password");
 	const [role, setRole] = useState("Super Admin");
-	const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+	const [status, setStatus] = useState<
+		"idle" | "loading" | "success" | "error"
+	>("idle");
 	const formRef = useRef<HTMLFormElement>(null);
 
 	useEffect(() => {
@@ -23,7 +25,10 @@ export default function RegisterPage() {
 		async (event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
 			if (password !== confirmPassword) {
-				toast.error("Passwords do not match.", { title: "VALIDATION", duration: 3000 });
+				toast.error("Passwords do not match.", {
+					title: "VALIDATION",
+					duration: 3000,
+				});
 				setStatus("error");
 				return;
 			}
@@ -55,12 +60,20 @@ export default function RegisterPage() {
 				onSubmit={handleSubmit}
 			>
 				{status === "success" && (
-					<RaktaAlert type="success" title="REGISTERED" onClose={() => setStatus("idle")}>
+					<RaktaAlert
+						type="success"
+						title="REGISTERED"
+						onClose={() => setStatus("idle")}
+					>
 						Account created. You can now sign in.
 					</RaktaAlert>
 				)}
 				{status === "error" && (
-					<RaktaAlert type="error" title="ERROR" onClose={() => setStatus("idle")}>
+					<RaktaAlert
+						type="error"
+						title="ERROR"
+						onClose={() => setStatus("idle")}
+					>
 						Registration failed. Check inputs.
 					</RaktaAlert>
 				)}
@@ -141,7 +154,10 @@ export default function RegisterPage() {
 
 				<div className="flex items-center justify-between border-t border-surface-stroke pt-4 font-mono text-xs uppercase text-gray-500">
 					<span>Already have an account?</span>
-					<click to="/login" className="font-bold text-brand-pink hover:underline flex items-center gap-1">
+					<click
+						to="/login"
+						className="font-bold text-brand-pink hover:underline flex items-center gap-1"
+					>
 						<FaArrowRight className="h-2.5 w-2.5" /> Sign in
 					</click>
 				</div>

@@ -1,15 +1,41 @@
-# Middleware
+# Middleware Subsystem
 
-## Overview
+Rakta.js middleware is an async request pipeline for global, route, nested, layout, API, and edge scopes. Middleware is exported from `rakta/middleware`.
 
-Rakta middleware is an async request pipeline for global, route, nested,
-layout, API, and edge scopes. It is exported from `rakta/middleware`.
+---
 
-Middleware can run before a request reaches a handler, after the handler
-returns a response, or stop the request with a redirect, rewrite, or abort
-response.
+## Middleware Pipeline Execution Flow
 
-## Quick start
+```mermaid
+flowchart TD
+    Start((Start))
+    Start --> Req[HTTP / Edge Request Received]
+    Req --> Build[Build Middleware Stack\ncreateMiddlewareStack]
+    Build --> GlobalBefore[Execute Global before Hook]
+    GlobalBefore --> RouteBefore[Execute Route before Hook]
+    RouteBefore --> Signal{Control Signal?}
+
+    Signal -->|redirect| Redir[Return 302 / 307\nRedirect Response]
+    Signal -->|abort| AbortRes[Return 401 / 403\nAbort Response]
+    Signal -->|rewrite| RewritePath[Apply x-rakta-rewrite\nPath Header]
+    Signal -->|next| Handler[Execute Route Handler]
+
+    Redir --> End((End))
+    AbortRes --> End
+
+    RewritePath --> Handler
+    Handler --> RouteAfter[Execute Route after Hook]
+    RouteAfter --> GlobalAfter[Execute Global after Hook]
+    GlobalAfter --> Final[Return Final HTTP Response]
+    Final --> End
+
+    classDef startEnd fill:#e63946,stroke:#c1121f,color:#ffffff,font-weight:bold
+    class Start,End startEnd
+```
+
+---
+
+## Quick Start
 
 ```ts
 import { before, createMiddlewareStack, redirect } from "rakta/middleware";
@@ -28,42 +54,23 @@ const stack = createMiddlewareStack([
 const response = await stack.handle(request, () => new Response("OK"));
 ```
 
-## API reference
+---
+
+## API Reference
 
 | API | Description |
 | --- | --- |
-| `createMiddlewareStack(middlewares)` | Creates an ordered async pipeline |
-| `defineMiddleware(fn)` | Gives a middleware function a stable typed shape |
-| `before(fn)` | Runs logic before the next handler |
-| `after(fn)` | Runs logic after the downstream response |
+| `createMiddlewareStack(middlewares)` | Creates a sequential async pipeline |
+| `defineMiddleware(fn)` | Type-safe wrapper function for middleware |
+| `before(fn)` | Executes logic prior to the downstream handler |
+| `after(fn)` | Executes logic after downstream response generation |
 | `redirect(url, status)` | Returns a redirect response |
-| `rewrite(pathname)` | Returns a rewrite instruction with `x-rakta-rewrite` |
-| `abort(status, body)` | Stops the request with a response |
+| `rewrite(pathname)` | Returns a rewrite directive using `x-rakta-rewrite` |
+| `abort(status, body)` | Terminates request with an immediate error response |
 
-## Ordering
+---
 
-Middleware runs in array order. `after()` middleware receives the response
-after downstream handlers finish.
-
-```ts
-const stack = createMiddlewareStack([
-  before(() => console.log("before")),
-  after((_context, response) => {
-    const headers = new Headers(response.headers);
-    headers.set("x-rakta", "1");
-    return new Response(response.body, { status: response.status, headers });
-  }),
-]);
-```
-
-## Best practices
-
-- Keep middleware small and focused.
-- Register authentication before analytics or logging that depends on user state.
-- Use `context.state` for request-local data.
-- Return `redirect()`, `rewrite()`, or `abort()` instead of throwing for normal control flow.
-
-## Related docs
+## Related Documentation
 
 - [`kernel.md`](./kernel.md)
 - [`templates.md`](./templates.md)

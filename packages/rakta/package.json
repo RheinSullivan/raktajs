@@ -1,6 +1,6 @@
 {
 	"name": "raktajs",
-	"version": "1.1.2",
+	"version": "1.1.4",
 	"description": "Rakta.js core framework package for React, Bun, TypeScript, app routing, rendering, SEO, components, RPC, store, schema, HTTP, PWA, and auto imports.",
 	"type": "module",
 	"license": "MIT",
@@ -16,6 +16,7 @@
 	},
 	"keywords": [
 		"rakta",
+		"raktajs",
 		"rakta.js",
 		"rheinsullivan",
 		"framework",
@@ -28,6 +29,10 @@
 		"ssr",
 		"ssg",
 		"csr",
+		"spa",
+		"isr",
+		"edge",
+		"edge-runtime",
 		"fullstack",
 		"rpc",
 		"store",
@@ -37,12 +42,18 @@
 		"offline",
 		"autoImport",
 		"plugin-system",
-		"service-container"
+		"service-container",
+		"image-optimization",
+		"mail",
+		"middleware",
+		"web-framework",
+		"create-rakta",
+		"wappalyzer"
 	],
 	"sideEffects": false,
 	"engines": {
-		"bun": ">=1.0.0",
-		"node": ">=18.0.0"
+		"bun": ">= 1.3.0",
+		"node": ">= 20.0.0"
 	},
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -186,6 +197,18 @@
 		"./api": {
 			"types": "./dist/api/index.d.ts",
 			"import": "./dist/api/index.js"
+		},
+		"./ecosystem/image": {
+			"types": "./dist/ecosystem/image.d.ts",
+			"import": "./dist/ecosystem/image.js"
+		},
+		"./ecosystem/mail": {
+			"types": "./dist/ecosystem/mail.d.ts",
+			"import": "./dist/ecosystem/mail.js"
+		},
+		"./spa": {
+			"types": "./dist/spa/spa.d.ts",
+			"import": "./dist/spa/spa.js"
 		},
 		"./auth": {
 			"types": "./dist/auth/index.d.ts",

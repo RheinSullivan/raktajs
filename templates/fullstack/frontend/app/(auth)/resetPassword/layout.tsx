@@ -6,6 +6,10 @@ export const metadata: Metadata = {
 	description: "Set a new password for your Rakta.js developer account.",
 };
 
-export default function ResetPasswordLayout({ children }: { children: ReactNode }) {
+export default function ResetPasswordLayout({
+	children,
+}: {
+	children: ReactNode;
+}) {
 	return <>{children}</>;
 }

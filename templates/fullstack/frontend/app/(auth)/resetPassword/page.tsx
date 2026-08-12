@@ -1,11 +1,13 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Reset Password Page — Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert
+// Reset Password Page - Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert
 
 export default function ResetPasswordPage() {
 	const [token, setToken] = useState("rakta_reset_token_sec_9948");
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
-	const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+	const [status, setStatus] = useState<
+		"idle" | "loading" | "success" | "error"
+	>("idle");
 	const formRef = useRef<HTMLFormElement>(null);
 
 	useEffect(() => {
@@ -21,7 +23,10 @@ export default function ResetPasswordPage() {
 		async (event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
 			if (newPassword !== confirmPassword) {
-				toast.error("Passwords do not match.", { title: "VALIDATION", duration: 3000 });
+				toast.error("Passwords do not match.", {
+					title: "VALIDATION",
+					duration: 3000,
+				});
 				setStatus("error");
 				return;
 			}
@@ -53,12 +58,20 @@ export default function ResetPasswordPage() {
 				onSubmit={handleSubmit}
 			>
 				{status === "success" && (
-					<RaktaAlert type="success" title="PASSWORD UPDATED" onClose={() => setStatus("idle")}>
+					<RaktaAlert
+						type="success"
+						title="PASSWORD UPDATED"
+						onClose={() => setStatus("idle")}
+					>
 						Your password was updated. Redirecting to sign in...
 					</RaktaAlert>
 				)}
 				{status === "error" && (
-					<RaktaAlert type="error" title="ERROR" onClose={() => setStatus("idle")}>
+					<RaktaAlert
+						type="error"
+						title="ERROR"
+						onClose={() => setStatus("idle")}
+					>
 						Reset failed. Check your token or passwords.
 					</RaktaAlert>
 				)}
@@ -119,7 +132,10 @@ export default function ResetPasswordPage() {
 				</button>
 
 				<div className="flex justify-between font-mono text-xs uppercase text-gray-500">
-					<click to="/login" className="hover:text-brand-pink transition-colors flex items-center gap-1">
+					<click
+						to="/login"
+						className="hover:text-brand-pink transition-colors flex items-center gap-1"
+					>
 						<FaArrowRight className="h-2.5 w-2.5 rotate-180" /> Back to Sign in
 					</click>
 				</div>

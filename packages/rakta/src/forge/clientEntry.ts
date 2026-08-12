@@ -407,6 +407,16 @@ photo img {
 \`;
 document.head.appendChild(raktaElementStyle);
 
+if (typeof window !== "undefined") {
+  (window as unknown as Record<string, unknown>).__RAKTA__ = {
+    name: "Rakta.js",
+    version: "1.1.3",
+  };
+  if (document.documentElement) {
+    document.documentElement.dataset.rakta = "true";
+  }
+}
+
 const photoAttributeMap = {
   path: "src",
   alt: "alt",
@@ -593,6 +603,7 @@ function RaktaAppShell(): React.ReactElement {
   const [pathname, setPathname] = useState(() => window.location.pathname);
   const [Page, setPage] = useState<React.ComponentType | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     function handlePopState(): void {
@@ -663,12 +674,18 @@ function RaktaAppShell(): React.ReactElement {
       setPathname(window.location.pathname);
     }
 
+    function handleFastRefresh(): void {
+      setRefreshKey((prev) => prev + 1);
+    }
+
     window.addEventListener("popstate", handlePopState);
+    window.addEventListener("rakta:fast-refresh", handleFastRefresh);
     document.addEventListener("click", handleClick);
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("rakta:fast-refresh", handleFastRefresh);
       document.removeEventListener("click", handleClick);
       document.removeEventListener("keydown", handleKeyDown);
     };
@@ -698,7 +715,7 @@ function RaktaAppShell(): React.ReactElement {
     return () => {
       isCurrent = false;
     };
-  }, [pathname]);
+  }, [pathname, refreshKey]);
 
   useEffect(() => {
     const animationFrameId = window.requestAnimationFrame(syncRaktaElements);

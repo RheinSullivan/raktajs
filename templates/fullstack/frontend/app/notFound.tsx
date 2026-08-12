@@ -17,20 +17,76 @@ export default function NotFound() {
 						strokeLinejoin="round"
 					>
 						{/* Crane arm */}
-						<path d="M10 90 L30 10 L80 10" className="stroke-brand-pink" strokeWidth="3" />
+						<path
+							d="M10 90 L30 10 L80 10"
+							className="stroke-brand-pink"
+							strokeWidth="3"
+						/>
 						<path d="M30 10 L50 90" strokeDasharray="3 3" />
 						{/* Cable & Load */}
-						<line x1="70" y1="10" x2="70" y2="40" stroke="#f43f5e" strokeWidth="2" />
-						<rect x="60" y="40" width="20" height="20" fill="#e11d48" fillOpacity="0.3" stroke="#e11d48" />
-						<text x="70" y="54" fontSize="10" textAnchor="middle" fill="#fff" fontWeight="bold">404</text>
+						<line
+							x1="70"
+							y1="10"
+							x2="70"
+							y2="40"
+							stroke="#f43f5e"
+							strokeWidth="2"
+						/>
+						<rect
+							x="60"
+							y="40"
+							width="20"
+							height="20"
+							fill="#e11d48"
+							fillOpacity="0.3"
+							stroke="#e11d48"
+						/>
+						<text
+							x="70"
+							y="54"
+							fontSize="10"
+							textAnchor="middle"
+							fill="#fff"
+							fontWeight="bold"
+						>
+							404
+						</text>
 						{/* Ground barrier */}
 						<path d="M10 90 L90 90" stroke="#3f3f46" strokeWidth="4" />
 						{/* Caution stripes */}
-						<line x1="20" y1="90" x2="25" y2="80" stroke="#eab308" strokeWidth="2" />
-						<line x1="35" y1="90" x2="40" y2="80" stroke="#eab308" strokeWidth="2" />
-						<line x1="50" y1="90" x2="55" y2="80" stroke="#eab308" strokeWidth="2" />
+						<line
+							x1="20"
+							y1="90"
+							x2="25"
+							y2="80"
+							stroke="#eab308"
+							strokeWidth="2"
+						/>
+						<line
+							x1="35"
+							y1="90"
+							x2="40"
+							y2="80"
+							stroke="#eab308"
+							strokeWidth="2"
+						/>
+						<line
+							x1="50"
+							y1="90"
+							x2="55"
+							y2="80"
+							stroke="#eab308"
+							strokeWidth="2"
+						/>
 						{/* Gear icon */}
-						<circle cx="30" cy="50" r="10" stroke="#10b981" strokeWidth="2" strokeDasharray="4 2" />
+						<circle
+							cx="30"
+							cy="50"
+							r="10"
+							stroke="#10b981"
+							strokeWidth="2"
+							strokeDasharray="4 2"
+						/>
 						<circle cx="30" cy="50" r="4" fill="#10b981" />
 					</svg>
 				</div>
@@ -45,7 +101,9 @@ export default function NotFound() {
 				</h1>
 
 				<p className="mx-auto mb-6 max-w-md font-mono text-xs leading-relaxed text-gray-400">
-					The requested route node does not exist or is currently undergoing structural maintenance. Check your URL pattern or return to main navigation.
+					The requested route node does not exist or is currently undergoing
+					structural maintenance. Check your URL pattern or return to main
+					navigation.
 				</p>
 
 				<div className="flex flex-wrap items-center justify-center gap-4">

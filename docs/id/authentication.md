@@ -4,6 +4,60 @@ Autentikasi self-hosted yang di-generate oleh Rakta.js fullstack generator. Tida
 
 ---
 
+## Arsitektur Autentikasi JWT + Session
+
+```mermaid
+sequenceDiagram
+    actor Client as Browser / API Client
+    participant AuthAPI as Auth API Handler
+    participant Validator as Schema Validator
+    participant DB as Database (Users / Sessions)
+    participant JWT as JWT Engine (HMAC-SHA256)
+    participant Cookie as Cookie Manager
+
+    Client->>AuthAPI: POST /api/auth/login { email, password, rememberMe }
+    AuthAPI->>Validator: Validate request body shape
+    Validator-->>AuthAPI: Input valid
+    AuthAPI->>DB: Lookup user by email
+    DB-->>AuthAPI: User record { id, email, passwordHash, role }
+    AuthAPI->>AuthAPI: bcrypt.compare(password, passwordHash)
+    AuthAPI->>DB: Create session record
+    DB-->>AuthAPI: sessionId
+    AuthAPI->>JWT: Sign accessToken { sub, email, sessionId, type: "access" }
+    JWT-->>AuthAPI: accessToken (1h)
+    AuthAPI->>JWT: Sign refreshToken { sub, email, sessionId, type: "refresh" }
+    JWT-->>AuthAPI: refreshToken (7d / 30d)
+    AuthAPI->>Cookie: Set rakta_session (HttpOnly, SameSite=Lax)
+    AuthAPI->>Cookie: Set rakta_refresh (HttpOnly, SameSite=Strict)
+    AuthAPI-->>Client: 200 { user, accessToken, sessionId }
+```
+
+---
+
+## Alur Refresh Token Rotation
+
+```mermaid
+sequenceDiagram
+    actor Client
+    participant AuthAPI as Auth API Handler
+    participant JWT as JWT Engine
+    participant DB as Session Store
+
+    Client->>AuthAPI: POST /api/auth/refresh (cookie: rakta_refresh)
+    AuthAPI->>JWT: Verify refresh token signature & expiry
+    JWT-->>AuthAPI: Decoded { sub, sessionId, type: "refresh" }
+    AuthAPI->>DB: Validate sessionId still active
+    DB-->>AuthAPI: Session valid
+    AuthAPI->>DB: Revoke old session record
+    AuthAPI->>DB: Create new session record
+    AuthAPI->>JWT: Sign new accessToken
+    AuthAPI->>JWT: Sign new refreshToken
+    JWT-->>AuthAPI: New token pair
+    AuthAPI-->>Client: 200 { accessToken } + set new cookies
+```
+
+---
+
 ## Strategi Autentikasi
 
 Saat generate fullstack project, pilih dari:
@@ -73,12 +127,6 @@ curl http://localhost:4000/api/auth/me \
 # Cookie (browser - otomatis setelah login)
 curl http://localhost:4000/api/auth/me --cookie "rakta_session=<sessionId>"
 ```
-
----
-
-## Refresh Token Rotation
-
-Access token kadaluarsa dalam 1 jam. Refresh token berlaku 7 hari (30 hari dengan `rememberMe: true`). Setiap refresh yang berhasil mengeluarkan pasangan token baru dan mencabut session lama.
 
 ---
 

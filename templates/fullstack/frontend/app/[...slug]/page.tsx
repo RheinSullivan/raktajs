@@ -22,7 +22,8 @@ export default function CatchAllPage() {
 					Dynamic Catch-All Route
 				</h1>
 				<p className="font-mono text-xs text-gray-400 mb-6">
-					This route was matched by Rakta.js catch-all pattern scanner (<code className="text-brand-pink">/:slug*</code>).
+					This route was matched by Rakta.js catch-all pattern scanner (
+					<code className="text-brand-pink">/:slug*</code>).
 				</p>
 
 				<div className="bg-black border border-surface-stroke p-4 font-mono text-xs text-left mb-6">
@@ -36,7 +37,10 @@ export default function CatchAllPage() {
 					</div>
 				</div>
 
-				<click to="/" className="inline-block border border-brand-pink bg-brand-pink px-6 py-3 font-mono text-xs font-bold uppercase text-white hover:bg-white hover:text-black transition-colors">
+				<click
+					to="/"
+					className="inline-block border border-brand-pink bg-brand-pink px-6 py-3 font-mono text-xs font-bold uppercase text-white hover:bg-white hover:text-black transition-colors"
+				>
 					Return to Main Landing
 				</click>
 			</div>

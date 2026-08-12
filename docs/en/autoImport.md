@@ -1,16 +1,16 @@
 # Auto Import - TrusmiThread
 
-## Overview
-
 **TrusmiThread** is the automatic import system of Rakta.js, inspired by Vue.js and Nuxt.js. It allows you to build applications without writing repetitive `import` statements at the top of every file.
 
-When you create UI components (like `<Navbar />`, `<Footer />`, `<Button />`), helper functions, state stores, or validation schemas in your project, Rakta.js automatically detects and registers them in both the global TypeScript scope and the browser runtime.
+---
 
 ## How It Works
 
 1. **Zero Explicit Imports**: Place any component inside `components/` (e.g., `components/Navbar.tsx` or `components/ui/Button.tsx`). You can immediately use `<Navbar />` or `<Button />` inside any page or layout without adding an `import` line.
 2. **Global Runtime Registration**: During dev and production builds, Rakta.js mounts discovered exports to the global scope (`globalThis`), so React can find components when rendering JSX.
 3. **TypeScript Autocomplete**: Rakta.js generates `.rakta/auto-imports.d.ts` with global type declarations so VS Code and other IDEs provide instant autocompletion and type checking without red squiggly lines.
+
+---
 
 ## Code Example
 
@@ -23,9 +23,9 @@ export default function Navbar() {
     <nav className="navbar">
       <h2>My Portfolio</h2>
       <div className="links">
-        <click to="/">Home</click>
-        <click to="/about">About</click>
-        <click to="/projects">Projects</click>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/projects">Projects</a>
       </div>
     </nav>
   );
@@ -48,6 +48,8 @@ export default function HomePage() {
   );
 }
 ```
+
+---
 
 ## Configured Directories
 
@@ -74,6 +76,8 @@ export default defineRaktaConfig({
 | `stores/` | State management stores | `useCounterStore()` |
 | `schemas/` | Validation schemas | `userSchema` |
 
+---
+
 ## Regenerating Auto Imports Manually
 
 To manually trigger a rescan of auto-imported files, run:
@@ -81,6 +85,8 @@ To manually trigger a rescan of auto-imported files, run:
 ```bash
 bun rakta imports:generate
 ```
+
+---
 
 ## Disabling Auto Import
 
@@ -100,11 +106,15 @@ When disabled, import hooks from `raktajs/hooks` explicitly:
 import { lengkoState, empalEffect } from "raktajs/hooks";
 ```
 
+---
+
 ## Best Practices
 
 - Keep `autoImport.enabled: true` for a fast, modern developer experience similar to Nuxt.js.
 - Group reusable UI primitives in `components/` or `components/ui/`.
 - Do not manually edit files inside the `.rakta/` directory.
+
+---
 
 ## Related Docs
 

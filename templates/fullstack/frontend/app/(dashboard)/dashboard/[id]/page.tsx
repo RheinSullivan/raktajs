@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Dynamic Bracket Route — Rakta.js: gsap, <click>, react-icons, toast, useRef/useEffect/useCallback
+// Dynamic Bracket Route - Rakta.js: gsap, <click>, react-icons, toast, useRef/useEffect/useCallback
 
 export default function UserDetailPage() {
 	const [idParam, setIdParam] = useState("1");
@@ -46,7 +46,10 @@ export default function UserDetailPage() {
 		<div className="flex flex-col gap-6 max-w-4xl mx-auto font-sans antialiased">
 			{/* Breadcrumb */}
 			<div className="flex items-center gap-2 font-mono text-xs text-gray-500 uppercase">
-				<click to="/dashboard" className="hover:text-brand-pink transition-colors flex items-center gap-1">
+				<click
+					to="/dashboard"
+					className="hover:text-brand-pink transition-colors flex items-center gap-1"
+				>
 					<Terminal className="h-3 w-3" /> Dashboard
 				</click>
 				<ArrowRight className="h-3 w-3" />
@@ -68,13 +71,23 @@ export default function UserDetailPage() {
 			</div>
 
 			{/* Record Box */}
-			<div ref={cardRef} className="border border-surface-stroke bg-[#080808] p-6 grid gap-4 font-mono text-xs">
+			<div
+				ref={cardRef}
+				className="border border-surface-stroke bg-[#080808] p-6 grid gap-4 font-mono text-xs"
+			>
 				{[
 					{ label: "PARAM KEY", value: ":id", color: "text-brand-pink" },
 					{ label: "RESOLVED VALUE", value: idParam, color: "text-white" },
-					{ label: "ROUTER PATTERN", value: "/dashboard/:id", color: "text-brand-green" },
+					{
+						label: "ROUTER PATTERN",
+						value: "/dashboard/:id",
+						color: "text-brand-green",
+					},
 				].map((row) => (
-					<div key={row.label} className="flex justify-between border-b border-surface-stroke pb-3">
+					<div
+						key={row.label}
+						className="flex justify-between border-b border-surface-stroke pb-3"
+					>
 						<span className="text-gray-500 uppercase">{row.label}</span>
 						<span className={`font-bold ${row.color}`}>{row.value}</span>
 					</div>
@@ -82,7 +95,9 @@ export default function UserDetailPage() {
 
 				<div className="mt-4">
 					<div className="flex items-center justify-between mb-2">
-						<span className="text-gray-500 uppercase">SIMULATED JSON PAYLOAD</span>
+						<span className="text-gray-500 uppercase">
+							SIMULATED JSON PAYLOAD
+						</span>
 						<button
 							type="button"
 							onClick={handleCopyPayload}

@@ -1,43 +1,68 @@
 # Performance
 
-## "Network response sudah selesai tapi UI butuh 10 detik untuk update"
+## Browser Render Pipeline Breakdown
 
-Ini adalah keluhan performance Rakta.js yang paling umum. Server menunjukkan 200 dalam 18ms. Browser Network tab menunjukkan response sudah ada. Tapi UI tidak update selama beberapa detik.
+Penyebab paling umum keluhan "server sudah 200 tapi UI lambat" adalah bottleneck di **browser pipeline**, bukan di server.
 
-**Ini BUKAN masalah server.** Bottleneck ada di browser pipeline.
+```mermaid
+sequenceDiagram
+    participant App as Application Code
+    participant Browser as Browser Runtime
+    participant React as React Reconciler
+    participant DOM as DOM / Paint Engine
 
-### Breakdown timeline
-
+    App->>Browser: fetch() - Request dikirim (T0)
+    Browser->>Browser: Network transit (T1 - T2)
+    Note over Browser: Server response: 200 in 18ms (T2)
+    Browser->>Browser: Receive & buffer response body (T3)
+    Browser->>App: Response body parsed (T4) - JSON.parse()
+    App->>React: setState() triggered (T5)
+    React->>React: Component re-render & reconcile (T6)
+    React->>DOM: Commit changes to DOM (T7)
+    DOM->>Browser: Layout + Paint (T8)
+    Note over App,DOM: Gap T3-T8 = "response done, UI lagging" zone
 ```
-T0  request dikirim
-T1  server menerima request
-T2  server mengirim response       ← terminal menunjukkan ini sebagai "200 in 18ms"
-T3  browser menerima response
-T4  JavaScript mem-parse response body
-T5  state update dipanggil
-T6  React render dimulai
-T7  React commit (update DOM)
-T8  browser melakukan paint
-```
 
-Gap 10 detik berada antara **T3 dan T8** - sepenuhnya di browser.
+---
 
-### Penyebab umum
+## Titik Bottleneck Umum
 
 | Tahap | Penyebab | Solusi |
 |---|---|---|
-| T3→T4 | Payload JSON besar (>1MB) | Paginasi, filter di server |
-| T4→T5 | Transform/sort mahal di client | Pindah ke server, gunakan memoize |
-| T5→T6 | State update memicu render seluruh tree | `useMemo`, pisah context |
-| T6→T7 | Component tree besar, tanpa virtualisasi | Virtualisasi list panjang |
-| T7→T8 | Layout/paint berat (DOM besar, shadow) | Kurangi ukuran DOM |
+| T3 ke T4 | Payload JSON besar (>1MB) | Paginasi, filter di server |
+| T4 ke T5 | Transform/sort mahal di client | Pindah ke server, gunakan memoize |
+| T5 ke T6 | State update memicu render seluruh tree | `useMemo`, pisah context |
+| T6 ke T7 | Component tree besar, tanpa virtualisasi | Virtualisasi list panjang |
+| T7 ke T8 | Layout/paint berat (DOM besar, shadow) | Kurangi ukuran DOM |
 
-### Diagnosis dengan Rakta Dev Indicator
+---
+
+## Pipeline Optimasi HTML Shell
+
+```mermaid
+flowchart TD
+    Mulai((Mulai))
+    Mulai --> HTMLShell[Generasi Shell HTML\nMesin Forge]
+    HTMLShell --> JSPreload[link rel=modulepreload\nBrowser paralel fetch, parse, & kompilasi JS]
+    HTMLShell --> CSSPreload[link rel=preload CSS\nStylesheet tidak memblokir render]
+    HTMLShell --> CriticalCSS[Inline CSS Kritis\nIndikator loading langsung tampil tanpa blank flash]
+    CriticalCSS --> MountEvent[Event rakta:mounted\nHapus overlay loading setelah commit React pertama]
+    JSPreload --> Selesai((Selesai))
+    CSSPreload --> Selesai
+    MountEvent --> Selesai
+
+    classDef startEnd fill:#e63946,stroke:#c1121f,color:#ffffff,font-weight:bold
+    class Mulai,Selesai startEnd
+```
+
+---
+
+## Diagnosis dengan Rakta Dev Indicator
 
 Buka panel Performance di Dev Indicator (logo kiri bawah). Panel menampilkan:
 
 ```
-Network      18ms    ← sesuai terminal
+Network      18ms    <- sesuai terminal
 Parse         3ms
 State         2ms
 Render       21ms
@@ -45,11 +70,11 @@ Paint         4ms
 Total        48ms
 ```
 
-Jika `Response → UI gap` di Diagnostics menunjukkan >1 detik, periksa baris **State** dan **Render**.
+Jika `Response -> UI gap` di Diagnostics menunjukkan >1 detik, periksa baris **State** dan **Render**.
 
-### Aplikasi laporan/tabel besar
+---
 
-Untuk aplikasi yang merender dataset besar:
+## Aplikasi Laporan/Tabel Besar
 
 **Sisi server:**
 ```ts
@@ -70,7 +95,7 @@ const { data, loading, error, refetch } = useRaktaData(
 );
 ```
 
-**Hindari merender >500 DOM row sekaligus.** Gunakan windowing/virtualisasi untuk tabel besar.
+**Hindari merender lebih dari 500 DOM row sekaligus.** Gunakan windowing/virtualisasi untuk tabel besar.
 
 ---
 
@@ -91,17 +116,6 @@ const http = createRaktaHttp({
 // Dengan retry
 const data = await http.get<Laporan>("/api/laporan", { retries: 2 });
 ```
-
----
-
-## Render Pipeline Performance
-
-Perubahan HTML shell Rakta.js v1.0.7:
-
-- `<link rel="modulepreload">` untuk JS bundle - browser fetch+parse+compile paralel dengan HTML
-- `<link rel="preload">` untuk CSS - stylesheet tidak lagi memblokir render
-- Inline critical CSS - loading indicator langsung terlihat, tidak ada blank white flash
-- Loading overlay dihapus setelah React commit pertama via event `rakta:mounted`
 
 ---
 

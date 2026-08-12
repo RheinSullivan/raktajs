@@ -9,6 +9,26 @@ import {
 } from "./runtime";
 import type { TideAdapter, TideAdapterConfig } from "./types";
 
+/** Rakta.js version - keep in sync with src/index.ts */
+const RAKTA_VERSION = "1.1.4";
+
+/**
+ * DETECTION_HEADERS are added to every response so that platform scanners
+ * (Wappalyzer, BuiltWith, Netcraft, Shodan, Shields.io custom endpoints) can
+ * identify Rakta.js applications.
+ *
+ * Wappalyzer rule (to be submitted):
+ *   headers: { "x-powered-by": "Rakta\\.js" }
+ *   html:    { "meta[name=generator]": "Rakta\\.js" }
+ *   js:      { "window.__RAKTA__": "" }
+ */
+const DETECTION_HEADERS: Record<string, string> = {
+	"X-Powered-By": `Rakta.js`,
+	"X-Generator": `Rakta.js/${RAKTA_VERSION}`,
+	"X-Rakta-Runtime": "bun",
+	"X-Rakta-Version": RAKTA_VERSION,
+};
+
 const STATIC_MIME_TYPES: Readonly<Record<string, string>> = {
 	".js": "application/javascript; charset=utf-8",
 	".ts": "application/javascript; charset=utf-8",
@@ -135,12 +155,37 @@ export function createBunAdapter(
 					: "public, max-age=0, must-revalidate";
 				return new Response(readFileSync(filePath), {
 					headers: {
+						...DETECTION_HEADERS,
 						"Content-Type": mimeForPath(filePath),
 						"Cache-Control": cacheControl,
 						Vary: "Accept-Encoding",
 					},
 				});
 			}
+		}
+
+		// ── /.well-known/rakta - framework fingerprint endpoint ──────────────
+		if (
+			pathname === "/.well-known/rakta" ||
+			pathname === "/.well-known/rakta.json"
+		) {
+			return new Response(
+				JSON.stringify({
+					framework: "Rakta.js",
+					version: RAKTA_VERSION,
+					website: "https://raktajs.dev",
+					npm: "create-rakta",
+					runtime: "bun",
+					renderer: "react",
+				}),
+				{
+					headers: {
+						...DETECTION_HEADERS,
+						"Content-Type": "application/json",
+						"Cache-Control": "public, max-age=86400",
+					},
+				},
+			);
 		}
 
 		const apiRoutes = manifest.routes.filter((route) => route.kind === "api");
@@ -203,7 +248,15 @@ export function createBunAdapter(
 			return buildErrorResponse(renderResult.reason, renderResult.httpStatus);
 		}
 
-		return buildHtmlResponse(renderResult.html, renderResult.httpStatus);
+		const htmlResponse = buildHtmlResponse(
+			renderResult.html,
+			renderResult.httpStatus,
+		);
+		// Inject detection headers into the HTML response.
+		for (const [key, value] of Object.entries(DETECTION_HEADERS)) {
+			htmlResponse.headers.set(key, value);
+		}
+		return htmlResponse;
 	}
 
 	return {

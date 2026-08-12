@@ -1,10 +1,40 @@
 {
 	"name": "rakta-js-monorepo",
-	"version": "0.1.3",
-	"description": "Rakta.js monorepo - framework source, create app CLI, examples, and documentation.",
+	"version": "1.1.4",
+	"description": "Rakta.js - Small in size. Fierce in speed. Alive in every route. A modern full-stack framework built with React, Bun, and TypeScript.",
 	"author": "Rhein Sullivan | Vyagra Nexus™",
 	"license": "MIT",
 	"homepage": "https://raktajs.dev",
+	"keywords": [
+		"rakta",
+		"raktajs",
+		"rakta.js",
+		"framework",
+		"fullstack",
+		"react",
+		"bun",
+		"typescript",
+		"router",
+		"ssr",
+		"csr",
+		"ssg",
+		"spa",
+		"isr",
+		"edge",
+		"rpc",
+		"middleware",
+		"web-framework",
+		"javascript",
+		"create-rakta"
+	],
+	"engines": {
+		"bun": ">= 1.3.0",
+		"node": ">= 20.0.0"
+	},
+	"funding": {
+		"type": "github",
+		"url": "https://github.com/sponsors/RheinSullivan"
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/RheinSullivan/raktajs.git"

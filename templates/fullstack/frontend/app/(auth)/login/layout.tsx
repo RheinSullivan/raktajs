@@ -3,7 +3,8 @@
 
 export const metadata: Metadata = {
 	title: "Sign In · Rakta.js Monolith",
-	description: "Authenticate into your Rakta.js developer account with JWT and HTTP-only session cookie mode.",
+	description:
+		"Authenticate into your Rakta.js developer account with JWT and HTTP-only session cookie mode.",
 };
 
 export default function LoginLayout({ children }: { children: ReactNode }) {

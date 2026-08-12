@@ -22,12 +22,35 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 						strokeLinejoin="round"
 					>
 						{/* Shield alert outline */}
-						<path d="M50 10 L85 25 V50 C85 70 50 90 50 90 C50 90 15 70 15 50 V25 Z" className="stroke-red-600" strokeWidth="3" fill="#450a0a" fillOpacity="0.4" />
+						<path
+							d="M50 10 L85 25 V50 C85 70 50 90 50 90 C50 90 15 70 15 50 V25 Z"
+							className="stroke-red-600"
+							strokeWidth="3"
+							fill="#450a0a"
+							fillOpacity="0.4"
+						/>
 						{/* Lightning bolt hazard */}
-						<path d="M55 25 L35 52 H50 L45 75 L65 48 H50 Z" fill="#ef4444" stroke="#f8fafc" strokeWidth="1.5" />
+						<path
+							d="M55 25 L35 52 H50 L45 75 L65 48 H50 Z"
+							fill="#ef4444"
+							stroke="#f8fafc"
+							strokeWidth="1.5"
+						/>
 						{/* Warning pulse dots */}
-						<circle cx="20" cy="20" r="3" fill="#ef4444" className="animate-ping" />
-						<circle cx="80" cy="20" r="3" fill="#ef4444" className="animate-ping" />
+						<circle
+							cx="20"
+							cy="20"
+							r="3"
+							fill="#ef4444"
+							className="animate-ping"
+						/>
+						<circle
+							cx="80"
+							cy="20"
+							r="3"
+							fill="#ef4444"
+							className="animate-ping"
+						/>
 					</svg>
 				</div>
 
@@ -40,7 +63,8 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 						Something Went Wrong
 					</h1>
 					<p className="font-mono text-xs text-gray-400 mt-1">
-						Rakta.js caught an unhandled runtime error during component render or route execution.
+						Rakta.js caught an unhandled runtime error during component render
+						or route execution.
 					</p>
 				</div>
 
@@ -50,7 +74,8 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 						ERROR MESSAGE:
 					</span>
 					<p className="text-gray-200 break-words mb-3 font-semibold">
-						{error?.message || "An unexpected application exception was thrown."}
+						{error?.message ||
+							"An unexpected application exception was thrown."}
 					</p>
 
 					{error?.stack && (

@@ -3,9 +3,14 @@
 
 export const metadata: Metadata = {
 	title: "Cockpit Overview · Rakta.js Dashboard",
-	description: "System analytics, seeders user database, latency telemetry, and server status cockpit.",
+	description:
+		"System analytics, seeders user database, latency telemetry, and server status cockpit.",
 };
 
-export default function DashboardOverviewLayout({ children }: { children: ReactNode }) {
+export default function DashboardOverviewLayout({
+	children,
+}: {
+	children: ReactNode;
+}) {
 	return <>{children}</>;
 }

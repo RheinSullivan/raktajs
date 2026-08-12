@@ -1,5 +1,5 @@
 export const RAKTA_NAME = "Rakta.js";
-export const RAKTA_VERSION = "1.1.2";
+export const RAKTA_VERSION = "1.1.4";
 export const RAKTA_TAGLINE =
 	"Small in size. Fierce in speed. Alive in every route.";
 
@@ -250,6 +250,45 @@ export {
 	rules as formRules,
 	validateForm,
 } from "./ecosystem/forms";
+// Image Optimization
+export type {
+	BlurPlaceholder,
+	ImageBreakpoints,
+	ImageCdnKind,
+	ImageFormat,
+	ImageOptimizeOptions,
+	ResponsiveImageManifest,
+	SrcSetEntry,
+} from "./ecosystem/image";
+export {
+	buildOptimizedUrl,
+	generateBlurPlaceholder,
+	generateSrcSet,
+	getImageDimensions,
+	IMAGE_BREAKPOINTS,
+	isAnimatedGif,
+	normalizeFormat,
+} from "./ecosystem/image";
+// Mail
+export type {
+	MailAddress,
+	MailAttachment,
+	MailDriverKind,
+	MailMessage,
+	MailSendResult,
+	MailTransport,
+	MailTransportConfig,
+	MailVariables,
+} from "./ecosystem/mail";
+export {
+	buildHtmlEmail,
+	createMailer,
+	normalizeAddress,
+	normalizeAddressList,
+	renderMailTemplate,
+	sendMail,
+	sendTemplateMail,
+} from "./ecosystem/mail";
 export type {
 	StorageAdapter,
 	StorageConfig,
@@ -677,7 +716,21 @@ export {
 	resolveRobotsContent,
 	resolveTitle,
 } from "./seo/index";
-
+// SPA Engine
+export type {
+	SpaMode,
+	SpaRouteGuardContext,
+	SpaRouteGuardHandler,
+	SpaRouterConfig,
+	SpaRouterState,
+} from "./spa/spa";
+export {
+	createSpaConfig,
+	ScrollRestoration,
+	SpaErrorBoundary,
+	useNavigation,
+	useRouteGuard,
+} from "./spa/spa";
 // Store
 export type {
 	GetStateFn,
@@ -690,7 +743,6 @@ export type {
 	UnsubscribeFn,
 } from "./store/index";
 export { createRaktaStore } from "./store/index";
-
 // Testing
 export type {
 	ComponentTestOptions,
@@ -713,7 +765,6 @@ export {
 	renderComponent,
 	runRaktaTests,
 } from "./testing/index";
-
 // Tide - NorthCoastFlow
 export type {
 	TideAdapter,
@@ -732,7 +783,6 @@ export {
 	createBunAdapter,
 	createRuntimeContext,
 } from "./tide/index";
-
 // Vector - TrusmiVector (SVG state machine, mascot, image zoom)
 export { useImageZoom, useTrusmiGallery } from "./vector/imageExperience";
 export {

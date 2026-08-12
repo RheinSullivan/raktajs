@@ -4,33 +4,36 @@ Dokumen ini menjelaskan bagaimana framework disusun secara internal. Jika kamu i
 
 ---
 
-## Gambaran Umum
+## Gambaran Umum Pipeline Request
 
 Rakta.js adalah framework modular yang diorganisir di sekitar kernel terpusat. Setiap modul memiliki satu tanggung jawab dan bisa di-import secara independen. Sistem build men-tree-shake semua yang tidak kamu import.
 
-```
-Request
-  │
-  ▼
-RaktaMiddleware     ← hook before(), edge middleware
-  │
-  ▼
-NorthCoastFlow      ← resolusi mode render (CSR/SSR/SSG/ISR/hybrid)
-  │
-  ▼
-MegaWeave Router    ← cocokkan route ke handler
-  │
-  ▼
-Route Handler       ← komponen halaman atau endpoint API
-  │
-  ▼
-NagaLimanWire (RPC) ← panggilan prosedur type-safe opsional
-  │
-  ▼
-RaktaMiddleware     ← hook after()
-  │
-  ▼
-Response
+```mermaid
+flowchart TD
+    Mulai((Mulai))
+    Mulai --> Req[HTTP Request Masuk]
+    Req --> MWBefore[RaktaMiddleware\nHook before / Edge]
+    MWBefore --> ModeCheck{NorthCoastFlow\nMode Rendering?}
+
+    ModeCheck -->|SSR| SSR[Render Sisi Server\nHTML Segar per Request]
+    ModeCheck -->|SSG| SSG[HTML Statis\nSajikan dari Cache Build]
+    ModeCheck -->|CSR| CSR[Kirim Shell Minimal\nBrowser Merender]
+    ModeCheck -->|Edge| Edge[Edge Runtime\nWorkers / Node CDN]
+
+    SSR --> Router[Router MendungWeave\nPencocok Manifest]
+    SSG --> Router
+    CSR --> Router
+    Edge --> Router
+
+    Router --> Handler[Route Handler\nKomponen Halaman / Endpoint API]
+    Handler --> RPC[Panggilan RPC CarubanWire\nOpsional]
+    RPC --> Handler
+    Handler --> MWAfter[RaktaMiddleware\nHook after]
+    MWAfter --> Resp[Response HTTP Dikirim]
+    Resp --> Selesai((Selesai))
+
+    classDef startEnd fill:#e63946,stroke:#c1121f,color:#ffffff,font-weight:bold
+    class Mulai,Selesai startEnd
 ```
 
 ---
@@ -69,7 +72,28 @@ kernel.use({
 await kernel.start(); // menjalankan semua fase lifecycle
 ```
 
-### Lifecycle Plugin
+### Lifecycle Plugin & Startup Pipeline
+
+```mermaid
+flowchart TD
+    Mulai((Mulai Kernel))
+    Mulai --> P1[Fase 1: Preload\nMuat environment & konfigurasi]
+    P1 --> P2[Fase 2: Configure\nDaftarkan fitur, service, middleware]
+    P2 --> P3[Fase 3: Start\nKoneksi database, background task]
+    P3 --> P4[Fase 4: Ready\nLog kesiapan, jalankan cek kesehatan]
+    P4 --> Running[Aplikasi Berjalan Aktif]
+
+    Running --> ShutSignal{Sinyal\nPenutupan?}
+    ShutSignal -->|Tidak| Running
+    ShutSignal -->|Ya| S1[Fase Penutupan 4\nKosongkan antrean job]
+    S1 --> S2[Fase Penutupan 3\nHentikan service]
+    S2 --> S3[Fase Penutupan 2\nLepas ikatan plugin]
+    S3 --> S4[Fase Penutupan 1\nPembersihan & keluar]
+    S4 --> Selesai((Selesai))
+
+    classDef startEnd fill:#e63946,stroke:#c1121f,color:#ffffff,font-weight:bold
+    class Mulai,Selesai startEnd
+```
 
 | Fase | Kapan | Tujuan |
 |------|-------|--------|
@@ -77,16 +101,6 @@ await kernel.start(); // menjalankan semua fase lifecycle
 | `start` | Setelah semua plugin dikonfigurasi | Koneksi ke database, mulai background task |
 | `ready` | App sudah sepenuhnya siap | Log readiness, jalankan health check |
 | `shutdown` | App akan ditutup | Bersihkan koneksi, flush queue |
-
-### Pipeline Startup
-
-Fungsi `createStartupPipeline()` menyediakan lifecycle berbasis fase yang terurut:
-
-```
-preload → configure → start → ready
-```
-
-Setiap fase berjalan berurutan. Task dalam satu fase berjalan berdasarkan urutan prioritas. Shutdown menjalankan fase secara terbalik (LIFO).
 
 ### Module Loader
 
@@ -301,4 +315,4 @@ export async function GET(request: Request): Promise<Response> {
 
 *Rakta.js - jiwa Cirebon, siap produksi.*
 
-*Dibuat oleh Rhein Sullivan (Muhammad Rizky Ramadhan) dari Cirebon & Jakarta Selatan, Indonesia - Vyagra Nexus™ 🇮🇩 · 🇵🇸 Free Palestine.*
+*Dibuat oleh Rhein Sullivan (Muhammad Rizky Ramadhan) dari Cirebon & Jakarta Selatan, Indonesia - Vyagra Nexus. Free Palestine.*

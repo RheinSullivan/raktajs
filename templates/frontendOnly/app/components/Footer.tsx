@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Footer — Rakta.js: <photo>, <click>, <pantura>, react-icons, gsap
+// Footer - Rakta.js: <photo>, <click>, <pantura>, react-icons, gsap
 
 const footerCopyData = {
 	id: {

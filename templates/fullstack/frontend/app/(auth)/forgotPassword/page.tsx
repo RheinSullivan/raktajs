@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Forgot Password Page — Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert
+// Forgot Password Page - Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert
 
 export default function ForgotPasswordPage() {
 	const [email, setEmail] = useState("rheinsullivan@raktajs.dev");
@@ -46,14 +46,20 @@ export default function ForgotPasswordPage() {
 				onSubmit={handleSubmit}
 			>
 				{status === "sent" && (
-					<RaktaAlert type="success" title="MAGIC LINK SENT" onClose={() => setStatus("idle")}>
-						Password reset instructions have been sent to <strong>{email}</strong>.
+					<RaktaAlert
+						type="success"
+						title="MAGIC LINK SENT"
+						onClose={() => setStatus("idle")}
+					>
+						Password reset instructions have been sent to{" "}
+						<strong>{email}</strong>.
 					</RaktaAlert>
 				)}
 
 				<label className="grid gap-2 font-mono text-xs uppercase text-gray-400">
 					<span className="flex items-center gap-1.5">
-						<FaCode className="h-3 w-3 text-brand-pink" /> Registered Email Address
+						<FaCode className="h-3 w-3 text-brand-pink" /> Registered Email
+						Address
 					</span>
 					<input
 						className="border border-surface-stroke bg-black px-4 py-3 font-mono text-sm text-white outline-none focus:border-brand-pink transition-colors"
@@ -85,10 +91,16 @@ export default function ForgotPasswordPage() {
 				</button>
 
 				<div className="flex flex-wrap items-center justify-between border-t border-surface-stroke pt-4 font-mono text-xs uppercase text-gray-500">
-					<click to="/login" className="hover:text-brand-pink transition-colors flex items-center gap-1">
+					<click
+						to="/login"
+						className="hover:text-brand-pink transition-colors flex items-center gap-1"
+					>
 						<FaArrowRight className="h-2.5 w-2.5 rotate-180" /> Back to Sign in
 					</click>
-					<click to="/resetPassword" className="hover:text-brand-pink transition-colors">
+					<click
+						to="/resetPassword"
+						className="hover:text-brand-pink transition-colors"
+					>
 						Have a token? Reset
 					</click>
 				</div>

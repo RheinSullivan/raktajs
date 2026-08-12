@@ -1,49 +1,65 @@
-# Routing - MendungWeave
+# File-Based Routing - MendungWeave
 
-## Overview
+**MendungWeave** is the file-based routing layer in Rakta.js. The folder structure under `app/` is the router - there is no centralized route configuration file to maintain.
 
-**MendungWeave** is the file-based routing layer of Rakta.js. The folder
-structure under `app/` is the router - there is no central route config
-file to keep in sync.
+---
 
-## When to use this
+## Route Resolution Architecture & Lifecycle
 
-Anytime you need a new page, API endpoint, layout, loading state, or error
-boundary in a Rakta.js app.
+```mermaid
+flowchart TD
+    Start((Start))
+    Start --> ScanDir[Scan app/ Directory Tree\nscanRoutes File Scanner]
+    ScanDir --> ClassifyFile{Classify File Entry}
 
-## File conventions
+    ClassifyFile -->|page.tsx| PageKind[Kind: page\nRoute Component]
+    ClassifyFile -->|route.ts| APIKind[Kind: api\nAPI Endpoint]
+    ClassifyFile -->|layout.tsx| LayoutKind[Kind: layout\nLayout Wrapper]
+    ClassifyFile -->|loading.tsx / error.tsx| SpecialKind[Kind: special\nLoading / Error / NotFound]
 
-| File | Becomes |
+    PageKind --> ManifestBuilder[generateManifest\nRoute Manifest Builder]
+    APIKind --> ManifestBuilder
+    LayoutKind --> LayoutTree[findLayoutsForPathname\nNested Layout Tree]
+    SpecialKind --> ManifestBuilder
+    LayoutTree --> ManifestBuilder
+
+    ManifestBuilder --> RouteManifest[(RouteManifest\nEntry Table)]
+
+    RouteManifest --> MatchEngine[matchRoute Engine\nPath Pattern Matching]
+
+    MatchEngine --> MatchResult{Route\nMatch Found?}
+
+    MatchResult -->|Yes| ExtractParams[Extract Dynamic Params\nslug, id, catchAll...]
+    MatchResult -->|No| NotFound[Render notFound.tsx\nBoundary]
+
+    ExtractParams --> Execute[Execute Component\n& Wrap Layout Tree]
+    Execute --> End((End))
+    NotFound --> End
+
+    classDef startEnd fill:#e63946,stroke:#c1121f,color:#ffffff,font-weight:bold
+    class Start,End startEnd
+```
+
+---
+
+## File Conventions
+
+| File | Resolves To |
 | --- | --- |
 | `app/page.tsx` | `/` |
 | `app/about/page.tsx` | `/about` |
 | `app/blog/[slug]/page.tsx` | `/blog/:slug` (dynamic segment) |
 | `app/blog/[...slug]/page.tsx` | `/blog/*` (catch-all) |
-| `app/(auth)/login/page.tsx` | `/login` - the `(auth)` segment is a route group and does not appear in the URL |
-| `app/layout.tsx` | Layout wrapping every route below it |
-| `app/loading.tsx` | Shown while a route segment is loading |
-| `app/error.tsx` | Error boundary for a route segment |
+| `app/(auth)/login/page.tsx` | `/login` - `(auth)` is a route group and excluded from URL |
+| `app/layout.tsx` | Root layout wrapping downstream routes |
+| `app/loading.tsx` | Rendered while route segment is loading |
+| `app/error.tsx` | Error boundary for route segment |
 | `app/notFound.tsx` | Rendered when no route matches |
-| `app/api/users/route.ts` | An API endpoint (KasepuhanGate) at `/api/users` |
+| `app/api/users/route.ts` | API endpoint at `/api/users` |
 
-## Architecture
+---
 
-MendungWeave has three stages:
-
-1. **Scanner** (`rakta/router`'s `scanRoutes`) walks the `app/` directory
-   and produces a flat list of route entries with their kind (`page`,
-   `layout`, `loading`, `error`, `notFound`, `api`) and raw segments.
-2. **Manifest** turns that list into a `RouteManifestEntry[]`, computing
-   the URL pattern and any dynamic parameter names for each entry.
-3. **Matcher** (`matchRoute`) takes an incoming pathname and the manifest
-   and returns the matching entry plus extracted parameters, or `null` if
-   nothing matches.
-
-Layouts are resolved separately with `findLayoutsForPathname`, which
-returns every layout whose pattern is a prefix of the current pathname, so
-nested layouts compose naturally.
-
-## Code example
+## Code Example
 
 ```tsx
 // app/blog/[slug]/page.tsx
@@ -57,7 +73,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 ```
 
 ```ts
-// app/api/users/route.ts - KasepuhanGate endpoint
+// app/api/users/route.ts
 export async function GET(): Promise<Response> {
   return Response.json({ users: [] });
 }
@@ -68,53 +84,28 @@ export async function POST(request: Request): Promise<Response> {
 }
 ```
 
-## Route groups for layout isolation
+---
 
-Wrap a folder name in parentheses to group routes under a shared layout
-without adding a URL segment:
+## Route Groups for Layout Isolation
+
+Wrap folder names in parentheses to group routes under a shared layout without affecting the URL path:
 
 ```txt
 app/
 ├─ (auth)/
-│  ├─ layout.tsx        only wraps login/register/etc, no navbar/footer
+│  ├─ layout.tsx        auth layout (login/register)
 │  ├─ login/page.tsx     /login
 │  └─ register/page.tsx  /register
 ├─ dashboard/
-│  ├─ layout.tsx        dashboard sidebar, no marketing footer
+│  ├─ layout.tsx        dashboard sidebar layout
 │  └─ page.tsx           /dashboard
-└─ layout.tsx            public marketing layout (navbar + footer)
+└─ layout.tsx            public marketing layout
 ```
 
-This is exactly how the fullstack template structures public marketing
-pages, auth pages, and the dashboard - Rakta.js | Vyagra Nexus™ ❤️ 🇮🇩 & 🇵🇸
-[`templates.md`](./templates.md).
+---
 
-## Navigation with ShrimpStep
+## Related Documentation
 
-Use the `<click to="">` custom element for in-app navigation instead of a
-plain `<a href="">`:
-
-```tsx
-import { Click } from "rakta/components";
-
-<click to="/dashboard">Go to dashboard</click>
-```
-
-`Click` understands internal vs. external destinations automatically,
-supports keyboard activation, and marks the active route with
-`aria-current="page"`.
-
-## Common mistakes
-
-- Naming a file `Page.tsx` instead of `page.tsx` - the scanner matches
-  exact lowercase filenames.
-- Forgetting that `(group)` folders do not add a URL segment - `app/(auth)/login/page.tsx`
-  is `/login`, not `/auth/login`.
-- Using `<a href="">` for internal navigation, which causes a full page
-  reload instead of a client-side transition.
-
-## Related docs
-
-- [`templates.md`](./templates.md) - how routing is laid out in generated apps
-- [`seo.md`](./seo.md) - per-route metadata with SunyaragiCrown
-- [`rpc.md`](./rpc.md) - CarubanWire, for typed calls instead of raw `route.ts` handlers
+- [`templates.md`](./templates.md) - How routing is structured in generated templates
+- [`seo.md`](./seo.md) - Per-route metadata
+- [`rpc.md`](./rpc.md) - Type-safe RPC API

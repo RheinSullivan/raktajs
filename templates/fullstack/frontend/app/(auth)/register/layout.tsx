@@ -3,7 +3,8 @@
 
 export const metadata: Metadata = {
 	title: "Create Account · Rakta.js Monolith",
-	description: "Register a new developer account on the Rakta.js fullstack React platform.",
+	description:
+		"Register a new developer account on the Rakta.js fullstack React platform.",
 };
 
 export default function RegisterLayout({ children }: { children: ReactNode }) {

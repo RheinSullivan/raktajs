@@ -74,6 +74,39 @@ export const RENDER_MODE_DESCRIPTORS: Readonly<
 		clientHydration: true,
 		roadmap: false,
 	},
+	isr: {
+		mode: "isr",
+		label: "Incremental Static Regeneration",
+		shortLabel: "ISR",
+		description:
+			"Static pages are revalidated asynchronously in the background based on a revalidate time interval.",
+		serverRequired: true,
+		buildTimeGenerated: true,
+		clientHydration: true,
+		roadmap: false,
+	},
+	streaming_ssr: {
+		mode: "streaming_ssr",
+		label: "Streaming Server-Side Rendering",
+		shortLabel: "Streaming SSR",
+		description:
+			"Streams HTML chunks directly over HTTP ReadableStream for minimal time-to-first-byte (TTFB).",
+		serverRequired: true,
+		buildTimeGenerated: false,
+		clientHydration: true,
+		roadmap: false,
+	},
+	edge: {
+		mode: "edge",
+		label: "Edge Rendering",
+		shortLabel: "Edge",
+		description:
+			"Executes render handlers directly at edge locations close to users (Cloudflare Workers, Vercel Edge).",
+		serverRequired: false,
+		buildTimeGenerated: false,
+		clientHydration: true,
+		roadmap: false,
+	},
 };
 
 /**

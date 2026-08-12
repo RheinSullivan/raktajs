@@ -31,8 +31,8 @@ export const raktaFeatures: readonly RaktaFeature[] = [
 		id: "trusmithread",
 		title: "TrusmiThread",
 		desc: {
-			id: "Scanner auto-import yang menghasilkan deklarasi bertype untuk komponen, store, dan hooks — tanpa satu pun import manual.",
-			en: "Auto-import scanner generating typed declarations for components, stores, and hooks — zero manual imports.",
+			id: "Scanner auto-import yang menghasilkan deklarasi bertype untuk komponen, store, dan hooks - tanpa satu pun import manual.",
+			en: "Auto-import scanner generating typed declarations for components, stores, and hooks - zero manual imports.",
 		},
 		code: "const [state, setState] = useState()",
 	},

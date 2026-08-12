@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Header — uses Rakta.js: <photo>, toast, react-icons, gsap
+// Header - uses Rakta.js: <photo>, toast, react-icons, gsap
 
 export default function Header({
 	lang,
@@ -24,10 +24,15 @@ export default function Header({
 
 	const handleLangToggle = useCallback(() => {
 		onLangToggle();
-		toast.info(lang === "ID" ? "Switched to English 🇬🇧" : "Berganti ke Bahasa Indonesia 🇮🇩", {
-			title: "LANGUAGE",
-			duration: 2000,
-		});
+		toast.info(
+			lang === "ID"
+				? "Switched to English 🇬🇧"
+				: "Berganti ke Bahasa Indonesia 🇮🇩",
+			{
+				title: "LANGUAGE",
+				duration: 2000,
+			},
+		);
 	}, [lang, onLangToggle]);
 
 	const handleMuteToggle = useCallback(() => {

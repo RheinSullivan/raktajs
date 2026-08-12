@@ -1,48 +1,78 @@
-# Data Fetching
+# Data Fetching and Caching
 
-## Overview
+The `rakta/data` module supplies lightweight data caching utilities, route data strategy contracts, and helper functions for identifying ISR, streaming, and prefetching capabilities. These primitives are consumed by the Forge build engine, Tide runtime, and custom renderers to determine how each route is fetched, cached, and revalidated.
 
-The `rakta/data` module provides a lightweight data cache, route data strategy contracts, and helpers for identifying ISR, streaming, and prefetch routes. These primitives are used by the Forge build engine, the Tide runtime, and custom renderers to decide how each route is fetched, cached, and re-rendered.
+---
 
-## When to use this
+## Data Fetching & Caching Lifecycle Architecture
 
-Use this module when you need:
-- A request-scoped cache that deduplicates parallel calls to the same loader.
-- Per-route rendering strategy annotations (server vs. client, prerender vs. dynamic, streaming, prefetch).
-- ISR / revalidation logic that determines whether a cached page is stale.
+```mermaid
+flowchart TD
+    Start((Start))
+    Start --> Req[Incoming Route Request]
+    Req --> Strategy{Route Strategy?}
 
-## Cache API
+    Strategy -->|prerender + revalidate| ISRCache[(Incremental Cache Store)]
+    Strategy -->|stream = true| StreamShell[Streaming Shell\n& React Suspense]
+    Strategy -->|cache request| DataCache[createDataCache\nRequest-Scoped Cache]
 
-`createDataCache()` returns a cache instance for one request lifecycle. Entries are stored by a string key and invalidated by tag.
+    ISRCache --> FreshCheck{Cache Age\nvs TTL?}
+    FreshCheck -->|Fresh| ServeStatic[Serve Static HTML\nfrom Cache]
+    FreshCheck -->|Stale| RevalBg[Background Async\nRevalidation]
+    RevalBg --> UpdateStore[(Update Cache Store)]
+    UpdateStore --> ServeStatic
+
+    DataCache --> TagCheck{Tag / TTL\nMatch?}
+    TagCheck -->|Cache Hit| ReturnCached[Return Data\nfrom Cache]
+    TagCheck -->|Cache Miss| FetchDB[Execute Async Loader\n/ DB Query]
+    FetchDB --> StoreResult[(Write to Cache)]
+    StoreResult --> ReturnCached
+
+    ServeStatic --> Resp[HTTP Response Sent]
+    StreamShell --> Resp
+    ReturnCached --> Resp
+    Resp --> End((End))
+
+    classDef startEnd fill:#e63946,stroke:#c1121f,color:#ffffff,font-weight:bold
+    class Start,End startEnd
+```
+
+---
+
+## Data Cache API
+
+`createDataCache()` returns a request-scoped cache instance. Entries are stored with string keys and can be invalidated by tags or individual keys.
 
 ```ts
 import { createDataCache } from "raktajs/data";
 
 const cache = createDataCache();
 
-// Cache a loader result for 60 seconds, tagged as "cms"
+// Cache loader response for 60 seconds with "cms" tag
 const posts = await cache.cache("cms:posts", () => fetchPostsFromDB(), {
   ttl: 60_000,
   tags: ["cms"],
 });
 
-// Invalidate everything tagged "cms"
+// Invalidate all entries tagged "cms"
 cache.revalidate("cms");
 
 // Invalidate a single key
 cache.revalidate("cms:posts");
 ```
 
-### Cache options
+### Cache Options
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `ttl` | `number` | `0` (never expires) | Time-to-live in milliseconds |
-| `tags` | `string[]` | `[]` | Tags for grouped invalidation |
+| `ttl` | `number` | `0` (never expires) | Expiration time in milliseconds |
+| `tags` | `string[]` | `[]` | Tag list for group invalidation |
 
-## Route data strategy
+---
 
-`defineRouteDataStrategy` annotates a route with its rendering and data contract. The Forge build engine reads these annotations to decide how to emit the route.
+## Route Data Strategy
+
+`defineRouteDataStrategy` annotates routes with their rendering strategy and data contract:
 
 ```ts
 import { defineRouteDataStrategy, isIncrementalRoute, shouldStreamRoute, shouldPrefetchRoute } from "raktajs/data";
@@ -50,89 +80,32 @@ import { defineRouteDataStrategy, isIncrementalRoute, shouldStreamRoute, shouldP
 const dashboardStrategy = defineRouteDataStrategy({
   routePattern: "/dashboard",
   runtime: "server",    // "server" | "client" | "edge"
-  prerender: false,      // true = SSG / ISR at build time
+  prerender: false,      // true = SSG / ISR during build
   stream: true,          // true = enable streaming response
   prefetch: true,        // true = prefetch on hover
-  revalidate: 60,        // ISR revalidation interval in seconds (only when prerender: true)
+  revalidate: 60,        // ISR revalidation interval in seconds
 });
 
 const blogStrategy = defineRouteDataStrategy({
   routePattern: "/blog/:slug",
   runtime: "server",
-  prerender: true,       // pre-render at build time
+  prerender: true,       // pre-render during build
   stream: false,
   prefetch: true,
-  revalidate: 3600,      // re-generate every hour
+  revalidate: 3600,      // rebuild hourly
 });
 
-// Check helpers
-isIncrementalRoute(dashboardStrategy); // false - prerender is false
-isIncrementalRoute(blogStrategy);      // true  - prerender + revalidate
+// Helper Checks
+isIncrementalRoute(dashboardStrategy); // false
+isIncrementalRoute(blogStrategy);      // true
 shouldStreamRoute(dashboardStrategy);  // true
 shouldPrefetchRoute(dashboardStrategy); // true
 ```
 
-### Strategy options
+---
 
-| Option | Type | Description |
-| --- | --- | --- |
-| `routePattern` | `string` | The URL pattern this strategy applies to |
-| `runtime` | `"server" \| "client" \| "edge"` | Where the route runs |
-| `prerender` | `boolean` | Generate a static file at build time |
-| `stream` | `boolean` | Stream the response as it renders |
-| `prefetch` | `boolean` | Pre-load this route on hover or mount |
-| `revalidate` | `number` | Seconds before ISR re-generates (requires `prerender: true`) |
+## Related Documentation
 
-## Rendering strategy per route
-
-Strategy helpers let you inspect a route's contract programmatically:
-
-```ts
-import {
-  isIncrementalRoute,
-  shouldStreamRoute,
-  shouldPrefetchRoute,
-} from "raktajs/data";
-
-const myRoute = defineRouteDataStrategy({
-  routePattern: "/product/:id",
-  runtime: "server",
-  prerender: true,
-  revalidate: 300,
-  stream: false,
-  prefetch: true,
-});
-
-console.log(isIncrementalRoute(myRoute));   // true  - prerender + revalidate > 0
-console.log(shouldStreamRoute(myRoute));    // false
-console.log(shouldPrefetchRoute(myRoute));  // true
-```
-
-## Runtime registry
-
-The cache pairs with the Tide runtime adapter for per-request isolation:
-
-```ts
-import { createDataCache } from "raktajs/data";
-import { createRuntimeContext } from "raktajs/tide";
-
-// In a Bun fetch handler
-const ctx = createRuntimeContext(request);
-const cache = createDataCache(); // isolated per request
-
-const user = await cache.cache(`user:${ctx.params.id}`, () => getUser(ctx.params.id), {
-  ttl: 5_000,
-});
-```
-
-## Common mistakes
-
-- Sharing a cache instance across requests in a server handler - each request must create its own `createDataCache()` instance.
-- Setting `revalidate` without setting `prerender: true` - ISR only applies to pre-rendered routes.
-- Using `stream: true` on a route with a slow database query without a `<Suspense>` boundary - the stream will still block until the query resolves.
-
-## Related docs
-
-- [`routing.md`](./routing.md) - file-based routing and route kinds
-- [`layout.md`](./layout.md) - layout system with loading states
-- [`rpc.md`](./rpc.md) - type-safe API calls instead of raw fetch
+- [`routing.md`](./routing.md) - File-based routing
+- [`layout.md`](./layout.md) - Layout system
+- [`rpc.md`](./rpc.md) - Type-safe RPC API

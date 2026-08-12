@@ -1,12 +1,57 @@
 # Sistem Layout
 
-## Gambaran Umum
-
 Rakta.js menggunakan sistem layout berbasis berkas yang serupa dengan konvensi direktori `app/`. Layout membungkus halaman dan bertahan saat navigasi antar segmen URL yang sama. Modul `rakta/layout` menyediakan pemindai (scanner), pembuat manifes, dan pencocok (matcher) yang digunakan oleh mesin build Forge dan perkakas kustom.
 
-## Kapan Menggunakannya
+---
 
-Gunakan layout ketika Anda membutuhkan antarmuka yang digunakan bersama - seperti navigasi (navbar), bilah samping (sidebar), footer, atau pembatas autentikasi - yang harus tetap terpasang tanpa muat ulang halaman saat berpindah antar rute dalam bagian aplikasi Anda.
+## Arsitektur Sistem Layout
+
+```mermaid
+flowchart TD
+    Mulai((Mulai))
+    Mulai --> ScanDir[Pindai Direktori app/\nPemindai scanLayouts]
+    ScanDir --> ClassifyFile{Klasifikasikan Entri Berkas?}
+
+    ClassifyFile -->|layout.tsx| LayoutKind[Jenis: layout\nPembungkus Hierarki]
+    ClassifyFile -->|loading.tsx| LoadKind[Jenis: loading\nBoundary Loading]
+    ClassifyFile -->|error.tsx| ErrKind[Jenis: error\nBoundary Error]
+
+    LayoutKind --> ManifestBuilder[createLayoutManifest\nPembangun Manifest Layout]
+    LoadKind --> ManifestBuilder
+    ErrKind --> ManifestBuilder
+
+    ManifestBuilder --> Manifest[(Tabel Manifest Layout)]
+
+    Manifest --> MatcherEngine[Pencocokan URL Masuk\nFungsi matchLayouts]
+
+    MatcherEngine --> Chain[Rantai Layout Terresolusi\nRootLayout -> DashboardLayout]
+    Chain --> RenderTree[Renderer: Bungkus Halaman dengan Layout\ndari Luar ke Dalam]
+    RenderTree --> Selesai((Selesai))
+
+    classDef startEnd fill:#e63946,stroke:#c1121f,color:#ffffff,font-weight:bold
+    class Mulai,Selesai startEnd
+```
+
+---
+
+## Hierarki Layout Bersarang (Nested Layout Chain)
+
+```mermaid
+graph LR
+    subgraph Outer ["Outer Shell"]
+        RootL["app/layout.tsx\n(html, body, global nav)"]
+    end
+    subgraph Middle ["Segment Shell"]
+        DashL["app/dashboard/layout.tsx\n(sidebar, user menu)"]
+    end
+    subgraph Inner ["Page Content"]
+        Page["app/dashboard/settings/page.tsx\n(actual content)"]
+    end
+
+    RootL --> DashL --> Page
+```
+
+---
 
 ## Konvensi Berkas
 
@@ -18,6 +63,8 @@ Gunakan layout ketika Anda membutuhkan antarmuka yang digunakan bersama - sepert
 | `app/dashboard/error.tsx` | Pembatas kesalahan (error boundary) untuk segmen dashboard |
 | `app/(auth)/layout.tsx` | Layout grup rute - tidak menambahkan segmen URL |
 | `app/dashboard/@analytics/layout.tsx` | Slot paralel - dirender berdampingan dengan konten utama |
+
+---
 
 ## Root Layout
 
@@ -31,12 +78,14 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html  lang="en">
+    <html lang="en">
       <body>{children}</body>
     </html>
   );
 }
 ```
+
+---
 
 ## Layout Bersarang (Nested Layouts)
 
@@ -59,7 +108,9 @@ app/
    └─ register/page.tsx /register
 ```
 
-Rantai layout untuk `/dashboard/settings` adalah: `app/layout.tsx` `app/dashboard/layout.tsx`.
+Rantai layout untuk `/dashboard/settings` adalah: `app/layout.tsx` kemudian `app/dashboard/layout.tsx`.
+
+---
 
 ## Grup Rute untuk Isolasi Layout
 
@@ -75,6 +126,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   );
 }
 ```
+
+---
 
 ## API Layout (`rakta/layout`)
 
@@ -96,6 +149,8 @@ const manifest: RaktaLayoutManifest = createLayoutManifest([
 const activeLayouts: RaktaLayoutEntry[] = matchLayouts(manifest, "/dashboard/settings");
 // [app/layout.tsx, app/dashboard/layout.tsx]
 ```
+
+---
 
 ## Layout Khusus
 
@@ -141,17 +196,21 @@ export default function NotFound() {
   return (
     <main>
       <h1>404 - Halaman Tidak Ditemukan</h1>
-      <click to="/">Kembali ke Beranda</click>
+      <a href="/">Kembali ke Beranda</a>
     </main>
   );
 }
 ```
+
+---
 
 ## Kesalahan Umum
 
 - Membuat berkas `Layout.tsx` alih-alih `layout.tsx` - pemindai mencocokkan nama berkas huruf kecil secara presisi.
 - Lupa membuat root layout - tanpa `app/layout.tsx` cangkang HTML tidak akan dirender.
 - Menambahkan layout di dalam `(group)` dan berharap memengaruhi rute di luar grup - grup rute bersifat terisolasi.
+
+---
 
 ## Dokumentasi Terkait
 

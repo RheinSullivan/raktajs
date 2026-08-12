@@ -37,7 +37,7 @@ export default function App() {
 
 	return (
 		<div className="min-h-screen bg-black font-sans text-white antialiased">
-			{/* Navigation Header — contains lang toggle */}
+			{/* Navigation Header - contains lang toggle */}
 			<Header
 				lang={lang}
 				onLangToggle={onLangToggle}
@@ -49,7 +49,7 @@ export default function App() {
 				onLowLatencyToggle={() => setLowLatencyMode((prev) => !prev)}
 			/>
 
-			{/* Hero Banner — bilingual */}
+			{/* Hero Banner - bilingual */}
 			<HeroSection
 				lang={lang}
 				onOpenDocs={() => setIsDocsOpen(true)}
@@ -79,13 +79,13 @@ export default function App() {
 				onTriggerJump={triggerJump}
 			/>
 
-			{/* Unified Core Modules — bilingual */}
+			{/* Unified Core Modules - bilingual */}
 			<FeatureGrid lang={lang} />
 
-			{/* Donations & Humanitarian Support — bilingual */}
+			{/* Donations & Humanitarian Support - bilingual */}
 			<DonationSection lang={lang} />
 
-			{/* Footer — bilingual */}
+			{/* Footer - bilingual */}
 			<Footer lang={lang} />
 
 			{/* Modals */}

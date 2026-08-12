@@ -1,36 +1,46 @@
 # RPC - CarubanWire
 
-## Overview
+**CarubanWire** is the type-safe RPC layer in Rakta.js, providing zero-codegen end-to-end type safety between client and server.
 
-**CarubanWire** is Rakta.js's type-safe RPC layer, inspired by tRPC but
-implemented natively for Rakta.js without depending on it. You define
-procedures once on the server; the client gets full type inference with
-no code generation step.
+---
 
-## When to use this
+## RPC Protocol & Type Inference Architecture
 
-Use CarubanWire when you want typed function calls between frontend and
-backend instead of hand-writing `fetch` calls and manually typing the
-response. For untyped or third-party REST APIs, use
-[PanturaFetch](./http.md) instead.
+```mermaid
+flowchart TD
+    Start((Start))
+    Start --> ClientCall[Client Call\nclient.getUser.query input]
+    ClientCall --> SchemaVal{Rakta Schema\nValidation?}
 
-## Architecture
+    SchemaVal -->|Failed| ErrResp[Throw RaktaRpcError\nBAD_REQUEST / Invalid Input]
+    SchemaVal -->|Valid| ExecuteProc[Execute Procedure Handler\nquery / mutation]
 
-- A **router** is a plain object whose values are procedures created with
-  `publicProcedure`.
-- A **procedure** is built fluently: `.input(schema)` attaches an optional
-  Rakta Schema validator, then `.query(handler)` or `.mutation(handler)`
-  finalizes it.
-- The **client**, created with `createRaktaClient<AppRouter>()`, is a
-  `Proxy` - calling `client.someProcedure.query(input)` sends a typed
-  request and returns a typed response, fully inferred from the server's
-  router type.
-- Errors surface as `RaktaRpcError`, carrying a `code` and optional
-  `details` for validation failures.
+    ErrResp --> End((End))
 
-## Code example
+    ExecuteProc --> DBQuery[(Database / External\nService Query)]
+    DBQuery --> ProcResult[Result Formatted]
+    ProcResult --> HTTPTransport[HTTP JSON Transport Response]
+    HTTPTransport --> ClientType[Zero-Codegen Type Inference\nin React Component]
+    ClientType --> End
 
-Server:
+    classDef startEnd fill:#e63946,stroke:#c1121f,color:#ffffff,font-weight:bold
+    class Start,End startEnd
+```
+
+---
+
+## Component Overview
+
+- **Router**: Plain object mapping keys to procedures built with `publicProcedure`.
+- **Procedure**: Fluent builder: `.input(schema)` attaches Rakta Schema validation, followed by `.query(handler)` or `.mutation(handler)`.
+- **Client**: Instantiated via `createRaktaClient<AppRouter>()`, invoking `client.procedure.query(input)` sends a typed request and returns a fully typed response inferred from server router types.
+- **Error**: Errors surface as `RaktaRpcError` with explicit `code` and optional validation failure details.
+
+---
+
+## Code Example
+
+### Server Definition
 ```ts
 // backend/src/rpc/router.ts
 import { publicProcedure } from "rakta/rpc";
@@ -45,7 +55,7 @@ export const appRouter = {
 export type AppRouter = typeof appRouter;
 ```
 
-Client:
+### Client Call
 ```ts
 // frontend/lib/rpc.ts
 import { createRaktaClient } from "rakta/rpc";
@@ -56,21 +66,12 @@ export const rpc = createRaktaClient<AppRouter>({
 });
 
 const result = await rpc.greet.query({ name: "Rakta" });
-// result.message: string - fully typed, no manual annotation
+// result.message: string - fully typed without code generation
 ```
 
-## Common mistakes
+---
 
-- Forgetting `await` on `.query()` / `.mutate()` - both return a `Promise`.
-- Sharing the router type by re-exporting the whole backend module into
-  the frontend bundle - instead, export only the `type AppRouter`, which
-  is erased at build time and adds no runtime weight to the client.
-- Catching errors with a generic `catch` block and ignoring `error.code` -
-  `RaktaRpcError.code` lets you distinguish validation failures from other
-  server errors.
+## Related Documentation
 
-## Related docs
-
-- [`schema.md`](./schema.md) *(see package docs for `rakta/schema`)* - input validation used by `.input()`
-- [`http.md`](./http.md) - PanturaFetch, for non-RPC HTTP calls
-- [`backendFrameworks.md`](./backendFrameworks.md) - wiring CarubanWire into Gaman.js, Express.js, Nest.js, or Adonis.js
+- [`http.md`](./http.md) - PanturaFetch for non-RPC HTTP requests
+- [`backendFrameworks.md`](./backendFrameworks.md) - Integrating CarubanWire with backend frameworks

@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// HeroSection — Rakta.js: gsap, <pantura>, <reborns>, <click>, react-icons
+// HeroSection - Rakta.js: gsap, <pantura>, <reborns>, <click>, react-icons
 
 const heroCopyData = {
 	id: {
