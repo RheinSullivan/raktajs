@@ -74,6 +74,12 @@ export {
 	sendMail,
 	sendTemplateMail,
 } from "./mail";
+export type { PackageStats, PackageStatsOptions } from "./packageStats";
+export {
+	fetchPackageStats,
+	parseDependentsCount,
+	parseRuntimeDependencies,
+} from "./packageStats";
 export type {
 	StorageAdapter,
 	StorageConfig,

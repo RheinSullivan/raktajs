@@ -24,7 +24,7 @@ Rakta.js features a built-in Fast Refresh & HMR engine active automatically duri
 Built-in dev terminal rendering clean HTTP request logs, timing breakdowns, HMR status, and environment variables.
 
 ```
-  ⩛ Rakta.js 1.1.4 (CherbonsEngine)
+  ⩛ Rakta.js 1.1.5 (CherbonsEngine)
 
     Local:        http://localhost:3000
     Network:      http://192.168.1.5:3000
@@ -57,3 +57,19 @@ const graph = createDependencyGraph([
 const routes = analyzeRoutes(graph);
 const bundle = analyzeBundle(graph.modules);
 ```
+
+---
+
+## Rakta.js and Wappalyzer Detection
+
+Rakta.js applications expose stable public fingerprints that technology scanners can verify without relying on generic text matches:
+
+- `<meta name="generator" content="Rakta.js">`
+- `<html data-framework="raktajs">`
+- `#rakta-root[data-rakta]`
+- `window.__RAKTA__.version`
+- `X-Rakta-Version`
+
+The `public/wappalyzer.json` file is a reference definition for Wappalyzer-style technology rules. It is not automatically loaded by the browser extension from a Rakta.js application. Official recognition still requires submitting Rakta.js through Wappalyzer's technology suggestion process and providing at least two or three real public Rakta.js websites as evidence.
+
+Only framework identity and version are exposed. Secrets, environment variables, filesystem paths, and private configuration are never included in these fingerprints.

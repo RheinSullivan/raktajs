@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { scanForExports } from "../autoImport/scanner";
+import { RAKTA_NAME, RAKTA_VERSION } from "../frameworkIdentity";
 import type { RouteManifest, RouteManifestEntry } from "../router/types";
 
 export interface ClientEntryOptions {
@@ -208,7 +209,7 @@ function buildClientEntrySource(
 		"raktajs",
 		"package.json",
 	);
-	let rVersion = "1.1.2";
+	let rVersion = RAKTA_VERSION;
 	if (existsSync(pkgPath)) {
 		try {
 			const pkg = JSON.parse(readFileSync(pkgPath, "utf8")) as {
@@ -240,6 +241,8 @@ import {
 	Toaster,
 	RaktaAlert,
 	Alert,
+	Click,
+	Picture as Photo,
 	Pantura,
 	Reborns,
 	usePantura,
@@ -269,6 +272,23 @@ import {
 	LuVolumeX as VolumeX,
 	LuX as X,
 } from "react-icons/lu";
+import {
+	FaArrowRight,
+	FaArrowRotateRight,
+	FaBook,
+	FaCheck,
+	FaCircleCheck,
+	FaCloud,
+	FaCode,
+	FaCopy,
+	FaHandHoldingHeart,
+	FaHeart,
+	FaMagnifyingGlass,
+	FaMicrochip,
+	FaPlay,
+	FaRibbon,
+	FaXmark,
+} from "react-icons/fa6";
 ${cssImport}
 ${layoutImport}
 (globalThis as typeof globalThis & Record<string, unknown>).useCallback = ReactHooks.useCallback;
@@ -281,6 +301,11 @@ ${layoutImport}
 (globalThis as typeof globalThis & Record<string, unknown>).Toaster = Toaster;
 (globalThis as typeof globalThis & Record<string, unknown>).RaktaAlert = RaktaAlert;
 (globalThis as typeof globalThis & Record<string, unknown>).Alert = Alert;
+(globalThis as typeof globalThis & Record<string, unknown>).Click = Click;
+(globalThis as typeof globalThis & Record<string, unknown>).click = Click;
+(globalThis as typeof globalThis & Record<string, unknown>).Photo = Photo;
+(globalThis as typeof globalThis & Record<string, unknown>).photo = Photo;
+(globalThis as typeof globalThis & Record<string, unknown>).Picture = Photo;
 (globalThis as typeof globalThis & Record<string, unknown>).Pantura = Pantura;
 (globalThis as typeof globalThis & Record<string, unknown>).Reborns = Reborns;
 (globalThis as typeof globalThis & Record<string, unknown>).usePantura = usePantura;
@@ -311,6 +336,21 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 (globalThis as typeof globalThis & Record<string, unknown>).Volume2 = Volume2;
 (globalThis as typeof globalThis & Record<string, unknown>).VolumeX = VolumeX;
 (globalThis as typeof globalThis & Record<string, unknown>).X = X;
+(globalThis as typeof globalThis & Record<string, unknown>).FaArrowRight = FaArrowRight;
+(globalThis as typeof globalThis & Record<string, unknown>).FaArrowRotateRight = FaArrowRotateRight;
+(globalThis as typeof globalThis & Record<string, unknown>).FaBook = FaBook;
+(globalThis as typeof globalThis & Record<string, unknown>).FaCheck = FaCheck;
+(globalThis as typeof globalThis & Record<string, unknown>).FaCircleCheck = FaCircleCheck;
+(globalThis as typeof globalThis & Record<string, unknown>).FaCloud = FaCloud;
+(globalThis as typeof globalThis & Record<string, unknown>).FaCode = FaCode;
+(globalThis as typeof globalThis & Record<string, unknown>).FaCopy = FaCopy;
+(globalThis as typeof globalThis & Record<string, unknown>).FaHandHoldingHeart = FaHandHoldingHeart;
+(globalThis as typeof globalThis & Record<string, unknown>).FaHeart = FaHeart;
+(globalThis as typeof globalThis & Record<string, unknown>).FaMagnifyingGlass = FaMagnifyingGlass;
+(globalThis as typeof globalThis & Record<string, unknown>).FaMicrochip = FaMicrochip;
+(globalThis as typeof globalThis & Record<string, unknown>).FaPlay = FaPlay;
+(globalThis as typeof globalThis & Record<string, unknown>).FaRibbon = FaRibbon;
+(globalThis as typeof globalThis & Record<string, unknown>).FaXmark = FaXmark;
 
 ${starterGlobalLoaders}
 
@@ -408,9 +448,13 @@ photo img {
 document.head.appendChild(raktaElementStyle);
 
 if (typeof window !== "undefined") {
-  (window as unknown as Record<string, unknown>).__RAKTA__ = {
-    name: "Rakta.js",
-    version: "1.1.3",
+  const browserWindow = window as unknown as {
+    __RAKTA__?: Record<string, unknown>;
+  };
+  browserWindow.__RAKTA__ = {
+    ...(browserWindow.__RAKTA__ ?? {}),
+    framework: "${RAKTA_NAME}",
+    version: "${rVersionSafe}",
   };
   if (document.documentElement) {
     document.documentElement.dataset.rakta = "true";
@@ -764,6 +808,8 @@ const rootElement = document.getElementById("rakta-root");
 if (!rootElement) {
   throw new Error("Rakta.js root element #rakta-root was not found.");
 }
+
+rootElement.setAttribute("data-rakta", "true");
 
 createRoot(rootElement).render(
   React.createElement(RaktaErrorBoundary, null, React.createElement(RaktaAppShell))

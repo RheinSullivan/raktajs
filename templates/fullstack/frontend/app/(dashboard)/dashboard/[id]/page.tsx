@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Dynamic Bracket Route - Rakta.js: gsap, <click>, react-icons, toast, useRef/useEffect/useCallback
+// Dynamic Bracket Route - Rakta.js: gsap, <Click>, react-icons, toast, useRef/useEffect/useCallback
 
 export default function UserDetailPage() {
 	const [idParam, setIdParam] = useState("1");
@@ -46,12 +46,12 @@ export default function UserDetailPage() {
 		<div className="flex flex-col gap-6 max-w-4xl mx-auto font-sans antialiased">
 			{/* Breadcrumb */}
 			<div className="flex items-center gap-2 font-mono text-xs text-gray-500 uppercase">
-				<click
+				<Click
 					to="/dashboard"
 					className="hover:text-brand-pink transition-colors flex items-center gap-1"
 				>
 					<Terminal className="h-3 w-3" /> Dashboard
-				</click>
+				</Click>
 				<ArrowRight className="h-3 w-3" />
 				<span className="text-white">User Record #{idParam}</span>
 			</div>
@@ -124,12 +124,12 @@ export default function UserDetailPage() {
 
 			{/* Action button */}
 			<div>
-				<click
+				<Click
 					to="/dashboard"
 					className="inline-flex items-center gap-2 border border-brand-pink bg-brand-pink px-6 py-3 font-mono text-xs font-bold uppercase text-white hover:bg-white hover:text-black transition-colors"
 				>
 					<ArrowRight className="h-3 w-3 rotate-180" /> Back to Dashboard
-				</click>
+				</Click>
 			</div>
 		</div>
 	);

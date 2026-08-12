@@ -424,6 +424,12 @@ declare global {
 		className?: string;
 		style?: import("react").CSSProperties;
 	}>;
+	// ── Rakta.js Built-in Components ──
+	const Click: typeof import("raktajs/components").Click;
+	const click: typeof import("raktajs/components").Click;
+	const Photo: typeof import("raktajs/components").Picture;
+	const photo: typeof import("raktajs/components").Picture;
+	const Picture: typeof import("raktajs/components").Picture;
 	// ── Lu icon aliases (react-icons/lu injected by clientEntry) ──
 	const ArrowRight: import("react").ComponentType<{
 		className?: string;
@@ -522,6 +528,9 @@ declare global {
 	const Footer: import("react").ComponentType<Record<string, unknown>>;
 	const Header: import("react").ComponentType<HeaderProps>;
 	const HeroSection: import("react").ComponentType<HeroSectionProps>;
+	const PackageStatsStrip: import("react").ComponentType<{
+		readonly lang: "ID" | "EN";
+	}>;
 	const SeaweedGrass: import("react").ComponentType<Record<string, unknown>>;
 	const ShrimpCharacter: import("react").ComponentType<Record<string, unknown>>;
 	const ShrimpRunGame: import("react").ComponentType<ShrimpRunGameProps>;
@@ -603,4 +612,20 @@ declare global {
 	}
 	const raktaFeatures: readonly RaktaFeature[];
 	const RAKTA_FEATURES: readonly RaktaFeature[];
+
+	// packageStats
+	interface PackageStats {
+		readonly dependencies: number;
+		readonly dependencyNames: readonly string[];
+		readonly dependents: number | null;
+		readonly version?: string;
+		readonly updatedAt?: string;
+	}
+	const fetchPackageStats: () => Promise<PackageStats>;
+	const getCachedPackageStats: () => PackageStats | null;
+	const parseDependentsCount: (responseData: unknown) => number | null;
+	const parseRuntimeDependencies: (metadata: unknown) => Pick<
+		PackageStats,
+		"dependencies" | "dependencyNames" | "updatedAt" | "version"
+	>;
 }

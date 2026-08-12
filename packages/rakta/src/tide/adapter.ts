@@ -1,5 +1,10 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
+import {
+	applyRaktaDetectionHeaders,
+	createRaktaDetectionHeaders,
+	createRaktaWellKnownPayload,
+} from "../frameworkIdentity";
 import { type RenderConfig, render, resolveRouteMode } from "../render";
 import { generateManifest, matchRoute } from "../router";
 import {
@@ -9,25 +14,7 @@ import {
 } from "./runtime";
 import type { TideAdapter, TideAdapterConfig } from "./types";
 
-/** Rakta.js version - keep in sync with src/index.ts */
-const RAKTA_VERSION = "1.1.4";
-
-/**
- * DETECTION_HEADERS are added to every response so that platform scanners
- * (Wappalyzer, BuiltWith, Netcraft, Shodan, Shields.io custom endpoints) can
- * identify Rakta.js applications.
- *
- * Wappalyzer rule (to be submitted):
- *   headers: { "x-powered-by": "Rakta\\.js" }
- *   html:    { "meta[name=generator]": "Rakta\\.js" }
- *   js:      { "window.__RAKTA__": "" }
- */
-const DETECTION_HEADERS: Record<string, string> = {
-	"X-Powered-By": `Rakta.js`,
-	"X-Generator": `Rakta.js/${RAKTA_VERSION}`,
-	"X-Rakta-Runtime": "bun",
-	"X-Rakta-Version": RAKTA_VERSION,
-};
+const DETECTION_HEADERS = createRaktaDetectionHeaders("bun");
 
 const STATIC_MIME_TYPES: Readonly<Record<string, string>> = {
 	".js": "application/javascript; charset=utf-8",
@@ -125,6 +112,16 @@ function getApiRouteHandler(
 	return undefined;
 }
 
+function withRaktaDetectionHeaders(response: Response): Response {
+	const headers = applyRaktaDetectionHeaders(new Headers(response.headers), "bun");
+
+	return new Response(response.body, {
+		status: response.status,
+		statusText: response.statusText,
+		headers,
+	});
+}
+
 /**
  * Creates the Bun Tide adapter.
  * Handles static files, API routes, and page rendering.
@@ -170,14 +167,7 @@ export function createBunAdapter(
 			pathname === "/.well-known/rakta.json"
 		) {
 			return new Response(
-				JSON.stringify({
-					framework: "Rakta.js",
-					version: RAKTA_VERSION,
-					website: "https://raktajs.dev",
-					npm: "create-rakta",
-					runtime: "bun",
-					renderer: "react",
-				}),
+				JSON.stringify(createRaktaWellKnownPayload("bun")),
 				{
 					headers: {
 						...DETECTION_HEADERS,
@@ -197,9 +187,11 @@ export function createBunAdapter(
 			const routeModule: unknown = await import(modulePath);
 
 			if (!isApiRouteExports(routeModule)) {
-				return new Response("Invalid API route module", {
-					status: 500,
-				});
+				return withRaktaDetectionHeaders(
+					new Response("Invalid API route module", {
+						status: 500,
+					}),
+				);
 			}
 
 			const handler = getApiRouteHandler(
@@ -208,12 +200,14 @@ export function createBunAdapter(
 			);
 
 			if (!handler) {
-				return new Response("Method not allowed", {
-					status: 405,
-				});
+				return withRaktaDetectionHeaders(
+					new Response("Method not allowed", {
+						status: 405,
+					}),
+				);
 			}
 
-			return await handler(request);
+			return withRaktaDetectionHeaders(await handler(request));
 		}
 
 		const resolvedRouteMode = resolveRouteMode(pathname, renderConfig);
@@ -245,18 +239,16 @@ export function createBunAdapter(
 		);
 
 		if (renderResult.kind === "failure") {
-			return buildErrorResponse(renderResult.reason, renderResult.httpStatus);
+			return withRaktaDetectionHeaders(
+				buildErrorResponse(renderResult.reason, renderResult.httpStatus),
+			);
 		}
 
 		const htmlResponse = buildHtmlResponse(
 			renderResult.html,
 			renderResult.httpStatus,
 		);
-		// Inject detection headers into the HTML response.
-		for (const [key, value] of Object.entries(DETECTION_HEADERS)) {
-			htmlResponse.headers.set(key, value);
-		}
-		return htmlResponse;
+		return withRaktaDetectionHeaders(htmlResponse);
 	}
 
 	return {

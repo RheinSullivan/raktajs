@@ -295,7 +295,7 @@ function personalizeFrontendTemplate(
 				},
 				dependencies: {
 					...(packageJson.dependencies ?? {}),
-					raktajs: "^1.1.2",
+					raktajs: "^1.1.5",
 					react: "^19.2.7",
 					"react-dom": "^19.2.7",
 					gsap: "^3.12.7",
@@ -397,7 +397,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^1.1.2",
+						raktajs: "^1.1.5",
 						gsap: "^3.12.7",
 						clsx: "^2.1.1",
 						"tailwind-merge": "^3.0.2",
@@ -582,7 +582,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^1.1.2",
+						raktajs: "^1.1.5",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						gsap: "^3.12.7",
@@ -647,15 +647,15 @@ function getFullstackFrontendFiles(
 		},
 		{
 			path: "frontend/app/about/page.tsx",
-			content: `export default function AboutPage() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">ABOUT</p>\n        <h1>About ${projectName}</h1>\n        <p>This project is built with Rakta.js, React, Bun, and TypeScript.</p>\n        <click to="/">Back to home</click>\n      </section>\n    </main>\n  );\n}\n`,
+			content: `export default function AboutPage() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">ABOUT</p>\n        <h1>About ${projectName}</h1>\n        <p>This project is built with Rakta.js, React, Bun, and TypeScript.</p>\n        <Click to="/">Back to home</Click>\n      </section>\n    </main>\n  );\n}\n`,
 		},
 		{
 			path: "frontend/app/blog/page.tsx",
-			content: `const BLOG_POSTS = [\n  { slug: "getting-started", title: "Getting started with Rakta.js" },\n  { slug: "file-based-routing", title: "File-based routing explained" },\n  { slug: "type-safe-rpc", title: "Type-safe API with CarubanWire" },\n];\n\nexport default function BlogPage() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">BLOG</p>\n        <h1>Articles</h1>\n        <ul>\n          {BLOG_POSTS.map((post) => (\n            <li key={post.slug}>\n              <click to={\`/blog/\${post.slug}\`}>{post.title}</click>\n            </li>\n          ))}\n        </ul>\n      </section>\n    </main>\n  );\n}\n`,
+			content: `const BLOG_POSTS = [\n  { slug: "getting-started", title: "Getting started with Rakta.js" },\n  { slug: "file-based-routing", title: "File-based routing explained" },\n  { slug: "type-safe-rpc", title: "Type-safe API with CarubanWire" },\n];\n\nexport default function BlogPage() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">BLOG</p>\n        <h1>Articles</h1>\n        <ul>\n          {BLOG_POSTS.map((post) => (\n            <li key={post.slug}>\n              <Click to={\`/blog/\${post.slug}\`}>{post.title}</Click>\n            </li>\n          ))}\n        </ul>\n      </section>\n    </main>\n  );\n}\n`,
 		},
 		{
 			path: "frontend/app/blog/[slug]/page.tsx",
-			content: `interface BlogPostPageProps {\n  readonly params: {\n    readonly slug?: string;\n  };\n}\n\nexport default function BlogPostPage({ params }: BlogPostPageProps) {\n  const postTitle = params.slug?.replaceAll("-", " ") ?? "Article";\n\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">BLOG POST</p>\n        <h1>{postTitle}</h1>\n        <p>Slug: <code>{params.slug}</code></p>\n        <click to="/blog">Back to blog</click>\n      </section>\n    </main>\n  );\n}\n`,
+			content: `interface BlogPostPageProps {\n  readonly params: {\n    readonly slug?: string;\n  };\n}\n\nexport default function BlogPostPage({ params }: BlogPostPageProps) {\n  const postTitle = params.slug?.replaceAll("-", " ") ?? "Article";\n\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <p className="eyebrow">BLOG POST</p>\n        <h1>{postTitle}</h1>\n        <p>Slug: <code>{params.slug}</code></p>\n        <Click to="/blog">Back to blog</Click>\n      </section>\n    </main>\n  );\n}\n`,
 		},
 		{
 			path: "frontend/app/loading.tsx",
@@ -667,7 +667,7 @@ function getFullstackFrontendFiles(
 		},
 		{
 			path: "frontend/app/not-found.tsx",
-			content: `export default function NotFound() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <h1>404</h1>\n        <p>The page you are looking for does not exist.</p>\n        <click to="/">Return home</click>\n      </section>\n    </main>\n  );\n}\n`,
+			content: `export default function NotFound() {\n  return (\n    <main className="page-shell">\n      <section className="hero-card">\n        <h1>404</h1>\n        <p>The page you are looking for does not exist.</p>\n        <Click to="/">Return home</Click>\n      </section>\n    </main>\n  );\n}\n`,
 		},
 		{
 			path: "frontend/app/api/hello/route.ts",
@@ -1680,7 +1680,7 @@ declare module "*.css";
 declare module "*.scss";
 declare module "*.sass";
 
-// Rakta.js built-in anchor component - use <click to="/path"> instead of <a href>
+// Rakta.js built-in anchor component - use <Click to="/path"> instead of <a href>
 type RaktaClickAttributes = Omit<
   import("react").AnchorHTMLAttributes<HTMLElement>,
   "href"
@@ -1688,7 +1688,7 @@ type RaktaClickAttributes = Omit<
   readonly to: string;
 };
 
-// Rakta.js built-in image component - use <photo path="..."> instead of <img>
+// Rakta.js built-in image component - use <Photo path="..."> instead of <img>
 type RaktaPhotoAttributes = Omit<
   import("react").ImgHTMLAttributes<HTMLImageElement>,
   "src"
@@ -1720,24 +1720,57 @@ declare global {
 
   const gsap: typeof import("gsap").default;
 
-  const ArrowRight: import("react").ComponentType<Record<string, unknown>>;
-  const Book: import("react").ComponentType<Record<string, unknown>>;
-  const Check: import("react").ComponentType<Record<string, unknown>>;
-  const CheckCircle2: import("react").ComponentType<Record<string, unknown>>;
-  const Cloud: import("react").ComponentType<Record<string, unknown>>;
-  const Code: import("react").ComponentType<Record<string, unknown>>;
-  const Copy: import("react").ComponentType<Record<string, unknown>>;
-  const Cpu: import("react").ComponentType<Record<string, unknown>>;
-  const Github: import("react").ComponentType<Record<string, unknown>>;
-  const Info: import("react").ComponentType<Record<string, unknown>>;
-  const Play: import("react").ComponentType<Record<string, unknown>>;
-  const RotateCcw: import("react").ComponentType<Record<string, unknown>>;
-  const Search: import("react").ComponentType<Record<string, unknown>>;
-  const Server: import("react").ComponentType<Record<string, unknown>>;
-  const Terminal: import("react").ComponentType<Record<string, unknown>>;
-  const Volume2: import("react").ComponentType<Record<string, unknown>>;
-  const VolumeX: import("react").ComponentType<Record<string, unknown>>;
-  const X: import("react").ComponentType<Record<string, unknown>>;
+  const RaktaToast: typeof import("raktajs/components").RaktaToast;
+  const Toaster: typeof import("raktajs/components").Toaster;
+  const RaktaAlert: typeof import("raktajs/components").RaktaAlert;
+  const Alert: typeof import("raktajs/components").Alert;
+  const Click: typeof import("raktajs/components").Click;
+  const click: typeof import("raktajs/components").Click;
+  const Photo: typeof import("raktajs/components").Picture;
+  const photo: typeof import("raktajs/components").Picture;
+  const Picture: typeof import("raktajs/components").Picture;
+  const Pantura: typeof import("raktajs/components").Pantura;
+  const Reborns: typeof import("raktajs/components").Reborns;
+  const usePantura: typeof import("raktajs/components").usePantura;
+  const toast: typeof import("raktajs/components").toast;
+  const useToast: typeof import("raktajs/components").useToast;
+
+  type IconComponent = import("react").ComponentType<{ className?: string; style?: import("react").CSSProperties }>;
+
+  const ArrowRight: IconComponent;
+  const Book: IconComponent;
+  const Check: IconComponent;
+  const CheckCircle2: IconComponent;
+  const Cloud: IconComponent;
+  const Code: IconComponent;
+  const Copy: IconComponent;
+  const Cpu: IconComponent;
+  const Github: IconComponent;
+  const Info: IconComponent;
+  const Play: IconComponent;
+  const RotateCcw: IconComponent;
+  const Search: IconComponent;
+  const Server: IconComponent;
+  const Terminal: IconComponent;
+  const Volume2: IconComponent;
+  const VolumeX: IconComponent;
+  const X: IconComponent;
+
+  const FaArrowRight: IconComponent;
+  const FaArrowRotateRight: IconComponent;
+  const FaBook: IconComponent;
+  const FaCheck: IconComponent;
+  const FaCircleCheck: IconComponent;
+  const FaCloud: IconComponent;
+  const FaCode: IconComponent;
+  const FaCopy: IconComponent;
+  const FaHandHoldingHeart: IconComponent;
+  const FaHeart: IconComponent;
+  const FaMagnifyingGlass: IconComponent;
+  const FaMicrochip: IconComponent;
+  const FaPlay: IconComponent;
+  const FaRibbon: IconComponent;
+  const FaXmark: IconComponent;
 
   const ComponentsModal: import("react").ComponentType<Record<string, unknown>>;
   const CoralObstacle: import("react").ComponentType<Record<string, unknown>>;
@@ -1842,12 +1875,12 @@ function generateFrontendOnlyNotFound(): string {
         <p className="mb-6 text-sm leading-6 text-slate-400">
           The page you are looking for does not exist.
         </p>
-        <click
+        <Click
           to="/"
           className="font-semibold text-red-500 underline-offset-4 transition hover:text-red-400 hover:underline"
         >
           Return home
-        </click>
+        </Click>
       </section>
     </main>
   );
@@ -2426,8 +2459,8 @@ function generateFullstackHomePage(projectName: string): string {
           Built with Rakta.js -” Small in size. Fierce in speed. Alive in every route.
         </p>
         <div className="button-row">
-          <click to="/about">About</click>
-          <click to="/blog">Blog</click>
+          <Click to="/about">About</Click>
+          <Click to="/blog">Blog</Click>
         </div>
       </section>
     </main>

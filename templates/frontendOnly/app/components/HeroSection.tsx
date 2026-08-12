@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// HeroSection - Rakta.js: gsap, <pantura>, <reborns>, <click>, react-icons
+// HeroSection - Rakta.js: gsap, <Pantura>, <Reborns>, <Click>, react-icons
 
 const heroCopyData = {
 	id: {
@@ -106,7 +106,7 @@ export default function HeroSection({
 			ref={heroRef}
 			className="relative border-b border-surface-stroke bg-black px-4 py-16 sm:px-6 lg:py-24"
 		>
-			<reborns id="hero" />
+			<Reborns id="hero" />
 			<div className="mx-auto max-w-5xl text-center">
 				<div className="hero-badge mb-6 inline-flex items-center gap-2 border border-brand-pink/30 bg-rose-950/20 px-3 py-1 font-mono text-xs text-brand-pink">
 					<span className="h-2 w-2 animate-ping rounded-full bg-brand-pink" />
@@ -161,13 +161,13 @@ export default function HeroSection({
 						{currentCopy.ctaDeploy}
 					</button>
 
-					<pantura
+					<Pantura
 						to="features"
 						className="cursor-pointer border border-surface-stroke bg-black px-6 py-3 font-mono text-xs font-bold uppercase text-gray-400 transition-all hover:border-white hover:text-white flex items-center gap-2"
 					>
 						<FaArrowRight className="h-3 w-3" />
 						{currentCopy.ctaScroll}
-					</pantura>
+					</Pantura>
 				</div>
 
 				{/* Quick stats row */}

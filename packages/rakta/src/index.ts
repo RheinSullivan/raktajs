@@ -1,7 +1,14 @@
-export const RAKTA_NAME = "Rakta.js";
-export const RAKTA_VERSION = "1.1.4";
-export const RAKTA_TAGLINE =
-	"Small in size. Fierce in speed. Alive in every route.";
+export {
+	RAKTA_FRAMEWORK_ID,
+	RAKTA_NAME,
+	RAKTA_TAGLINE,
+	RAKTA_VERSION,
+	RAKTA_WEBSITE,
+	applyRaktaDetectionHeaders,
+	createRaktaDetectionHeaders,
+	createRaktaRuntimeFingerprint,
+	createRaktaWellKnownPayload,
+} from "./frameworkIdentity";
 
 // API - REST helpers, GraphQL adapter, OpenAPI generation
 export type {
@@ -250,6 +257,15 @@ export {
 	rules as formRules,
 	validateForm,
 } from "./ecosystem/forms";
+export type {
+	PackageStats,
+	PackageStatsOptions,
+} from "./ecosystem/packageStats";
+export {
+	fetchPackageStats,
+	parseDependentsCount,
+	parseRuntimeDependencies,
+} from "./ecosystem/packageStats";
 // Image Optimization
 export type {
 	BlurPlaceholder,

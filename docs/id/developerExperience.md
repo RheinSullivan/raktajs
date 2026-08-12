@@ -24,7 +24,7 @@ Rakta.js menyertakan mesin Fast Refresh & HMR bawaan yang aktif secara otomatis 
 Terminal bawaan yang menampilkan log HTTP request, estimasi latensi, status HMR, dan status environment dalam format visual yang bersih.
 
 ```
-  ⩛ Rakta.js 1.1.4 (CherbonsEngine)
+  ⩛ Rakta.js 1.1.5 (CherbonsEngine)
 
     Local:        http://localhost:3000
     Network:      http://192.168.1.5:3000
@@ -57,3 +57,19 @@ const graph = createDependencyGraph([
 const routes = analyzeRoutes(graph);
 const bundle = analyzeBundle(graph.modules);
 ```
+
+---
+
+## Deteksi Rakta.js dan Wappalyzer
+
+Aplikasi Rakta.js menampilkan fingerprint publik yang stabil agar scanner teknologi dapat mengenali framework tanpa mencocokkan teks generik:
+
+- `<meta name="generator" content="Rakta.js">`
+- `<html data-framework="raktajs">`
+- `#rakta-root[data-rakta]`
+- `window.__RAKTA__.version`
+- `X-Rakta-Version`
+
+File `public/wappalyzer.json` adalah definisi referensi untuk aturan teknologi bergaya Wappalyzer. File ini tidak otomatis dibaca oleh extension browser dari aplikasi Rakta.js. Agar Rakta.js dikenali secara resmi, teknologi ini tetap harus diajukan melalui proses suggestion resmi Wappalyzer dengan minimal dua atau tiga website publik Rakta.js sebagai bukti.
+
+Fingerprint hanya memuat identitas framework dan versi. Secret, environment variable, path filesystem, dan konfigurasi privat tidak pernah diekspos.

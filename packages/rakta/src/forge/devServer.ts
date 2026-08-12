@@ -1,6 +1,11 @@
 import { existsSync, readFileSync, statSync, watch } from "node:fs";
 import { join, relative } from "node:path";
 import { createDevTerminal } from "../developerExperience/terminal";
+import {
+	RAKTA_VERSION,
+	applyRaktaDetectionHeaders,
+	createRaktaDetectionHeaders,
+} from "../frameworkIdentity";
 import { resolveRouteMode } from "../render/modes";
 import { render } from "../render/renderer";
 import { generateManifest } from "../router/manifest";
@@ -38,6 +43,16 @@ function resolveDevPort(port: number): number {
 
 function isReadableFile(filePath: string): boolean {
 	return existsSync(filePath) && statSync(filePath).isFile();
+}
+
+function withRaktaDetectionHeaders(response: Response): Response {
+	const headers = applyRaktaDetectionHeaders(new Headers(response.headers), "bun");
+
+	return new Response(response.body, {
+		status: response.status,
+		statusText: response.statusText,
+		headers,
+	});
 }
 
 async function buildDevClientBundle(
@@ -91,7 +106,7 @@ interface ApiRouteExports {
  *
  * Terminal output (development only):
  *
- *   ⩛ Rakta.js 1.1.2 (CherbonsEngine)
+ *   ⩛ Rakta.js 1.1.5 (CherbonsEngine)
  *
  *     Local:        http://localhost:3000
  *     Network:      http://192.168.1.x:3000
@@ -116,7 +131,7 @@ export async function startDevServer(
 	// Development-only. Zero cost in production: this module is never imported
 	// by the production server path (tide/adapter.ts).
 	// Read version from the closest raktajs package.json at runtime
-	let _rVersion = "1.1.2";
+	let _rVersion = RAKTA_VERSION;
 	try {
 		const _pkgCandidates = [
 			join(options.projectRoot, "node_modules", "raktajs", "package.json"),
@@ -213,6 +228,7 @@ export async function startDevServer(
 					const isHashedAsset = pathname.includes("/chunks/");
 					return new Response(Bun.file(clientBundlePath), {
 						headers: {
+							...createRaktaDetectionHeaders("bun"),
 							"Content-Type": resolveMime(clientBundlePath),
 							"Cache-Control": isHashedAsset
 								? "public, max-age=31536000, immutable"
@@ -226,6 +242,7 @@ export async function startDevServer(
 			if (isReadableFile(publicPath)) {
 				return new Response(Bun.file(publicPath), {
 					headers: {
+						...createRaktaDetectionHeaders("bun"),
 						"Content-Type": resolveMime(pathname),
 						"Cache-Control": "no-cache, no-store, must-revalidate",
 					},
@@ -252,7 +269,9 @@ export async function startDevServer(
 						totalMs: ms,
 						kind: "api",
 					});
-					return new Response("Method not allowed", { status: 405 });
+					return withRaktaDetectionHeaders(
+						new Response("Method not allowed", { status: 405 }),
+					);
 				}
 
 				const apiResponse = await handler(request);
@@ -264,7 +283,7 @@ export async function startDevServer(
 					totalMs: ms,
 					kind: "api",
 				});
-				return apiResponse;
+				return withRaktaDetectionHeaders(apiResponse);
 			}
 
 			const resolved = resolveRouteMode(pathname, options.renderConfig);
@@ -308,7 +327,9 @@ export async function startDevServer(
 					totalMs: ms,
 					kind: "page",
 				});
-				return new Response(result.reason, { status: result.httpStatus });
+				return withRaktaDetectionHeaders(
+					new Response(result.reason, { status: result.httpStatus }),
+				);
 			}
 
 			// Inject Rakta.js Fast Refresh & Hot Module Replacement (HMR) Client Engine.
@@ -415,10 +436,12 @@ export async function startDevServer(
 				kind: "page",
 			});
 
-			return new Response(finalHtml, {
-				status: result.httpStatus,
-				headers: result.responseHeaders,
-			});
+			return withRaktaDetectionHeaders(
+				new Response(finalHtml, {
+					status: result.httpStatus,
+					headers: result.responseHeaders,
+				}),
+			);
 		},
 	});
 

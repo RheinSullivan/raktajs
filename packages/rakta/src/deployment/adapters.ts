@@ -3,6 +3,7 @@ import type {
 	DeploymentAdapterOptions,
 	DeploymentTarget,
 } from "./types";
+import { RAKTA_NAME, RAKTA_VERSION } from "../frameworkIdentity";
 
 const TARGET_LABELS: Record<DeploymentTarget, string> = {
 	node: "Node.js",
@@ -65,9 +66,12 @@ export function createDeploymentAdapter(
 									{
 										source: "/(.*)",
 										headers: [
-											{ key: "X-Powered-By", value: "Rakta.js" },
-											{ key: "X-Generator", value: "Rakta.js/1.1.4" },
-											{ key: "X-Rakta-Version", value: "1.1.4" },
+											{ key: "X-Powered-By", value: RAKTA_NAME },
+											{
+												key: "X-Generator",
+												value: `${RAKTA_NAME}/${RAKTA_VERSION}`,
+											},
+											{ key: "X-Rakta-Version", value: RAKTA_VERSION },
 											{ key: "X-Frame-Options", value: "DENY" },
 											{ key: "X-Content-Type-Options", value: "nosniff" },
 											{
@@ -118,9 +122,9 @@ export function createDeploymentAdapter(
 [[headers]]
   for = "/*"
   [headers.values]
-    X-Powered-By = "Rakta.js"
-    X-Generator = "Rakta.js/1.1.4"
-    X-Rakta-Version = "1.1.4"
+    X-Powered-By = "${RAKTA_NAME}"
+    X-Generator = "${RAKTA_NAME}/${RAKTA_VERSION}"
+    X-Rakta-Version = "${RAKTA_VERSION}"
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"

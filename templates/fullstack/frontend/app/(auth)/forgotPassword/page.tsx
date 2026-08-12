@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Forgot Password Page - Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert
+// Forgot Password Page - Rakta.js: gsap, <Click>, react-icons, toast, RaktaAlert
 
 export default function ForgotPasswordPage() {
 	const [email, setEmail] = useState("rheinsullivan@raktajs.dev");
@@ -91,18 +91,18 @@ export default function ForgotPasswordPage() {
 				</button>
 
 				<div className="flex flex-wrap items-center justify-between border-t border-surface-stroke pt-4 font-mono text-xs uppercase text-gray-500">
-					<click
+					<Click
 						to="/login"
 						className="hover:text-brand-pink transition-colors flex items-center gap-1"
 					>
 						<FaArrowRight className="h-2.5 w-2.5 rotate-180" /> Back to Sign in
-					</click>
-					<click
+					</Click>
+					<Click
 						to="/resetPassword"
 						className="hover:text-brand-pink transition-colors"
 					>
 						Have a token? Reset
-					</click>
+					</Click>
 				</div>
 			</form>
 		</AuthShell>

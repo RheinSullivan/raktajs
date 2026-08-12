@@ -19,7 +19,7 @@ export default function AuthShell({
 			<div className="w-full max-w-md">
 				{/* Top Logo & Title */}
 				<div className="mb-6 flex flex-col items-center text-center">
-					<photo
+					<Photo
 						path="/rakta-logo.svg"
 						alt="Rakta.js Logo"
 						className="mb-3 h-10 w-10"

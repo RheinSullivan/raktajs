@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Register Page - Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert
+// Register Page - Rakta.js: gsap, <Click>, react-icons, toast, RaktaAlert
 
 export default function RegisterPage() {
 	const [name, setName] = useState("Rhein Sullivan");
@@ -154,12 +154,12 @@ export default function RegisterPage() {
 
 				<div className="flex items-center justify-between border-t border-surface-stroke pt-4 font-mono text-xs uppercase text-gray-500">
 					<span>Already have an account?</span>
-					<click
+					<Click
 						to="/login"
 						className="font-bold text-brand-pink hover:underline flex items-center gap-1"
 					>
 						<FaArrowRight className="h-2.5 w-2.5" /> Sign in
-					</click>
+					</Click>
 				</div>
 			</form>
 		</AuthShell>

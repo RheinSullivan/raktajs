@@ -1,6 +1,6 @@
 {
 	"name": "rakta-js-monorepo",
-	"version": "1.1.4",
+	"version": "1.1.5",
 	"description": "Rakta.js - Small in size. Fierce in speed. Alive in every route. A modern full-stack framework built with React, Bun, and TypeScript.",
 	"author": "Rhein Sullivan | Vyagra Nexus™",
 	"license": "MIT",
@@ -57,6 +57,7 @@
 		"build:rakta": "cd packages/rakta && bun run build",
 		"build:create-rakta": "cd packages/create-rakta && bun run build",
 		"test": "bun test --pass-with-no-tests",
+		"test:wappalyzer": "bun run packages/rakta/scripts/wappalyzerCheck.ts",
 		"lint": "bun run lint:root && bun run lint:rakta && bun run lint:create-rakta && bun run lint:template",
 		"lint:root": "bunx biome check package.json tsconfig.base.json biome.json workspace.test.ts",
 		"lint:rakta": "bunx biome check packages/rakta/package.json packages/rakta/tsconfig.json packages/rakta/src packages/rakta/scripts",

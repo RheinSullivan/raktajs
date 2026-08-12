@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Dashboard layout with sidebar - Rakta.js: gsap, <photo>, <click>, react-icons, toast
+// Dashboard layout with sidebar - Rakta.js: gsap, <Photo>, <Click>, react-icons, toast
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
 	const sidebarRef = useRef<HTMLElement>(null);
@@ -23,7 +23,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 				<div>
 					{/* Brand */}
 					<div className="flex items-center gap-3 mb-8">
-						<photo
+						<Photo
 							path="/rakta-logo.svg"
 							alt="Rakta Logo"
 							className="h-7 w-7"
@@ -38,32 +38,32 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 						</div>
 					</div>
 
-					{/* Nav Links using <click> */}
+					{/* Nav Links using <Click> */}
 					<nav className="flex flex-col gap-2 font-mono text-xs uppercase tracking-wider">
-						<click
+						<Click
 							to="/dashboard"
 							className="flex items-center gap-2 border border-brand-pink/50 bg-rose-950/20 px-3 py-2.5 text-brand-pink font-bold transition-colors hover:bg-rose-950/40"
 						>
 							<Terminal className="h-3.5 w-3.5" /> Overview
-						</click>
-						<click
+						</Click>
+						<Click
 							to="/dashboard/1"
 							className="flex items-center gap-2 border border-surface-stroke bg-black px-3 py-2.5 text-gray-400 hover:text-white hover:border-gray-700 transition-colors"
 						>
 							<Info className="h-3.5 w-3.5" /> User #1 Detail
-						</click>
-						<click
+						</Click>
+						<Click
 							to="/dashboard/2"
 							className="flex items-center gap-2 border border-surface-stroke bg-black px-3 py-2.5 text-gray-400 hover:text-white hover:border-gray-700 transition-colors"
 						>
 							<Globe className="h-3.5 w-3.5" /> User #2 Detail
-						</click>
-						<click
+						</Click>
+						<Click
 							to="/"
 							className="flex items-center gap-2 border border-surface-stroke bg-black px-3 py-2.5 text-gray-400 hover:text-white hover:border-gray-700 transition-colors"
 						>
 							<ArrowRight className="h-3.5 w-3.5" /> Main Landing
-						</click>
+						</Click>
 					</nav>
 				</div>
 
@@ -73,7 +73,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 						<span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
 						<span>CONNECTED TO GAMAN SERVER</span>
 					</div>
-					<p className="text-gray-600">v1.1.2 · Cirebon &amp; Jakarta 🇮🇩</p>
+					<p className="text-gray-600">v1.1.5 · Cirebon &amp; Jakarta 🇮🇩</p>
 				</div>
 			</aside>
 

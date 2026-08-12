@@ -16,7 +16,7 @@ export const raktaFeatures: readonly RaktaFeature[] = [
 			id: "File-based routing yang mengompilasi setiap route menjadi HTML node streaming dengan overhead nol.",
 			en: "File-based routing that compiles every route into streaming HTML nodes with zero overhead.",
 		},
-		code: '<click to="/dashboard">',
+		code: '<Click to="/dashboard">',
 	},
 	{
 		id: "nagalimanwire",
@@ -43,7 +43,7 @@ export const raktaFeatures: readonly RaktaFeature[] = [
 			id: "Engine smooth scroll dan navigasi bagian halaman, dinamai dari Jalur Pantura, jalan pantai utara Jawa yang legendaris.",
 			en: "Smooth scroll and in-page navigation engine, named after Jalur Pantura, Java's legendary north coast highway.",
 		},
-		code: '<pantura to="section-id">',
+		code: '<Pantura to="section-id">',
 	},
 	{
 		id: "sunyaragicrown",

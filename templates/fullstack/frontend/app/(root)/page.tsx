@@ -57,6 +57,9 @@ export default function App() {
 				onOpenDeploy={() => setIsDeployOpen(true)}
 			/>
 
+			{/* Real npm ecosystem statistics */}
+			<PackageStatsStrip lang={lang} />
+
 			{/* Interactive Physics Canvas */}
 			<ShrimpRunGame
 				isPlaying={isPlaying}
