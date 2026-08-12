@@ -39,5 +39,9 @@
 	"tailwindCSS.experimental.classRegex": [
 		["className\\s*=\\s*\"([^\"]*)\"", "([a-zA-Z0-9\\-:/]+)"]
 	],
+	"rubyLsp.rubyExecutablePath": "C:\\Ruby34-x64\\bin\\ruby.exe",
+	"rubyLsp.rubyVersionManager": {
+		"identifier": "none"
+	},
 	"workbench.settings.useSplitJSON": false
 }
