@@ -39,7 +39,7 @@ class RaktaRubyToolingSmokeTest < Minitest::Test
     assert_includes source, "go vet ./..."
     assert_includes source, "ruby -c"
     assert_includes source, "templates/frontendOnly"
-    assert_includes source, "templates/fullStack"
+    assert_includes source, "templates/fullstack"
   end
 
   def test_test_runner_exposes_multiple_reporters

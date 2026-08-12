@@ -60,7 +60,7 @@ if %w[all ts].include?(scope)
     "packages/rakta/package.json packages/rakta/tsconfig.json packages/rakta/src packages/rakta/scripts",
     "packages/create-rakta/package.json packages/create-rakta/tsconfig.json packages/create-rakta/src packages/create-rakta/scripts",
     "templates/frontendOnly/package.json templates/frontendOnly/tsconfig.json templates/frontendOnly/app",
-    "templates/fullStack/frontend/package.json templates/fullStack/frontend/app",
+    "templates/fullstack/frontend/package.json templates/fullstack/frontend/app",
   ].each_with_index do |target, i|
     results << run_cmd("biome [#{i + 1}/4]", "bunx biome check #{fix ? "--write" : ""} #{target}")
   end
@@ -92,10 +92,10 @@ if %w[all templates].include?(scope)
   required = %w[
     templates/frontendOnly/app/(root)/page.tsx
     templates/frontendOnly/app/layout.tsx
-    templates/fullStack/frontend/app/(root)/page.tsx
-    templates/fullStack/frontend/app/layout.tsx
-    templates/fullStack/frontend/app/(auth)/layout.tsx
-    templates/fullStack/frontend/app/(dashboard)/layout.tsx
+    templates/fullstack/frontend/app/(root)/page.tsx
+    templates/fullstack/frontend/app/layout.tsx
+    templates/fullstack/frontend/app/(auth)/layout.tsx
+    templates/fullstack/frontend/app/(dashboard)/layout.tsx
   ]
   required.each do |rel|
     exists = File.exist?(File.join(project_root, rel))

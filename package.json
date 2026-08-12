@@ -66,12 +66,12 @@
 		"lint:root": "bunx biome check package.json tsconfig.base.json biome.json workspace.test.ts",
 		"lint:rakta": "bunx biome check packages/rakta/package.json packages/rakta/tsconfig.json packages/rakta/src packages/rakta/scripts",
 		"lint:create-rakta": "bunx biome check packages/create-rakta/package.json packages/create-rakta/tsconfig.json packages/create-rakta/src packages/create-rakta/scripts",
-		"lint:template": "bunx biome check templates/frontendOnly/package.json templates/frontendOnly/tsconfig.json templates/frontendOnly/rakta-env.d.ts templates/frontendOnly/app templates/frontendOnly/styles",
+		"lint:template": "bunx biome check templates/frontendOnly/package.json templates/frontendOnly/tsconfig.json templates/frontendOnly/rakta-env.d.ts templates/frontendOnly/app templates/frontendOnly/styles templates/fullstack/frontend/package.json templates/fullstack/frontend/tsconfig.json templates/fullstack/frontend/rakta-env.d.ts templates/fullstack/frontend/app templates/fullstack/frontend/styles",
 		"format": "bun run format:root && bun run format:rakta && bun run format:create-rakta && bun run format:template",
 		"format:root": "bunx biome check --write package.json tsconfig.base.json biome.json workspace.test.ts",
 		"format:rakta": "bunx biome check --write packages/rakta/package.json packages/rakta/tsconfig.json packages/rakta/src packages/rakta/scripts",
 		"format:create-rakta": "bunx biome check --write packages/create-rakta/package.json packages/create-rakta/tsconfig.json packages/create-rakta/src packages/create-rakta/scripts",
-		"format:template": "bunx biome check --write templates/frontendOnly/package.json templates/frontendOnly/tsconfig.json templates/frontendOnly/rakta-env.d.ts templates/frontendOnly/app templates/frontendOnly/styles",
+		"format:template": "bunx biome check --write templates/frontendOnly/package.json templates/frontendOnly/tsconfig.json templates/frontendOnly/rakta-env.d.ts templates/frontendOnly/app templates/frontendOnly/styles templates/fullstack/frontend/package.json templates/fullstack/frontend/tsconfig.json templates/fullstack/frontend/rakta-env.d.ts templates/fullstack/frontend/app templates/fullstack/frontend/styles",
 		"check:workspace": "bun run typecheck && bun run lint"
 	},
 	"devDependencies": {
