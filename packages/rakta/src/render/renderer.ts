@@ -1,10 +1,10 @@
 import {
+	createRaktaDetectionHeaders,
+	createRaktaRuntimeFingerprint,
 	RAKTA_FRAMEWORK_ID,
 	RAKTA_NAME,
 	RAKTA_VERSION,
 	RAKTA_WEBSITE,
-	createRaktaDetectionHeaders,
-	createRaktaRuntimeFingerprint,
 } from "../frameworkIdentity";
 import { isRoadmapMode } from "./modes";
 import type {

@@ -1,9 +1,9 @@
+import { RAKTA_NAME, RAKTA_VERSION } from "../frameworkIdentity";
 import type {
 	DeploymentAdapter,
 	DeploymentAdapterOptions,
 	DeploymentTarget,
 } from "./types";
-import { RAKTA_NAME, RAKTA_VERSION } from "../frameworkIdentity";
 
 const TARGET_LABELS: Record<DeploymentTarget, string> = {
 	node: "Node.js",

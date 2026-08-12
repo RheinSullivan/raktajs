@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Dashboard layout with sidebar - Rakta.js: gsap, <Photo>, <Click>, react-icons, toast
+// Dashboard layout with sidebar - Rakta.js: gsap, <photo>, <click>, react-icons, toast
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
 	const sidebarRef = useRef<HTMLElement>(null);
@@ -23,7 +23,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 				<div>
 					{/* Brand */}
 					<div className="flex items-center gap-3 mb-8">
-						<Photo
+						<photo
 							path="/rakta-logo.svg"
 							alt="Rakta Logo"
 							className="h-7 w-7"
@@ -38,32 +38,32 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 						</div>
 					</div>
 
-					{/* Nav Links using <Click> */}
+					{/* Nav Links using <click> */}
 					<nav className="flex flex-col gap-2 font-mono text-xs uppercase tracking-wider">
-						<Click
+						<click
 							to="/dashboard"
 							className="flex items-center gap-2 border border-brand-pink/50 bg-rose-950/20 px-3 py-2.5 text-brand-pink font-bold transition-colors hover:bg-rose-950/40"
 						>
 							<Terminal className="h-3.5 w-3.5" /> Overview
-						</Click>
-						<Click
+						</click>
+						<click
 							to="/dashboard/1"
 							className="flex items-center gap-2 border border-surface-stroke bg-black px-3 py-2.5 text-gray-400 hover:text-white hover:border-gray-700 transition-colors"
 						>
 							<Info className="h-3.5 w-3.5" /> User #1 Detail
-						</Click>
-						<Click
+						</click>
+						<click
 							to="/dashboard/2"
 							className="flex items-center gap-2 border border-surface-stroke bg-black px-3 py-2.5 text-gray-400 hover:text-white hover:border-gray-700 transition-colors"
 						>
 							<Globe className="h-3.5 w-3.5" /> User #2 Detail
-						</Click>
-						<Click
+						</click>
+						<click
 							to="/"
 							className="flex items-center gap-2 border border-surface-stroke bg-black px-3 py-2.5 text-gray-400 hover:text-white hover:border-gray-700 transition-colors"
 						>
 							<ArrowRight className="h-3.5 w-3.5" /> Main Landing
-						</Click>
+						</click>
 					</nav>
 				</div>
 

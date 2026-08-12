@@ -29,7 +29,10 @@ function readNumber(value: unknown): number | null {
 
 export function parseRuntimeDependencies(
 	metadata: unknown,
-): Pick<PackageStats, "dependencies" | "dependencyNames" | "updatedAt" | "version"> {
+): Pick<
+	PackageStats,
+	"dependencies" | "dependencyNames" | "updatedAt" | "version"
+> {
 	const packageMetadata = readObject(metadata);
 	const distTags = readObject(packageMetadata?.["dist-tags"]);
 	const latestVersion =

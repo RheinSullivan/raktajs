@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Dashboard Overview - Rakta.js: gsap, <Click>, react-icons, toast, RaktaAlert
+// Dashboard Overview - Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert
 
 const SEEDED_USERS = [
 	{
@@ -91,18 +91,18 @@ export default function DashboardOverviewPage() {
 					>
 						<FaArrowRotateRight className="h-3 w-3" /> Refresh
 					</button>
-					<Click
+					<click
 						to="/login"
 						className="border border-surface-stroke bg-black px-4 py-2 font-mono text-xs uppercase text-gray-300 hover:text-white transition-colors flex items-center gap-1.5"
 					>
 						<FaMagnifyingGlass className="h-3 w-3" /> Switch Session
-					</Click>
-					<Click
+					</click>
+					<click
 						to="/"
 						className="border border-brand-pink bg-brand-pink px-4 py-2 font-mono text-xs font-bold uppercase text-white hover:bg-white hover:text-black transition-colors flex items-center gap-1.5"
 					>
 						<ArrowRight className="h-3 w-3" /> View App
-					</Click>
+					</click>
 				</div>
 			</div>
 
@@ -207,12 +207,12 @@ export default function DashboardOverviewPage() {
 										<FaCircleCheck className="h-3 w-3" /> {user.status}
 									</td>
 									<td className="py-3 text-right">
-										<Click
+										<click
 											to={`/dashboard/${user.id}`}
 											className="border border-surface-stroke px-2.5 py-1 text-[10px] uppercase text-gray-300 hover:border-white hover:text-white transition-colors inline-flex items-center gap-1"
 										>
 											<FaArrowRight className="h-2.5 w-2.5" /> Inspect
-										</Click>
+										</click>
 									</td>
 								</tr>
 							))}

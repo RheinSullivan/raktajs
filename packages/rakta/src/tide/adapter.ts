@@ -113,7 +113,10 @@ function getApiRouteHandler(
 }
 
 function withRaktaDetectionHeaders(response: Response): Response {
-	const headers = applyRaktaDetectionHeaders(new Headers(response.headers), "bun");
+	const headers = applyRaktaDetectionHeaders(
+		new Headers(response.headers),
+		"bun",
+	);
 
 	return new Response(response.body, {
 		status: response.status,
@@ -166,16 +169,13 @@ export function createBunAdapter(
 			pathname === "/.well-known/rakta" ||
 			pathname === "/.well-known/rakta.json"
 		) {
-			return new Response(
-				JSON.stringify(createRaktaWellKnownPayload("bun")),
-				{
-					headers: {
-						...DETECTION_HEADERS,
-						"Content-Type": "application/json",
-						"Cache-Control": "public, max-age=86400",
-					},
+			return new Response(JSON.stringify(createRaktaWellKnownPayload("bun")), {
+				headers: {
+					...DETECTION_HEADERS,
+					"Content-Type": "application/json",
+					"Cache-Control": "public, max-age=86400",
 				},
-			);
+			});
 		}
 
 		const apiRoutes = manifest.routes.filter((route) => route.kind === "api");

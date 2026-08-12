@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Header - uses Rakta.js: <Photo>, toast, react-icons, gsap
+// Header - uses Rakta.js: <photo>, toast, react-icons, gsap
 
 export default function Header({
 	lang,
@@ -50,8 +50,8 @@ export default function Header({
 		>
 			<div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
 				{/* Brand: [LOGO] Rakta.js */}
-				<Click to="/" className="flex items-center gap-2.5 no-underline">
-					<Photo
+				<click to="/" className="flex items-center gap-2.5 no-underline">
+					<photo
 						path="/rakta-logo.svg"
 						alt="Rakta.js Logo"
 						width={26}
@@ -65,7 +65,7 @@ export default function Header({
 						<Terminal className="h-2.5 w-2.5" />
 						v1.1.5 · FULLSTACK ENGINE
 					</span>
-				</Click>
+				</click>
 
 				{/* Controls */}
 				<div className="flex items-center gap-3">

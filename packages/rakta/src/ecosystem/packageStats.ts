@@ -26,7 +26,10 @@ interface NpmPackageMetadata {
 
 const DEFAULT_PACKAGE_NAME = "raktajs";
 const DEFAULT_CACHE_TTL_MS = 1000 * 60 * 60 * 6;
-const memoryCache = new Map<string, { readonly expiresAt: number; readonly stats: PackageStats }>();
+const memoryCache = new Map<
+	string,
+	{ readonly expiresAt: number; readonly stats: PackageStats }
+>();
 
 function readNumber(value: unknown): number | null {
 	return typeof value === "number" && Number.isFinite(value) && value >= 0
@@ -43,14 +46,19 @@ function readObject(value: unknown): Record<string, unknown> | null {
 export function parseRuntimeDependencies(
 	metadata: unknown,
 	packageName: string = DEFAULT_PACKAGE_NAME,
-): Pick<PackageStats, "dependencies" | "dependencyNames" | "updatedAt" | "version"> {
+): Pick<
+	PackageStats,
+	"dependencies" | "dependencyNames" | "updatedAt" | "version"
+> {
 	const packageMetadata = readObject(metadata) as NpmPackageMetadata | null;
 	const latestVersion = packageMetadata?.["dist-tags"]?.latest;
 	const versionMetadata =
 		latestVersion !== undefined
 			? packageMetadata?.versions?.[latestVersion]
 			: undefined;
-	const dependencyNames = Object.keys(versionMetadata?.dependencies ?? {}).sort();
+	const dependencyNames = Object.keys(
+		versionMetadata?.dependencies ?? {},
+	).sort();
 
 	const result: Pick<
 		PackageStats,
@@ -61,7 +69,9 @@ export function parseRuntimeDependencies(
 	};
 
 	const updatedAt =
-		latestVersion !== undefined ? packageMetadata?.time?.[latestVersion] : undefined;
+		latestVersion !== undefined
+			? packageMetadata?.time?.[latestVersion]
+			: undefined;
 	if (updatedAt !== undefined) {
 		return {
 			...result,
@@ -90,12 +100,10 @@ export function parseDependentsCount(
 	}
 
 	const objects = Array.isArray(root.objects) ? root.objects : [];
-	const match = objects
-		.map(readObject)
-		.find((entry) => {
-			const packageData = readObject(entry?.package);
-			return packageData?.name === packageName;
-		});
+	const match = objects.map(readObject).find((entry) => {
+		const packageData = readObject(entry?.package);
+		return packageData?.name === packageName;
+	});
 
 	if (!match) return null;
 

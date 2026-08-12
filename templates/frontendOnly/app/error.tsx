@@ -98,12 +98,12 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 					>
 						Try Again
 					</button>
-					<Click
+					<click
 						to="/"
 						className="border border-surface-stroke bg-black px-6 py-3 font-mono text-xs font-bold uppercase text-gray-300 transition-all hover:border-white hover:text-white"
 					>
 						Return Home
-					</Click>
+					</click>
 				</div>
 			</div>
 		</main>

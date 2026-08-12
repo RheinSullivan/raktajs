@@ -16,7 +16,14 @@ interface WappalyzerTechnology {
 }
 
 function readWappalyzerDefinition(): WappalyzerTechnology {
-	const filePath = join(import.meta.dir, "..", "..", "..", "public", "wappalyzer.json");
+	const filePath = join(
+		import.meta.dir,
+		"..",
+		"..",
+		"..",
+		"public",
+		"wappalyzer.json",
+	);
 	const json = JSON.parse(readFileSync(filePath, "utf8")) as Record<
 		string,
 		WappalyzerTechnology

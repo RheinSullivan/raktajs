@@ -28,7 +28,7 @@ when **Fullstack app** is selected.
 
 Generated Rakta apps are configured for framework auto import. Component
 files should prefer auto-imported Rakta public components such as
-`<Click to="/">` and `<Photo path="/image.svg">` instead of manual imports for
+`<click to="/">` and `<photo path="/image.svg">` instead of manual imports for
 framework primitives. Lowercase `<click>` and `<photo>` remain supported for
 compatibility, but new template code should use uppercase React components to
 avoid browser unknown-tag warnings.

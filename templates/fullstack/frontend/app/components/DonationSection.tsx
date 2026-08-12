@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// DonationSection - Rakta.js: gsap, <Click>, react-icons, toast, RaktaAlert
+// DonationSection - Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert
 
 const donationCopyData = {
 	id: {
@@ -133,7 +133,7 @@ export default function DonationSection({ lang }: { lang: "ID" | "EN" }) {
 			className="border-t border-surface-stroke bg-black px-4 py-16 sm:px-6"
 			id="donation"
 		>
-			<Reborns id="donation" />
+			<reborns id="donation" />
 			<div className="mx-auto max-w-6xl">
 				{/* RaktaAlert for call-to-action */}
 				{showAlert && (

@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Login Page - Rakta.js: gsap, <Click>, react-icons, toast, RaktaAlert, useRef/useEffect
+// Login Page - Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert, useRef/useEffect
 
 export default function LoginPage() {
 	const [email, setEmail] = useState("rheinsullivan@raktajs.dev");
@@ -119,18 +119,18 @@ export default function LoginPage() {
 				</button>
 
 				<div className="flex flex-wrap items-center justify-between border-t border-surface-stroke pt-4 font-mono text-xs uppercase text-gray-500">
-					<Click
+					<click
 						to="/register"
 						className="hover:text-brand-pink transition-colors flex items-center gap-1"
 					>
 						<FaArrowRight className="h-2.5 w-2.5" /> Create account
-					</Click>
-					<Click
+					</click>
+					<click
 						to="/forgotPassword"
 						className="hover:text-brand-pink transition-colors"
 					>
 						Forgot password?
-					</Click>
+					</click>
 				</div>
 			</form>
 		</AuthShell>

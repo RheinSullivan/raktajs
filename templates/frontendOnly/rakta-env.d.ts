@@ -611,7 +611,6 @@ declare global {
 		code: string;
 	}
 	const raktaFeatures: readonly RaktaFeature[];
-	const RAKTA_FEATURES: readonly RaktaFeature[];
 
 	// packageStats
 	interface PackageStats {
@@ -624,7 +623,9 @@ declare global {
 	const fetchPackageStats: () => Promise<PackageStats>;
 	const getCachedPackageStats: () => PackageStats | null;
 	const parseDependentsCount: (responseData: unknown) => number | null;
-	const parseRuntimeDependencies: (metadata: unknown) => Pick<
+	const parseRuntimeDependencies: (
+		metadata: unknown,
+	) => Pick<
 		PackageStats,
 		"dependencies" | "dependencyNames" | "updatedAt" | "version"
 	>;

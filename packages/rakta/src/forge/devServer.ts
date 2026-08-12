@@ -2,9 +2,9 @@ import { existsSync, readFileSync, statSync, watch } from "node:fs";
 import { join, relative } from "node:path";
 import { createDevTerminal } from "../developerExperience/terminal";
 import {
-	RAKTA_VERSION,
 	applyRaktaDetectionHeaders,
 	createRaktaDetectionHeaders,
+	RAKTA_VERSION,
 } from "../frameworkIdentity";
 import { resolveRouteMode } from "../render/modes";
 import { render } from "../render/renderer";
@@ -46,7 +46,10 @@ function isReadableFile(filePath: string): boolean {
 }
 
 function withRaktaDetectionHeaders(response: Response): Response {
-	const headers = applyRaktaDetectionHeaders(new Headers(response.headers), "bun");
+	const headers = applyRaktaDetectionHeaders(
+		new Headers(response.headers),
+		"bun",
+	);
 
 	return new Response(response.body, {
 		status: response.status,

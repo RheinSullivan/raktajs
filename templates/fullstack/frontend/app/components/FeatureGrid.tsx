@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// FeatureGrid - Rakta.js: gsap, <Reborns>, react-icons, toast, useMemo
+// FeatureGrid - Rakta.js: gsap, <reborns>, react-icons, toast, useMemo
 
 export default function FeatureGrid({ lang }: { lang: "ID" | "EN" }) {
 	const copy = {
@@ -63,12 +63,12 @@ export default function FeatureGrid({ lang }: { lang: "ID" | "EN" }) {
 	}, []);
 
 	const featuresList = (
-		typeof RAKTA_FEATURES !== "undefined" ? RAKTA_FEATURES : []
+		typeof raktaFeatures !== "undefined" ? raktaFeatures : []
 	) as readonly RaktaFeature[];
 
 	return (
 		<section className="bg-black py-16 px-4 sm:px-6" id="features">
-			<Reborns id="features" />
+			<reborns id="features" />
 			<div className="mx-auto max-w-6xl">
 				<div className="text-center mb-12">
 					<h2 className="font-mono text-2xl sm:text-3xl font-black uppercase text-white tracking-tight">

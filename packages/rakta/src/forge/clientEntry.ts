@@ -444,6 +444,21 @@ photo img {
   width: 100%;
   height: 100%;
 }
+
+pantura {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+pantura * {
+  cursor: pointer !important;
+}
+
+reborns {
+  display: contents;
+}
 \`;
 document.head.appendChild(raktaElementStyle);
 
@@ -493,8 +508,19 @@ function syncPhotoElement(photoElement: Element): void {
   imageElement.decoding = photoElement.getAttribute("priority") === "true" ? "sync" : "async";
 }
 
+function syncPanturaElement(panturaElement: Element): void {
+  if (!panturaElement.hasAttribute("role")) {
+    panturaElement.setAttribute("role", "button");
+  }
+
+  if (!panturaElement.hasAttribute("tabindex")) {
+    panturaElement.setAttribute("tabindex", "0");
+  }
+}
+
 function syncRaktaElements(): void {
   document.querySelectorAll("photo").forEach(syncPhotoElement);
+  document.querySelectorAll("pantura").forEach(syncPanturaElement);
 }
 
 ${routeModules}
@@ -582,6 +608,24 @@ function openExternalTo(to: string, target: string | null): void {
   window.location.assign(to);
 }
 
+function scrollToPanturaTarget(panturaElement: Element): void {
+  const rawTarget = panturaElement.getAttribute("to");
+  if (!rawTarget) return;
+
+  const targetId = rawTarget.startsWith("#") ? rawTarget.slice(1) : rawTarget;
+  const targetElement = document.getElementById(targetId);
+  if (!targetElement) return;
+
+  const rawOffset = Number(panturaElement.getAttribute("offset") ?? "0");
+  const offset = Number.isFinite(rawOffset) ? rawOffset : 0;
+  const top = targetElement.getBoundingClientRect().top + window.scrollY - offset;
+
+  window.scrollTo({
+    top,
+    behavior: "smooth",
+  });
+}
+
 class RaktaErrorBoundary extends React.Component<
   { children: React.ReactNode },
   { hasError: boolean; error: Error | null }
@@ -661,6 +705,13 @@ function RaktaAppShell(): React.ReactElement {
         return;
       }
 
+      const panturaElement = target.closest("pantura");
+      if (panturaElement) {
+        event.preventDefault();
+        scrollToPanturaTarget(panturaElement);
+        return;
+      }
+
       const clickElement = target.closest("click");
 
       if (!clickElement) {
@@ -692,6 +743,13 @@ function RaktaAppShell(): React.ReactElement {
       const target = event.target;
 
       if (!(target instanceof Element)) {
+        return;
+      }
+
+      const panturaElement = target.closest("pantura");
+      if (panturaElement) {
+        event.preventDefault();
+        scrollToPanturaTarget(panturaElement);
         return;
       }
 

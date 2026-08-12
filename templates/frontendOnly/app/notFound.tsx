@@ -107,18 +107,18 @@ export default function NotFound() {
 				</p>
 
 				<div className="flex flex-wrap items-center justify-center gap-4">
-					<Click
+					<click
 						to="/"
 						className="border-2 border-brand-pink bg-brand-pink px-6 py-3 font-mono text-xs font-bold uppercase text-white shadow-[4px_4px_0px_0px_rgba(244,63,94,0.4)] transition-all hover:bg-white hover:text-black"
 					>
 						Return to Homepage
-					</Click>
-					<Click
+					</click>
+					<click
 						to="/dashboard"
 						className="border border-surface-stroke bg-black px-6 py-3 font-mono text-xs font-bold uppercase text-gray-300 transition-all hover:border-white hover:text-white"
 					>
 						Open Dashboard
-					</Click>
+					</click>
 				</div>
 			</div>
 		</main>

@@ -1,8 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import {
-	parseDependentsCount,
-	parseRuntimeDependencies,
-} from "./packageStats";
+import { parseDependentsCount, parseRuntimeDependencies } from "./packageStats";
 
 describe("package statistics parsing", () => {
 	test("counts runtime dependencies from the latest npm version only", () => {

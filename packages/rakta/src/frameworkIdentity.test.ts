@@ -1,11 +1,11 @@
 import { describe, expect, test } from "bun:test";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
+	createRaktaDetectionHeaders,
 	RAKTA_NAME,
 	RAKTA_VERSION,
-	createRaktaDetectionHeaders,
 } from "./frameworkIdentity";
 import { render } from "./render/renderer";
 import { createBunAdapter } from "./tide/adapter";
@@ -47,7 +47,9 @@ describe("Rakta framework identity", () => {
 		expect(result.kind).toBe("success");
 		if (result.kind !== "success") return;
 
-		expect(result.html).toContain('<meta name="generator" content="Rakta.js" />');
+		expect(result.html).toContain(
+			'<meta name="generator" content="Rakta.js" />',
+		);
 		expect(result.html).toContain('data-framework="raktajs"');
 		expect(result.html).toContain('id="rakta-root" data-rakta="true"');
 		expect(result.html).toContain("window.__RAKTA__");

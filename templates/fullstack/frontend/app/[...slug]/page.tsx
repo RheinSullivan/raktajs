@@ -37,12 +37,12 @@ export default function CatchAllPage() {
 					</div>
 				</div>
 
-				<Click
+				<click
 					to="/"
 					className="inline-block border border-brand-pink bg-brand-pink px-6 py-3 font-mono text-xs font-bold uppercase text-white hover:bg-white hover:text-black transition-colors"
 				>
 					Return to Main Landing
-				</Click>
+				</click>
 			</div>
 		</main>
 	);

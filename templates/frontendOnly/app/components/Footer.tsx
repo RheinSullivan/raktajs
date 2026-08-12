@@ -1,5 +1,5 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Footer - Rakta.js: <Photo>, <Click>, <Pantura>, react-icons, gsap
+// Footer - Rakta.js: <photo>, <click>, <pantura>, react-icons, gsap
 
 const footerCopyData = {
 	id: {
@@ -53,7 +53,7 @@ export default function Footer({ lang }: { lang: "ID" | "EN" }) {
 				<div className="flex flex-col items-center justify-between gap-6 font-mono text-xs text-gray-500 sm:flex-row">
 					{/* Brand: [LOGO] Rakta.js */}
 					<div className="flex items-center gap-3 text-center sm:text-left">
-						<Photo
+						<photo
 							path="/rakta-logo.svg"
 							alt="Rakta.js Logo"
 							width={28}
@@ -62,12 +62,12 @@ export default function Footer({ lang }: { lang: "ID" | "EN" }) {
 						/>
 						<div>
 							<div className="flex items-center gap-2">
-								<Pantura
+								<pantura
 									to="hero"
 									className="font-bold text-white text-sm leading-none hover:text-brand-pink transition-colors"
 								>
 									Rakta<span className="text-brand-pink">.js</span>
-								</Pantura>
+								</pantura>
 								<span className="border border-surface-stroke px-1.5 py-0.5 text-[9px] uppercase text-gray-600">
 									v1.1.5
 								</span>
@@ -88,24 +88,24 @@ export default function Footer({ lang }: { lang: "ID" | "EN" }) {
 					<div className="flex flex-col items-center gap-3 text-[10px] sm:items-end">
 						{/* Scroll-to-section links */}
 						<div className="flex items-center gap-4 uppercase">
-							<Pantura
+							<pantura
 								to="hero"
 								className="hover:text-brand-pink transition-colors"
 							>
 								Top
-							</Pantura>
-							<Pantura
+							</pantura>
+							<pantura
 								to="features"
 								className="hover:text-brand-pink transition-colors"
 							>
 								Features
-							</Pantura>
-							<Pantura
+							</pantura>
+							<pantura
 								to="donation"
 								className="hover:text-brand-pink transition-colors"
 							>
 								Donate
-							</Pantura>
+							</pantura>
 						</div>
 
 						{/* External links */}

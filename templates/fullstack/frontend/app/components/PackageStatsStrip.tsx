@@ -139,9 +139,12 @@ export default function PackageStatsStrip({ lang }: PackageStatsStripProps) {
 				</a>
 
 				<div className="border border-surface-stroke bg-black p-4 font-mono text-[11px] text-gray-500">
-					<div className="font-bold uppercase tracking-widest">{copy.version}</div>
+					<div className="font-bold uppercase tracking-widest">
+						{copy.version}
+					</div>
 					<div className="mt-1 text-sm font-black text-white">
-						{stats?.version ?? (status === "loading" ? copy.loading : copy.unavailable)}
+						{stats?.version ??
+							(status === "loading" ? copy.loading : copy.unavailable)}
 					</div>
 					<div className="mt-2 text-[10px] uppercase text-gray-600">
 						{stats?.updatedAt ? copy.updated : copy.error}

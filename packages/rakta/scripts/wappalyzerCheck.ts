@@ -1,6 +1,11 @@
-import { RAKTA_VERSION } from "../src/frameworkIdentity";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 const targetUrl = process.argv[2] ?? "http://localhost:3000";
+const packageJson = JSON.parse(
+	readFileSync(join(import.meta.dir, "..", "package.json"), "utf8"),
+) as { readonly version: string };
+const raktaVersion = packageJson.version;
 
 interface CheckResult {
 	readonly label: string;
@@ -37,15 +42,18 @@ async function main(): Promise<void> {
 			ok: /<html[^>]+data-framework=["']raktajs["']/i.test(html),
 		},
 		{ label: "root data-rakta marker", ok: hasRootMarker(html) },
-		{ label: "window.__RAKTA__ runtime marker", ok: html.includes("window.__RAKTA__") },
+		{
+			label: "window.__RAKTA__ runtime marker",
+			ok: html.includes("window.__RAKTA__"),
+		},
 		{
 			label: "runtime version marker",
-			ok: html.includes(`"version":"${RAKTA_VERSION}"`),
-			detail: RAKTA_VERSION,
+			ok: html.includes(`"version":"${raktaVersion}"`),
+			detail: raktaVersion,
 		},
 		{
 			label: "X-Rakta-Version header",
-			ok: headerVersion === RAKTA_VERSION,
+			ok: headerVersion === raktaVersion,
 			detail: headerVersion ?? "missing",
 		},
 	];
