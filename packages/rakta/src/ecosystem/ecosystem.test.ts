@@ -134,9 +134,9 @@ describe("Rakta @rakta/mail", () => {
 	it("renderMailTemplate interpolates variables", () => {
 		const out = renderMailTemplate("Hello {{name}}, version {{v}}!", {
 			name: "Rhein",
-			v: "1.1.6",
+			v: "1.1.7",
 		});
-		expect(out).toBe("Hello Rhein, version 1.1.6!");
+		expect(out).toBe("Hello Rhein, version 1.1.7!");
 	});
 
 	it("renderMailTemplate leaves unknown placeholders untouched", () => {

@@ -23,12 +23,12 @@ module Inspector
 
     app_dir = File.join(target_dir, 'app')
     if Dir.exist?(app_dir)
-      routes = Dir.glob("#{app_dir}/**/page.tsx").map do |f|
-        route = f.sub("#{app_dir}/", '').sub('/page.tsx', '').sub('page.tsx', '/')
+      routes = Dir.glob("#{app_dir}/**/page.tsx").map do |file|
+        route = file.sub("#{app_dir}/", '').sub('/page.tsx', '').sub('page.tsx', '/')
         route.empty? ? '/' : "/#{route}"
       end
       puts "  Discovered Routes (#{routes.length}):"
-      routes.each { |r| puts "    - #{r}" }
+      routes.each { |route| puts "    - #{route}" }
     end
   end
 end

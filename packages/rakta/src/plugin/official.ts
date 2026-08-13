@@ -8,76 +8,76 @@ const OFFICIAL_PLUGIN_DEFINITIONS: readonly {
 }[] = [
 	{
 		name: "@rakta/react",
-		version: "1.1.6",
+		version: "1.1.7",
 		description:
 			"React 19 runtime support with Fast Refresh and JSX transform.",
 		capabilities: ["react", "runtime"],
 	},
 	{
 		name: "@rakta/tailwind",
-		version: "1.1.6",
+		version: "1.1.7",
 		description: "Tailwind CSS v4 integration with PostCSS pipeline.",
 		capabilities: ["build"],
 	},
 	{
 		name: "@rakta/vue",
-		version: "1.1.6",
+		version: "1.1.7",
 		description: "Vue 3 rendering runtime support.",
 		capabilities: ["react", "runtime"],
 	},
 	{
 		name: "@rakta/svelte",
-		version: "1.1.6",
+		version: "1.1.7",
 		description: "Svelte 5 rendering runtime support.",
 		capabilities: ["react", "runtime"],
 	},
 	{
 		name: "@rakta/mdx",
-		version: "1.1.6",
+		version: "1.1.7",
 		description: "MDX file support with React integration.",
 		capabilities: ["mdx", "docs"],
 	},
 	{
 		name: "@rakta/pwa",
-		version: "1.1.6",
+		version: "1.1.7",
 		description:
 			"Progressive Web App - service worker, web manifest, install prompt.",
 		capabilities: ["pwa", "build"],
 	},
 	{
 		name: "@rakta/vercel",
-		version: "1.1.6",
+		version: "1.1.7",
 		description:
 			"First-class Vercel deployment adapter with Edge Functions support.",
 		capabilities: ["deployment"],
 	},
 	{
 		name: "@rakta/netlify",
-		version: "1.1.6",
+		version: "1.1.7",
 		description: "Netlify deployment adapter with Functions and Edge support.",
 		capabilities: ["deployment"],
 	},
 	{
 		name: "@rakta/cloudflare",
-		version: "1.1.6",
+		version: "1.1.7",
 		description: "Cloudflare Workers + Pages deployment adapter.",
 		capabilities: ["deployment", "runtime"],
 	},
 	{
 		name: "@rakta/node",
-		version: "1.1.6",
+		version: "1.1.7",
 		description: "Node.js production server adapter.",
 		capabilities: ["deployment", "runtime"],
 	},
 	{
 		name: "@rakta/bun",
-		version: "1.1.6",
+		version: "1.1.7",
 		description: "Bun native server adapter - fastest cold start.",
 		capabilities: ["deployment", "runtime"],
 	},
 	{
 		name: "@rakta/docker",
-		version: "1.1.6",
+		version: "1.1.7",
 		description:
 			"Dockerfile and docker-compose generator for containerized deployments.",
 		capabilities: ["deployment"],

@@ -120,7 +120,7 @@ end
 puts
 puts "=" * 60
 puts bold("Summary")
-results.each { |r| puts "  #{r[:label].ljust(30)} avg=#{ms(r[:avg_ms] / 1000.0).rjust(12)}" }
+results.each { |result| puts "  #{result[:label].ljust(30)} avg=#{ms(result[:avg_ms] / 1000.0).rjust(12)}" }
 puts "=" * 60
 puts green("✔ Benchmark complete")
 puts

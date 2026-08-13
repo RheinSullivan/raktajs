@@ -4,14 +4,14 @@ import { parseDependentsCount, parseRuntimeDependencies } from "./packageStats";
 describe("package statistics parsing", () => {
 	test("counts runtime dependencies from the latest npm version only", () => {
 		const parsed = parseRuntimeDependencies({
-			"dist-tags": { latest: "1.1.6" },
-			time: { "1.1.6": "2026-08-13T00:00:00.000Z" },
+			"dist-tags": { latest: "1.1.7" },
+			time: { "1.1.7": "2026-08-13T00:00:00.000Z" },
 			versions: {
 				"1.1.4": {
 					dependencies: { oldRuntime: "^1.0.0" },
 					version: "1.1.4",
 				},
-				"1.1.6": {
+				"1.1.7": {
 					dependencies: {
 						gsap: "^3.12.7",
 						"react-icons": "^5.7.0",
@@ -23,7 +23,7 @@ describe("package statistics parsing", () => {
 						react: ">=19.0.0",
 						"react-dom": ">=19.0.0",
 					},
-					version: "1.1.6",
+					version: "1.1.7",
 				},
 			},
 		});
@@ -35,7 +35,7 @@ describe("package statistics parsing", () => {
 			"react-dom",
 			"react-icons",
 		]);
-		expect(parsed.version).toBe("1.1.6");
+		expect(parsed.version).toBe("1.1.7");
 		expect(parsed.updatedAt).toBe("2026-08-13T00:00:00.000Z");
 	});
 

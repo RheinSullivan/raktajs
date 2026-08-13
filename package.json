@@ -1,6 +1,6 @@
 {
 	"name": "rakta-js-monorepo",
-	"version": "1.1.6",
+	"version": "1.1.7",
 	"description": "Rakta.js - Small in size. Fierce in speed. Alive in every route. A modern full-stack framework built with React, Bun, and TypeScript.",
 	"author": "Rhein Sullivan | Vyagra Nexus™",
 	"license": "MIT",

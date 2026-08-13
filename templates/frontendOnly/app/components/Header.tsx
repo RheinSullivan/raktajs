@@ -63,7 +63,7 @@ export default function Header({
 					</span>
 					<span className="hidden sm:inline-flex items-center gap-1 border border-surface-stroke bg-zinc-900/80 px-2 py-0.5 font-mono text-[10px] uppercase text-gray-400 leading-none">
 						<Terminal className="h-2.5 w-2.5" />
-						v1.1.6 · FULLSTACK ENGINE
+						v1.1.7 · FULLSTACK ENGINE
 					</span>
 				</click>
 

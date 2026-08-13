@@ -81,8 +81,8 @@ end
 # Ruby syntax check
 if %w[all rb].include?(scope)
   puts "\n#{bold("[ Ruby - syntax check ]")}"
-  Dir.glob("#{project_root}/tools/**/*.rb").each do |f|
-    results << run_cmd(File.basename(f), "ruby -c #{f}")
+  Dir.glob("#{project_root}/tools/**/*.rb").each do |file|
+    results << run_cmd(File.basename(file), "ruby -c #{file}")
   end
 end
 
@@ -106,8 +106,8 @@ if %w[all templates].include?(scope)
 end
 
 # Report
-pass_count = results.count { |r| r[:pass] }
-fail_count = results.count { |r| !r[:pass] }
+pass_count = results.count { |res| res[:pass] }
+fail_count = results.count { |res| !res[:pass] }
 
 puts
 puts "=" * 60

@@ -67,9 +67,9 @@ active.each do |suite|
   elapsed = ((Time.now - t0) * 1_000).round(1)
 
   combined = stdout + stderr
-  pass_n = combined.match(/(\d+)\s+pass/)&.then { |m| m[1].to_i } || 0
-  fail_n = combined.match(/(\d+)\s+fail/)&.then { |m| m[1].to_i } || 0
-  skip_n = combined.match(/(\d+)\s+skip/)&.then { |m| m[1].to_i } || 0
+  pass_n = combined.match(/(\d+)\s+pass/)&.then { |match| match[1].to_i } || 0
+  fail_n = combined.match(/(\d+)\s+fail/)&.then { |match| match[1].to_i } || 0
+  skip_n = combined.match(/(\d+)\s+skip/)&.then { |match| match[1].to_i } || 0
 
   total_pass += pass_n
   total_fail += fail_n
@@ -85,7 +85,7 @@ active.each do |suite|
   unless ok
     puts
     puts red("  Last 20 lines:")
-    combined.lines.last(20).each { |l| puts "    #{l.rstrip}" }
+    combined.lines.last(20).each { |line| puts "    #{line.rstrip}" }
   end
 
   results << { suite: suite[:label], duration_ms: elapsed,
