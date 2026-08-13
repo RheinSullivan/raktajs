@@ -22,7 +22,7 @@ function readObject(value: unknown): Record<string, unknown> | null {
 }
 
 function readNumber(value: unknown): number | null {
-	return typeof value === "number" && Number.isFinite(value) && value >= 0
+	return typeof value === "number" && Number.isFinite(value) && value > 0
 		? value
 		: null;
 }
@@ -40,8 +40,11 @@ export function parseRuntimeDependencies(
 	const versions = readObject(packageMetadata?.versions);
 	const versionMetadata =
 		latestVersion !== undefined ? readObject(versions?.[latestVersion]) : null;
-	const dependencyNames = Object.keys(
-		readObject(versionMetadata?.dependencies) ?? {},
+	const dependencyNames = Array.from(
+		new Set([
+			...Object.keys(readObject(versionMetadata?.dependencies) ?? {}),
+			...Object.keys(readObject(versionMetadata?.peerDependencies) ?? {}),
+		]),
 	).sort();
 	const time = readObject(packageMetadata?.time);
 

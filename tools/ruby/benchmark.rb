@@ -11,7 +11,7 @@ require "json"
 require "open3"
 require "time"
 
-# ── Helpers ────────────────────────────────────────────────────────────────────
+# Helpers
 def red(msg)    = "\e[31m#{msg}\e[0m"
 def green(msg)  = "\e[32m#{msg}\e[0m"
 def yellow(msg) = "\e[33m#{msg}\e[0m"
@@ -29,7 +29,7 @@ rescue StandardError => e
   nil
 end
 
-# ── CLI args ───────────────────────────────────────────────────────────────────
+# CLI args 
 args = ARGV.reduce({}) do |acc, arg|
   key, val = arg.sub(/\A--/, "").split("=", 2)
   acc.merge(key.to_sym => (val || true))
@@ -39,7 +39,7 @@ suite      = args[:suite]      || "full"
 iterations = (args[:iterations] || "5").to_i
 warmup     = (args[:warmup]    || "1").to_i
 
-# ── Banner ─────────────────────────────────────────────────────────────────────
+# Banner
 puts
 puts bold(cyan("⩛ Benchmark Suite"))
 puts "  suite=#{suite}  iterations=#{iterations}  warmup=#{warmup}"
@@ -57,7 +57,7 @@ def run_iterations(n, warmup_n, &block)
     p95_ms: samples.sort[(samples.size * 0.95).ceil - 1], n: samples.size }
 end
 
-# ── Lint ───────────────────────────────────────────────────────────────────────
+# Lint
 if %w[full lint].include?(suite)
   puts "\n#{bold("[ Lint - biome ]")}"
   stat = run_iterations(iterations, warmup) do
@@ -72,7 +72,7 @@ if %w[full lint].include?(suite)
   end
 end
 
-# ── Typecheck ─────────────────────────────────────────────────────────────────
+# Typecheck
 if %w[full typecheck].include?(suite)
   puts "\n#{bold("[ TypeScript - tsc --noEmit ]")}"
   stat = run_iterations([iterations, 3].min, 0) do
@@ -90,7 +90,7 @@ if %w[full typecheck].include?(suite)
   end
 end
 
-# ── Test ───────────────────────────────────────────────────────────────────────
+# Test
 if %w[full test].include?(suite)
   puts "\n#{bold("[ Test suite - bun test ]")}"
   stat = run_iterations([iterations, 3].min, 0) do
@@ -103,7 +103,7 @@ if %w[full test].include?(suite)
   end
 end
 
-# ── File counts ────────────────────────────────────────────────────────────────
+# File counts
 if %w[full files].include?(suite)
   puts "\n#{bold("[ Repository Statistics ]")}"
   ts  = Dir.glob("#{project_root}/packages/**/*.ts").reject { |f| f =~ /node_modules|\/dist\// }
@@ -116,7 +116,7 @@ if %w[full files].include?(suite)
   puts "  Total      : #{ts.size + go.size + rb.size} source files"
 end
 
-# ── Summary ────────────────────────────────────────────────────────────────────
+# Summary
 puts
 puts "=" * 60
 puts bold("Summary")

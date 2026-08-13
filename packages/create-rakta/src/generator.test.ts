@@ -146,6 +146,39 @@ describe("create-rakta fullstack generator", () => {
 		expect(envExample).toContain("GITHUB_CLIENT_ID");
 	});
 
+	test("generates unified rendering and current Rakta.js dependency", () => {
+		const files = generateProjectFiles(fullstackConfig);
+		const fileByPath = new Map(
+			files.map((file) => [
+				file.path,
+				typeof file.content === "string" ? file.content : "",
+			]),
+		);
+
+		expect(fileByPath.get("frontend/package.json")).toContain(
+			'"raktajs": "^1.1.6"',
+		);
+		expect(fileByPath.get("frontend/rakta.config.ts")).toContain(
+			'defaultMode: "hybrid"',
+		);
+		expect(fileByPath.get("frontend/rakta.config.ts")).toContain('"/": "csr"');
+		expect(fileByPath.get("README.md")).toContain("bun run dev");
+		expect(fileByPath.get("README.md")).toContain(
+			"Dependencies are installed automatically",
+		);
+	});
+
+	test("does not prompt for a separate render mode", async () => {
+		const { readFileSync } = await import("node:fs");
+		const promptSource = readFileSync(
+			"packages/create-rakta/src/prompts.ts",
+			"utf8",
+		);
+
+		expect(promptSource).not.toContain("Choose a render mode");
+		expect(promptSource).not.toContain("promptRenderMode");
+	});
+
 	test("ships the Gaman.js backend template in the built package", () => {
 		const distPath =
 			"packages/create-rakta/dist/templates/fullStack/backend/src/index.ts";

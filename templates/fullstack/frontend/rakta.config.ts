@@ -16,12 +16,7 @@ export default defineRaktaConfig({
 	render: {
 		defaultMode: "hybrid",
 		routes: {
-			"/": "ssg",
-			"/dashboard": "csr",
-			"/auth/login": "csr",
-			"/auth/register": "csr",
-			"/auth/forgot-password": "csr",
-			"/auth/reset-password": "csr",
+			"/": "csr",
 		},
 	},
 });

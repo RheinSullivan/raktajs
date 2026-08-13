@@ -199,7 +199,7 @@ export class RaktaDevTerminal {
 	 *
 	 * Example output (with color):
 	 *
-	 *   ⩛ Rakta.js 1.1.5 (CherbonsEngine)
+	 *   ⩛ Rakta.js 1.1.6 (CherbonsEngine)
 	 *
 	 *     Local:        http://localhost:3000
 	 *     Network:      http://192.168.1.8:3000

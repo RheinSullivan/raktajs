@@ -11,7 +11,7 @@ require "open3"
 require "json"
 require "time"
 
-# ── Helpers ────────────────────────────────────────────────────────────────────
+# Helpers
 def red(msg)    = "\e[31m#{msg}\e[0m"
 def green(msg)  = "\e[32m#{msg}\e[0m"
 def yellow(msg) = "\e[33m#{msg}\e[0m"
@@ -19,7 +19,7 @@ def cyan(msg)   = "\e[36m#{msg}\e[0m"
 def bold(msg)   = "\e[1m#{msg}\e[0m"
 def project_root = File.expand_path("../../", __dir__)
 
-# ── CLI args ───────────────────────────────────────────────────────────────────
+# CLI args
 args = ARGV.reduce({}) do |acc, arg|
   key, val = arg.sub(/\A--/, "").split("=", 2)
   acc.merge(key.to_sym => (val || true))
@@ -29,7 +29,7 @@ scope    = args[:scope]    || "all"
 coverage = args[:coverage] || false
 reporter = args[:reporter] || "text"
 
-# ── Suite definitions ──────────────────────────────────────────────────────────
+# Suite definitions
 suites = {
   unit:        { label: "Unit Tests",       pattern: "packages/**/*.test.ts",             desc: "Module-level unit tests" },
   workspace:   { label: "Workspace Tests",  pattern: "workspace.test.ts",                 desc: "Workspace identity and health" },
@@ -44,7 +44,7 @@ if active.empty?
   exit 0
 end
 
-# ── Banner ─────────────────────────────────────────────────────────────────────
+# Banner
 puts
 puts bold(cyan("⩛ Test Runner"))
 puts "  scope=#{scope}  coverage=#{coverage}  reporter=#{reporter}"
@@ -92,7 +92,7 @@ active.each do |suite|
                pass: pass_n, fail: fail_n, skip: skip_n, ok: ok }
 end
 
-# ── Summary ────────────────────────────────────────────────────────────────────
+# Summary
 total_duration = ((Time.now - suite_start) * 1_000).round(1)
 overall_ok = total_fail == 0
 

@@ -11,6 +11,7 @@ export interface ForgeDevServerOptions {
 	readonly appName: string;
 	readonly seo: SeoConfig;
 	readonly renderConfig: RenderConfig;
+	readonly devTools: boolean;
 }
 
 export interface ForgeBuildOptions {

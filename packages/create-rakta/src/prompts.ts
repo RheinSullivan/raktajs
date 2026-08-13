@@ -8,7 +8,6 @@ import type {
 	ProjectConfig,
 	ProjectLanguage,
 	ProjectMode,
-	RenderMode,
 	SessionPolicy,
 } from "./types";
 import {
@@ -19,7 +18,6 @@ import {
 	OAUTH_PROVIDER_DISPLAY,
 	PROJECT_LANGUAGE_DISPLAY,
 	PROJECT_MODE_DISPLAY,
-	RENDER_MODE_DISPLAY,
 	SESSION_POLICY_DISPLAY,
 } from "./types";
 
@@ -102,23 +100,6 @@ export async function promptProjectLanguage(): Promise<ProjectLanguage> {
 			{ value: "javascript", label: PROJECT_LANGUAGE_DISPLAY.javascript },
 		],
 		initialValue: "typescript",
-	});
-
-	return getPromptValue(promptResult);
-}
-
-export async function promptRenderMode(): Promise<RenderMode> {
-	const promptResult = await clack.select<RenderMode>({
-		message: "Choose a render mode:",
-		options: [
-			{ value: "csr", label: RENDER_MODE_DISPLAY.csr, hint: "recommended" },
-			{ value: "spa", label: RENDER_MODE_DISPLAY.spa },
-			{ value: "hybrid", label: RENDER_MODE_DISPLAY.hybrid },
-			{ value: "ssr", label: RENDER_MODE_DISPLAY.ssr },
-			{ value: "ssg", label: RENDER_MODE_DISPLAY.ssg },
-			{ value: "csg", label: RENDER_MODE_DISPLAY.csg },
-		],
-		initialValue: "csr",
 	});
 
 	return getPromptValue(promptResult);
@@ -254,7 +235,7 @@ export async function runPrompts(projectName: string): Promise<ProjectConfig> {
 	const projectMode = await promptProjectMode();
 	const language = await promptProjectLanguage();
 	const cssFramework = await promptCssFramework();
-	const renderMode = await promptRenderMode();
+	const renderMode = "hybrid";
 	const autoImport = await promptAutoImport();
 	const useTypeScript = language === "typescript";
 

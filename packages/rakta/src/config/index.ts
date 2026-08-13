@@ -3,6 +3,7 @@ export type {
 	BuildConfig,
 	CorsConfig,
 	CssConfig,
+	DevToolsConfig,
 	RaktaConfig,
 	RpcConfig,
 	SeoConfig,

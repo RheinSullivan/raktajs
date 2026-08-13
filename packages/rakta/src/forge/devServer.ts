@@ -11,6 +11,12 @@ import { render } from "../render/renderer";
 import { generateManifest } from "../router/manifest";
 import { matchRoute } from "../router/matcher";
 import { writeClientEntry } from "./clientEntry";
+import {
+	clearRaktaDevelopmentCache,
+	createRaktaDevToolsJsonResponse,
+	RAKTA_DEVTOOLS_CONTROL_BASE_PATH,
+	resolveRaktaDevToolsRouteInfo,
+} from "./devTools";
 import type { ForgeDevServerHandle, ForgeDevServerOptions } from "./types";
 
 const DEFAULT_DEV_PORT = 3000;
@@ -69,6 +75,7 @@ async function buildDevClientBundle(
 		appDir: options.appDir,
 		workDir,
 		manifest,
+		devToolsEnabled: options.devTools,
 	});
 
 	const buildResult = await Bun.build({
@@ -76,6 +83,9 @@ async function buildDevClientBundle(
 		outdir: clientOutDir,
 		target: "browser",
 		sourcemap: "external",
+		define: {
+			"process.env.NODE_ENV": JSON.stringify("development"),
+		},
 		naming: {
 			entry: "app.[ext]",
 			chunk: "chunks/[name]-[hash].[ext]",
@@ -109,7 +119,7 @@ interface ApiRouteExports {
  *
  * Terminal output (development only):
  *
- *   ⩛ Rakta.js 1.1.5 (CherbonsEngine)
+ *   ⩛ Rakta.js 1.1.6 (CherbonsEngine)
  *
  *     Local:        http://localhost:3000
  *     Network:      http://192.168.1.x:3000
@@ -125,11 +135,12 @@ interface ApiRouteExports {
 export async function startDevServer(
 	options: ForgeDevServerOptions,
 ): Promise<ForgeDevServerHandle> {
-	const manifest = generateManifest(options.appDir);
+	let manifest = generateManifest(options.appDir);
 	const resolvedPort = resolveDevPort(options.port);
 	let clientOutDir = await buildDevClientBundle(options, manifest);
 	let isClientBundleDirty = false;
 	let clientBundleRebuild: Promise<void> | null = null;
+	let devToolsCommand: Promise<Response> | null = null;
 
 	// Development-only. Zero cost in production: this module is never imported
 	// by the production server path (tide/adapter.ts).
@@ -197,6 +208,98 @@ export async function startDevServer(
 		await clientBundleRebuild;
 	}
 
+	async function restartDevelopmentServer(): Promise<Response> {
+		if (devToolsCommand !== null) {
+			return createRaktaDevToolsJsonResponse(
+				{
+					ok: false,
+					message: "A Rakta DevTools command is already running.",
+				},
+				409,
+			);
+		}
+
+		devToolsCommand = (async () => {
+			try {
+				manifest = generateManifest(options.appDir);
+				clientOutDir = await buildDevClientBundle(options, manifest);
+				isClientBundleDirty = false;
+				server.publish(
+					"livereload",
+					JSON.stringify({ type: "devtools:restart" }),
+				);
+				return createRaktaDevToolsJsonResponse({
+					ok: true,
+					message: "Rakta development server was restarted.",
+				});
+			} catch (caughtError) {
+				return createRaktaDevToolsJsonResponse(
+					{
+						ok: false,
+						message:
+							caughtError instanceof Error
+								? caughtError.message
+								: "Rakta development server restart failed.",
+					},
+					500,
+				);
+			} finally {
+				devToolsCommand = null;
+			}
+		})();
+
+		return devToolsCommand;
+	}
+
+	async function resetDevelopmentCache(): Promise<Response> {
+		if (devToolsCommand !== null) {
+			return createRaktaDevToolsJsonResponse(
+				{
+					ok: false,
+					message: "A Rakta DevTools command is already running.",
+				},
+				409,
+			);
+		}
+
+		devToolsCommand = (async () => {
+			const cacheResult = clearRaktaDevelopmentCache(options.projectRoot);
+			if (!cacheResult.ok) {
+				devToolsCommand = null;
+				return createRaktaDevToolsJsonResponse(cacheResult, 400);
+			}
+
+			try {
+				manifest = generateManifest(options.appDir);
+				clientOutDir = await buildDevClientBundle(options, manifest);
+				isClientBundleDirty = false;
+				server.publish(
+					"livereload",
+					JSON.stringify({ type: "devtools:cache-reset" }),
+				);
+				return createRaktaDevToolsJsonResponse({
+					ok: true,
+					message: "Rakta bundler cache was reset and rebuilt.",
+				});
+			} catch (caughtError) {
+				return createRaktaDevToolsJsonResponse(
+					{
+						ok: false,
+						message:
+							caughtError instanceof Error
+								? caughtError.message
+								: "Rakta bundler cache reset failed.",
+					},
+					500,
+				);
+			} finally {
+				devToolsCommand = null;
+			}
+		})();
+
+		return devToolsCommand;
+	}
+
 	const server = Bun.serve({
 		port: resolvedPort,
 		hostname: options.host,
@@ -221,6 +324,47 @@ export async function startDevServer(
 
 			const url = new URL(request.url);
 			const { pathname } = url;
+
+			if (
+				options.devTools &&
+				pathname.startsWith(RAKTA_DEVTOOLS_CONTROL_BASE_PATH)
+			) {
+				if (
+					pathname === `${RAKTA_DEVTOOLS_CONTROL_BASE_PATH}/route` &&
+					request.method === "GET"
+				) {
+					const routePathname = url.searchParams.get("pathname") ?? "/";
+					return createRaktaDevToolsJsonResponse(
+						resolveRaktaDevToolsRouteInfo({
+							pathname: routePathname,
+							manifest,
+							renderConfig: options.renderConfig,
+						}),
+					);
+				}
+
+				if (
+					pathname === `${RAKTA_DEVTOOLS_CONTROL_BASE_PATH}/restart` &&
+					request.method === "POST"
+				) {
+					return restartDevelopmentServer();
+				}
+
+				if (
+					pathname === `${RAKTA_DEVTOOLS_CONTROL_BASE_PATH}/cache/reset` &&
+					request.method === "POST"
+				) {
+					return resetDevelopmentCache();
+				}
+
+				return createRaktaDevToolsJsonResponse(
+					{
+						ok: false,
+						message: "Unknown Rakta DevTools command.",
+					},
+					404,
+				);
+			}
 
 			// Rebuild bundle if source changed since last request.
 			await ensureFreshClientBundle();

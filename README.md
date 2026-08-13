@@ -220,9 +220,12 @@ Setelah membuat project, masuk ke folder dan jalankan dev server:
 
 ```bash
 cd my-app
-bun install
 bun run dev
 ```
+
+Dependencies are installed automatically by `create-rakta-app`. If you intentionally used `--no-install`, run `bun install` once before `bun run dev`.
+
+Dependencies otomatis di-install oleh `create-rakta-app`. Jika kamu sengaja memakai `--no-install`, jalankan `bun install` sekali sebelum `bun run dev`.
 
 The dev server runs at `http://localhost:3000` by default.
 
@@ -413,12 +416,9 @@ import { defineConfig } from "rakta/config";
 export default defineConfig({
   appName: "My Rakta App",
   render: {
-    defaultMode: "ssr",  // Default untuk semua route | Default for all routes
+    defaultMode: "hybrid", // Unified Rakta rendering | Rendering Rakta terpadu
     routes: {
-      "/": "ssg",         // Homepage dirender saat build | Homepage rendered at build time
-      "/dashboard": "csr", // Dashboard dirender di browser | Dashboard rendered in browser
-      "/blog/**": "ssg",  // Semua halaman blog statis | All blog pages are static
-      "/profile": "ssr",  // Profil dirender di server | Profile rendered on server
+      "/": "csr",
     },
   },
 });

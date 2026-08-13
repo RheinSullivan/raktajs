@@ -35,9 +35,11 @@ The CLI asks:
 1. Project name
 2. Project mode - `Frontend Only` or `Fullstack`
 3. CSS framework - `Tailwind CSS v4`, `Bootstrap`, `SASS`, `None`
-4. Rendering mode - `CSR`, `SSR`, `SSG`, `CSG`, `SPA`, `Hybrid`
-5. *(Fullstack only)* Backend - `Gaman.js`, `Express.js`, `Nest.js`, `Adonis.js`
+4. Auto Import - enabled or disabled
+5. *(Fullstack only)* Backend - `Gaman.js`
 6. *(Fullstack only)* Database - `PostgreSQL`, `MySQL`, `SQLite`, `MongoDB`, `Redis`, `Firebase`, `MariaDB`, `PlanetScale`, `Neon`, `Turso`
+
+Rendering is configured automatically as unified Rakta rendering (`hybrid`) with route-level overrides in `rakta.config.ts`.
 
 ---
 
@@ -118,11 +120,13 @@ my-app/
 ```bash
 # Frontend Only
 cd my-app
-bun install
 bun run dev
 
 # Fullstack
-cd my-app && bun install
+cd my-app
+bun run dev
+
+# Or separately:
 cd frontend && bun run dev   # terminal 1
 cd backend  && bun run dev   # terminal 2
 ```
@@ -140,16 +144,20 @@ cd backend  && bun run dev   # terminal 2
 
 ---
 
-## Rendering Modes
+## Rendering
 
-| Mode | Best For |
-|---|---|
-| CSR | Dashboards, apps requiring auth |
-| SSR | Dynamic pages, personalized content |
-| SSG | Blogs, docs, marketing pages |
-| CSG | Static shell + client hydration |
-| SPA | All navigation client-side |
-| Hybrid | Mixed requirements per route |
+New projects use unified Rakta rendering by default:
+
+```ts
+render: {
+  defaultMode: "hybrid",
+  routes: {
+    "/": "csr",
+  },
+}
+```
+
+You can still override individual routes with `csr`, `spa`, `ssr`, `ssg`, `csg`, `isr`, `streaming_ssr`, or `edge` as the framework capabilities evolve.
 
 ---
 

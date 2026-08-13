@@ -10,7 +10,7 @@ export interface ClientEntryOptions {
   readonly appDir: string;
   readonly workDir: string;
   readonly manifest: RouteManifest;
-  readonly devToolsEnabled: boolean;
+  readonly devToolsEnabled?: boolean;
 }
 
 function toModuleSpecifier(fromFile: string, targetFile: string): string {

@@ -10,7 +10,7 @@
 require "open3"
 require "json"
 
-# ── Helpers ────────────────────────────────────────────────────────────────────
+# Helpers
 def red(msg)    = "\e[31m#{msg}\e[0m"
 def green(msg)  = "\e[32m#{msg}\e[0m"
 def yellow(msg) = "\e[33m#{msg}\e[0m"
@@ -34,7 +34,7 @@ rescue Errno::ENOENT => e
   { label: label, pass: true, skipped: true }
 end
 
-# ── CLI args ───────────────────────────────────────────────────────────────────
+# CLI args
 args = ARGV.reduce({}) do |acc, arg|
   key, val = arg.sub(/\A--/, "").split("=", 2)
   acc.merge(key.to_sym => (val || true))
@@ -44,7 +44,7 @@ fix    = args[:fix]    || false
 scope  = args[:scope]  || "all"
 format = args[:format] || "text"
 
-# ── Banner ─────────────────────────────────────────────────────────────────────
+# Banner
 puts
 puts bold(cyan("⩛ Lint Orchestrator"))
 puts "  scope=#{scope}  fix=#{fix}  format=#{format}"
@@ -53,7 +53,7 @@ puts "-" * 60
 
 results = []
 
-# ── TypeScript - biome ─────────────────────────────────────────────────────────
+# TypeScript - biome
 if %w[all ts].include?(scope)
   puts "\n#{bold("[ TypeScript - biome ]")}"
   [
@@ -66,7 +66,7 @@ if %w[all ts].include?(scope)
   end
 end
 
-# ── Go - gofmt + go vet ───────────────────────────────────────────────────────
+# Go - gofmt + go vet
 if %w[all go].include?(scope)
   puts "\n#{bold("[ Go - gofmt + go vet ]")}"
   engine = File.join(project_root, "engine")
@@ -78,7 +78,7 @@ if %w[all go].include?(scope)
   end
 end
 
-# ── Ruby syntax check ─────────────────────────────────────────────────────────
+# Ruby syntax check
 if %w[all rb].include?(scope)
   puts "\n#{bold("[ Ruby - syntax check ]")}"
   Dir.glob("#{project_root}/tools/**/*.rb").each do |f|
@@ -86,7 +86,7 @@ if %w[all rb].include?(scope)
   end
 end
 
-# ── Template structure ────────────────────────────────────────────────────────
+# Template structure
 if %w[all templates].include?(scope)
   puts "\n#{bold("[ Templates - structure ]")}"
   required = %w[
@@ -105,7 +105,7 @@ if %w[all templates].include?(scope)
   end
 end
 
-# ── Report ────────────────────────────────────────────────────────────────────
+# Report
 pass_count = results.count { |r| r[:pass] }
 fail_count = results.count { |r| !r[:pass] }
 

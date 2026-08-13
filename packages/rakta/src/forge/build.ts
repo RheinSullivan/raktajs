@@ -40,6 +40,7 @@ export async function buildProject(
 				appDir: options.appDir,
 				workDir: join(options.projectRoot, ".rakta"),
 				manifest,
+				devToolsEnabled: false,
 			});
 
 	// Build JavaScript bundle
@@ -50,6 +51,9 @@ export async function buildProject(
 		minify: options.minify,
 		sourcemap: options.sourcemap ? "external" : "none",
 		splitting: options.splitting,
+		define: {
+			"process.env.NODE_ENV": JSON.stringify("production"),
+		},
 		naming: {
 			entry: "app.[ext]",
 			chunk: "chunks/[name]-[hash].[ext]",

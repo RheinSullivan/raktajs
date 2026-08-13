@@ -69,7 +69,7 @@ export default function Footer({ lang }: { lang: "ID" | "EN" }) {
 									Rakta<span className="text-brand-pink">.js</span>
 								</pantura>
 								<span className="border border-surface-stroke px-1.5 py-0.5 text-[9px] uppercase text-gray-600">
-									v1.1.5
+									v1.1.6
 								</span>
 							</div>
 							<span className="text-gray-400 text-[11px] mt-0.5 block">

@@ -53,6 +53,10 @@ export interface RpcConfig {
 	readonly maxBodySize?: number;
 }
 
+export interface DevToolsConfig {
+	readonly enabled: boolean;
+}
+
 export interface RaktaConfig {
 	readonly appName?: string;
 	readonly appDir?: string;
@@ -65,6 +69,7 @@ export interface RaktaConfig {
 	readonly autoImport?: AutoImportConfig;
 	readonly rpc?: RpcConfig;
 	readonly render?: RenderConfig;
+	readonly devTools?: boolean | DevToolsConfig;
 }
 
 export function defineConfig(config: RaktaConfig): RaktaConfig {
@@ -118,5 +123,8 @@ export const defaultConfig: Required<RaktaConfig> = {
 	render: {
 		defaultMode: "csr",
 		routes: {},
+	},
+	devTools: {
+		enabled: true,
 	},
 };

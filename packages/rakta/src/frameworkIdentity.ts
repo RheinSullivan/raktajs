@@ -2,7 +2,7 @@ export const RAKTA_NAME = "Rakta.js";
 export const RAKTA_FRAMEWORK_ID = "raktajs";
 export const RAKTA_TAGLINE =
 	"Small in size. Fierce in speed. Alive in every route.";
-export const RAKTA_VERSION = "1.1.5";
+export const RAKTA_VERSION = "1.1.6";
 export const RAKTA_WEBSITE = "https://raktajs.dev";
 
 export interface RaktaRuntimeFingerprint {

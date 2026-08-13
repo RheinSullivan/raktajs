@@ -4,6 +4,10 @@ import { startDevServer } from "../forge/devServer";
 
 export async function devCommand(cwd: string = process.cwd()): Promise<void> {
 	const config = await loadConfig(cwd);
+	const devToolsEnabled =
+		typeof config.devTools === "boolean"
+			? config.devTools
+			: config.devTools.enabled;
 
 	// startDevServer already handles terminal output:
 	// - markStart() before build
@@ -19,5 +23,6 @@ export async function devCommand(cwd: string = process.cwd()): Promise<void> {
 		appName: config.appName,
 		seo: config.seo,
 		renderConfig: config.render,
+		devTools: devToolsEnabled,
 	});
 }

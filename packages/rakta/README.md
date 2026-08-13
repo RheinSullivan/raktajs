@@ -20,8 +20,10 @@ bun add raktajs
 
 ```bash
 bun create rakta-app@latest my-app
-cd my-app && bun install && bun run dev
+cd my-app && bun run dev
 ```
+
+`create-rakta-app` installs dependencies automatically. Use `--no-install` only when you want to install manually.
 
 ---
 
@@ -75,7 +77,12 @@ import { defineRaktaConfig } from "raktajs";
 
 export default defineRaktaConfig({
   appName: "My App",
-  render: { defaultMode: "csr" },
+  render: {
+    defaultMode: "hybrid",
+    routes: {
+      "/": "csr",
+    },
+  },
   server: { port: 3000 },
 });
 ```
@@ -220,7 +227,7 @@ Development-only. Not in production builds.
 **Rakta Dev Terminal** - output when `bun run dev`:
 
 ```
-  ⩛ Rakta.js 1.1.5 (CherbonsEngine)
+  ⩛ Rakta.js 1.1.6 (CherbonsEngine)
 
   Local:         http://localhost:3000
   Network:       http://192.168.1.8:3000
@@ -235,7 +242,7 @@ Development-only. Not in production builds.
   ✗ GET  /missing           404   2ms
 ```
 
-**Rakta Dev Indicator** - floating panel in browser (bottom-left, Rakta.js SVG logo). Shows route, render mode, bundler, real Performance API measurements, and diagnostics for the "response done but UI slow" case.
+**Rakta DevTools** - floating Rakta.js logo indicator with a compact browser panel. Shows real route metadata from the Forge manifest, active render status, `Bun.build (CherbonsEngine)`, preferences, session hiding, shortcut control, restart, and safe `.rakta/dev` cache reset.
 
 See [docs/en/devtools.md](../../docs/en/devtools.md) and [docs/en/performance.md](../../docs/en/performance.md).
 

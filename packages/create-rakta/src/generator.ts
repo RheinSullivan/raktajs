@@ -173,6 +173,10 @@ function getAutoImportConfig(autoImport: boolean): string {
 	return `  autoImport: {\n    enabled: ${autoImport},\n    directories: ["app", "components", "lib", "stores", "schemas"],\n    outputDirectory: ".rakta",\n    dts: true,\n  },\n`;
 }
 
+function getUnifiedRenderConfig(): string {
+	return `  render: {\n    defaultMode: "hybrid",\n    routes: {\n      "/": "csr",\n    },\n  },\n`;
+}
+
 function applyHookImportMode(sourceCode: string, autoImport: boolean): string {
 	if (autoImport) {
 		return sourceCode;
@@ -295,7 +299,7 @@ function personalizeFrontendTemplate(
 				},
 				dependencies: {
 					...(packageJson.dependencies ?? {}),
-					raktajs: "^1.1.5",
+					raktajs: "^1.1.6",
 					react: "^19.2.7",
 					"react-dom": "^19.2.7",
 					gsap: "^3.12.7",
@@ -330,7 +334,7 @@ function personalizeFrontendTemplate(
 		normalizedPath === "frontend/rakta.config.ts" ||
 		normalizedPath === "frontend/rakta.config.js"
 	) {
-		return content
+		const personalizedConfig = content
 			.replace(/appName:\s*"[^"]*"/, `appName: "${projectConfig.projectName}"`)
 			.replace(
 				/enabled:\s*(true|false)/,
@@ -340,6 +344,11 @@ function personalizeFrontendTemplate(
 				/defaultTitle:\s*"[^"]*"/,
 				`defaultTitle: "${DEFAULT_METADATA_TITLE}"`,
 			);
+
+		return personalizedConfig.replace(
+			/render:\s*\{[\s\S]*?\n\s*\},?\n\}\);/,
+			`${getUnifiedRenderConfig()}});`,
+		);
 	}
 
 	if (
@@ -397,7 +406,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^1.1.5",
+						raktajs: "^1.1.6",
 						gsap: "^3.12.7",
 						clsx: "^2.1.1",
 						"tailwind-merge": "^3.0.2",
@@ -429,7 +438,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 		},
 		{
 			path: `rakta.config.${scriptExtension}`,
-			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n${getAutoImportConfig(autoImport)}  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js - Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {},\n  },\n});\n`,
+			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n${getAutoImportConfig(autoImport)}  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js - Small in size. Fierce in speed. Alive in every route.",\n  },\n${getUnifiedRenderConfig()}});\n`,
 		},
 		{
 			path: `app/layout.${pageExtension}`,
@@ -582,7 +591,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^1.1.5",
+						raktajs: "^1.1.6",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						gsap: "^3.12.7",
@@ -2505,10 +2514,10 @@ function generateProjectReadme(projectConfig: ProjectConfig): string {
 	const { projectName, projectMode } = projectConfig;
 
 	if (projectMode === "frontend-only") {
-		return `# ${projectName}\n\nBuilt with Rakta.js -” Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\nbun run dev\n\`\`\`\n\n## ShrimpRun\n\nYour starter includes ShrimpRun -” an interactive game where a shrimp dodges obstacles. Press Space or click to jump!\n`;
+		return `# ${projectName}\n\nBuilt with Rakta.js - Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun run dev\n\`\`\`\n\nDependencies are installed automatically during project creation. If you created the project with \`--no-install\`, run \`bun install\` once before starting development.\n\n## ShrimpRun\n\nYour starter includes ShrimpRun - an interactive game where a shrimp dodges obstacles. Press Space or click to jump!\n`;
 	}
 
-	return `# ${projectName}\n\nBuilt with Rakta.js -” Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Backend | ${BACKEND_DISPLAY[projectConfig.backendFramework]} |\n| Database | ${DATABASE_DISPLAY[projectConfig.database]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun install\n\n# Frontend + backend in one command\nbun run dev\n\n# Or separately:\nbun run dev:frontend\nbun run dev:backend\n\`\`\`\n\n## Endpoints\n\n- Frontend: http://localhost:3000\n- Backend: http://localhost:4000\n`;
+	return `# ${projectName}\n\nBuilt with Rakta.js - Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Backend | ${BACKEND_DISPLAY[projectConfig.backendFramework]} |\n| Database | ${DATABASE_DISPLAY[projectConfig.database]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\n# Frontend + backend in one command\nbun run dev\n\n# Or separately:\nbun run dev:frontend\nbun run dev:backend\n\`\`\`\n\nDependencies are installed automatically during project creation. If you created the project with \`--no-install\`, run \`bun install\` once before starting development.\n\n## Endpoints\n\n- Frontend: http://localhost:3000\n- Backend: http://localhost:4000\n`;
 }
 
 //  Main export

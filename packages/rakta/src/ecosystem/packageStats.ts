@@ -14,6 +14,7 @@ export interface PackageStatsOptions {
 interface NpmVersionMetadata {
 	readonly version?: string;
 	readonly dependencies?: Record<string, string>;
+	readonly peerDependencies?: Record<string, string>;
 }
 
 interface NpmPackageMetadata {
@@ -32,7 +33,7 @@ const memoryCache = new Map<
 >();
 
 function readNumber(value: unknown): number | null {
-	return typeof value === "number" && Number.isFinite(value) && value >= 0
+	return typeof value === "number" && Number.isFinite(value) && value > 0
 		? value
 		: null;
 }
@@ -56,8 +57,11 @@ export function parseRuntimeDependencies(
 		latestVersion !== undefined
 			? packageMetadata?.versions?.[latestVersion]
 			: undefined;
-	const dependencyNames = Object.keys(
-		versionMetadata?.dependencies ?? {},
+	const dependencyNames = Array.from(
+		new Set([
+			...Object.keys(versionMetadata?.dependencies ?? {}),
+			...Object.keys(versionMetadata?.peerDependencies ?? {}),
+		]),
 	).sort();
 
 	const result: Pick<

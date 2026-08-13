@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import * as clack from "@clack/prompts";
@@ -30,28 +31,64 @@ function getProjectNameFromArgs(
 	return undefined;
 }
 
+function shouldInstallDependencies(cliArgs: ReadonlyArray<string>): boolean {
+	return (
+		!cliArgs.includes("--no-install") && !cliArgs.includes("--skip-install")
+	);
+}
+
+function formatInstallCommand(projectName: string): string {
+	return pc.cyan(`cd ${projectName} && bun install`);
+}
+
 function formatFullstackCommands(projectName: string): string {
 	return [
 		pc.dim(`# Option A: start both with one command`),
 		pc.cyan(`cd ${projectName}`),
-		pc.cyan("bun install"),
 		pc.cyan("bun run dev"),
 		"",
 		pc.dim("# Option B: start separately"),
-		pc.cyan(`cd ${projectName}/frontend && bun install && bun run dev`),
-		pc.cyan(`cd ${projectName}/backend  && bun install && bun run dev`),
+		pc.cyan(`cd ${projectName}/frontend && bun run dev`),
+		pc.cyan(`cd ${projectName}/backend  && bun run dev`),
 	]
 		.map((line) => (line.length === 0 ? "" : `        ${line}`))
 		.join("\n");
 }
 
 function formatFrontendOnlyCommands(projectName: string): string {
-	return [`cd ${projectName}`, "bun install", "bun run dev"]
+	return [`cd ${projectName}`, "bun run dev"]
 		.map((command) => `        ${pc.cyan(command)}`)
 		.join("\n");
 }
 
-function printSuccessMessage(projectConfig: ProjectConfig): void {
+async function installDependencies(projectDirectory: string): Promise<void> {
+	await new Promise<void>((resolveInstall, rejectInstall) => {
+		const installProcess = spawn("bun", ["install"], {
+			cwd: projectDirectory,
+			stdio: "inherit",
+			shell: process.platform === "win32",
+		});
+
+		installProcess.on("error", rejectInstall);
+		installProcess.on("exit", (exitCode) => {
+			if (exitCode === 0) {
+				resolveInstall();
+				return;
+			}
+
+			rejectInstall(
+				new Error(
+					`bun install failed with exit code ${exitCode ?? "unknown"}.`,
+				),
+			);
+		});
+	});
+}
+
+function printSuccessMessage(
+	projectConfig: ProjectConfig,
+	dependenciesInstalled: boolean,
+): void {
 	const modeLabel = PROJECT_MODE_DISPLAY[projectConfig.projectMode];
 	const languageLabel = PROJECT_LANGUAGE_DISPLAY[projectConfig.language];
 	const cssLabel = CSS_DISPLAY[projectConfig.cssFramework];
@@ -90,6 +127,7 @@ function printSuccessMessage(projectConfig: ProjectConfig): void {
 
       ${pc.bold("Next steps:")}
 
+        ${pc.dim(dependenciesInstalled ? "Dependencies are already installed." : "Run bun install once before starting.")}
 ${nextSteps}
 
       ${pc.bold("Frontend:")} ${pc.cyan("http://localhost:3000")}${isFullstack ? `\n      ${pc.bold("Backend:")}  ${pc.cyan("http://localhost:4000")}` : ""}
@@ -98,6 +136,7 @@ ${nextSteps}
 
 async function main(): Promise<void> {
 	const rawArgs = process.argv.slice(2);
+	const installAfterGeneration = shouldInstallDependencies(rawArgs);
 
 	printBanner();
 
@@ -132,7 +171,27 @@ async function main(): Promise<void> {
 		process.exit(1);
 	}
 
-	printSuccessMessage(projectConfig);
+	if (installAfterGeneration) {
+		const installSpinner = clack.spinner();
+		installSpinner.start("Installing dependencies with Bun...");
+		try {
+			await installDependencies(targetPath);
+			installSpinner.stop(pc.green("Dependencies installed."));
+		} catch (caughtError) {
+			installSpinner.stop(pc.red("Dependency installation failed."));
+			if (caughtError instanceof Error) {
+				console.error(pc.red(caughtError.message));
+			}
+			console.error(
+				pc.dim(
+					`Run ${formatInstallCommand(projectName)} after fixing the install error.`,
+				),
+			);
+			process.exit(1);
+		}
+	}
+
+	printSuccessMessage(projectConfig, installAfterGeneration);
 }
 
 main().catch((caughtError: unknown) => {

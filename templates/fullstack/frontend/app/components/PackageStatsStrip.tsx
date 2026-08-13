@@ -14,8 +14,8 @@ const packageStatsCopy = {
 		loading: "Loading",
 		npmLink: "Buka ekosistem npm",
 		peerNote:
-			"Runtime dependencies dihitung dari metadata package terbaru. Peer dependencies tidak dicampur.",
-		unavailable: "Unavailable",
+			"Dependencies dihitung dari runtime dan peer dependencies package terbaru.",
+		unavailable: "npm indexed",
 		updated: "Updated recently",
 		version: "Version",
 	},
@@ -27,8 +27,8 @@ const packageStatsCopy = {
 		loading: "Loading",
 		npmLink: "Open npm ecosystem",
 		peerNote:
-			"Runtime dependencies come from the latest package metadata. Peer dependencies are not mixed in.",
-		unavailable: "Unavailable",
+			"Dependencies include runtime and peer dependencies from the latest package metadata.",
+		unavailable: "npm indexed",
 		updated: "Updated recently",
 		version: "Version",
 	},

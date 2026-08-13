@@ -14,7 +14,7 @@ export default defineRaktaConfig({
 			"Frontend-only Rakta.js app with zero-import components and ShrimpRun.",
 	},
 	render: {
-		defaultMode: "csr",
+		defaultMode: "hybrid",
 		routes: {
 			"/": "csr",
 		},

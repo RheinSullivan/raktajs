@@ -1,95 +1,64 @@
-# Dev Tools
+# Rakta DevTools
 
-Rakta.js ships two development-only tools: **Rakta Dev Indicator** (browser) and **Rakta Dev Terminal** (server). Both are excluded from production builds automatically.
+Rakta DevTools are development-only browser tools that appear when you run the Rakta.js Forge dev server. Production builds do not mount the indicator, include the DevTools browser module, or expose the DevTools control endpoints.
 
----
+## Dev Indicator
 
-## Rakta Dev Indicator
+The Rakta Dev Indicator is a small floating button that uses the real `public/Rakta.js.svg` logo. Press the button with a mouse, `Enter`, or `Space` to open Rakta DevTools. Press `Escape` or click outside the panel to close it.
 
-A floating panel injected into the browser in development mode. Powered by the actual Rakta.js SVG logo.
+The panel shows:
 
-**Features:**
+- current route pathname
+- route status based on the resolved Rakta render mode
+- active bundler, currently `Bun.build (CherbonsEngine)`
+- Route Info
+- Preferences
+- Restart Dev Server
+- Reset Bundler Cache
 
-- Floating circular button (bottom-left) with the Rakta.js logo
-- Click to open panel showing: route path, render mode, bundler
-- Performance tab with real measurements from the browser Performance API
-- Diagnostics tab highlighting the "response arrived but UI is slow" case
-- Keyboard accessible: `Enter`/`Space` to open, `Escape` to close
-- Respects `prefers-reduced-motion`
-- Zero production cost - guarded by `process.env.NODE_ENV === "development"`
+## Route Info
 
-**What it measures:**
+Route Info comes from the active Forge route manifest and render configuration. The browser asks the development server for metadata through the DevTools route endpoint; it does not scan the filesystem.
 
-```
-Network    Time from fetch start to response end (Navigation Timing API)
-Parse      DOM processing time after response
-State      Rakta state update time (performance.mark)
-Render     React render time (performance.mark)
-Paint      First Contentful Paint (FCP)
-Total      Full load event duration
-```
+The panel shows the matched pattern, route type, render mode source, route source file, layout files, page file, route segments, and dynamic parameter names.
 
-**Diagnosing "response is done but UI is slow":**
+## Preferences
 
-The Diagnostics panel calculates `Response - UI gap = FCP - networkMs`. If this number is large (>1s), the bottleneck is in the browser pipeline, not the server.
+Preferences are stored in browser storage for the local development browser.
 
-**Production exclusion:**
+Supported preferences:
+
+- Theme: System, Light, Dark
+- Position: Bottom Left, Bottom Right, Top Left, Top Right
+- Size: Small, Medium, Large
+- Hide DevTools shortcut
+
+The default shortcut is `Alt+Shift+D`. Shortcut recording requires at least one modifier key, avoids common browser-reserved shortcuts, and does not trigger while typing in inputs, textareas, selects, or editable content.
+
+Use "Hide DevTools for this session" to hide the indicator until the development browser session is restarted. This does not modify project configuration.
+
+## Project Configuration
+
+Disable Rakta DevTools for a project with:
 
 ```ts
-// In generated client entry - only runs in development
-if (process.env.NODE_ENV === "development") {
-  const { mountDevIndicator } = await import("./devIndicator");
-  mountDevIndicator({ version, logoDataUrl, bundler });
-}
+import { defineConfig } from "raktajs/config";
+
+export default defineConfig({
+  devTools: false,
+});
 ```
 
----
+When disabled, the Forge dev server does not mount the browser indicator and does not expose the DevTools control endpoints.
+
+## Dev Server Commands
+
+"Restart Dev Server" asks the active Forge development server to regenerate the route manifest, rebuild the client bundle, and notify connected browsers through the existing live-reload channel.
+
+"Reset Bundler Cache" clears only the generated `.rakta/dev` development bundle cache, then rebuilds the client bundle. It does not delete source files, `node_modules`, `.git`, or project configuration.
+
+Both commands prevent duplicate requests while a previous command is still running and show success or failure feedback in the panel.
 
 ## Rakta Dev Terminal
 
-Output printed to the server terminal when running `bun run dev`.
-
-**Startup output:**
-
-```
-  ⩛ Rakta.js 1.1.5 (CherbonsEngine)
-
-  Local:          http://localhost:3000
-  Network:        http://192.168.1.8:3000
-  Environments:   .env.local
-  Mode:           development
-
-  Ready in 421ms
-```
-
-**Request logging:**
-
-```
-  GET    /                              200  24ms
-  GET    /api/report                    200  17ms
-  POST   /api/report                    201  31ms
-  GET    /api/report                    200  1.4s  [slow]
-  GET    /missing                       404   2ms
-```
-
-**Features:**
-
-- Real Local URL from server port (not hardcoded)
-- LAN Network IP detected from active network interfaces (skips Docker, WSL, VPN)
-- Environment filenames detected - values never exposed
-- Ready time measured from server start to first accepted connection
-- Request timing: total server-side ms per request
-- Slow request flag: configurable threshold (default 1000ms)
-- `NO_COLOR` env variable respected
-
----
-
-## Status
-
-| Feature | Status |
-|---|---|
-| Rakta Dev Terminal | Experimental |
-| Rakta Dev Indicator | Experimental |
-| Error Overlay | Planned |
-| HMR status in indicator | Planned |
-| Request ID cross-reference | Planned |
+Rakta Dev Terminal is the server-side output printed by `bun run dev`. It shows the Rakta.js version, local URL, LAN URL when available, detected environment filenames, startup time, and request timings.

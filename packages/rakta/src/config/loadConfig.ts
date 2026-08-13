@@ -37,6 +37,11 @@ export function mergeConfig(
 	baseConfig: Required<RaktaConfig>,
 	overrideConfig: RaktaConfig,
 ): Required<RaktaConfig> {
+	const baseDevTools =
+		typeof baseConfig.devTools === "boolean"
+			? { enabled: baseConfig.devTools }
+			: baseConfig.devTools;
+
 	return {
 		appName: overrideConfig.appName ?? baseConfig.appName,
 		appDir: overrideConfig.appDir ?? baseConfig.appDir,
@@ -78,5 +83,11 @@ export function mergeConfig(
 						},
 					}
 				: baseConfig.render,
+		devTools:
+			overrideConfig.devTools !== undefined
+				? typeof overrideConfig.devTools === "boolean"
+					? { enabled: overrideConfig.devTools }
+					: { ...baseDevTools, ...overrideConfig.devTools }
+				: baseConfig.devTools,
 	};
 }

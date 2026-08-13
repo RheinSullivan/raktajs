@@ -92,7 +92,7 @@ export const RENDER_MODE_DISPLAY: Record<RenderMode, string> = {
 	ssg: "SSG - Static Site Generation",
 	csg: "CSG - Configurable Static Generation",
 	spa: "SPA - Single Page Application",
-	hybrid: "Hybrid - Mixed per-route",
+	hybrid: "Unified Rakta Rendering",
 };
 
 export const PROJECT_MODE_DISPLAY: Record<ProjectMode, string> = {

@@ -1,95 +1,64 @@
-# Dev Tools
+# Rakta DevTools
 
-Rakta.js menyertakan dua alat development-only: **Rakta Dev Indicator** (browser) dan **Rakta Dev Terminal** (server). Keduanya tidak disertakan dalam production build secara otomatis.
+Rakta DevTools adalah alat browser khusus development yang muncul saat menjalankan Forge dev server Rakta.js. Production build tidak memasang indicator, tidak menyertakan modul browser DevTools, dan tidak membuka endpoint kontrol DevTools.
 
----
+## Dev Indicator
 
-## Rakta Dev Indicator
+Rakta Dev Indicator adalah tombol floating kecil yang memakai logo asli `public/Rakta.js.svg`. Tekan tombol dengan mouse, `Enter`, atau `Space` untuk membuka Rakta DevTools. Tekan `Escape` atau klik area luar panel untuk menutupnya.
 
-Panel floating yang diinjeksikan ke browser saat mode development.
+Panel menampilkan:
 
-**Fitur:**
+- pathname route saat ini
+- status route berdasarkan render mode Rakta yang aktif
+- bundler aktif, saat ini `Bun.build (CherbonsEngine)`
+- Route Info
+- Preferences
+- Restart Dev Server
+- Reset Bundler Cache
 
-- Tombol circular floating (kiri bawah) dengan logo Rakta.js
-- Klik untuk membuka panel: route path, render mode, bundler
-- Tab Performance dengan pengukuran nyata dari browser Performance API
-- Tab Diagnostics yang menyoroti kasus "response sudah datang tapi UI lambat"
-- Accessible dengan keyboard: `Enter`/`Space` untuk buka, `Escape` untuk tutup
-- Menghormati `prefers-reduced-motion`
-- Zero production cost - dijaga oleh `process.env.NODE_ENV === "development"`
+## Route Info
 
-**Yang diukur:**
+Route Info berasal dari Forge route manifest dan konfigurasi render yang sedang aktif. Browser meminta metadata ke development server melalui endpoint route DevTools; browser tidak melakukan scan filesystem.
 
-```
-Network    Waktu dari fetch start ke response end (Navigation Timing API)
-Parse      Waktu pemrosesan DOM setelah response
-State      Waktu update state Rakta (performance.mark)
-Render     Waktu render React (performance.mark)
-Paint      First Contentful Paint (FCP)
-Total      Durasi load event penuh
-```
+Panel menampilkan matched pattern, tipe route, sumber render mode, file sumber route, file layout, file page, segment route, dan nama parameter dinamis.
 
-**Mendiagnosis masalah "response selesai tapi UI lambat":**
+## Preferences
 
-Panel Diagnostics menghitung `Response - UI gap = FCP - networkMs`. Jika angka ini besar (>1 detik), bottleneck ada di pipeline browser, bukan server.
+Preferences disimpan di browser storage untuk browser development lokal.
 
-**Eksklusi production:**
+Preferences yang didukung:
+
+- Theme: System, Light, Dark
+- Position: Bottom Left, Bottom Right, Top Left, Top Right
+- Size: Small, Medium, Large
+- Hide DevTools shortcut
+
+Shortcut default adalah `Alt+Shift+D`. Recording shortcut membutuhkan minimal satu modifier key, menghindari shortcut umum milik browser, dan tidak aktif saat developer sedang mengetik di input, textarea, select, atau editable content.
+
+Gunakan "Hide DevTools for this session" untuk menyembunyikan indicator sampai sesi browser development dimulai ulang. Ini tidak mengubah konfigurasi project.
+
+## Konfigurasi Project
+
+Nonaktifkan Rakta DevTools untuk sebuah project dengan:
 
 ```ts
-// Di generated client entry - hanya berjalan di development
-if (process.env.NODE_ENV === "development") {
-  const { mountDevIndicator } = await import("./devIndicator");
-  mountDevIndicator({ version, logoDataUrl, bundler });
-}
+import { defineConfig } from "raktajs/config";
+
+export default defineConfig({
+  devTools: false,
+});
 ```
 
----
+Saat dinonaktifkan, Forge dev server tidak memasang browser indicator dan tidak membuka endpoint kontrol DevTools.
+
+## Perintah Dev Server
+
+"Restart Dev Server" meminta Forge development server aktif untuk membuat ulang route manifest, membangun ulang client bundle, dan memberi tahu browser yang terhubung melalui channel live-reload yang sudah ada.
+
+"Reset Bundler Cache" hanya menghapus cache generated `.rakta/dev`, lalu membangun ulang client bundle. Perintah ini tidak menghapus source files, `node_modules`, `.git`, atau konfigurasi project.
+
+Kedua perintah mencegah request duplikat selama perintah sebelumnya masih berjalan dan menampilkan feedback berhasil atau gagal di panel.
 
 ## Rakta Dev Terminal
 
-Output yang dicetak ke terminal server saat menjalankan `bun run dev`.
-
-**Output startup:**
-
-```
-  ⩛ Rakta.js 1.1.5 (CherbonsEngine)
-
-  Local:          http://localhost:3000
-  Network:        http://192.168.1.8:3000
-  Environments:   .env.local
-  Mode:           development
-
-  Ready in 421ms
-```
-
-**Request logging:**
-
-```
-  GET    /                              200  24ms
-  GET    /api/report                    200  17ms
-  POST   /api/report                    201  31ms
-  GET    /api/report                    200  1.4s  [slow]
-  GET    /missing                       404   2ms
-```
-
-**Fitur:**
-
-- Local URL nyata dari port server (bukan hardcode)
-- IP Network LAN terdeteksi dari interface jaringan aktif (skip Docker, WSL, VPN)
-- Nama file environment terdeteksi - nilai tidak pernah ditampilkan
-- Ready time diukur dari start server sampai koneksi pertama diterima
-- Timing request: total ms sisi server per request
-- Flag slow request: threshold dapat dikonfigurasi (default 1000ms)
-- Environment variable `NO_COLOR` dihormati
-
----
-
-## Status
-
-| Fitur | Status |
-|---|---|
-| Rakta Dev Terminal | Experimental |
-| Rakta Dev Indicator | Experimental |
-| Error Overlay | Planned |
-| Status HMR di indicator | Planned |
-| Request ID cross-reference | Planned |
+Rakta Dev Terminal adalah output sisi server yang dicetak oleh `bun run dev`. Output ini menampilkan versi Rakta.js, Local URL, LAN URL jika tersedia, nama file environment yang terdeteksi, startup time, dan timing request.
