@@ -3,123 +3,125 @@ import { dirname, join, relative } from "node:path";
 import { scanForExports } from "../autoImport/scanner";
 import { RAKTA_NAME, RAKTA_VERSION } from "../frameworkIdentity";
 import type { RouteManifest, RouteManifestEntry } from "../router/types";
+import { RAKTA_DEVTOOLS_BUNDLER_NAME } from "./devTools";
 
 export interface ClientEntryOptions {
-	readonly projectRoot: string;
-	readonly appDir: string;
-	readonly workDir: string;
-	readonly manifest: RouteManifest;
+  readonly projectRoot: string;
+  readonly appDir: string;
+  readonly workDir: string;
+  readonly manifest: RouteManifest;
+  readonly devToolsEnabled: boolean;
 }
 
 function toModuleSpecifier(fromFile: string, targetFile: string): string {
-	const relativePath = relative(dirname(fromFile), targetFile).replace(
-		/\\/g,
-		"/",
-	);
+  const relativePath = relative(dirname(fromFile), targetFile).replace(
+    /\\/g,
+    "/",
+  );
 
-	if (relativePath.startsWith(".")) {
-		return relativePath;
-	}
+  if (relativePath.startsWith(".")) {
+    return relativePath;
+  }
 
-	return `./${relativePath}`;
+  return `./${relativePath}`;
 }
 
 function toCssImportSpecifier(
-	entryPath: string,
-	projectRoot: string,
+  entryPath: string,
+  projectRoot: string,
 ): string | null {
-	const candidates = [
-		join(projectRoot, "styles", "globals.css"),
-		join(projectRoot, "styles", "globals.scss"),
-		join(projectRoot, "styles", "globals.sass"),
-	];
+  const candidates = [
+    join(projectRoot, "styles", "globals.css"),
+    join(projectRoot, "styles", "globals.scss"),
+    join(projectRoot, "styles", "globals.sass"),
+  ];
 
-	const stylePath = candidates.find((candidate) => existsSync(candidate));
+  const stylePath = candidates.find((candidate) => existsSync(candidate));
 
-	if (!stylePath) {
-		return null;
-	}
+  if (!stylePath) {
+    return null;
+  }
 
-	return toModuleSpecifier(entryPath, stylePath);
+  return toModuleSpecifier(entryPath, stylePath);
 }
 
 function getPageRoutes(manifest: RouteManifest): RouteManifestEntry[] {
-	return manifest.routes.filter((route) => route.kind === "page");
+  return manifest.routes.filter((route) => route.kind === "page");
 }
 
 function buildRouteImports(
-	entryPath: string,
-	appDir: string,
-	pageRoutes: ReadonlyArray<RouteManifestEntry>,
+  entryPath: string,
+  appDir: string,
+  pageRoutes: ReadonlyArray<RouteManifestEntry>,
 ): string {
-	const routeEntries = pageRoutes
-		.map((route) => {
-			const pagePath = join(appDir, route.filePath);
-			return `  ${JSON.stringify(route.urlPattern)}: () => import("${toModuleSpecifier(entryPath, pagePath)}"),`;
-		})
-		.join("\n");
+  const routeEntries = pageRoutes
+    .map((route) => {
+      const pagePath = join(appDir, route.filePath);
+      return `  ${JSON.stringify(route.urlPattern)}: () => import("${toModuleSpecifier(entryPath, pagePath)}"),`;
+    })
+    .join("\n");
 
-	return `const routeModules = {\n${routeEntries}\n} as const;`;
+  return `const routeModules = {\n${routeEntries}\n} as const;`;
 }
 
 function buildRouteTable(
-	pageRoutes: ReadonlyArray<RouteManifestEntry>,
+  pageRoutes: ReadonlyArray<RouteManifestEntry>,
 ): string {
-	const routeEntries = pageRoutes
-		.map(
-			(route) =>
-				`  ${JSON.stringify(route.urlPattern)}: routeModules[${JSON.stringify(route.urlPattern)}],`,
-		)
-		.join("\n");
+  const routeEntries = pageRoutes
+    .map(
+      (route) =>
+        `  ${JSON.stringify(route.urlPattern)}: routeModules[${JSON.stringify(route.urlPattern)}],`,
+    )
+    .join("\n");
 
-	return `const routes = {\n${routeEntries}\n} as const;`;
+  return `const routes = {\n${routeEntries}\n} as const;`;
 }
 
 function findExistingModule(
-	basePathWithoutExtension: string,
+  basePathWithoutExtension: string,
 ): string | undefined {
-	const candidates = [".tsx", ".ts", ".jsx", ".js"].map(
-		(extension) => `${basePathWithoutExtension}${extension}`,
-	);
+  const candidates = [".tsx", ".ts", ".jsx", ".js"].map(
+    (extension) => `${basePathWithoutExtension}${extension}`,
+  );
 
-	return candidates.find((candidate) => existsSync(candidate));
+  return candidates.find((candidate) => existsSync(candidate));
 }
 
 function buildStarterGlobalLoaders(
-	options: ClientEntryOptions,
-	entryPath: string,
+  options: ClientEntryOptions,
+  entryPath: string,
 ): string {
-	const loaders: string[] = [];
+  const loaders: string[] = [];
 
-	const discovered = scanForExports({
-		frontendRoot: options.projectRoot,
-		directories: ["app", "components", "lib", "stores", "schemas", "utils"],
-		outputDirectory: ".rakta",
-	});
+  const discovered = scanForExports({
+    frontendRoot: options.projectRoot,
+    directories: ["app", "components", "lib", "stores", "schemas", "utils"],
+    outputDirectory: ".rakta",
+  });
 
-	let index = 0;
-	for (const item of discovered) {
-		const fullPath = join(options.projectRoot, item.filePath);
-		if (!existsSync(fullPath)) continue;
+  let index = 0;
+  for (const item of discovered) {
+    const fullPath = join(options.projectRoot, item.filePath);
+    if (!existsSync(fullPath)) continue;
 
-		const specifier = toModuleSpecifier(entryPath, fullPath);
-		const names = new Set<string>();
-		if (item.name) names.add(item.name);
-		if (item.simpleName) names.add(item.simpleName);
+    const specifier = toModuleSpecifier(entryPath, fullPath);
+    const names = new Set<string>();
+    if (item.name) names.add(item.name);
+    if (item.simpleName) names.add(item.simpleName);
 
-		const assignments = Array.from(names)
-			.map(
-				(n) =>
-					`    (globalThis as typeof globalThis & Record<string, unknown>).${n} = exp_${index};`,
-			)
-			.join("\n");
+    const assignments = Array.from(names)
+      .map((n) => `    (globalThis as typeof globalThis & Record<string, unknown>)[${JSON.stringify(n)}] = exp_${index};`)
+      .join("\n");
 
-		loaders.push(`  try {
-    const mod_${index} = await import("${specifier}");
-    const exp_${index} = mod_${index}.default || mod_${index}.${item.name} || mod_${index};
-    if (exp_${index}) {
+    // Use bracket access when reading potentially unsafe export names
+    const exportedAccess = item.name ? `mod_${index}.default || mod_${index}[${JSON.stringify(item.name)}] || mod_${index}` : `mod_${index}.default || mod_${index}`;
+
+    loaders.push(`  try {
+  const mod_${index} = await import("${specifier}");
+  const exp_${index} = ${exportedAccess};
+  if (exp_${index}) {
 ${assignments}
-    }
+  }
     for (const [k, v] of Object.entries(mod_${index})) {
       if (k !== "default" && typeof k === "string") {
         (globalThis as typeof globalThis & Record<string, unknown>)[k] = v;
@@ -127,13 +129,13 @@ ${assignments}
     }
   } catch (err) {}`);
 
-		index++;
-	}
+    index++;
+  }
 
-	const audioPath = findExistingModule(join(options.appDir, "utils", "audio"));
+  const audioPath = findExistingModule(join(options.appDir, "utils", "audio"));
 
-	if (audioPath !== undefined) {
-		loaders.push(`  try {
+  if (audioPath !== undefined) {
+    loaders.push(`  try {
     const audioModule = await import("${toModuleSpecifier(entryPath, audioPath)}");
     (globalThis as typeof globalThis & Record<string, unknown>).getMuteState = audioModule.getMuteState;
     (globalThis as typeof globalThis & Record<string, unknown>).playGameOverSound = audioModule.playGameOverSound;
@@ -141,95 +143,87 @@ ${assignments}
     (globalThis as typeof globalThis & Record<string, unknown>).playScoreSound = audioModule.playScoreSound;
     (globalThis as typeof globalThis & Record<string, unknown>).setMute = audioModule.setMute;
   } catch (err) {}`);
-	}
+  }
 
-	if (loaders.length === 0) {
-		return `async function loadRaktaGlobals(): Promise<void> {
+  if (loaders.length === 0) {
+    return `async function loadRaktaGlobals(): Promise<void> {
   return;
 }`;
-	}
+  }
 
-	return `async function loadRaktaGlobals(): Promise<void> {
+  return `async function loadRaktaGlobals(): Promise<void> {
 ${loaders.join("\n\n")}
 }`;
 }
 
 function buildClientEntrySource(
-	options: ClientEntryOptions,
-	entryPath: string,
+  options: ClientEntryOptions,
+  entryPath: string,
 ): string {
-	const pageRoutes = getPageRoutes(options.manifest);
-	const routeModules = buildRouteImports(entryPath, options.appDir, pageRoutes);
-	const routeTable = buildRouteTable(pageRoutes);
-	const cssImportSpecifier = toCssImportSpecifier(
-		entryPath,
-		options.projectRoot,
-	);
-	const cssImport =
-		cssImportSpecifier !== null ? `import "${cssImportSpecifier}";\n` : "";
-	const starterGlobalLoaders = buildStarterGlobalLoaders(options, entryPath);
+  const pageRoutes = getPageRoutes(options.manifest);
+  const routeModules = buildRouteImports(entryPath, options.appDir, pageRoutes);
+  const routeTable = buildRouteTable(pageRoutes);
+  const cssImportSpecifier = toCssImportSpecifier(
+    entryPath,
+    options.projectRoot,
+  );
+  const cssImport =
+    cssImportSpecifier !== null ? `import "${cssImportSpecifier}";\n` : "";
+  const starterGlobalLoaders = buildStarterGlobalLoaders(options, entryPath);
 
-	// Embed the Rakta.js SVG logo as a base64 data URL so the dev indicator
-	// has no runtime filesystem dependency. Computed once at bundle time.
-	const svgCandidates = [
-		join(options.projectRoot, "public", "rakta-logo.svg"),
-		join(options.projectRoot, "public", "Rakta.js.svg"),
-		join(options.projectRoot, "..", "..", "public", "Rakta.js.svg"),
-		join(__dirname, "..", "..", "..", "..", "public", "Rakta.js.svg"),
-	];
-	const svgPath = svgCandidates.find((p) => existsSync(p));
-	const logoDataUrl = svgPath
-		? `data:image/svg+xml;base64,${readFileSync(svgPath).toString("base64")}`
-		: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHBhdGggZmlsbD0iI0M2MDAwNSIgZD0iTTE2IDJMNCA4djE2bDEyIDYgMTItNlY4TDE2IDJ6Ii8+PC9zdmc+";
+  // Embed the Rakta.js SVG logo as a base64 data URL so the dev indicator
+  // has no runtime filesystem dependency. Computed once at bundle time.
+  const svgCandidates = [
+    join(options.projectRoot, "public", "rakta-logo.svg"),
+    join(options.projectRoot, "public", "Rakta.js.svg"),
+    join(options.projectRoot, "..", "..", "public", "Rakta.js.svg"),
+    join(__dirname, "..", "..", "..", "..", "public", "Rakta.js.svg"),
+  ];
+  const svgPath = svgCandidates.find((svgCandidatePath) =>
+    existsSync(svgCandidatePath),
+  );
+  const logoDataUrl = svgPath
+    ? `data:image/svg+xml;base64,${readFileSync(svgPath).toString("base64")}`
+    : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHBhdGggZmlsbD0iI0M2MDAwNSIgZD0iTTE2IDJMNCA4djE2bDEyIDYgMTItNlY4TDE2IDJ6Ii8+PC9zdmc+";
 
-	// Resolve path to devIndicator module relative to the generated entry file.
-	// For browser bundles, we inline the devIndicator source directly from the
-	// built dist file so there is no dynamic filesystem import at runtime.
-	const devIndicatorDistPath = join(
-		__dirname,
-		"..",
-		"developerExperience",
-		"devIndicator.js",
-	);
-	const devIndicatorInline = existsSync(devIndicatorDistPath)
-		? readFileSync(devIndicatorDistPath, "utf8")
-				.replace(/^#!.*\n/, "") // strip shebang if any
-				.replace(/export \{[^}]*\};?\s*$/m, "") // strip named exports
-				.replace(/export function /g, "function ")
-				.replace(/export const /g, "const ")
-				.replace(/export class /g, "class ")
-				.replace(/export interface /g, "// interface ")
-				.replace(/export type /g, "// type ")
-		: "";
+  const devIndicatorSourcePath = join(
+    __dirname,
+    "..",
+    "developerExperience",
+    "devIndicator.ts",
+  );
+  const devIndicatorImport = options.devToolsEnabled
+    ? `import { mountDevIndicator } from "${toModuleSpecifier(entryPath, devIndicatorSourcePath)}";\n`
+    : "";
 
-	// Read version from package.json at build time.
-	const pkgPath = join(
-		options.projectRoot,
-		"node_modules",
-		"raktajs",
-		"package.json",
-	);
-	let rVersion = RAKTA_VERSION;
-	if (existsSync(pkgPath)) {
-		try {
-			const pkg = JSON.parse(readFileSync(pkgPath, "utf8")) as {
-				version?: string;
-			};
-			if (typeof pkg.version === "string") rVersion = pkg.version;
-		} catch {
-			// fall back to default
-		}
-	}
-	const rVersionSafe = rVersion.replace(/"/g, "");
-	const logoDataUrlSafe = logoDataUrl
-		.replace(/\\/g, "\\\\")
-		.replace(/`/g, "\\`");
-	const layoutPath = findExistingModule(join(options.appDir, "layout"));
-	const layoutImport = layoutPath
-		? `import RootLayout from "${toModuleSpecifier(entryPath, layoutPath)}";\n`
-		: "const RootLayout = null;\n";
+  // Read version from package.json at build time.
+  const pkgPath = join(
+    options.projectRoot,
+    "node_modules",
+    "raktajs",
+    "package.json",
+  );
+  let rVersion = RAKTA_VERSION;
+  if (existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(readFileSync(pkgPath, "utf8")) as {
+        version?: string;
+      };
+      if (typeof pkg.version === "string") rVersion = pkg.version;
+    } catch {
+      // fall back to default
+    }
+  }
+  const rVersionSafe = rVersion.replace(/"/g, "");
+  const logoDataUrlSafe = logoDataUrl
+    .replace(/\\/g, "\\\\")
+    .replace(/`/g, "\\`");
+  const layoutPath = findExistingModule(join(options.appDir, "layout"));
+  const layoutImport = layoutPath
+    ? `import RootLayout from "${toModuleSpecifier(entryPath, layoutPath)}";\n`
+    : "const RootLayout = null;\n";
 
-	return `import React, { useEffect, useState } from "react";
+  return `import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import * as ReactHooks from "react";
 import gsap from "gsap";
@@ -291,6 +285,7 @@ import {
 } from "react-icons/fa6";
 ${cssImport}
 ${layoutImport}
+${devIndicatorImport}
 (globalThis as typeof globalThis & Record<string, unknown>).useCallback = ReactHooks.useCallback;
 (globalThis as typeof globalThis & Record<string, unknown>).useEffect = ReactHooks.useEffect;
 (globalThis as typeof globalThis & Record<string, unknown>).useMemo = ReactHooks.useMemo;
@@ -409,17 +404,17 @@ function setupUrlPreview(): void {
 
 setupUrlPreview();
 
-// Dev Indicator - development only. Inlined at build time, no dynamic import.
+${options.devToolsEnabled
+      ? `// Rakta DevTools stays behind the development guard so production builds do not import or mount the browser overlay.
 if (process.env.NODE_ENV === "development") {
-  ${devIndicatorInline}
-  if (typeof mountDevIndicator === "function") {
-    mountDevIndicator({
-      version: "${rVersionSafe}",
-      logoDataUrl: \`${logoDataUrlSafe}\`,
-      bundler: "Bun / Vite (CherbonsEngine)",
-    });
-  }
-}
+  mountDevIndicator({
+    version: "${rVersionSafe}",
+    logoDataUrl: \`${logoDataUrlSafe}\`,
+    bundler: "${RAKTA_DEVTOOLS_BUNDLER_NAME}",
+  });
+}`
+      : ""
+    }
 
 const raktaElementStyle = document.createElement("style");
 raktaElementStyle.textContent = \`
@@ -882,12 +877,12 @@ requestAnimationFrame(function() {
 }
 
 export function writeClientEntry(options: ClientEntryOptions): string {
-	mkdirSync(options.workDir, { recursive: true });
+  mkdirSync(options.workDir, { recursive: true });
 
-	const entryPath = join(options.workDir, "client-entry.tsx");
-	const entrySource = buildClientEntrySource(options, entryPath);
+  const entryPath = join(options.workDir, "client-entry.tsx");
+  const entrySource = buildClientEntrySource(options, entryPath);
 
-	writeFileSync(entryPath, entrySource, "utf-8");
+  writeFileSync(entryPath, entrySource, "utf-8");
 
-	return entryPath;
+  return entryPath;
 }
