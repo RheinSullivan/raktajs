@@ -16,24 +16,22 @@ Rakta.js publishes two npm packages from GitHub Actions using **npm Trusted Publ
 ## Architecture
 
 ```
-Developer pushes git tag  →  creates GitHub Release
+Developer creates a GitHub Release  →  publish.yml runs
          ↓
-GitHub Actions publish.yml fires (release: published)
-         ↓
-OIDC identity token issued by GitHub to the workflow
+GitHub Actions issues a short-lived OIDC token
          ↓
 npm Trusted Publishing validates the token
          ↓
-version validation  (tag == package.json version)
+version validation  (release tag == package.json version)
 version conflict check  (version not already on npm)
          ↓
 typecheck → lint → test → build
          ↓
 npm pack --dry-run  (validate tarball contents)
          ↓
-npm publish --provenance  (SLSA attestation embedded)
+npm publish --access public --tag <dist-tag>
          ↓
-Package live on npm with verified provenance
+Package is published from the exact workflow run without a stored npm token
 ```
 
 ---
@@ -59,15 +57,15 @@ Fires only on:
 Steps in order:
 
 1. Checkout (frozen)
-2. Setup Bun 1.3.11 + Node.js 22
+2. Setup Bun 1.3.11 + Node.js 24
 3. `bun install --frozen-lockfile`
-4. **Version validation** - git tag (e.g. `v1.0.7`) must match both `packages/rakta/package.json` and `packages/create-rakta/package.json`. Fails the workflow if they don't match.
+4. **Version validation** - release tag (e.g. `v1.1.8`) must match both `packages/rakta/package.json` and `packages/create-rakta/package.json`. Fails the workflow if they don't match.
 5. **Version conflict check** - queries npm to ensure neither version is already published. Prevents accidental re-publish.
-6. typecheck → lint → test → build
+6. Typecheck → lint → test → build
 7. `npm pack --dry-run` for both packages
-8. CLI smoke test (`node packages/create-rakta/dist/index.js --version`)
-9. `npm publish --access public --provenance` for `raktajs`
-10. `npm publish --access public --provenance` for `create-rakta-app`
+8. CLI smoke test (`node packages/create-rakta/dist/index.js --version` and `--help`)
+9. `npm publish --access public --tag "${NPM_TAG}"` for `raktajs`
+10. `npm publish --access public --tag "${NPM_TAG}"` for `create-rakta-app`
 
 Permissions:
 
@@ -184,20 +182,19 @@ The publish workflow uses `environment: npm`. You should create this environment
 
 ---
 
-## Provenance
+## Trusted Publishing and Provenance
 
-Both packages are published with `--provenance`. This creates a signed SLSA (Supply Chain Levels for Software Artifacts) attestation that links each published package to:
+The publish workflow uses npm Trusted Publishing through GitHub OIDC. It does not store a long-lived npm token in the repository or workflow environment.
 
-- The exact GitHub repository
-- The exact commit SHA
-- The exact workflow run
+The matching npm Trusted Publisher configuration is:
 
-Users can verify provenance on the npm package page or with:
+- GitHub Actions provider
+- Owner: `RheinSullivan`
+- Repository: `raktajs`
+- Workflow: `publish.yml`
+- Environment: `npm`
 
-```bash
-npm audit signatures raktajs
-npm audit signatures create-rakta-app
-```
+npm provenance is not added with `--provenance` in this workflow; the Trusted Publisher flow handles the authenticated publish path without a stored token.
 
 ---
 

@@ -35,8 +35,9 @@ type Handler func(changes []FileChange)
 // For development workloads the polling interval of 200 ms is imperceptible to
 // humans but sensitive enough to trigger HMR before the developer can switch
 // focus back to the browser tab.
+
 type Watcher struct {
-	mu       sync.Mutex
+	mutex    sync.Mutex
 	roots    []string
 	interval time.Duration
 	debounce time.Duration
@@ -87,22 +88,22 @@ func New(handler Handler, opts Options) *Watcher {
 }
 
 // Start begins the polling loop in a background goroutine.
-func (w *Watcher) Start() {
+func (watcher *Watcher) Start() {
 	// Take an initial snapshot so we do not fire for pre-existing files.
-	w.mu.Lock()
-	w.snapshot = w.scan()
-	w.mu.Unlock()
+	watcher.mutex.Lock()
+	watcher.snapshot = watcher.scan()
+	watcher.mutex.Unlock()
 
-	go w.loop()
+	go watcher.loop()
 }
 
 // Stop shuts down the watcher.
-func (w *Watcher) Stop() {
-	close(w.stop)
+func (watcher *Watcher) Stop() {
+	close(watcher.stop)
 }
 
-func (w *Watcher) loop() {
-	ticker := time.NewTicker(w.interval)
+func (watcher *Watcher) loop() {
+	ticker := time.NewTicker(watcher.interval)
 	defer ticker.Stop()
 
 	var pending []FileChange
@@ -110,14 +111,14 @@ func (w *Watcher) loop() {
 
 	for {
 		select {
-		case <-w.stop:
+		case <-watcher.stop:
 			return
 		case <-ticker.C:
-			w.mu.Lock()
-			current := w.scan()
-			changes := w.diff(w.snapshot, current)
-			w.snapshot = current
-			w.mu.Unlock()
+			watcher.mutex.Lock()
+			current := watcher.scan()
+			changes := watcher.diff(watcher.snapshot, current)
+			watcher.snapshot = current
+			watcher.mutex.Unlock()
 
 			if len(changes) == 0 {
 				continue
@@ -128,33 +129,33 @@ func (w *Watcher) loop() {
 			if debounceTimer != nil {
 				debounceTimer.Stop()
 			}
-			debounceTimer = time.AfterFunc(w.debounce, func() {
-				w.mu.Lock()
+			debounceTimer = time.AfterFunc(watcher.debounce, func() {
+				watcher.mutex.Lock()
 				batch := pending
 				pending = nil
-				w.mu.Unlock()
+				watcher.mutex.Unlock()
 				if len(batch) > 0 {
-					w.handler(batch)
+					watcher.handler(batch)
 				}
 			})
 		}
 	}
 }
 
-func (w *Watcher) scan() map[string]time.Time {
+func (watcher *Watcher) scan() map[string]time.Time {
 	result := make(map[string]time.Time)
-	for _, root := range w.roots {
-		_ = filepath.WalkDir(root, func(path string, d os.DirEntry, err error) error {
-			if err != nil || d.IsDir() {
+	for _, root := range watcher.roots {
+		_ = filepath.WalkDir(root, func(path string, directoryEntry os.DirEntry, err error) error {
+			if err != nil || directoryEntry.IsDir() {
 				return nil
 			}
-			if len(w.exts) > 0 {
-				if _, ok := w.exts[filepath.Ext(path)]; !ok {
+			if len(watcher.exts) > 0 {
+				if _, ok := watcher.exts[filepath.Ext(path)]; !ok {
 					return nil
 				}
 			}
-			info, statErr := d.Info()
-			if statErr != nil {
+			info, statError := directoryEntry.Info()
+			if statError != nil {
 				return nil
 			}
 			result[path] = info.ModTime()
@@ -164,7 +165,7 @@ func (w *Watcher) scan() map[string]time.Time {
 	return result
 }
 
-func (w *Watcher) diff(prev, current map[string]time.Time) []FileChange {
+func (watcher *Watcher) diff(prev, current map[string]time.Time) []FileChange {
 	var changes []FileChange
 
 	for path, modTime := range current {
@@ -186,13 +187,13 @@ func (w *Watcher) diff(prev, current map[string]time.Time) []FileChange {
 
 // FormatChange returns a human-readable description of a file change for
 // terminal output.
-func FormatChange(c FileChange) string {
-	switch c.Kind {
+func FormatChange(change FileChange) string {
+	switch change.Kind {
 	case ChangeKindCreated:
-		return fmt.Sprintf("+ %s", c.Path)
+		return fmt.Sprintf("+ %s", change.Path)
 	case ChangeKindDeleted:
-		return fmt.Sprintf("- %s", c.Path)
+		return fmt.Sprintf("- %s", change.Path)
 	default:
-		return fmt.Sprintf("~ %s", c.Path)
+		return fmt.Sprintf("~ %s", change.Path)
 	}
 }

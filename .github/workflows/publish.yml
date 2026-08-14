@@ -1,16 +1,5 @@
 name: Publish Packages
 
-# Publishing fires ONLY on a published GitHub Release or explicit workflow_dispatch.
-# It does NOT fire on every push to main - that is intentional.
-#
-# OIDC Trusted Publishing: no long-lived NPM_TOKEN stored in GitHub Secrets.
-# npm authenticates this workflow via GitHub Actions OIDC identity.
-#
-# MANUAL SETUP REQUIRED on npmjs.com (one-time, see docs/en/publishing.md):
-#   raktajs       → Settings → Publishing → Trusted Publisher → GitHub Actions
-#   create-rakta-app → Settings → Publishing → Trusted Publisher → GitHub Actions
-#   Use: owner=RheinSullivan, repo=raktajs, workflow=publish.yml, environment=npm
-
 on:
   release:
     types: [published]
@@ -26,139 +15,123 @@ on:
           - next
           - beta
 
-# Prevent two publish runs from racing each other.
 concurrency:
   group: npm-release
   cancel-in-progress: false
 
 permissions:
-  # Minimum required permissions only.
-  contents: read   # checkout
-  id-token: write  # OIDC token for npm Trusted Publishing
+  contents: read
+  id-token: write
 
 jobs:
   validate-and-publish:
     name: Validate, build, and publish
     runs-on: ubuntu-latest
-    # GitHub Environment "npm" - add protection rules (required reviewers) at
-    # github.com/RheinSullivan/raktajs/settings/environments if desired.
     environment: npm
 
     steps:
-      # ── 1. Checkout ────────────────────────────────────────────────────────
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ── 2. Runtime setup ───────────────────────────────────────────────────
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.3.11
 
-      # Node 22 LTS - ships npm ≥10.x which supports OIDC Trusted Publishing.
-      # Do NOT run `npm install -g npm@latest` in CI - it is fragile and can
-      # pull in an untested npm version. Pin to an LTS node version instead.
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
-          registry-url: https://registry.npmjs.org
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
 
-      # ── 3. Install (frozen - reproducible) ────────────────────────────────
-      - name: Install dependencies (frozen)
+      - name: Verify Node and npm
+        run: |
+          node --version
+          npm --version
+
+      - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      # ── 4. Version validation ──────────────────────────────────────────────
-      # On a GitHub Release: the git tag (e.g. v1.0.5) must match package
-      # versions.  On workflow_dispatch there is no tag to validate against,
-      # so we just display the current versions for human confirmation.
-      - name: Validate versions against release tag
+      - name: Validate versions
         run: |
-          RAKTA_VER=$(node -e "process.stdout.write(require('./packages/rakta/package.json').version)")
-          CREATE_VER=$(node -e "process.stdout.write(require('./packages/create-rakta/package.json').version)")
-          echo "raktajs version:         $RAKTA_VER"
-          echo "create-rakta-app version: $CREATE_VER"
+          RAKTA_VERSION=$(node -p "require('./packages/rakta/package.json').version")
+          CREATE_RAKTA_VERSION=$(node -p "require('./packages/create-rakta/package.json').version")
+
+          echo "raktajs version: $RAKTA_VERSION"
+          echo "create-rakta-app version: $CREATE_RAKTA_VERSION"
 
           if [ "${{ github.event_name }}" = "release" ]; then
-            TAG="${{ github.ref_name }}"
-            # Strip leading 'v' if present (v1.0.5 → 1.0.5)
-            EXPECTED="${TAG#v}"
-            if [ "$RAKTA_VER" != "$EXPECTED" ]; then
-              echo "::error::raktajs package.json version ($RAKTA_VER) does not match release tag ($TAG)"
+            RELEASE_TAG="${{ github.event.release.tag_name }}"
+            EXPECTED_VERSION="${RELEASE_TAG#v}"
+
+            if [ "$RAKTA_VERSION" != "$EXPECTED_VERSION" ]; then
+              echo "::error::raktajs version ($RAKTA_VERSION) does not match release tag ($RELEASE_TAG)"
               exit 1
             fi
-            if [ "$CREATE_VER" != "$EXPECTED" ]; then
-              echo "::error::create-rakta-app package.json version ($CREATE_VER) does not match release tag ($TAG)"
+
+            if [ "$CREATE_RAKTA_VERSION" != "$EXPECTED_VERSION" ]; then
+              echo "::error::create-rakta-app version ($CREATE_RAKTA_VERSION) does not match release tag ($RELEASE_TAG)"
               exit 1
             fi
-            echo "Version check passed: both packages are $EXPECTED"
+
+            echo "Release version validation passed: $EXPECTED_VERSION"
           else
-            echo "workflow_dispatch: skipping tag validation - publishing $RAKTA_VER / $CREATE_VER"
+            echo "workflow_dispatch detected."
+            echo "Publishing raktajs@$RAKTA_VERSION"
+            echo "Publishing create-rakta-app@$CREATE_RAKTA_VERSION"
           fi
 
-      # ── 5. Check versions are not already published ────────────────────────
-      - name: Check versions not already on npm
+      - name: Check versions are not already published
         run: |
-          RAKTA_VER=$(node -e "process.stdout.write(require('./packages/rakta/package.json').version)")
-          CREATE_VER=$(node -e "process.stdout.write(require('./packages/create-rakta/package.json').version)")
+          RAKTA_VERSION=$(node -p "require('./packages/rakta/package.json').version")
+          CREATE_RAKTA_VERSION=$(node -p "require('./packages/create-rakta/package.json').version")
 
-          if npm view "raktajs@$RAKTA_VER" version 2>/dev/null | grep -q "$RAKTA_VER"; then
-            echo "::error::raktajs@$RAKTA_VER is already published on npm. Bump the version before releasing."
+          if npm view "raktajs@$RAKTA_VERSION" version --registry=https://registry.npmjs.org 2>/dev/null | grep -Fxq "$RAKTA_VERSION"; then
+            echo "::error::raktajs@$RAKTA_VERSION is already published."
             exit 1
           fi
-          if npm view "create-rakta-app@$CREATE_VER" version 2>/dev/null | grep -q "$CREATE_VER"; then
-            echo "::error::create-rakta-app@$CREATE_VER is already published on npm. Bump the version before releasing."
+
+          if npm view "create-rakta-app@$CREATE_RAKTA_VERSION" version --registry=https://registry.npmjs.org 2>/dev/null | grep -Fxq "$CREATE_RAKTA_VERSION"; then
+            echo "::error::create-rakta-app@$CREATE_RAKTA_VERSION is already published."
             exit 1
           fi
-          echo "Version conflict check passed."
 
-      # ── 6. Typecheck ───────────────────────────────────────────────────────
+          echo "npm version conflict check passed."
+
       - name: Typecheck
         run: bun run typecheck
 
-      # ── 7. Lint ────────────────────────────────────────────────────────────
       - name: Lint
         run: bun run lint
 
-      # ── 8. Test ────────────────────────────────────────────────────────────
       - name: Test
         run: bun run test
 
-      # ── 9. Build ───────────────────────────────────────────────────────────
       - name: Build
         run: bun run build
 
-      # ── 10. npm pack dry-run (validate package contents) ──────────────────
-      - name: Pack raktajs (dry-run)
+      - name: Pack raktajs
         run: npm pack --dry-run
         working-directory: packages/rakta
 
-      - name: Pack create-rakta-app (dry-run)
+      - name: Pack create-rakta-app
         run: npm pack --dry-run
         working-directory: packages/create-rakta
 
-      # ── 11. Smoke test CLI from built tarball ──────────────────────────────
       - name: Smoke test create-rakta-app CLI
         run: |
-          node packages/create-rakta/dist/index.js --version 2>&1 || true
-          node packages/create-rakta/dist/index.js --help 2>&1 || true
+          node packages/create-rakta/dist/index.js --version
+          node packages/create-rakta/dist/index.js --help
 
-      # ── 12. OIDC authentication + publish raktajs ─────────────────────────
-      # --provenance: embeds signed SLSA provenance attestation linking this
-      # package to the exact source commit and workflow that built it.
-      # Requires OIDC (id-token: write) and npm Trusted Publishing to be
-      # configured on npmjs.com for this package.
       - name: Publish raktajs
-        run: npm publish --access public --provenance --tag "${NPM_TAG}"
+        run: npm publish --access public --tag "${NPM_TAG}"
         working-directory: packages/rakta
         env:
           NPM_TAG: ${{ github.event.inputs.tag || 'latest' }}
-          NODE_AUTH_TOKEN: ""  # Explicitly empty - OIDC does not use a token
 
-      # ── 13. Publish create-rakta-app ──────────────────────────────────────
       - name: Publish create-rakta-app
-        run: npm publish --access public --provenance --tag "${NPM_TAG}"
+        run: npm publish --access public --tag "${NPM_TAG}"
         working-directory: packages/create-rakta
         env:
           NPM_TAG: ${{ github.event.inputs.tag || 'latest' }}
-          NODE_AUTH_TOKEN: ""  # Explicitly empty - OIDC does not use a token

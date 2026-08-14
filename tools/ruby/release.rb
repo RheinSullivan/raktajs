@@ -11,26 +11,26 @@ module Release
   def self.bump(target_version)
     puts "⩛ [RELEASE] Bumping version to #{target_version}..."
 
-    pkg_paths = [
+    package_paths = [
       File.expand_path('../../package.json', __dir__),
       File.expand_path('../../packages/rakta/package.json', __dir__),
       File.expand_path('../../packages/create-rakta/package.json', __dir__)
     ]
 
-    pkg_paths.each do |path|
-      next unless File.exist?(path)
+    package_paths.each do |manifest_path|
+      next unless File.exist?(manifest_path)
 
-      pkg = JSON.parse(File.read(path))
-      pkg['version'] = target_version
-      File.write(path, JSON.pretty_generate(pkg) + "\n")
-      puts "  Updated #{File.basename(File.dirname(path))}/#{File.basename(path)} -> #{target_version}"
+      package_manifest = JSON.parse(File.read(manifest_path))
+      package_manifest['version'] = target_version
+      File.write(manifest_path, JSON.pretty_generate(package_manifest) + "\n")
+      puts "  Updated #{File.basename(File.dirname(manifest_path))}/#{File.basename(manifest_path)} -> #{target_version}"
     end
 
-    gen_path = File.expand_path('../../packages/create-rakta/src/generator.ts', __dir__)
-    if File.exist?(gen_path)
-      content = File.read(gen_path)
+    generator_path = File.expand_path('../../packages/create-rakta/src/generator.ts', __dir__)
+    if File.exist?(generator_path)
+      content = File.read(generator_path)
       content.gsub!(/raktajs:\s*"\^\d+\.\d+\.\d+"/, "raktajs: \"^#{target_version}\"")
-      File.write(gen_path, content)
+      File.write(generator_path, content)
       puts "  Updated packages/create-rakta/src/generator.ts -> ^#{target_version}"
     end
 

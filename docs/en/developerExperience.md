@@ -24,7 +24,7 @@ Rakta.js features a built-in Fast Refresh & HMR engine active automatically duri
 Built-in dev terminal rendering clean HTTP request logs, timing breakdowns, HMR status, and environment variables.
 
 ```
-  ⩛ Rakta.js 1.1.7 (CherbonsEngine)
+  ⩛ Rakta.js 1.1.8 (CherbonsEngine)
 
     Local:        http://localhost:3000
     Network:      http://192.168.1.5:3000

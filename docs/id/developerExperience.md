@@ -24,7 +24,7 @@ Rakta.js menyertakan mesin Fast Refresh & HMR bawaan yang aktif secara otomatis 
 Terminal bawaan yang menampilkan log HTTP request, estimasi latensi, status HMR, dan status environment dalam format visual yang bersih.
 
 ```
-  ⩛ Rakta.js 1.1.7 (CherbonsEngine)
+  ⩛ Rakta.js 1.1.8 (CherbonsEngine)
 
     Local:        http://localhost:3000
     Network:      http://192.168.1.5:3000

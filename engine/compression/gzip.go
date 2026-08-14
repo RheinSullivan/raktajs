@@ -7,24 +7,24 @@ import (
 )
 
 func CompressGzip(data []byte) ([]byte, error) {
-	var buf bytes.Buffer
-	writer := gzip.NewWriter(&buf)
+	var buffer bytes.Buffer
+	gzipWriter := gzip.NewWriter(&buffer)
 
-	if _, err := writer.Write(data); err != nil {
-		return nil, err
+	if _, writeError := gzipWriter.Write(data); writeError != nil {
+		return nil, writeError
 	}
-	if err := writer.Close(); err != nil {
-		return nil, err
+	if closeError := gzipWriter.Close(); closeError != nil {
+		return nil, closeError
 	}
-	return buf.Bytes(), nil
+	return buffer.Bytes(), nil
 }
 
 func DecompressGzip(data []byte) ([]byte, error) {
-	reader, err := gzip.NewReader(bytes.NewReader(data))
-	if err != nil {
-		return nil, err
+	gzipReader, openError := gzip.NewReader(bytes.NewReader(data))
+	if openError != nil {
+		return nil, openError
 	}
-	defer reader.Close()
+	defer gzipReader.Close()
 
-	return io.ReadAll(reader)
+	return io.ReadAll(gzipReader)
 }

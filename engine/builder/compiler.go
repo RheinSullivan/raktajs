@@ -26,8 +26,8 @@ type BuildResult struct {
 }
 
 type AssetGraph struct {
-	Nodes map[string]string
-	mu    sync.RWMutex
+	Nodes  map[string]string
+	mutex  sync.RWMutex
 }
 
 func NewBuilder() *AssetGraph {
@@ -36,7 +36,7 @@ func NewBuilder() *AssetGraph {
 	}
 }
 
-func (ag *AssetGraph) Build(opts BuildOptions) (*BuildResult, error) {
+func (assetGraph *AssetGraph) Build(opts BuildOptions) (*BuildResult, error) {
 	startTime := time.Now()
 
 	if opts.SourceDir == "" {
@@ -54,7 +54,7 @@ func (ag *AssetGraph) Build(opts BuildOptions) (*BuildResult, error) {
 	}
 
 	var files []string
-	err := filepath.Walk(opts.SourceDir, func(path string, info os.FileInfo, err error) error {
+	walkError := filepath.Walk(opts.SourceDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -62,41 +62,41 @@ func (ag *AssetGraph) Build(opts BuildOptions) (*BuildResult, error) {
 			return filepath.SkipDir
 		}
 		if !info.IsDir() {
-			ext := filepath.Ext(path)
-			if ext == ".ts" || ext == ".tsx" || ext == ".js" || ext == ".jsx" || ext == ".css" || ext == ".json" {
+			extension := filepath.Ext(path)
+			if extension == ".ts" || extension == ".tsx" || extension == ".js" || extension == ".jsx" || extension == ".css" || extension == ".json" {
 				files = append(files, path)
 			}
 		}
 		return nil
 	})
 
-	if err != nil {
-		return nil, err
+	if walkError != nil {
+		return nil, walkError
 	}
 
 	var totalBytes int64
 	var cacheHits int
 
 	for _, file := range files {
-		hash, err := fileHash(file)
-		if err != nil {
+		hash, hashError := fileHash(file)
+		if hashError != nil {
 			continue
 		}
 
-		ag.mu.RLock()
-		prevHash, exists := ag.Nodes[file]
-		ag.mu.RUnlock()
+		assetGraph.mutex.RLock()
+		previousHash, exists := assetGraph.Nodes[file]
+		assetGraph.mutex.RUnlock()
 
-		if exists && prevHash == hash {
+		if exists && previousHash == hash {
 			cacheHits++
 		} else {
-			ag.mu.Lock()
-			ag.Nodes[file] = hash
-			ag.mu.Unlock()
+			assetGraph.mutex.Lock()
+			assetGraph.Nodes[file] = hash
+			assetGraph.mutex.Unlock()
 		}
 
-		info, err := os.Stat(file)
-		if err == nil {
+		info, statError := os.Stat(file)
+		if statError == nil {
 			totalBytes += info.Size()
 		}
 	}
@@ -120,15 +120,15 @@ func (ag *AssetGraph) Build(opts BuildOptions) (*BuildResult, error) {
 }
 
 func fileHash(path string) (string, error) {
-	f, err := os.Open(path)
+	fileHandle, err := os.Open(path)
 	if err != nil {
 		return "", err
 	}
-	defer f.Close()
+	defer fileHandle.Close()
 
-	h := sha256.New()
-	if _, err := io.Copy(h, f); err != nil {
+	hasher := sha256.New()
+	if _, err := io.Copy(hasher, fileHandle); err != nil {
 		return "", err
 	}
-	return hex.EncodeToString(h.Sum(nil)), nil
+	return hex.EncodeToString(hasher.Sum(nil)), nil
 }

@@ -10,30 +10,30 @@ import (
 )
 
 func main() {
-	root := "."
+	projectRoot := "."
 	if len(os.Args) > 1 {
-		root = os.Args[1]
+		projectRoot = os.Args[1]
 	}
 
-	absoluteRoot, err := filepath.Abs(root)
-	if err != nil {
-		exitWithError(err)
+	absoluteRoot, resolveError := filepath.Abs(projectRoot)
+	if resolveError != nil {
+		exitWithError(resolveError)
 	}
 
-	report, err := repo.BuildAuditReport(absoluteRoot)
-	if err != nil {
-		exitWithError(err)
+	report, buildError := repo.BuildAuditReport(absoluteRoot)
+	if buildError != nil {
+		exitWithError(buildError)
 	}
 
-	payload, err := json.MarshalIndent(report, "", "  ")
-	if err != nil {
-		exitWithError(err)
+	payload, marshalError := json.MarshalIndent(report, "", "  ")
+	if marshalError != nil {
+		exitWithError(marshalError)
 	}
 
 	fmt.Println(string(payload))
 }
 
-func exitWithError(err error) {
-	fmt.Fprintf(os.Stderr, "rakta-repo-audit: %v\n", err)
+func exitWithError(errorToDisplay error) {
+	fmt.Fprintf(os.Stderr, "rakta-repo-audit: %v\n", errorToDisplay)
 	os.Exit(1)
 }

@@ -6,27 +6,27 @@ import (
 	"testing"
 )
 
-func TestDefaultConfigIsProductionReady(t *testing.T) {
-	cfg := Default()
+func TestDefaultConfigIsProductionReady(test *testing.T) {
+	configuration := Default()
 
-	if cfg.AppDir != "app" {
-		t.Fatalf("expected app dir to default to app, got %q", cfg.AppDir)
+	if configuration.AppDir != "app" {
+		test.Fatalf("expected app dir to default to app, got %q", configuration.AppDir)
 	}
-	if cfg.PublicDir != "public" {
-		t.Fatalf("expected public dir to default to public, got %q", cfg.PublicDir)
+	if configuration.PublicDir != "public" {
+		test.Fatalf("expected public dir to default to public, got %q", configuration.PublicDir)
 	}
-	if cfg.RenderMode != RenderModeCSR {
-		t.Fatalf("expected csr render mode, got %q", cfg.RenderMode)
+	if configuration.RenderMode != RenderModeCSR {
+		test.Fatalf("expected csr render mode, got %q", configuration.RenderMode)
 	}
-	if cfg.Server.Port != 3000 {
-		t.Fatalf("expected port 3000, got %d", cfg.Server.Port)
+	if configuration.Server.Port != 3000 {
+		test.Fatalf("expected port 3000, got %d", configuration.Server.Port)
 	}
 }
 
-func TestLoadMergesJsonConfig(t *testing.T) {
-	root := t.TempDir()
+func TestLoadMergesJsonConfig(test *testing.T) {
+	root := test.TempDir()
 	configPath := filepath.Join(root, "rakta.config.json")
-	configJson := `{
+	configJsonText := `{
 		"appDir": "src/app",
 		"publicDir": "static",
 		"renderMode": "spa",
@@ -36,57 +36,57 @@ func TestLoadMergesJsonConfig(t *testing.T) {
 		"pwa": { "enabled": true, "name": "Rakta", "shortName": "Rakta" }
 	}`
 
-	if err := os.WriteFile(configPath, []byte(configJson), 0644); err != nil {
-		t.Fatalf("write config: %v", err)
+	if writeError := os.WriteFile(configPath, []byte(configJsonText), 0644); writeError != nil {
+		test.Fatalf("write config: %v", writeError)
 	}
 
-	cfg, err := Load(root)
-	if err != nil {
-		t.Fatalf("load config: %v", err)
+	configuration, loadError := Load(root)
+	if loadError != nil {
+		test.Fatalf("load config: %v", loadError)
 	}
 
-	if cfg.AppDir != "src/app" || cfg.PublicDir != "static" {
-		t.Fatalf("unexpected directories: app=%q public=%q", cfg.AppDir, cfg.PublicDir)
+	if configuration.AppDir != "src/app" || configuration.PublicDir != "static" {
+		test.Fatalf("unexpected directories: app=%q public=%q", configuration.AppDir, configuration.PublicDir)
 	}
-	if cfg.RenderMode != RenderModeSPA {
-		t.Fatalf("expected spa render mode, got %q", cfg.RenderMode)
+	if configuration.RenderMode != RenderModeSPA {
+		test.Fatalf("expected spa render mode, got %q", configuration.RenderMode)
 	}
-	if cfg.Server.Port != 4173 || cfg.Server.Host != "127.0.0.1" {
-		t.Fatalf("unexpected server config: %+v", cfg.Server)
+	if configuration.Server.Port != 4173 || configuration.Server.Host != "127.0.0.1" {
+		test.Fatalf("unexpected server config: %+v", configuration.Server)
 	}
-	if !cfg.Build.Analyze || cfg.Build.Minify {
-		t.Fatalf("unexpected build config: %+v", cfg.Build)
+	if !configuration.Build.Analyze || configuration.Build.Minify {
+		test.Fatalf("unexpected build config: %+v", configuration.Build)
 	}
 }
 
-func TestLoadRejectsInvalidConfig(t *testing.T) {
-	root := t.TempDir()
+func TestLoadRejectsInvalidConfig(test *testing.T) {
+	root := test.TempDir()
 	configPath := filepath.Join(root, "rakta.config.json")
 
-	if err := os.WriteFile(configPath, []byte(`{"renderMode":"invalid","server":{"port":70000}}`), 0644); err != nil {
-		t.Fatalf("write config: %v", err)
+	if writeError := os.WriteFile(configPath, []byte(`{"renderMode":"invalid","server":{"port":70000}}`), 0644); writeError != nil {
+		test.Fatalf("write config: %v", writeError)
 	}
 
-	if _, err := Load(root); err == nil {
-		t.Fatal("expected invalid config to fail")
+	if _, loadError := Load(root); loadError == nil {
+		test.Fatal("expected invalid config to fail")
 	}
 }
 
-func TestEnvironmentHelpers(t *testing.T) {
-	t.Setenv("RAKTA_BOOL_TRUE", "yes")
-	t.Setenv("RAKTA_BOOL_FALSE", "off")
-	t.Setenv("RAKTA_ENV", "production")
+func TestEnvironmentHelpers(test *testing.T) {
+	test.Setenv("RAKTA_BOOL_TRUE", "yes")
+	test.Setenv("RAKTA_BOOL_FALSE", "off")
+	test.Setenv("RAKTA_ENV", "production")
 
 	if Env("RAKTA_MISSING", "fallback") != "fallback" {
-		t.Fatal("expected Env to return fallback")
+		test.Fatal("expected Env to return fallback")
 	}
 	if !EnvBool("RAKTA_BOOL_TRUE", false) {
-		t.Fatal("expected truthy environment value")
+		test.Fatal("expected truthy environment value")
 	}
 	if EnvBool("RAKTA_BOOL_FALSE", true) {
-		t.Fatal("expected falsy environment value")
+		test.Fatal("expected falsy environment value")
 	}
 	if !IsProduction() {
-		t.Fatal("expected production environment")
+		test.Fatal("expected production environment")
 	}
 }

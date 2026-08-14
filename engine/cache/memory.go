@@ -11,8 +11,8 @@ type Item struct {
 }
 
 type MemoryCache struct {
-	items map[string]Item
-	mu    sync.RWMutex
+	items  map[string]Item
+	mutex  sync.RWMutex
 }
 
 func NewMemoryCache() *MemoryCache {
@@ -21,46 +21,46 @@ func NewMemoryCache() *MemoryCache {
 	}
 }
 
-func (c *MemoryCache) Set(key string, value []byte, ttl time.Duration) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+func (memoryCache *MemoryCache) Set(key string, value []byte, timeToLive time.Duration) {
+	memoryCache.mutex.Lock()
+	defer memoryCache.mutex.Unlock()
 
-	var exp int64
-	if ttl > 0 {
-		exp = time.Now().Add(ttl).UnixNano()
+	var expirationTimestamp int64
+	if timeToLive > 0 {
+		expirationTimestamp = time.Now().Add(timeToLive).UnixNano()
 	}
 
-	c.items[key] = Item{
+	memoryCache.items[key] = Item{
 		Value:      value,
-		Expiration: exp,
+		Expiration: expirationTimestamp,
 	}
 }
 
-func (c *MemoryCache) Get(key string) ([]byte, bool) {
-	c.mu.RLock()
-	item, found := c.items[key]
-	c.mu.RUnlock()
+func (memoryCache *MemoryCache) Get(key string) ([]byte, bool) {
+	memoryCache.mutex.RLock()
+	item, found := memoryCache.items[key]
+	memoryCache.mutex.RUnlock()
 
 	if !found {
 		return nil, false
 	}
 
 	if item.Expiration > 0 && time.Now().UnixNano() > item.Expiration {
-		c.Delete(key)
+		memoryCache.Delete(key)
 		return nil, false
 	}
 
 	return item.Value, true
 }
 
-func (c *MemoryCache) Delete(key string) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	delete(c.items, key)
+func (memoryCache *MemoryCache) Delete(key string) {
+	memoryCache.mutex.Lock()
+	defer memoryCache.mutex.Unlock()
+	delete(memoryCache.items, key)
 }
 
-func (c *MemoryCache) Clear() {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	c.items = make(map[string]Item)
+func (memoryCache *MemoryCache) Clear() {
+	memoryCache.mutex.Lock()
+	defer memoryCache.mutex.Unlock()
+	memoryCache.items = make(map[string]Item)
 }

@@ -78,25 +78,25 @@ func runDev(args []string) {
 	printBanner()
 
 	// Load project config
-	cfg, err := config.Load(*root)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Config warning: %v\n", err)
+	projectConfig, loadError := config.Load(*root)
+	if loadError != nil {
+		fmt.Fprintf(os.Stderr, "Config warning: %v\n", loadError)
 	}
-	if cfg.Server.Port != 0 && *port == 3000 {
-		*port = cfg.Server.Port
+	if projectConfig.Server.Port != 0 && *port == 3000 {
+		*port = projectConfig.Server.Port
 	}
 
 	// Start file watcher for HMR
-	w := watcher.New(func(changes []watcher.FileChange) {
-		for _, c := range changes {
-			fmt.Printf("[HMR] %s\n", watcher.FormatChange(c))
+	watcherInstance := watcher.New(func(changes []watcher.FileChange) {
+		for _, change := range changes {
+			fmt.Printf("[HMR] %s\n", watcher.FormatChange(change))
 		}
 	}, watcher.Options{
 		Roots:      []string{*root},
 		Extensions: []string{".ts", ".tsx", ".css", ".scss"},
 	})
-	w.Start()
-	defer w.Stop()
+	watcherInstance.Start()
+	defer watcherInstance.Stop()
 
 	// Build middleware stack
 	stack := middleware.NewStack()
@@ -126,20 +126,20 @@ func runBuild(args []string) {
 
 	printBanner()
 
-	cfg, err := config.Load(*root)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Config warning: %v\n", err)
+	projectConfig, loadError := config.Load(*root)
+	if loadError != nil {
+		fmt.Fprintf(os.Stderr, "Config warning: %v\n", loadError)
 	}
 
-	if cfg.Build.OutDir != "" && *outDir == "./dist" {
-		*outDir = cfg.Build.OutDir
+	if projectConfig.Build.OutDir != "" && *outDir == "./dist" {
+		*outDir = projectConfig.Build.OutDir
 	}
-	if cfg.Build.Analyze && !*analyze {
+	if projectConfig.Build.Analyze && !*analyze {
 		*analyze = true
 	}
 
-	b := builder.NewBuilder()
-	res, err := b.Build(builder.BuildOptions{
+	builderInstance := builder.NewBuilder()
+	buildResult, err := builderInstance.Build(builder.BuildOptions{
 		OutputDir: *outDir,
 		Analyze:   *analyze,
 	})
@@ -149,7 +149,7 @@ func runBuild(args []string) {
 		os.Exit(1)
 	}
 
-	fmt.Printf("✔ Build completed in %v! Files processed: %d (%d bytes)\n", res.Duration, res.FilesBuilt, res.TotalBytes)
+	fmt.Printf("✔ Build completed in %v! Files processed: %d (%d bytes)\n", buildResult.Duration, buildResult.FilesBuilt, buildResult.TotalBytes)
 }
 
 func runDeploy(args []string) {
@@ -178,22 +178,22 @@ func runConfig(args []string) {
 	fs.Parse(args)
 
 	printBanner()
-	cfg, err := config.Load(*root)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Config error: %v\n", err)
+	projectConfig, loadError := config.Load(*root)
+	if loadError != nil {
+		fmt.Fprintf(os.Stderr, "Config error: %v\n", loadError)
 		os.Exit(1)
 	}
 
 	fmt.Println("⩛ [RESOLVED CONFIG]")
-	fmt.Printf("  appDir      : %s\n", cfg.AppDir)
-	fmt.Printf("  publicDir   : %s\n", cfg.PublicDir)
-	fmt.Printf("  renderMode  : %s\n", cfg.RenderMode)
-	fmt.Printf("  server.port : %d\n", cfg.Server.Port)
-	fmt.Printf("  server.host : %s\n", cfg.Server.Host)
-	fmt.Printf("  build.outDir: %s\n", cfg.Build.OutDir)
-	fmt.Printf("  build.minify: %v\n", cfg.Build.Minify)
-	fmt.Printf("  seo.title   : %s\n", cfg.Seo.Title)
-	fmt.Printf("  pwa.enabled : %v\n", cfg.Pwa.Enabled)
+	fmt.Printf("  appDir      : %s\n", projectConfig.AppDir)
+	fmt.Printf("  publicDir   : %s\n", projectConfig.PublicDir)
+	fmt.Printf("  renderMode  : %s\n", projectConfig.RenderMode)
+	fmt.Printf("  server.port : %d\n", projectConfig.Server.Port)
+	fmt.Printf("  server.host : %s\n", projectConfig.Server.Host)
+	fmt.Printf("  build.outDir: %s\n", projectConfig.Build.OutDir)
+	fmt.Printf("  build.minify: %v\n", projectConfig.Build.Minify)
+	fmt.Printf("  seo.title   : %s\n", projectConfig.Seo.Title)
+	fmt.Printf("  pwa.enabled : %v\n", projectConfig.Pwa.Enabled)
 	fmt.Printf("  environment : %s\n", func() string {
 		if config.IsProduction() {
 			return "production"
@@ -209,14 +209,14 @@ func runRoutes(args []string) {
 	printBanner()
 
 	// Demonstrate the Go router with sample routes matching Rakta.js conventions.
-	r := router.New()
-	r.GET("/", func(_ http.ResponseWriter, _ *http.Request, _ router.Params) {})
-	r.GET("/about", func(_ http.ResponseWriter, _ *http.Request, _ router.Params) {})
-	r.GET("/dashboard", func(_ http.ResponseWriter, _ *http.Request, _ router.Params) {})
-	r.GET("/dashboard/:id", func(_ http.ResponseWriter, _ *http.Request, _ router.Params) {})
-	r.POST("/api/rpc", func(_ http.ResponseWriter, _ *http.Request, _ router.Params) {})
+	routerInstance := router.New()
+	routerInstance.GET("/", func(_ http.ResponseWriter, _ *http.Request, _ router.Params) {})
+	routerInstance.GET("/about", func(_ http.ResponseWriter, _ *http.Request, _ router.Params) {})
+	routerInstance.GET("/dashboard", func(_ http.ResponseWriter, _ *http.Request, _ router.Params) {})
+	routerInstance.GET("/dashboard/:id", func(_ http.ResponseWriter, _ *http.Request, _ router.Params) {})
+	routerInstance.POST("/api/rpc", func(_ http.ResponseWriter, _ *http.Request, _ router.Params) {})
 
-	_ = r
+	_ = routerInstance
 
 	fmt.Println("⩛ [ROUTE TABLE (demo)]")
 	routes := []struct {

@@ -16,24 +16,22 @@ Rakta.js mem-publish dua package npm dari GitHub Actions menggunakan **npm Trust
 ## Arsitektur
 
 ```
-Developer push git tag  →  buat GitHub Release
+Developer membuat GitHub Release  →  publish.yml berjalan
          ↓
-GitHub Actions publish.yml berjalan (release: published)
-         ↓
-Token identitas OIDC dikeluarkan GitHub untuk workflow
+GitHub Actions mengeluarkan token OIDC yang berumur pendek
          ↓
 npm Trusted Publishing memvalidasi token
          ↓
-validasi versi  (tag == versi di package.json)
+validasi versi  (tag release == versi di package.json)
 cek konflik versi  (versi belum ada di npm)
          ↓
 typecheck → lint → test → build
          ↓
 npm pack --dry-run  (validasi isi tarball)
          ↓
-npm publish --provenance  (attestasi SLSA disematkan)
+npm publish --access public --tag <dist-tag>
          ↓
-Package aktif di npm dengan provenance terverifikasi
+Package dipublish dari workflow yang sama tanpa token npm yang tersimpan
 ```
 
 ---
@@ -59,15 +57,15 @@ Hanya berjalan pada:
 Urutan langkah:
 
 1. Checkout (frozen)
-2. Setup Bun 1.3.11 + Node.js 22
+2. Setup Bun 1.3.11 + Node.js 24
 3. `bun install --frozen-lockfile`
-4. **Validasi versi** - git tag (misal `v1.0.7`) harus cocok dengan `packages/rakta/package.json` dan `packages/create-rakta/package.json`. Workflow gagal jika tidak cocok.
+4. **Validasi versi** - tag release (misal `v1.1.8`) harus cocok dengan `packages/rakta/package.json` dan `packages/create-rakta/package.json`. Workflow gagal jika tidak cocok.
 5. **Cek konflik versi** - query npm untuk memastikan versi belum pernah dipublish. Mencegah publish ulang yang tidak disengaja.
-6. typecheck → lint → test → build
+6. Typecheck → lint → test → build
 7. `npm pack --dry-run` untuk kedua package
-8. Smoke test CLI (`node packages/create-rakta/dist/index.js --version`)
-9. `npm publish --access public --provenance` untuk `raktajs`
-10. `npm publish --access public --provenance` untuk `create-rakta-app`
+8. Smoke test CLI (`node packages/create-rakta/dist/index.js --version` dan `--help`)
+9. `npm publish --access public --tag "${NPM_TAG}"` untuk `raktajs`
+10. `npm publish --access public --tag "${NPM_TAG}"` untuk `create-rakta-app`
 
 Permission:
 
@@ -184,20 +182,19 @@ Workflow publish menggunakan `environment: npm`. Kamu perlu membuat environment 
 
 ---
 
-## Provenance
+## Trusted Publishing dan Provenance
 
-Kedua package dipublish dengan `--provenance`. Ini membuat attestasi SLSA (Supply Chain Levels for Software Artifacts) yang ditandatangani dan menghubungkan setiap package yang dipublish ke:
+Workflow publish memakai npm Trusted Publishing melalui GitHub OIDC. Tidak ada token npm berumur panjang yang disimpan di repository atau environment workflow.
 
-- Repository GitHub yang tepat
-- Commit SHA yang tepat
-- Workflow run yang tepat
+Konfigurasi npm Trusted Publisher yang sesuai adalah:
 
-Pengguna dapat memverifikasi provenance di halaman package npm atau dengan:
+- Provider: GitHub Actions
+- Owner: `RheinSullivan`
+- Repository: `raktajs`
+- Workflow: `publish.yml`
+- Environment: `npm`
 
-```bash
-npm audit signatures raktajs
-npm audit signatures create-rakta-app
-```
+Provenance tidak ditambahkan lewat `--provenance` di workflow ini; jalur autentikasi Trusted Publisher menangani publish yang terautentikasi tanpa token yang disimpan.
 
 ---
 

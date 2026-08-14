@@ -10,8 +10,8 @@ require 'open3'
 module Doctor
   VERSION = '1.1.3'
 
-  def self.check_cmd(cmd)
-    stdout, _stderr, status = Open3.capture3("#{cmd} --version")
+  def self.check_command(command_text)
+    stdout, _stderr, status = Open3.capture3("#{command_text} --version")
     if status.success?
       stdout.strip.lines.first
     else
@@ -26,10 +26,10 @@ module Doctor
     puts '=================================================='
 
     checks = {
-      'Bun' => check_cmd('bun'),
-      'Node.js' => check_cmd('node'),
-      'Git' => check_cmd('git'),
-      'Go Engine' => check_cmd('go'),
+      'Bun' => check_command('bun'),
+      'Node.js' => check_command('node'),
+      'Git' => check_command('git'),
+      'Go Engine' => check_command('go'),
       'Ruby Tooling' => "#{RUBY_VERSION} (#{RUBY_PLATFORM})"
     }
 

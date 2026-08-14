@@ -46,28 +46,28 @@ func NewStack() *Stack {
 }
 
 // Use appends a handler to the stack.
-func (s *Stack) Use(h Handler) {
-	s.handlers = append(s.handlers, h)
+func (stack *Stack) Use(handler Handler) {
+	stack.handlers = append(stack.handlers, handler)
 }
 
 // Run executes the middleware stack for the given request/response pair.
 // It returns the final Result from whichever handler stopped the chain, or a
 // Continue result if all handlers passed through.
-func (s *Stack) Run(w http.ResponseWriter, r *http.Request) Result {
-	ctx := &Context{
-		Request:  r,
-		Response: w,
+func (stack *Stack) Run(responseWriter http.ResponseWriter, request *http.Request) Result {
+	requestContext := &Context{
+		Request:  request,
+		Response: responseWriter,
 		Data:     make(map[string]any),
 	}
 
-	for _, h := range s.handlers {
-		result := h(ctx)
+	for _, handler := range stack.handlers {
+		result := handler(requestContext)
 		// Apply any path override for the next handler.
 		if result.Rewrite != "" {
-			ctx.PathOverride = result.Rewrite
-			r2 := r.Clone(r.Context())
-			r2.URL.Path = result.Rewrite
-			ctx.Request = r2
+			requestContext.PathOverride = result.Rewrite
+			rewrittenRequest := request.Clone(request.Context())
+			rewrittenRequest.URL.Path = result.Rewrite
+			requestContext.Request = rewrittenRequest
 			continue // rewrite does not stop the chain
 		}
 		if !result.Continue {
@@ -80,7 +80,7 @@ func (s *Stack) Run(w http.ResponseWriter, r *http.Request) Result {
 
 // Apply writes the side-effects of a Result to the ResponseWriter.
 // Returns true when the response has been committed (caller must not write further).
-func Apply(w http.ResponseWriter, result Result) bool {
+func Apply(responseWriter http.ResponseWriter, result Result) bool {
 	if !result.Continue {
 		switch {
 		case result.Redirect != "":
@@ -88,10 +88,10 @@ func Apply(w http.ResponseWriter, result Result) bool {
 			if status == 0 {
 				status = http.StatusFound
 			}
-			http.Redirect(w, &http.Request{URL: &url.URL{}}, result.Redirect, status)
+			http.Redirect(responseWriter, &http.Request{URL: &url.URL{}}, result.Redirect, status)
 			return true
 		case result.Aborted != 0:
-			http.Error(w, http.StatusText(result.Aborted), result.Aborted)
+			http.Error(responseWriter, http.StatusText(result.Aborted), result.Aborted)
 			return true
 		}
 	}
@@ -160,12 +160,12 @@ func CORS(origins string) Handler {
 // response headers recommended for modern web applications.
 func SecureHeaders() Handler {
 	return func(ctx *Context) Result {
-		h := ctx.Response.Header()
-		h.Set("X-Frame-Options", "DENY")
-		h.Set("X-Content-Type-Options", "nosniff")
-		h.Set("Referrer-Policy", "strict-origin-when-cross-origin")
-		h.Set("Permissions-Policy", "geolocation=(), microphone=(), camera=()")
-		h.Set("X-Rakta-Engine", "go")
+		headerSet := ctx.Response.Header()
+		headerSet.Set("X-Frame-Options", "DENY")
+		headerSet.Set("X-Content-Type-Options", "nosniff")
+		headerSet.Set("Referrer-Policy", "strict-origin-when-cross-origin")
+		headerSet.Set("Permissions-Policy", "geolocation=(), microphone=(), camera=()")
+		headerSet.Set("X-Rakta-Engine", "go")
 		return Next()
 	}
 }

@@ -30,8 +30,8 @@ type RoutePattern struct {
 }
 
 func AnalyzeRouteFile(appRoot string, filePath string) RoutePattern {
-	relativePath, err := filepath.Rel(appRoot, filePath)
-	if err != nil {
+	relativePath, pathError := filepath.Rel(appRoot, filePath)
+	if pathError != nil {
 		relativePath = filePath
 	}
 
@@ -39,12 +39,12 @@ func AnalyzeRouteFile(appRoot string, filePath string) RoutePattern {
 	segments := make([]RouteSegment, 0, len(parts))
 	publicParts := make([]string, 0, len(parts))
 
-	for _, part := range parts {
-		if part == "" || part == "page" || part == "layout" || part == "loading" || part == "error" || part == "not-found" {
+	for _, routePart := range parts {
+		if routePart == "" || routePart == "page" || routePart == "layout" || routePart == "loading" || routePart == "error" || routePart == "not-found" {
 			continue
 		}
 
-		segment := ParseSegment(part)
+		segment := ParseSegment(routePart)
 		segments = append(segments, segment)
 		if segment.Kind != SegmentGroup {
 			publicParts = append(publicParts, routePathPart(segment))

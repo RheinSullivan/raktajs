@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestStackRunsHandlersInOrder(t *testing.T) {
+func TestStackRunsHandlersInOrder(test *testing.T) {
 	stack := NewStack()
 	calls := []string{}
 
@@ -27,14 +27,14 @@ func TestStackRunsHandlersInOrder(t *testing.T) {
 	result := stack.Run(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, "/", nil))
 
 	if result.Aborted != http.StatusUnauthorized {
-		t.Fatalf("expected abort status 401, got %+v", result)
+		test.Fatalf("expected abort status 401, got %+v", result)
 	}
 	if len(calls) != 2 || calls[0] != "first" || calls[1] != "rhein" {
-		t.Fatalf("unexpected call order: %#v", calls)
+		test.Fatalf("unexpected call order: %#v", calls)
 	}
 }
 
-func TestRewriteContinuesWithPathOverride(t *testing.T) {
+func TestRewriteContinuesWithPathOverride(test *testing.T) {
 	stack := NewStack()
 	var observedPath string
 
@@ -49,14 +49,14 @@ func TestRewriteContinuesWithPathOverride(t *testing.T) {
 	result := stack.Run(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, "/old", nil))
 
 	if !result.Continue {
-		t.Fatalf("expected rewrite chain to continue, got %+v", result)
+		test.Fatalf("expected rewrite chain to continue, got %+v", result)
 	}
 	if observedPath != "/dashboard" {
-		t.Fatalf("expected rewritten path, got %q", observedPath)
+		test.Fatalf("expected rewritten path, got %q", observedPath)
 	}
 }
 
-func TestSecurityAndCorsHeaders(t *testing.T) {
+func TestSecurityAndCorsHeaders(test *testing.T) {
 	stack := NewStack()
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodOptions, "/api", nil)
@@ -67,17 +67,17 @@ func TestSecurityAndCorsHeaders(t *testing.T) {
 	result := stack.Run(recorder, request)
 
 	if result.Aborted != http.StatusNoContent {
-		t.Fatalf("expected options preflight abort, got %+v", result)
+		test.Fatalf("expected options preflight abort, got %+v", result)
 	}
 	if recorder.Header().Get("X-Frame-Options") != "DENY" {
-		t.Fatal("missing secure X-Frame-Options header")
+		test.Fatal("missing secure X-Frame-Options header")
 	}
 	if recorder.Header().Get("Access-Control-Allow-Origin") != "https://raktajs.dev" {
-		t.Fatal("missing CORS origin header")
+		test.Fatal("missing CORS origin header")
 	}
 }
 
-func TestPathPrefixRunsOnlyForMatchingPath(t *testing.T) {
+func TestPathPrefixRunsOnlyForMatchingPath(test *testing.T) {
 	stack := NewStack()
 	called := false
 
@@ -88,11 +88,11 @@ func TestPathPrefixRunsOnlyForMatchingPath(t *testing.T) {
 
 	result := stack.Run(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, "/docs", nil))
 	if !result.Continue || called {
-		t.Fatalf("expected non matching path to continue, result=%+v called=%v", result, called)
+		test.Fatalf("expected non matching path to continue, result=%+v called=%v", result, called)
 	}
 
 	result = stack.Run(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, "/api/users", nil))
 	if result.Aborted != http.StatusForbidden || !called {
-		t.Fatalf("expected matching path to abort, result=%+v called=%v", result, called)
+		test.Fatalf("expected matching path to abort, result=%+v called=%v", result, called)
 	}
 }

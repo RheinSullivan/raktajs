@@ -6,32 +6,32 @@ import (
 	"testing"
 )
 
-func TestRouterStaticAndDynamic(t *testing.T) {
-	r := New()
+func TestRouterStaticAndDynamic(test *testing.T) {
+	router := New()
 	var matchedPath string
 	var paramVal string
 
-	r.GET("/", func(w http.ResponseWriter, req *http.Request, p Params) {
+	router.GET("/", func(writer http.ResponseWriter, request *http.Request, params Params) {
 		matchedPath = "/"
 	})
-	r.GET("/user/:id", func(w http.ResponseWriter, req *http.Request, p Params) {
+	router.GET("/user/:id", func(writer http.ResponseWriter, request *http.Request, params Params) {
 		matchedPath = "/user/:id"
-		paramVal = p.Get("id")
+		paramVal = params.Get("id")
 	})
 
-	rec := httptest.NewRecorder()
-	req := httptest.NewRequest("GET", "/", nil)
-	r.ServeHTTP(rec, req)
+	recorder := httptest.NewRecorder()
+	request := httptest.NewRequest("GET", "/", nil)
+	router.ServeHTTP(recorder, request)
 
 	if matchedPath != "/" {
-		t.Errorf("expected root match, got %s", matchedPath)
+		test.Errorf("expected root match, got %s", matchedPath)
 	}
 
-	rec = httptest.NewRecorder()
-	req = httptest.NewRequest("GET", "/user/123", nil)
-	r.ServeHTTP(rec, req)
+	recorder = httptest.NewRecorder()
+	request = httptest.NewRequest("GET", "/user/123", nil)
+	router.ServeHTTP(recorder, request)
 
 	if matchedPath != "/user/:id" || paramVal != "123" {
-		t.Errorf("expected /user/:id match with id=123, got path=%s param=%s", matchedPath, paramVal)
+		test.Errorf("expected /user/:id match with id=123, got path=%s param=%s", matchedPath, paramVal)
 	}
 }

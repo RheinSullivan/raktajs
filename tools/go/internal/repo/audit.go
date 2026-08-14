@@ -29,7 +29,7 @@ type AuditReport struct {
 	Languages []LanguageStat    `json:"languages"`
 }
 
-var languageByExtension = map[string]string{
+var languageByExtensionMap = map[string]string{
 	".css":  "CSS",
 	".go":   "Go",
 	".js":   "JavaScript",
@@ -42,7 +42,7 @@ var languageByExtension = map[string]string{
 	".yaml": "YAML",
 }
 
-var ignoredDirectories = map[string]bool{
+var ignoredDirectoryNames = map[string]bool{
 	".git":         true,
 	".tmp":         true,
 	"dist":         true,
@@ -54,14 +54,14 @@ func BuildAuditReport(root string) (AuditReport, error) {
 		return AuditReport{}, errors.New("root path is required")
 	}
 
-	packages, err := FindPackageManifests(root)
-	if err != nil {
-		return AuditReport{}, err
+	packages, packageError := FindPackageManifests(root)
+	if packageError != nil {
+		return AuditReport{}, packageError
 	}
 
-	languages, err := CountLanguages(root)
-	if err != nil {
-		return AuditReport{}, err
+	languages, languageError := CountLanguages(root)
+	if languageError != nil {
+		return AuditReport{}, languageError
 	}
 
 	return AuditReport{
@@ -74,13 +74,13 @@ func BuildAuditReport(root string) (AuditReport, error) {
 func FindPackageManifests(root string) ([]PackageManifest, error) {
 	var manifests []PackageManifest
 
-	err := filepath.WalkDir(root, func(path string, entry fs.DirEntry, walkErr error) error {
+	walkError := filepath.WalkDir(root, func(path string, entry fs.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
 		}
 
 		if entry.IsDir() {
-			if ignoredDirectories[entry.Name()] {
+			if ignoredDirectoryNames[entry.Name()] {
 				return filepath.SkipDir
 			}
 			return nil
@@ -90,17 +90,17 @@ func FindPackageManifests(root string) ([]PackageManifest, error) {
 			return nil
 		}
 
-		manifest, err := readPackageManifest(root, path)
-		if err != nil {
-			return err
+		manifest, readError := readPackageManifest(root, path)
+		if readError != nil {
+			return readError
 		}
 		if manifest.Name != "" {
 			manifests = append(manifests, manifest)
 		}
 		return nil
 	})
-	if err != nil {
-		return nil, err
+	if walkError != nil {
+		return nil, walkError
 	}
 
 	sort.Slice(manifests, func(i, j int) bool {
@@ -118,37 +118,37 @@ func CountLanguages(root string) ([]LanguageStat, error) {
 	stats := map[string]aggregate{}
 	var totalBytes int64
 
-	err := filepath.WalkDir(root, func(path string, entry fs.DirEntry, walkErr error) error {
+	walkError := filepath.WalkDir(root, func(path string, entry fs.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
 		}
 
 		if entry.IsDir() {
-			if ignoredDirectories[entry.Name()] {
+			if ignoredDirectoryNames[entry.Name()] {
 				return filepath.SkipDir
 			}
 			return nil
 		}
 
-		language := languageByExtension[strings.ToLower(filepath.Ext(entry.Name()))]
+		language := languageByExtensionMap[strings.ToLower(filepath.Ext(entry.Name()))]
 		if language == "" {
 			return nil
 		}
 
-		info, err := entry.Info()
-		if err != nil {
-			return err
+		fileInfo, fileInfoError := entry.Info()
+		if fileInfoError != nil {
+			return fileInfoError
 		}
 
 		current := stats[language]
 		current.files++
-		current.bytes += info.Size()
+		current.bytes += fileInfo.Size()
 		stats[language] = current
-		totalBytes += info.Size()
+		totalBytes += fileInfo.Size()
 		return nil
 	})
-	if err != nil {
-		return nil, err
+	if walkError != nil {
+		return nil, walkError
 	}
 
 	result := make([]LanguageStat, 0, len(stats))
@@ -180,18 +180,18 @@ func readPackageManifest(root string, path string) (PackageManifest, error) {
 		Version string `json:"version"`
 	}
 
-	content, err := os.ReadFile(path)
-	if err != nil {
-		return PackageManifest{}, err
+	content, readError := os.ReadFile(path)
+	if readError != nil {
+		return PackageManifest{}, readError
 	}
 
 	var manifest rawManifest
-	if err := json.Unmarshal(content, &manifest); err != nil {
-		return PackageManifest{}, err
+	if unmarshalError := json.Unmarshal(content, &manifest); unmarshalError != nil {
+		return PackageManifest{}, unmarshalError
 	}
 
-	relativePath, err := filepath.Rel(root, path)
-	if err != nil {
+	relativePath, pathError := filepath.Rel(root, path)
+	if pathError != nil {
 		relativePath = path
 	}
 

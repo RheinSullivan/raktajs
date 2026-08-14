@@ -9,53 +9,53 @@ import (
 )
 
 type FileCache struct {
-	dir string
-	mu  sync.RWMutex
+	cacheDirectory string
+	mutex          sync.RWMutex
 }
 
-func NewFileCache(dir string) (*FileCache, error) {
-	if dir == "" {
-		dir = ".cache"
+func NewFileCache(directory string) (*FileCache, error) {
+	if directory == "" {
+		directory = ".cache"
 	}
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(directory, 0755); err != nil {
 		return nil, err
 	}
-	return &FileCache{dir: dir}, nil
+	return &FileCache{cacheDirectory: directory}, nil
 }
 
-func (fc *FileCache) keyToPath(key string) string {
+func (fileCache *FileCache) keyToPath(key string) string {
 	hash := sha256.Sum256([]byte(key))
 	filename := hex.EncodeToString(hash[:]) + ".cache"
-	return filepath.Join(fc.dir, filename)
+	return filepath.Join(fileCache.cacheDirectory, filename)
 }
 
-func (fc *FileCache) Set(key string, data []byte) error {
-	fc.mu.Lock()
-	defer fc.mu.Unlock()
+func (fileCache *FileCache) Set(key string, data []byte) error {
+	fileCache.mutex.Lock()
+	defer fileCache.mutex.Unlock()
 
-	path := fc.keyToPath(key)
+	path := fileCache.keyToPath(key)
 	return os.WriteFile(path, data, 0644)
 }
 
-func (fc *FileCache) Get(key string) ([]byte, bool) {
-	fc.mu.RLock()
-	defer fc.mu.RUnlock()
+func (fileCache *FileCache) Get(key string) ([]byte, bool) {
+	fileCache.mutex.RLock()
+	defer fileCache.mutex.RUnlock()
 
-	path := fc.keyToPath(key)
-	data, err := os.ReadFile(path)
-	if err != nil {
+	path := fileCache.keyToPath(key)
+	data, readError := os.ReadFile(path)
+	if readError != nil {
 		return nil, false
 	}
 	return data, true
 }
 
-func (fc *FileCache) Delete(key string) error {
-	fc.mu.Lock()
-	defer fc.mu.Unlock()
+func (fileCache *FileCache) Delete(key string) error {
+	fileCache.mutex.Lock()
+	defer fileCache.mutex.Unlock()
 
-	path := fc.keyToPath(key)
-	if err := os.Remove(path); err != nil && !os.IsNotExist(err) {
-		return err
+	path := fileCache.keyToPath(key)
+	if removeError := os.Remove(path); removeError != nil && !os.IsNotExist(removeError) {
+		return removeError
 	}
 	return nil
 }

@@ -12,22 +12,22 @@ require "json"
 require "time"
 
 # Helpers
-def red(msg)    = "\e[31m#{msg}\e[0m"
-def green(msg)  = "\e[32m#{msg}\e[0m"
-def yellow(msg) = "\e[33m#{msg}\e[0m"
-def cyan(msg)   = "\e[36m#{msg}\e[0m"
-def bold(msg)   = "\e[1m#{msg}\e[0m"
+def red(message) = "\e[31m#{message}\e[0m"
+def green(message) = "\e[32m#{message}\e[0m"
+def yellow(message) = "\e[33m#{message}\e[0m"
+def cyan(message) = "\e[36m#{message}\e[0m"
+def bold(message) = "\e[1m#{message}\e[0m"
 def project_root = File.expand_path("../../", __dir__)
 
 # CLI args
-args = ARGV.reduce({}) do |acc, arg|
-  key, val = arg.sub(/\A--/, "").split("=", 2)
-  acc.merge(key.to_sym => (val || true))
+arguments = ARGV.reduce({}) do |accumulator, argument|
+  key, value = argument.sub(/\A--/, "").split("=", 2)
+  accumulator.merge(key.to_sym => (value || true))
 end
 
-scope    = args[:scope]    || "all"
-coverage = args[:coverage] || false
-reporter = args[:reporter] || "text"
+scope = arguments[:scope] || "all"
+coverage = arguments[:coverage] || false
+reporter = arguments[:reporter] || "text"
 
 # Suite definitions
 suites = {
@@ -37,9 +37,9 @@ suites = {
   e2e:         { label: "End-to-End",       pattern: "packages/**/*.e2e.test.ts",         desc: "E2E scenario tests" },
 }
 
-active = scope == "all" ? suites.values : [suites[scope.to_sym]].compact
+active_suites = scope == "all" ? suites.values : [suites[scope.to_sym]].compact
 
-if active.empty?
+if active_suites.empty?
   puts yellow("No suite matched scope '#{scope}'.")
   exit 0
 end
@@ -55,44 +55,43 @@ results = []
 total_pass = total_fail = total_skip = 0
 suite_start = Time.now
 
-active.each do |suite|
-  puts "\n#{bold("[ #{suite[:label]} ]")}"
+active_suites.each do |suite|
+  puts "\n#{bold("[ #{suite[:label]} ]")}" 
   puts "  #{suite[:desc]}"
 
-  cov_flag = coverage ? "--coverage" : ""
-  cmd = "bun test #{suite[:pattern]} --pass-with-no-tests #{cov_flag}"
+  coverage_flag = coverage ? "--coverage" : ""
+  command_text = "bun test #{suite[:pattern]} --pass-with-no-tests #{coverage_flag}"
 
-  t0 = Time.now
-  stdout, stderr, status = Open3.capture3(cmd, chdir: project_root)
-  elapsed = ((Time.now - t0) * 1_000).round(1)
+  start_time = Time.now
+  stdout, stderr, status = Open3.capture3(command_text, chdir: project_root)
+  elapsed = ((Time.now - start_time) * 1_000).round(1)
 
   combined = stdout + stderr
-  pass_n = combined.match(/(\d+)\s+pass/)&.then { |match| match[1].to_i } || 0
-  fail_n = combined.match(/(\d+)\s+fail/)&.then { |match| match[1].to_i } || 0
-  skip_n = combined.match(/(\d+)\s+skip/)&.then { |match| match[1].to_i } || 0
+  pass_count = combined.match(/(\d+)\s+pass/)&.then { |match| match[1].to_i } || 0
+  fail_count = combined.match(/(\d+)\s+fail/)&.then { |match| match[1].to_i } || 0
+  skip_count = combined.match(/(\d+)\s+skip/)&.then { |match| match[1].to_i } || 0
 
-  total_pass += pass_n
-  total_fail += fail_n
-  total_skip += skip_n
+  total_pass += pass_count
+  total_fail += fail_count
+  total_skip += skip_count
 
-  ok = status.success? || fail_n == 0
+  is_successful = status.success? || fail_count == 0
   puts "  duration : #{elapsed} ms"
-  puts "  pass     : #{green(pass_n.to_s)}"
-  puts "  fail     : #{fail_n > 0 ? red(fail_n.to_s) : "0"}"
-  puts "  skip     : #{skip_n}"
-  puts "  status   : #{ok ? green("PASS") : red("FAIL")}"
+  puts "  pass     : #{green(pass_count.to_s)}"
+  puts "  fail     : #{fail_count > 0 ? red(fail_count.to_s) : "0"}"
+  puts "  skip     : #{skip_count}"
+  puts "  status   : #{is_successful ? green("PASS") : red("FAIL")}"
 
-  unless ok
+  unless is_successful
     puts
     puts red("  Last 20 lines:")
     combined.lines.last(20).each { |line| puts "    #{line.rstrip}" }
   end
 
   results << { suite: suite[:label], duration_ms: elapsed,
-               pass: pass_n, fail: fail_n, skip: skip_n, ok: ok }
+               pass: pass_count, fail: fail_count, skip: skip_count, ok: is_successful }
 end
 
-# Summary
 total_duration = ((Time.now - suite_start) * 1_000).round(1)
 overall_ok = total_fail == 0
 
@@ -110,7 +109,7 @@ if reporter == "json"
                                skip: total_skip, duration_ms: total_duration, suites: results })
 elsif reporter == "tap"
   puts "TAP version 14"
-  results.each_with_index { |r, i| puts "#{r[:ok] ? "ok" : "not ok"} #{i + 1} #{r[:suite]}" }
+  results.each_with_index { |result, index| puts "#{result[:ok] ? "ok" : "not ok"} #{index + 1} #{result[:suite]}" }
   puts "1..#{results.size}"
 end
 

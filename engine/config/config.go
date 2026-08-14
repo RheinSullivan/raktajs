@@ -92,59 +92,59 @@ func Default() Config {
 // Load reads a rakta.config.json file at projectRoot and merges it over the
 // default configuration. Missing keys keep their default values.
 func Load(projectRoot string) (Config, error) {
-	cfg := Default()
+	configuration := Default()
 
 	candidates := []string{
 		filepath.Join(projectRoot, "rakta.config.json"),
 		filepath.Join(projectRoot, ".rakta", "config.json"),
 	}
 
-	var jsonPath string
-	for _, c := range candidates {
-		if _, err := os.Stat(c); err == nil {
-			jsonPath = c
+	var configPath string
+	for _, configCandidate := range candidates {
+		if _, statError := os.Stat(configCandidate); statError == nil {
+			configPath = configCandidate
 			break
 		}
 	}
 
-	if jsonPath == "" {
+	if configPath == "" {
 		// No config file is not an error; defaults are used.
-		return cfg, nil
+		return configuration, nil
 	}
 
-	data, err := os.ReadFile(jsonPath)
-	if err != nil {
-		return cfg, fmt.Errorf("rakta config: read %s: %w", jsonPath, err)
+	data, readError := os.ReadFile(configPath)
+	if readError != nil {
+		return configuration, fmt.Errorf("rakta config: read %s: %w", configPath, readError)
 	}
 
-	if err := json.Unmarshal(data, &cfg); err != nil {
-		return cfg, fmt.Errorf("rakta config: parse %s: %w", jsonPath, err)
+	if unmarshalError := json.Unmarshal(data, &configuration); unmarshalError != nil {
+		return configuration, fmt.Errorf("rakta config: parse %s: %w", configPath, unmarshalError)
 	}
 
-	if err := validate(cfg); err != nil {
-		return cfg, fmt.Errorf("rakta config: validation: %w", err)
+	if validationError := validate(configuration); validationError != nil {
+		return configuration, fmt.Errorf("rakta config: validation: %w", validationError)
 	}
 
-	return cfg, nil
+	return configuration, nil
 }
 
 // validate checks a Config for obvious mistakes.
-func validate(cfg Config) error {
+func validate(configuration Config) error {
 	validModes := map[RenderMode]bool{
 		RenderModeCSR: true, RenderModeSSR: true, RenderModeSSG: true,
 		RenderModeSPA: true, RenderModeISR: true, RenderModeHybrid: true,
 		RenderModeEdge: true,
 	}
-	if !validModes[cfg.RenderMode] {
+	if !validModes[configuration.RenderMode] {
 		return fmt.Errorf("invalid renderMode %q; must be one of: %s",
-			cfg.RenderMode,
+			configuration.RenderMode,
 			strings.Join([]string{"csr", "ssr", "ssg", "spa", "isr", "hybrid", "edge"}, ", "),
 		)
 	}
-	if cfg.Server.Port < 1 || cfg.Server.Port > 65535 {
+	if configuration.Server.Port < 1 || configuration.Server.Port > 65535 {
 		return errors.New("server.port must be in range 1–65535")
 	}
-	if cfg.AppDir == "" {
+	if configuration.AppDir == "" {
 		return errors.New("appDir must not be empty")
 	}
 	return nil
@@ -153,19 +153,19 @@ func validate(cfg Config) error {
 // Env reads an environment variable with a typed fallback.
 // Keys that begin with "RAKTA_" are reserved for framework use.
 func Env(key, fallback string) string {
-	if v, ok := os.LookupEnv(key); ok {
-		return v
+	if envValue, ok := os.LookupEnv(key); ok {
+		return envValue
 	}
 	return fallback
 }
 
 // EnvBool reads a boolean environment variable ("1", "true", "yes" → true).
 func EnvBool(key string, fallback bool) bool {
-	v, ok := os.LookupEnv(key)
+	envValue, ok := os.LookupEnv(key)
 	if !ok {
 		return fallback
 	}
-	switch strings.ToLower(strings.TrimSpace(v)) {
+	switch strings.ToLower(strings.TrimSpace(envValue)) {
 	case "1", "true", "yes", "on":
 		return true
 	case "0", "false", "no", "off":
@@ -177,7 +177,7 @@ func EnvBool(key string, fallback bool) bool {
 // IsProduction returns true when RAKTA_ENV or NODE_ENV is "production".
 func IsProduction() bool {
 	for _, key := range []string{"RAKTA_ENV", "NODE_ENV"} {
-		if v := os.Getenv(key); strings.EqualFold(v, "production") {
+		if envValue := os.Getenv(key); strings.EqualFold(envValue, "production") {
 			return true
 		}
 	}
@@ -188,8 +188,8 @@ func IsProduction() bool {
 // (or when neither variable is set, which is the implicit dev default).
 func IsDevelopment() bool {
 	for _, key := range []string{"RAKTA_ENV", "NODE_ENV"} {
-		if v := os.Getenv(key); v != "" {
-			return strings.EqualFold(v, "development")
+		if envValue := os.Getenv(key); envValue != "" {
+			return strings.EqualFold(envValue, "development")
 		}
 	}
 	return true // default to development when no env var is present

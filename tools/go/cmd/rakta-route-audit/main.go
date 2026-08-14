@@ -16,9 +16,9 @@ func main() {
 	}
 
 	var patterns []routes.RoutePattern
-	err := filepath.WalkDir(appRoot, func(path string, entry os.DirEntry, walkErr error) error {
-		if walkErr != nil {
-			return walkErr
+	walkError := filepath.WalkDir(appRoot, func(path string, entry os.DirEntry, directoryError error) error {
+		if directoryError != nil {
+			return directoryError
 		}
 		if entry.IsDir() {
 			return nil
@@ -28,20 +28,20 @@ func main() {
 		}
 		return nil
 	})
-	if err != nil {
-		exitWithError(err)
+	if walkError != nil {
+		exitWithError(walkError)
 	}
 
 	routes.SortPatterns(patterns)
-	payload, err := json.MarshalIndent(patterns, "", "  ")
-	if err != nil {
-		exitWithError(err)
+	payload, marshalError := json.MarshalIndent(patterns, "", "  ")
+	if marshalError != nil {
+		exitWithError(marshalError)
 	}
 
 	fmt.Println(string(payload))
 }
 
-func exitWithError(err error) {
-	fmt.Fprintf(os.Stderr, "rakta-route-audit: %v\n", err)
+func exitWithError(errorToDisplay error) {
+	fmt.Fprintf(os.Stderr, "rakta-route-audit: %v\n", errorToDisplay)
 	os.Exit(1)
 }

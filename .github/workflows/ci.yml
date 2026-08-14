@@ -24,11 +24,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ── 1. Checkout ────────────────────────────────────────────────────────
+      # 1. Checkout
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ── 2. Runtime ─────────────────────────────────────────────────────────
+      # 2. Runtime
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
@@ -39,26 +39,26 @@ jobs:
         with:
           node-version: 22
 
-      # ── 3. Install (frozen - reproducible, no silent lockfile changes) ─────
+      # 3. Install (frozen - reproducible, no silent lockfile changes)
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      # ── 4. Typecheck ───────────────────────────────────────────────────────
+      # 4. Typecheck
       - name: Typecheck
         run: bun run typecheck
 
-      # ── 5. Lint ────────────────────────────────────────────────────────────
+      # 5. Lint
       - name: Lint
         run: bun run lint
 
-      # ── 6. Build first (test depends on dist/) ─────────────────────────────
+      # 6. Build first (test depends on dist/)
       - name: Build
         run: bun run build
 
-      # ── 7. Test ────────────────────────────────────────────────────────────
+      # 7. Test
       - name: Test
         run: bun run test
 
-      # ── 8. Workspace integrity check ───────────────────────────────────────
+      # 8. Workspace integrity check
       - name: Workspace check
         run: bun run check:workspace
