@@ -53,12 +53,13 @@ func (assetGraph *AssetGraph) Build(opts BuildOptions) (*BuildResult, error) {
 		return nil, fmt.Errorf("failed to create output directory: %w", err)
 	}
 
+	outDirName := filepath.Base(filepath.Clean(opts.OutputDir))
 	var files []string
 	walkError := filepath.Walk(opts.SourceDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		if info.IsDir() && (info.Name() == "node_modules" || info.Name() == ".git" || info.Name() == "dist") {
+		if info.IsDir() && (info.Name() == "node_modules" || info.Name() == ".git" || info.Name() == "dist" || info.Name() == outDirName) {
 			return filepath.SkipDir
 		}
 		if !info.IsDir() {

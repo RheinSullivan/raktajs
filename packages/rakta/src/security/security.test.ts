@@ -23,6 +23,11 @@ describe("Rakta security helpers", () => {
 		expect(decryptCookieValue(cookie, "secret")).toBe("session");
 	});
 
+	test("handles malformed Base64 tokens and cookies gracefully without throwing", () => {
+		expect(verifyCsrfToken("invalid-base64-!!!", "secret")).toBe(false);
+		expect(decryptCookieValue("invalid-base64-!!!", "secret")).toBeUndefined();
+	});
+
 	test("limits requests and stores secrets", () => {
 		const limiter = new RateLimiter();
 		const manager = new SecretManager();

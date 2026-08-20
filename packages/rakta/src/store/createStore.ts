@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import type {
 	ListenerFn,
 	SelectorFn,
@@ -7,6 +7,37 @@ import type {
 	StoreApi,
 	UnsubscribeFn,
 } from "./types";
+
+function shallowEqual(a: unknown, b: unknown): boolean {
+	if (Object.is(a, b)) return true;
+	if (
+		typeof a !== "object" ||
+		a === null ||
+		typeof b !== "object" ||
+		b === null
+	) {
+		return false;
+	}
+
+	const keysA = Object.keys(a);
+	const keysB = Object.keys(b);
+
+	if (keysA.length !== keysB.length) return false;
+
+	for (const key of keysA) {
+		if (
+			!Object.hasOwn(b, key) ||
+			!Object.is(
+				(a as Record<string, unknown>)[key],
+				(b as Record<string, unknown>)[key],
+			)
+		) {
+			return false;
+		}
+	}
+
+	return true;
+}
 
 function createStoreApi<TState>(
 	creator: StateCreator<TState>,
@@ -92,14 +123,35 @@ export function createRaktaStore<TState>(
 	function useStore<TSelected>(
 		selector?: SelectorFn<TState, TSelected>,
 	): TState | TSelected {
+		const prevSliceRef = useRef<TSelected | TState | undefined>(undefined);
+		const prevStateRef = useRef<TState | undefined>(undefined);
+
 		const getSnapshot = (): TState | TSelected => {
 			const state = storeApi.getState();
 
-			if (selector !== undefined) {
-				return selector(state);
+			if (selector === undefined) {
+				return state;
 			}
 
-			return state;
+			if (
+				prevStateRef.current === state &&
+				prevSliceRef.current !== undefined
+			) {
+				return prevSliceRef.current;
+			}
+
+			const nextSlice = selector(state);
+
+			if (
+				prevSliceRef.current !== undefined &&
+				shallowEqual(prevSliceRef.current, nextSlice)
+			) {
+				return prevSliceRef.current;
+			}
+
+			prevStateRef.current = state;
+			prevSliceRef.current = nextSlice;
+			return nextSlice;
 		};
 
 		return useSyncExternalStore(storeApi.subscribe, getSnapshot, getSnapshot);

@@ -80,7 +80,7 @@ func (stack *Stack) Run(responseWriter http.ResponseWriter, request *http.Reques
 
 // Apply writes the side-effects of a Result to the ResponseWriter.
 // Returns true when the response has been committed (caller must not write further).
-func Apply(responseWriter http.ResponseWriter, result Result) bool {
+func Apply(responseWriter http.ResponseWriter, request *http.Request, result Result) bool {
 	if !result.Continue {
 		switch {
 		case result.Redirect != "":
@@ -88,7 +88,10 @@ func Apply(responseWriter http.ResponseWriter, result Result) bool {
 			if status == 0 {
 				status = http.StatusFound
 			}
-			http.Redirect(responseWriter, &http.Request{URL: &url.URL{}}, result.Redirect, status)
+			if request == nil {
+				request = &http.Request{Method: http.MethodGet, URL: &url.URL{Path: "/"}}
+			}
+			http.Redirect(responseWriter, request, result.Redirect, status)
 			return true
 		case result.Aborted != 0:
 			http.Error(responseWriter, http.StatusText(result.Aborted), result.Aborted)

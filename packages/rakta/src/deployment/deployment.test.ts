@@ -13,11 +13,28 @@ describe("Rakta deployment adapters", () => {
 			appName: "rakta-app",
 			port: 4000,
 		});
+		const netlify = createDeploymentAdapter("netlify", {
+			appName: "rakta-app",
+			outDir: "dist",
+		});
+		const cloudflare = createDeploymentAdapter("cloudflare-workers", {
+			appName: "rakta-app",
+		});
 
 		expect(vercel.files.map((file) => file.path)).toContain("vercel.json");
 		expect(vercel.runtime).toBe("edge");
+		const vercelJson = vercel.files.find(
+			(f) => f.path === "vercel.json",
+		)?.content;
+		expect(vercelJson).toContain("[a-zA-Z0-9]");
+
 		expect(docker.files.map((file) => file.path)).toContain("Dockerfile");
 		expect(docker.environment.PORT).toBe("4000");
+
+		expect(netlify.files.map((file) => file.path)).toContain("netlify.toml");
+		expect(cloudflare.files.map((file) => file.path)).toContain(
+			"wrangler.toml",
+		);
 	});
 
 	test("lists supported stable targets", () => {

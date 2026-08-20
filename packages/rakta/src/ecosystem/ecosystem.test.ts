@@ -82,8 +82,14 @@ describe("Rakta @rakta/image", () => {
 		expect(dims).toEqual({ width: 800, height: 600 });
 	});
 
-	it("getImageDimensions returns null for URLs without dimensions", () => {
+	it("getImageDimensions returns null for URLs without dimensions or invalid dimensions", () => {
 		expect(getImageDimensions("https://example.com/img.jpg")).toBeNull();
+		expect(
+			getImageDimensions("https://cdn.example.com/img?w=abc&h=100"),
+		).toBeNull();
+		expect(
+			getImageDimensions("https://cdn.example.com/img?w=100&h=-50"),
+		).toBeNull();
 	});
 
 	it("isAnimatedGif detects .gif URLs", () => {

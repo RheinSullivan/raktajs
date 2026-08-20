@@ -82,3 +82,17 @@ func TestFormatChangeUsesStablePrefixes(test *testing.T) {
 		}
 	}
 }
+
+func TestWatcherStopIsIdempotent(test *testing.T) {
+	// Calling Stop() more than once must not panic.
+	w := New(func([]FileChange) {}, Options{})
+	w.Start()
+
+	// Wait a moment for the goroutine to be scheduled.
+	time.Sleep(10 * time.Millisecond)
+
+	w.Stop()
+	// Second stop must not panic.
+	w.Stop()
+}
+

@@ -34,4 +34,12 @@ func TestRouterStaticAndDynamic(test *testing.T) {
 	if matchedPath != "/user/:id" || paramVal != "123" {
 		test.Errorf("expected /user/:id match with id=123, got path=%s param=%s", matchedPath, paramVal)
 	}
+
+	recorder = httptest.NewRecorder()
+	request = httptest.NewRequest("GET", "/user/john%20doe", nil)
+	router.ServeHTTP(recorder, request)
+
+	if paramVal != "john doe" {
+		test.Errorf("expected unescaped param val 'john doe', got %q", paramVal)
+	}
 }

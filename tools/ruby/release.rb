@@ -14,14 +14,19 @@ module Release
     package_paths = [
       File.expand_path('../../package.json', __dir__),
       File.expand_path('../../packages/rakta/package.json', __dir__),
-      File.expand_path('../../packages/create-rakta/package.json', __dir__)
+      File.expand_path('../../packages/create-rakta/package.json', __dir__),
+      File.expand_path('../../templates/frontendOnly/package.json', __dir__),
+      File.expand_path('../../templates/fullstack/frontend/package.json', __dir__)
     ]
 
     package_paths.each do |manifest_path|
       next unless File.exist?(manifest_path)
 
       package_manifest = JSON.parse(File.read(manifest_path))
-      package_manifest['version'] = target_version
+      package_manifest['version'] = target_version if package_manifest['version']
+      if package_manifest['dependencies'] && package_manifest['dependencies']['raktajs']
+        package_manifest['dependencies']['raktajs'] = "^#{target_version}"
+      end
       File.write(manifest_path, JSON.pretty_generate(package_manifest) + "\n")
       puts "  Updated #{File.basename(File.dirname(manifest_path))}/#{File.basename(manifest_path)} -> #{target_version}"
     end

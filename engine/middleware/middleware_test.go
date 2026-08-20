@@ -96,3 +96,28 @@ func TestPathPrefixRunsOnlyForMatchingPath(test *testing.T) {
 		test.Fatalf("expected matching path to abort, result=%+v called=%v", result, called)
 	}
 }
+
+func TestApplyRedirectAndAbort(test *testing.T) {
+	recorder := httptest.NewRecorder()
+	request := httptest.NewRequest(http.MethodGet, "/old-location", nil)
+
+	committed := Apply(recorder, request, Redirect("/new-location", http.StatusMovedPermanently))
+	if !committed {
+		test.Fatal("expected Apply redirect to return committed=true")
+	}
+	if recorder.Code != http.StatusMovedPermanently {
+		test.Fatalf("expected status 301, got %d", recorder.Code)
+	}
+	if recorder.Header().Get("Location") != "/new-location" {
+		test.Fatalf("expected Location header /new-location, got %q", recorder.Header().Get("Location"))
+	}
+
+	abortRecorder := httptest.NewRecorder()
+	abortCommitted := Apply(abortRecorder, request, Abort(http.StatusForbidden))
+	if !abortCommitted {
+		test.Fatal("expected Apply abort to return committed=true")
+	}
+	if abortRecorder.Code != http.StatusForbidden {
+		test.Fatalf("expected status 403, got %d", abortRecorder.Code)
+	}
+}

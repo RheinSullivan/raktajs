@@ -3,8 +3,6 @@ import { RaktaType } from "./types";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-const URL_PATTERN = /^https?:\/\/[^\s$.?#].[^\s]*$/i;
-
 type StringRule = (value: string) => ReadonlyArray<ValidationError>;
 
 export class StringType extends RaktaType<string> {
@@ -89,8 +87,13 @@ export class StringType extends RaktaType<string> {
 
 	url(): StringType {
 		return this.addRule((value: string): ReadonlyArray<ValidationError> => {
-			if (URL_PATTERN.test(value)) {
-				return [];
+			try {
+				const parsed = new URL(value);
+				if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+					return [];
+				}
+			} catch {
+				// invalid URL
 			}
 
 			return [

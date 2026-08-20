@@ -20,7 +20,7 @@ export interface ManifestOptions {
 	readonly display?: ManifestDisplayMode;
 	readonly backgroundColor?: string;
 	readonly themeColor?: string;
-	readonly icons: ManifestIcon[];
+	readonly icons?: ManifestIcon[];
 }
 
 export interface WebAppManifestIcon {

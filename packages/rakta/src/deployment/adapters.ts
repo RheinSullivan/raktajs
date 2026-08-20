@@ -81,7 +81,9 @@ export function createDeploymentAdapter(
 										],
 									},
 								],
-								rewrites: [{ source: "/(.*)", destination: "/" }],
+								rewrites: [
+									{ source: "/((?!.*\\.[a-zA-Z0-9]+$).*)", destination: "/" },
+								],
 							},
 							null,
 							2,

@@ -36,6 +36,14 @@ function buildPatternRegex(segments: RouteSegment[]): {
 	return { regex, paramNames };
 }
 
+function safeDecode(val: string): string {
+	try {
+		return decodeURIComponent(val);
+	} catch {
+		return val;
+	}
+}
+
 export function matchRoute(
 	pathname: string,
 	routes: RouteManifestEntry[],
@@ -60,8 +68,8 @@ export function matchRoute(
 			const captured = match[index + 1];
 			if (captured !== undefined) {
 				params[name] = captured.includes("/")
-					? captured.split("/").filter(Boolean).map(decodeURIComponent)
-					: decodeURIComponent(captured);
+					? captured.split("/").filter(Boolean).map(safeDecode)
+					: safeDecode(captured);
 			}
 		});
 

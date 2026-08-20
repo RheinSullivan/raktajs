@@ -21,13 +21,32 @@ func NewMemoryCache() *MemoryCache {
 	}
 }
 
+const DefaultMaxItems = 10000
+
 func (memoryCache *MemoryCache) Set(key string, value []byte, timeToLive time.Duration) {
 	memoryCache.mutex.Lock()
 	defer memoryCache.mutex.Unlock()
 
+	now := time.Now().UnixNano()
 	var expirationTimestamp int64
 	if timeToLive > 0 {
-		expirationTimestamp = time.Now().Add(timeToLive).UnixNano()
+		expirationTimestamp = now + timeToLive.Nanoseconds()
+	}
+
+	// Automatic capacity check & expired pruning if near limit
+	if len(memoryCache.items) >= DefaultMaxItems {
+		for k, item := range memoryCache.items {
+			if item.Expiration > 0 && now > item.Expiration {
+				delete(memoryCache.items, k)
+			}
+		}
+		// If still at or over capacity, remove an arbitrary key to protect memory
+		if len(memoryCache.items) >= DefaultMaxItems {
+			for k := range memoryCache.items {
+				delete(memoryCache.items, k)
+				break
+			}
+		}
 	}
 
 	memoryCache.items[key] = Item{

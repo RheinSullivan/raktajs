@@ -78,3 +78,5 @@ self.addEventListener("fetch", (fetchEvent) => {
 });
 `;
 }
+
+export const generateServiceWorkerScript = generateServiceWorkerSource;

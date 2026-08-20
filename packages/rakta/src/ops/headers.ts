@@ -14,7 +14,11 @@ export function mergeHeaders(...sources: (HeadersInit | undefined)[]): Headers {
 		const h = new Headers(source);
 
 		for (const [key, value] of h.entries()) {
-			merged.set(key, value);
+			if (key.toLowerCase() === "set-cookie") {
+				merged.append(key, value);
+			} else {
+				merged.set(key, value);
+			}
 		}
 	}
 
@@ -28,7 +32,11 @@ export function headersToRecord(headers: Headers): Record<string, string> {
 	const record: Record<string, string> = {};
 
 	for (const [key, value] of headers.entries()) {
-		record[key] = value;
+		if (record[key] !== undefined) {
+			record[key] = `${record[key]}, ${value}`;
+		} else {
+			record[key] = value;
+		}
 	}
 
 	return record;

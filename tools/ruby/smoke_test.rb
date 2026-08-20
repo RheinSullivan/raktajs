@@ -56,6 +56,7 @@ class RaktaRubyToolingSmokeTest < Minitest::Test
 
     assert_includes source, "packages/rakta/package.json"
     assert_includes source, "packages/create-rakta/package.json"
+    assert_includes source, "templates/frontendOnly/package.json"
     assert_includes source, "packages/create-rakta/src/generator.ts"
   end
 

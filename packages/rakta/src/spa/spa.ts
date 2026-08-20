@@ -129,19 +129,19 @@ export class SpaErrorBoundary extends Component<
 	}
 }
 
+const globalScrollPositions = new Map<string, number>();
+
 export function ScrollRestoration({ enable = true }: { enable?: boolean }) {
 	useEffect(() => {
 		if (!enable || typeof window === "undefined") return;
 
-		const scrollPositions = new Map<string, number>();
-
 		const handleScroll = () => {
-			scrollPositions.set(window.location.pathname, window.scrollY);
+			globalScrollPositions.set(window.location.pathname, window.scrollY);
 		};
 
 		const handlePopState = () => {
-			const targetY = scrollPositions.get(window.location.pathname) ?? 0;
-			window.scrollTo({ top: targetY, behavior: "instant" });
+			const targetY = globalScrollPositions.get(window.location.pathname) ?? 0;
+			window.scrollTo({ top: targetY });
 		};
 
 		window.addEventListener("scroll", handleScroll, { passive: true });

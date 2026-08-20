@@ -33,7 +33,11 @@ export interface ProcedureDefinition<TInput, TOutput> {
 		}>;
 		parse(value: unknown): TInput;
 	};
-	readonly handler: (context: { readonly input: TInput }) => Promise<TOutput>;
+	readonly handler: (context: {
+		readonly input: TInput;
+		readonly request?: Request;
+		readonly signal?: AbortSignal;
+	}) => Promise<TOutput>;
 }
 
 /** A record of named procedure definitions forming a router. */
@@ -54,10 +58,21 @@ export type InferOutput<TProcedure> =
 		? TOutput
 		: never;
 
+export interface RpcCallConfig {
+	readonly timeout?: number;
+	readonly signal?: AbortSignal;
+}
+
 /** Produces a typed client shape from a router definition. */
 export type RouterClient<TRouter extends RouterDefinition> = {
 	[K in keyof TRouter]: {
-		query: (input: InferInput<TRouter[K]>) => Promise<InferOutput<TRouter[K]>>;
-		mutate: (input: InferInput<TRouter[K]>) => Promise<InferOutput<TRouter[K]>>;
+		query: (
+			input: InferInput<TRouter[K]>,
+			config?: RpcCallConfig,
+		) => Promise<InferOutput<TRouter[K]>>;
+		mutate: (
+			input: InferInput<TRouter[K]>,
+			config?: RpcCallConfig,
+		) => Promise<InferOutput<TRouter[K]>>;
 	};
 };

@@ -1,5 +1,26 @@
 import { existsSync, readFileSync, statSync, watch } from "node:fs";
-import { join, relative } from "node:path";
+import { join, relative, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
+
+function safePathJoin(baseDir: string, relativePath: string): string | null {
+	try {
+		const decoded = decodeURIComponent(relativePath);
+		const resolvedBase = resolve(baseDir);
+		const resolvedFile = resolve(join(resolvedBase, decoded));
+
+		if (
+			resolvedFile === resolvedBase ||
+			resolvedFile.startsWith(`${resolvedBase}/`) ||
+			resolvedFile.startsWith(`${resolvedBase}\\`)
+		) {
+			return resolvedFile;
+		}
+	} catch {
+		// URI malformed or path resolution failure
+	}
+	return null;
+}
+
 import { createDevTerminal } from "../developerExperience/terminal";
 import {
 	applyRaktaDetectionHeaders,
@@ -370,8 +391,8 @@ export async function startDevServer(
 			await ensureFreshClientBundle();
 
 			if (clientOutDir.length > 0) {
-				const clientBundlePath = join(clientOutDir, pathname);
-				if (isReadableFile(clientBundlePath)) {
+				const clientBundlePath = safePathJoin(clientOutDir, pathname);
+				if (clientBundlePath !== null && isReadableFile(clientBundlePath)) {
 					const isHashedAsset = pathname.includes("/chunks/");
 					return new Response(Bun.file(clientBundlePath), {
 						headers: {
@@ -385,8 +406,8 @@ export async function startDevServer(
 				}
 			}
 
-			const publicPath = join(options.publicDir, pathname);
-			if (isReadableFile(publicPath)) {
+			const publicPath = safePathJoin(options.publicDir, pathname);
+			if (publicPath !== null && isReadableFile(publicPath)) {
 				return new Response(Bun.file(publicPath), {
 					headers: {
 						...createRaktaDetectionHeaders("bun"),
@@ -403,34 +424,55 @@ export async function startDevServer(
 
 			if (apiMatch) {
 				const modulePath = join(options.appDir, apiMatch.entry.filePath);
-				const routeModule = (await import(modulePath)) as ApiRouteExports;
-				const method = request.method.toUpperCase() as keyof ApiRouteExports;
-				const handler = routeModule[method];
+				try {
+					const routeModule = (await import(
+						pathToFileURL(modulePath).href
+					)) as ApiRouteExports;
+					const method = request.method.toUpperCase() as keyof ApiRouteExports;
+					const handler = routeModule[method];
 
-				if (typeof handler !== "function") {
+					if (typeof handler !== "function") {
+						const ms = Date.now() - requestStartMs;
+						terminal.logRequest({
+							method: request.method,
+							pathname,
+							status: 405,
+							totalMs: ms,
+							kind: "api",
+						});
+						return withRaktaDetectionHeaders(
+							new Response("Method not allowed", { status: 405 }),
+						);
+					}
+
+					const apiResponse = await handler(request);
 					const ms = Date.now() - requestStartMs;
 					terminal.logRequest({
 						method: request.method,
 						pathname,
-						status: 405,
+						status: apiResponse.status,
+						totalMs: ms,
+						kind: "api",
+					});
+					return withRaktaDetectionHeaders(apiResponse);
+				} catch (caughtError) {
+					const ms = Date.now() - requestStartMs;
+					terminal.logRequest({
+						method: request.method,
+						pathname,
+						status: 500,
 						totalMs: ms,
 						kind: "api",
 					});
 					return withRaktaDetectionHeaders(
-						new Response("Method not allowed", { status: 405 }),
+						new Response(
+							caughtError instanceof Error
+								? caughtError.message
+								: "Internal API Error",
+							{ status: 500 },
+						),
 					);
 				}
-
-				const apiResponse = await handler(request);
-				const ms = Date.now() - requestStartMs;
-				terminal.logRequest({
-					method: request.method,
-					pathname,
-					status: apiResponse.status,
-					totalMs: ms,
-					kind: "api",
-				});
-				return withRaktaDetectionHeaders(apiResponse);
 			}
 
 			const resolved = resolveRouteMode(pathname, options.renderConfig);

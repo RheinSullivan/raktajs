@@ -21,6 +21,26 @@ describe("Rakta kernel", () => {
 		expect(kernel.snapshot().services).toEqual(["clock"]);
 	});
 
+	test("supports concurrent resolution of async singleton services without false circular dependency errors", async () => {
+		const kernel = createRaktaKernel();
+		let calls = 0;
+
+		kernel.services.singleton("asyncService", async () => {
+			calls += 1;
+			await new Promise((resolve) => setTimeout(resolve, 50));
+			return { id: "service-123" };
+		});
+
+		const [resA, resB] = await Promise.all([
+			kernel.services.resolve<{ id: string }>("asyncService"),
+			kernel.services.resolve<{ id: string }>("asyncService"),
+		]);
+
+		expect(resA).toBe(resB);
+		expect(resA.id).toBe("service-123");
+		expect(calls).toBe(1);
+	});
+
 	test("runs plugin lifecycle in a predictable order", async () => {
 		const events: string[] = [];
 		const kernel = createRaktaKernel({

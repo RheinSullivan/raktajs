@@ -140,8 +140,9 @@ export function resolveTitle(metadata: Metadata): string {
 			return metadata.title.absolute;
 		}
 		if (metadata.title.default) {
-			if (metadata.title.template) {
-				return metadata.title.template.replace("%s", metadata.title.default);
+			const template = metadata.title.template ?? metadata.titleTemplate;
+			if (template) {
+				return template.replace("%s", metadata.title.default);
 			}
 			return metadata.title.default;
 		}

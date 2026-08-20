@@ -64,6 +64,15 @@ describe("Rakta operations", () => {
 		expect(serialized).toContain("Max-Age=3600");
 	});
 
+	test("handles malformed percent-encoded cookie values without throwing", () => {
+		const malformedRequest = new Request("http://localhost/", {
+			headers: { cookie: "bad=%E0%A4%A; valid=ok" },
+		});
+		const cookies = parseCookies(malformedRequest);
+		expect(cookies.get("bad")).toBe("%E0%A4%A");
+		expect(cookies.get("valid")).toBe("ok");
+	});
+
 	test("sets and deletes cookies on response", () => {
 		let response = new Response("ok");
 		response = setCookie(response, "session", "abc123", { path: "/" });
@@ -74,9 +83,13 @@ describe("Rakta operations", () => {
 	});
 
 	test("merges headers and builds JSON responses", () => {
-		const merged = mergeHeaders({ "X-One": "1" }, { "X-Two": "2" });
+		const merged = mergeHeaders(
+			{ "Set-Cookie": "session=123; Path=/", "X-One": "1" },
+			{ "Set-Cookie": "theme=dark; Path=/", "X-Two": "2" },
+		);
 		expect(merged.get("X-One")).toBe("1");
 		expect(merged.get("X-Two")).toBe("2");
+		expect(merged.getSetCookie()).toHaveLength(2);
 
 		const record = headersToRecord(merged);
 		expect(record["x-one"]).toBe("1");

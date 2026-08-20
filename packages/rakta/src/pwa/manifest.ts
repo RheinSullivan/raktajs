@@ -13,7 +13,7 @@ export function generateManifest(options: ManifestOptions): WebAppManifest {
 		display: options.display ?? "standalone",
 		background_color: options.backgroundColor ?? "#050505",
 		theme_color: options.themeColor ?? "#dc2626",
-		icons: options.icons.map((icon) => {
+		icons: (options.icons ?? []).map((icon) => {
 			const manifestIcon = {
 				src: icon.src,
 				sizes: icon.sizes,

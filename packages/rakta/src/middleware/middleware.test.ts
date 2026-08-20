@@ -41,6 +41,40 @@ describe("Rakta middleware", () => {
 		expect(response.headers.get("x-after")).toBe("done");
 	});
 
+	test("supports post-processing middleware with await next() returning void", async () => {
+		const steps: string[] = [];
+		const stack = createMiddlewareStack([
+			async (_context, next) => {
+				steps.push("step-1-start");
+				await next();
+				steps.push("step-1-end");
+			},
+			async (_context, next) => {
+				steps.push("step-2-start");
+				const res = await next();
+				steps.push("step-2-end");
+				return res;
+			},
+		]);
+
+		const response = await stack.handle(
+			new Request("https://rakta.test/api/data"),
+			() => {
+				steps.push("handler");
+				return new Response("handler-response");
+			},
+		);
+
+		expect(await response.text()).toBe("handler-response");
+		expect(steps).toEqual([
+			"step-1-start",
+			"step-2-start",
+			"handler",
+			"step-2-end",
+			"step-1-end",
+		]);
+	});
+
 	test("supports redirects, aborts, and rewrites", async () => {
 		const redirected = redirect("https://rakta.test/login");
 		expect(redirected.status).toBe(307);

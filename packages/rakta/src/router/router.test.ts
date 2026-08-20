@@ -39,5 +39,6 @@ describe("Rakta router dynamic segments", () => {
 			"c",
 		]);
 		expect(matchRoute("/about", routes)?.entry.urlPattern).toBe("/about");
+		expect(matchRoute("/users/%E0%A4%A", routes)?.params.id).toBe("%E0%A4%A");
 	});
 });

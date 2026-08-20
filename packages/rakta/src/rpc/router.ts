@@ -90,9 +90,22 @@ export function createRpcHandler<TRouter extends RouterDefinition>(
 			validatedInput = selectedProcedure.inputSchema.parse(rpcPayload.input);
 		}
 
+		if (request.signal?.aborted) {
+			return buildJsonResponse<string>(
+				{
+					ok: false,
+					error: "Request aborted by client",
+					code: "client_aborted",
+				},
+				499,
+			);
+		}
+
 		try {
 			const procedureOutput = await selectedProcedure.handler({
 				input: validatedInput,
+				request,
+				signal: request.signal,
 			});
 
 			return buildJsonResponse({ ok: true, data: procedureOutput }, 200);

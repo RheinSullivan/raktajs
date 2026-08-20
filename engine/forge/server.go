@@ -112,10 +112,13 @@ func (server *Server) Start() error {
 
 	addr := fmt.Sprintf("%s:%d", server.config.Host, server.config.Port)
 	server.httpServer = &http.Server{
-		Addr:         addr,
-		Handler:      detectionMiddleware(mux),
-		ReadTimeout:  15 * time.Second,
-		WriteTimeout: 15 * time.Second,
+		Addr:        addr,
+		Handler:     detectionMiddleware(mux),
+		ReadTimeout: 30 * time.Second,
+		// WriteTimeout is intentionally 0 (unlimited) for the dev server.
+		// A non-zero WriteTimeout would terminate long-lived SSE connections
+		// (/_rakta/hmr) before clients can receive hot-reload events.
+		WriteTimeout: 0,
 	}
 
 	fmt.Printf("⩛ [RAKTA FORGE] Dev server → http://%s (HTTPS: %t)\n", addr, server.config.HTTPS)
@@ -158,7 +161,9 @@ func (server *Server) handleHMR(responseWriter http.ResponseWriter, request *htt
 	fmt.Fprintf(responseWriter, "event: connected\ndata: {\"engine\":\"Rakta Forge Go\"}\n\n")
 	flusher.Flush()
 
-	ticker := time.NewTicker(25 * time.Second)
+	// Send keep-alive pings every 15 seconds so proxies and browsers
+	// do not close the SSE connection due to read timeouts.
+	ticker := time.NewTicker(15 * time.Second)
 	defer ticker.Stop()
 
 	for {
@@ -166,7 +171,11 @@ func (server *Server) handleHMR(responseWriter http.ResponseWriter, request *htt
 		case <-request.Context().Done():
 			return
 		case <-ticker.C:
-			fmt.Fprintf(responseWriter, "event: ping\ndata: {}\n\n")
+			_, writeErr := fmt.Fprintf(responseWriter, "event: ping\ndata: {}\n\n")
+			if writeErr != nil {
+				// Client disconnected; stop the loop.
+				return
+			}
 			flusher.Flush()
 		}
 	}

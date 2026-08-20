@@ -14,6 +14,10 @@ export function createServiceContainer(): RaktaServiceContainer {
 		RaktaServiceRegistration<unknown>
 	>();
 	const singletons = new Map<RaktaServiceKey<unknown>, unknown>();
+	const inFlightSingletons = new Map<
+		RaktaServiceKey<unknown>,
+		Promise<unknown>
+	>();
 	const resolving = new Set<RaktaServiceKey<unknown>>();
 
 	return {
@@ -63,8 +67,14 @@ export function createServiceContainer(): RaktaServiceContainer {
 				);
 			}
 
-			if (registration.lifetime === "singleton" && singletons.has(key)) {
-				return singletons.get(key) as TValue;
+			if (registration.lifetime === "singleton") {
+				if (singletons.has(key)) {
+					return singletons.get(key) as TValue;
+				}
+
+				if (inFlightSingletons.has(key)) {
+					return (await inFlightSingletons.get(key)) as TValue;
+				}
 			}
 
 			if (resolving.has(key)) {
@@ -75,13 +85,24 @@ export function createServiceContainer(): RaktaServiceContainer {
 
 			resolving.add(key);
 
+			if (registration.lifetime === "singleton") {
+				const resolutionPromise = (async () => {
+					try {
+						const value = await registration.create(this);
+						singletons.set(key, value);
+						return value;
+					} finally {
+						inFlightSingletons.delete(key);
+						resolving.delete(key);
+					}
+				})();
+
+				inFlightSingletons.set(key, resolutionPromise);
+				return (await resolutionPromise) as TValue;
+			}
+
 			try {
 				const value = await registration.create(this);
-
-				if (registration.lifetime === "singleton") {
-					singletons.set(key, value);
-				}
-
 				return value as TValue;
 			} finally {
 				resolving.delete(key);
@@ -101,6 +122,7 @@ export function createServiceContainer(): RaktaServiceContainer {
 		clear() {
 			registrations.clear();
 			singletons.clear();
+			inFlightSingletons.clear();
 			resolving.clear();
 		},
 	};

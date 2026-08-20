@@ -51,9 +51,11 @@ function detectKind(filePath: string): AutoImportKind {
 
 function toPascalCase(text: string): string {
 	return text
-		.replace(/[-_.]/g, " ")
-		.replace(/\s+(.)/g, (_match: string, char: string) => char.toUpperCase())
-		.replace(/^(.)/, (_match: string, char: string) => char.toUpperCase());
+		.replace(/[-_.\s]+/g, " ")
+		.trim()
+		.split(" ")
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join("");
 }
 
 function deriveExportName(

@@ -66,8 +66,16 @@ export function createMiddlewareStack(
 					return terminal(context);
 				}
 
+				let nextResponse: Response | undefined;
 				const mwStart = Date.now();
-				const result = await middleware(context, () => dispatch(index + 1));
+
+				const nextFn = async (): Promise<Response> => {
+					const res = await dispatch(index + 1);
+					nextResponse = res;
+					return res;
+				};
+
+				const result = await middleware(context, nextFn);
 				middlewareTotalMs += Date.now() - mwStart;
 
 				if (result instanceof Response) {
@@ -76,6 +84,10 @@ export function createMiddlewareStack(
 
 				if (result?.kind === "rewrite") {
 					return buildRewriteResponse(request, result.pathname, result.headers);
+				}
+
+				if (nextResponse !== undefined) {
+					return nextResponse;
 				}
 
 				return dispatch(index + 1);

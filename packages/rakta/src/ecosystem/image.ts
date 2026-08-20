@@ -228,7 +228,17 @@ export function getImageDimensions(
 		const w = u.searchParams.get("w") ?? u.searchParams.get("width");
 		const h = u.searchParams.get("h") ?? u.searchParams.get("height");
 		if (!w || !h) return null;
-		return { width: Number(w), height: Number(h) };
+		const width = Number(w);
+		const height = Number(h);
+		if (
+			Number.isNaN(width) ||
+			Number.isNaN(height) ||
+			width <= 0 ||
+			height <= 0
+		) {
+			return null;
+		}
+		return { width, height };
 	} catch {
 		return null;
 	}

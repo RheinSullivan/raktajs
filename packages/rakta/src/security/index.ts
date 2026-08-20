@@ -29,7 +29,11 @@ export function createCsrfToken(secret: string, now = Date.now()): string {
 }
 
 export function verifyCsrfToken(token: string, secret: string): boolean {
-	return atob(token).startsWith(`${secret}:`);
+	try {
+		return atob(token).startsWith(`${secret}:`);
+	} catch {
+		return false;
+	}
 }
 
 export function encryptCookieValue(value: string, secret: string): string {
@@ -40,14 +44,36 @@ export function decryptCookieValue(
 	encryptedValue: string,
 	secret: string,
 ): string | undefined {
-	const decoded = atob(encryptedValue);
-	const prefix = `${secret}:`;
+	try {
+		const decoded = atob(encryptedValue);
+		const prefix = `${secret}:`;
 
-	return decoded.startsWith(prefix) ? decoded.slice(prefix.length) : undefined;
+		return decoded.startsWith(prefix)
+			? decoded.slice(prefix.length)
+			: undefined;
+	} catch {
+		return undefined;
+	}
 }
+
+const MAX_RATE_LIMIT_ENTRIES = 10_000;
 
 export class RateLimiter {
 	readonly #hits = new Map<string, { count: number; resetAt: number }>();
+
+	#prune(now: number): void {
+		for (const [k, entry] of this.#hits.entries()) {
+			if (entry.resetAt <= now) {
+				this.#hits.delete(k);
+			}
+		}
+		if (this.#hits.size >= MAX_RATE_LIMIT_ENTRIES) {
+			const keysToDelete = Array.from(this.#hits.keys()).slice(0, 1000);
+			for (const k of keysToDelete) {
+				this.#hits.delete(k);
+			}
+		}
+	}
 
 	check(
 		key: string,
@@ -55,6 +81,10 @@ export class RateLimiter {
 		windowMs: number,
 		now = Date.now(),
 	): RateLimitState {
+		if (this.#hits.size > 100) {
+			this.#prune(now);
+		}
+
 		const existing = this.#hits.get(key);
 		const hit =
 			existing === undefined || existing.resetAt <= now

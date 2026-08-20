@@ -45,12 +45,11 @@ function createRequestInit(
 	const requestInit: RequestInit = {
 		method,
 		headers,
-		// keepalive: reuses the underlying TCP connection for sequential requests
-		// to the same host. This eliminates TCP handshake overhead on every call,
-		// which is the most common cause of per-request latency in SPA apps that
-		// make many API calls to a single backend.
-		keepalive: keepalive ?? true,
 	};
+
+	if (keepalive !== undefined) {
+		requestInit.keepalive = keepalive;
+	}
 
 	if (body !== undefined && canSendBody(method)) {
 		requestInit.body = JSON.stringify(body);
@@ -72,11 +71,12 @@ async function withRetry<T>(
 		} catch (caughtError) {
 			lastError = caughtError;
 
-			// Don't retry on timeout or HTTP errors - only network errors.
-			if (
+			// Don't retry on timeout, caller cancellation, or HTTP response errors - only transient network errors.
+			const isAbortOrTimeout =
 				caughtError instanceof HttpTimeoutError ||
-				caughtError instanceof HttpResponseError
-			) {
+				(caughtError instanceof Error && caughtError.name === "AbortError");
+
+			if (isAbortOrTimeout || caughtError instanceof HttpResponseError) {
 				throw caughtError;
 			}
 
@@ -97,20 +97,16 @@ async function withRetry<T>(
  *
  * Named after the Pantura (Pantai Utara) highway: fast, reliable, coastal.
  *
- * Performance improvements over v1.0.3:
- * - Default timeout reduced from 30 000 ms → 10 000 ms.
- * - keepalive: true by default - reuses TCP connections, eliminates handshake
- *   overhead on sequential requests to the same host.
- * - Retry support for transient network errors (configurable, off by default).
- * - Interceptor chain no longer wraps every call in Promise.resolve().
- *
  * Usage:
  *   const http = createRaktaHttp({ baseUrl: "http://localhost:4000" });
  *   const users = await http.get<User[]>("/users");
  */
 export class RaktaHttpClient {
-	private readonly clientConfig: Required<Omit<HttpClientConfig, "headers">> & {
+	private readonly clientConfig: {
+		readonly baseUrl: string;
 		readonly headers: Record<string, string>;
+		readonly timeout: number;
+		readonly signal?: AbortSignal;
 	};
 
 	private readonly requestInterceptors: RequestInterceptorFn[] = [];
@@ -123,9 +119,9 @@ export class RaktaHttpClient {
 			headers: config.headers ?? {
 				"Content-Type": "application/json",
 			},
-			// 10 s is a more sensible default than 30 s for an interactive SPA.
-			// Users who need longer timeouts can override per-request or globally.
+			// 10 s is a sensible default for an interactive SPA.
 			timeout: config.timeout ?? 10_000,
+			...(config.signal ? { signal: config.signal } : {}),
 		};
 	}
 
@@ -165,6 +161,7 @@ export class RaktaHttpClient {
 				...(requestConfig?.headers ?? {}),
 			},
 			body,
+			requestConfig?.keepalive,
 		);
 
 		// Run request interceptors (most apps have zero, so this loop is cheap).
@@ -178,15 +175,42 @@ export class RaktaHttpClient {
 		const timeoutMs = requestConfig?.timeout ?? this.clientConfig.timeout;
 		const retries = requestConfig?.retries ?? 0;
 		const retryDelay = requestConfig?.retryDelay ?? 100;
+		const callerSignal = requestConfig?.signal ?? this.clientConfig.signal;
 
 		const doFetch = async (): Promise<TData> => {
-			const abortController = new AbortController();
-			const timeoutHandle = setTimeout(
-				() => abortController.abort(),
-				timeoutMs,
-			);
+			if (callerSignal?.aborted) {
+				if (callerSignal.reason instanceof Error) {
+					throw callerSignal.reason;
+				}
+				const err = new Error("Request aborted by caller");
+				err.name = "AbortError";
+				throw err;
+			}
 
-			const finalInit = { ...requestInit, signal: abortController.signal };
+			const timeoutController = new AbortController();
+			let timedOut = false;
+
+			const timeoutHandle = setTimeout(() => {
+				timedOut = true;
+				timeoutController.abort();
+			}, timeoutMs);
+
+			let abortListener: (() => void) | undefined;
+			let combinedSignal: AbortSignal = timeoutController.signal;
+
+			if (callerSignal) {
+				if (typeof AbortSignal.any === "function") {
+					combinedSignal = AbortSignal.any([
+						callerSignal,
+						timeoutController.signal,
+					]);
+				} else {
+					abortListener = () => timeoutController.abort();
+					callerSignal.addEventListener("abort", abortListener, { once: true });
+				}
+			}
+
+			const finalInit = { ...requestInit, signal: combinedSignal };
 
 			let response: Response;
 
@@ -194,11 +218,31 @@ export class RaktaHttpClient {
 				response = await fetch(resolvedUrl, finalInit);
 			} catch (caughtError) {
 				clearTimeout(timeoutHandle);
+				if (callerSignal && abortListener) {
+					callerSignal.removeEventListener("abort", abortListener);
+				}
 
-				if (
-					caughtError instanceof DOMException &&
-					caughtError.name === "AbortError"
-				) {
+				const isAbortOrTimeout =
+					timedOut ||
+					(caughtError instanceof Error && caughtError.name === "AbortError") ||
+					(typeof DOMException !== "undefined" &&
+						caughtError instanceof DOMException &&
+						caughtError.name === "AbortError") ||
+					callerSignal?.aborted ||
+					timeoutController.signal.aborted;
+
+				if (isAbortOrTimeout) {
+					if (timedOut) {
+						throw new HttpTimeoutError(resolvedUrl, timeoutMs);
+					}
+					if (callerSignal?.aborted) {
+						if (callerSignal.reason instanceof Error) {
+							throw callerSignal.reason;
+						}
+						const err = new Error("Request aborted by caller");
+						err.name = "AbortError";
+						throw err;
+					}
 					throw new HttpTimeoutError(resolvedUrl, timeoutMs);
 				}
 
@@ -211,6 +255,9 @@ export class RaktaHttpClient {
 			}
 
 			clearTimeout(timeoutHandle);
+			if (callerSignal && abortListener) {
+				callerSignal.removeEventListener("abort", abortListener);
+			}
 
 			if (!response.ok) {
 				throw new HttpResponseError(response);

@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"net/url"
 	"regexp"
 	"strings"
 )
@@ -116,7 +117,11 @@ func (router *Router) ServeHTTP(responseWriter http.ResponseWriter, request *htt
 		var params Params
 		for index, key := range routeEntry.keys {
 			if index+1 < len(matchResults) {
-				params = append(params, Param{Key: key, Value: matchResults[index+1]})
+				val := matchResults[index+1]
+				if unescaped, unescapeErr := url.PathUnescape(val); unescapeErr == nil {
+					val = unescaped
+				}
+				params = append(params, Param{Key: key, Value: val})
 			}
 		}
 		finalHandler := http.HandlerFunc(func(responseWriter http.ResponseWriter, request *http.Request) {

@@ -11,6 +11,14 @@ export interface CookieOptions {
 	readonly sameSite?: "Strict" | "Lax" | "None";
 }
 
+function safeDecodeCookieValue(val: string): string {
+	try {
+		return decodeURIComponent(val);
+	} catch {
+		return val;
+	}
+}
+
 /**
  * Parse all cookies from a Request header into a Map.
  */
@@ -29,7 +37,7 @@ export function parseCookies(request: Request): Map<string, string> {
 		const value = pair.slice(equalsIndex + 1).trim();
 
 		if (name) {
-			map.set(name, decodeURIComponent(value));
+			map.set(name, safeDecodeCookieValue(value));
 		}
 	}
 

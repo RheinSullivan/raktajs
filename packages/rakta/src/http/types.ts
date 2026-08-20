@@ -20,12 +20,17 @@ export interface HttpClientConfig {
 	readonly baseUrl: string;
 	readonly headers?: Record<string, string>;
 	readonly timeout?: number;
+	readonly signal?: AbortSignal;
 }
 
 export interface HttpRequestConfig {
 	readonly headers?: Record<string, string>;
 	readonly params?: HttpQueryParams;
 	readonly timeout?: number;
+	/** Optional AbortSignal for caller-initiated cancellation. */
+	readonly signal?: AbortSignal;
+	/** Optional keepalive flag for requests that outlive document lifecycle. Default is undefined/false. */
+	readonly keepalive?: boolean;
 	/** Number of retry attempts on transient network errors (default: 0). */
 	readonly retries?: number;
 	/** Base delay in ms between retries - doubled on each attempt (default: 100). */

@@ -38,6 +38,7 @@ type Handler func(changes []FileChange)
 
 type Watcher struct {
 	mutex    sync.Mutex
+	once     sync.Once
 	roots    []string
 	interval time.Duration
 	debounce time.Duration
@@ -97,47 +98,49 @@ func (watcher *Watcher) Start() {
 	go watcher.loop()
 }
 
-// Stop shuts down the watcher.
+// Stop shuts down the watcher. Safe to call multiple times.
 func (watcher *Watcher) Stop() {
-	close(watcher.stop)
+	watcher.once.Do(func() {
+		close(watcher.stop)
+	})
 }
 
 func (watcher *Watcher) loop() {
 	ticker := time.NewTicker(watcher.interval)
 	defer ticker.Stop()
 
+	// pending and debounceTimer are only accessed inside watcher.mutex.
 	var pending []FileChange
 	var debounceTimer *time.Timer
 
 	for {
 		select {
 		case <-watcher.stop:
+			if debounceTimer != nil {
+				debounceTimer.Stop()
+			}
 			return
 		case <-ticker.C:
 			watcher.mutex.Lock()
 			current := watcher.scan()
 			changes := watcher.diff(watcher.snapshot, current)
 			watcher.snapshot = current
-			watcher.mutex.Unlock()
 
-			if len(changes) == 0 {
-				continue
-			}
-
-			pending = append(pending, changes...)
-
-			if debounceTimer != nil {
-				debounceTimer.Stop()
-			}
-			debounceTimer = time.AfterFunc(watcher.debounce, func() {
-				watcher.mutex.Lock()
+			if len(changes) > 0 {
+				pending = append(pending, changes...)
+				if debounceTimer != nil {
+					debounceTimer.Stop()
+				}
+				// Snapshot pending under the mutex before launching AfterFunc.
 				batch := pending
 				pending = nil
-				watcher.mutex.Unlock()
-				if len(batch) > 0 {
-					watcher.handler(batch)
-				}
-			})
+				debounceTimer = time.AfterFunc(watcher.debounce, func() {
+					if len(batch) > 0 {
+						watcher.handler(batch)
+					}
+				})
+			}
+			watcher.mutex.Unlock()
 		}
 	}
 }

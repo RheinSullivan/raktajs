@@ -134,15 +134,31 @@ function pathMatchesPattern(pathname: string, pattern: string): boolean {
 
 /**
  * Resolves the render mode for the given pathname using the provided config.
- * Route-specific overrides take priority. The most specific (longest) matching
- * pattern wins. Falls back to `config.defaultMode`.
+ * Route-specific overrides take priority. More specific routes win:
+ *   1. Deeper routes (more segments) beat shallower ones.
+ *   2. Among same-depth routes, routes with more *literal* segments beat those
+ *      with more dynamic (:param) segments.
+ * Falls back to `config.defaultMode`.
  */
 export function resolveRouteMode(
 	pathname: string,
 	config: RenderConfig,
 ): ResolvedRouteMode {
+	/**
+	 * Compute a specificity score for a route pattern.
+	 * Each segment contributes 2 points; dynamic segments lose 1 point so that
+	 * `/users/profile` (score 4) beats `/users/:id` (score 3) when both match.
+	 */
+	function specificityOf(pattern: string): number {
+		const parts = pattern.split("/").filter(Boolean);
+		return parts.reduce(
+			(score, part) => score + (part.startsWith(":") ? 1 : 2),
+			0,
+		);
+	}
+
 	const patterns = Object.keys(config.routes).sort(
-		(a, b) => b.length - a.length, // longest pattern first (most specific)
+		(a, b) => specificityOf(b) - specificityOf(a), // highest specificity first
 	);
 
 	for (const pattern of patterns) {

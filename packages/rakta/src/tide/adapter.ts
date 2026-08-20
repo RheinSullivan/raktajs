@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import {
 	applyRaktaDetectionHeaders,
 	createRaktaDetectionHeaders,
@@ -63,6 +64,25 @@ function normalizeStaticPath(pathname: string): string {
 	}
 
 	return "index.html";
+}
+
+function safePathJoin(baseDir: string, relativePath: string): string | null {
+	try {
+		const decoded = decodeURIComponent(relativePath);
+		const resolvedBase = resolve(baseDir);
+		const resolvedFile = resolve(join(resolvedBase, decoded));
+
+		if (
+			resolvedFile === resolvedBase ||
+			resolvedFile.startsWith(`${resolvedBase}/`) ||
+			resolvedFile.startsWith(`${resolvedBase}\\`)
+		) {
+			return resolvedFile;
+		}
+	} catch {
+		// URI malformed or path resolution failure
+	}
+	return null;
 }
 
 function isReadableFile(filePath: string): boolean {
@@ -144,9 +164,9 @@ export function createBunAdapter(
 		const staticPathname = normalizeStaticPath(pathname);
 
 		for (const searchDirectory of searchDirectories) {
-			const filePath = join(searchDirectory, staticPathname);
+			const filePath = safePathJoin(searchDirectory, staticPathname);
 
-			if (isReadableFile(filePath)) {
+			if (filePath !== null && isReadableFile(filePath)) {
 				const isHashedAsset =
 					staticPathname.includes("chunks/") ||
 					staticPathname.match(/\.[a-f0-9]{8,}\.(js|css)$/) !== null;
@@ -184,30 +204,43 @@ export function createBunAdapter(
 		if (apiMatch) {
 			const modulePath = join(adapterConfig.appDir, apiMatch.entry.filePath);
 
-			const routeModule: unknown = await import(modulePath);
+			try {
+				const routeModule: unknown = await import(
+					pathToFileURL(modulePath).href
+				);
 
-			if (!isApiRouteExports(routeModule)) {
+				if (!isApiRouteExports(routeModule)) {
+					return withRaktaDetectionHeaders(
+						new Response("Invalid API route module", {
+							status: 500,
+						}),
+					);
+				}
+
+				const handler = getApiRouteHandler(
+					routeModule,
+					request.method.toUpperCase(),
+				);
+
+				if (!handler) {
+					return withRaktaDetectionHeaders(
+						new Response("Method not allowed", {
+							status: 405,
+						}),
+					);
+				}
+
+				return withRaktaDetectionHeaders(await handler(request));
+			} catch (caughtError) {
 				return withRaktaDetectionHeaders(
-					new Response("Invalid API route module", {
-						status: 500,
-					}),
+					buildErrorResponse(
+						caughtError instanceof Error
+							? caughtError.message
+							: "Internal API Error",
+						500,
+					),
 				);
 			}
-
-			const handler = getApiRouteHandler(
-				routeModule,
-				request.method.toUpperCase(),
-			);
-
-			if (!handler) {
-				return withRaktaDetectionHeaders(
-					new Response("Method not allowed", {
-						status: 405,
-					}),
-				);
-			}
-
-			return withRaktaDetectionHeaders(await handler(request));
 		}
 
 		const resolvedRouteMode = resolveRouteMode(pathname, renderConfig);
