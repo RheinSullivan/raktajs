@@ -242,6 +242,12 @@ import {
 	Alert,
 	Click,
 	Picture as Photo,
+	Lazy,
+	Guard,
+	Seal,
+	Form,
+	Title,
+	Shelf,
 	Pantura,
 	Reborns,
 	usePantura,
@@ -306,6 +312,18 @@ ${devIndicatorImport}
 (globalThis as typeof globalThis & Record<string, unknown>).Photo = Photo;
 (globalThis as typeof globalThis & Record<string, unknown>).photo = Photo;
 (globalThis as typeof globalThis & Record<string, unknown>).Picture = Photo;
+(globalThis as typeof globalThis & Record<string, unknown>).Lazy = Lazy;
+(globalThis as typeof globalThis & Record<string, unknown>).lazy = Lazy;
+(globalThis as typeof globalThis & Record<string, unknown>).Guard = Guard;
+(globalThis as typeof globalThis & Record<string, unknown>).guard = Guard;
+(globalThis as typeof globalThis & Record<string, unknown>).Seal = Seal;
+(globalThis as typeof globalThis & Record<string, unknown>).seal = Seal;
+(globalThis as typeof globalThis & Record<string, unknown>).Form = Form;
+(globalThis as typeof globalThis & Record<string, unknown>).form = Form;
+(globalThis as typeof globalThis & Record<string, unknown>).Title = Title;
+(globalThis as typeof globalThis & Record<string, unknown>).title = Title;
+(globalThis as typeof globalThis & Record<string, unknown>).Shelf = Shelf;
+(globalThis as typeof globalThis & Record<string, unknown>).shelf = Shelf;
 (globalThis as typeof globalThis & Record<string, unknown>).Pantura = Pantura;
 (globalThis as typeof globalThis & Record<string, unknown>).Reborns = Reborns;
 (globalThis as typeof globalThis & Record<string, unknown>).usePantura = usePantura;

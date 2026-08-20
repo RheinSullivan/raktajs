@@ -35,6 +35,9 @@ export function buildTextResponse(
 	status: number,
 	headers: Record<string, string>,
 ): Response {
+	if (status === 204 || status === 304) {
+		return new Response(null, { status, headers });
+	}
 	return new Response(body, { status, headers });
 }
 

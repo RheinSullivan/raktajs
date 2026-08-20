@@ -1,9 +1,4 @@
 export default function App() {
-	// Modal visibility states
-	const [isDocsOpen, setIsDocsOpen] = useState(false);
-	const [isComponentsOpen, setIsComponentsOpen] = useState(false);
-	const [isDeployOpen, setIsDeployOpen] = useState(false);
-
 	// Settings states
 	const [lang, setLang] = useState<"ID" | "EN">("ID");
 	const [isMuted, setIsMuted] = useState(false);
@@ -11,7 +6,7 @@ export default function App() {
 		useState<AestheticUnit>("LENIS-MODERN");
 	const [lowLatencyMode, setLowLatencyMode] = useState(true);
 
-	// Custom 144 FPS game physics hook
+	// Game physics hook (144 FPS ref-based physics loop)
 	const {
 		isPlaying,
 		score,
@@ -37,7 +32,7 @@ export default function App() {
 
 	return (
 		<div className="min-h-screen bg-black font-sans text-white antialiased">
-			{/* Navigation Header - contains lang toggle */}
+			{/* Navigation Header */}
 			<Header
 				lang={lang}
 				onLangToggle={onLangToggle}
@@ -49,13 +44,8 @@ export default function App() {
 				onLowLatencyToggle={() => setLowLatencyMode((prev) => !prev)}
 			/>
 
-			{/* Hero Banner - bilingual */}
-			<HeroSection
-				lang={lang}
-				onOpenDocs={() => setIsDocsOpen(true)}
-				onOpenComponents={() => setIsComponentsOpen(true)}
-				onOpenDeploy={() => setIsDeployOpen(true)}
-			/>
+			{/* Hero Banner */}
+			<HeroSection lang={lang} />
 
 			{/* Real npm ecosystem statistics */}
 			<PackageStatsStrip lang={lang} />
@@ -82,25 +72,14 @@ export default function App() {
 				onTriggerJump={triggerJump}
 			/>
 
-			{/* Unified Core Modules - bilingual */}
+			{/* Unified Core Modules */}
 			<FeatureGrid lang={lang} />
 
-			{/* Donations & Humanitarian Support - bilingual */}
+			{/* Donations & Humanitarian Support */}
 			<DonationSection lang={lang} />
 
-			{/* Footer - bilingual */}
+			{/* Footer */}
 			<Footer lang={lang} />
-
-			{/* Modals */}
-			<DocsModal isOpen={isDocsOpen} onClose={() => setIsDocsOpen(false)} />
-			<ComponentsModal
-				isOpen={isComponentsOpen}
-				onClose={() => setIsComponentsOpen(false)}
-			/>
-			<DeployModal
-				isOpen={isDeployOpen}
-				onClose={() => setIsDeployOpen(false)}
-			/>
 		</div>
 	);
 }

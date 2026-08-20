@@ -151,9 +151,10 @@ func CORS(origins string) Handler {
 		ctx.Response.Header().Set("Access-Control-Allow-Origin", origins)
 		ctx.Response.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
 		ctx.Response.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		ctx.Response.Header().Set("Vary", "Origin")
 		if ctx.Request.Method == http.MethodOptions {
 			ctx.Response.WriteHeader(http.StatusNoContent)
-			return Abort(http.StatusNoContent)
+			return Result{} // stop the chain; response already committed
 		}
 		return Next()
 	}

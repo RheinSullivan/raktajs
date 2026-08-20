@@ -1,10 +1,27 @@
 export type CssFramework = "tailwind" | "bootstrap" | "sass" | "none";
 
-export type BackendFramework = "gaman";
+export type BackendFramework =
+	| "gaman"
+	| "nestjs"
+	| "express"
+	| "adonis"
+	| "hono"
+	| "laravel"
+	| "codeigniter"
+	| "flask"
+	| "django"
+	| "prabogo"
+	| "beego"
+	| "rails"
+	| "hanami"
+	| "spring-boot"
+	| "jakarta-ee";
 
 export type Database =
 	| "postgresql"
 	| "mysql"
+	| "sawitdb"
+	| "oracle"
 	| "mongodb"
 	| "firebase"
 	| "sqlite"
@@ -70,12 +87,28 @@ export const CSS_DISPLAY: Record<CssFramework, string> = {
 };
 
 export const BACKEND_DISPLAY: Record<BackendFramework, string> = {
-	gaman: "Gaman.js",
+	gaman: "Gaman.js (Default / Powered - JavaScript / TypeScript)",
+	nestjs: "Nest.js (JavaScript / TypeScript)",
+	express: "Express.js (JavaScript / TypeScript)",
+	adonis: "Adonis.js (JavaScript / TypeScript)",
+	hono: "Hono.js (JavaScript / TypeScript)",
+	laravel: "Laravel (PHP)",
+	codeigniter: "CodeIgniter (PHP)",
+	flask: "Flask (Python)",
+	django: "Django (Python)",
+	prabogo: "Prabogo (Go)",
+	beego: "Beego (Go)",
+	rails: "Ruby on Rails (Ruby)",
+	hanami: "Hanami (Ruby)",
+	"spring-boot": "Spring Boot (Java)",
+	"jakarta-ee": "Jakarta EE / J2EE (Java)",
 };
 
 export const DATABASE_DISPLAY: Record<Database, string> = {
 	postgresql: "PostgreSQL",
 	mysql: "MySQL",
+	sawitdb: "SawitDB (Rakta Ecosystem Database Engine)",
+	oracle: "Oracle Database",
 	mongodb: "MongoDB",
 	firebase: "Firebase",
 	sqlite: "SQLite",

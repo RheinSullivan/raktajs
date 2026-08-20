@@ -60,10 +60,9 @@ const heroCopyData = {
 
 export default function HeroSection({
 	lang,
-	onOpenDocs,
-	onOpenComponents,
-	onOpenDeploy,
-}: HeroSectionProps) {
+}: {
+	lang: "ID" | "EN";
+}) {
 	const langKey = lang.toLowerCase() as "id" | "en";
 	const currentCopy = heroCopyData[langKey];
 	const heroRef = useRef<HTMLElement>(null);
@@ -134,32 +133,29 @@ export default function HeroSection({
 					ref={ctaRef}
 					className="mt-8 flex flex-wrap items-center justify-center gap-4"
 				>
-					<button
-						type="button"
-						onClick={onOpenDocs}
+					<click
+						to="/docs"
 						className="cursor-pointer border-2 border-brand-pink bg-brand-pink px-6 py-3 font-mono text-xs font-bold uppercase text-white shadow-[4px_4px_0px_0px_rgba(244,63,94,0.4)] transition-all hover:bg-white hover:text-black flex items-center gap-2"
 					>
 						<FaBook className="h-3 w-3" />
 						{currentCopy.ctaDocs}
-					</button>
+					</click>
 
-					<button
-						type="button"
-						onClick={onOpenComponents}
+					<click
+						to="/components"
 						className="cursor-pointer border-2 border-white bg-black px-6 py-3 font-mono text-xs font-bold uppercase text-white shadow-[4px_4px_0px_0px_rgba(255,255,255,0.3)] transition-all hover:bg-white hover:text-black flex items-center gap-2"
 					>
 						<FaCode className="h-3 w-3" />
 						{currentCopy.ctaComponents}
-					</button>
+					</click>
 
-					<button
-						type="button"
-						onClick={onOpenDeploy}
+					<click
+						to="/deploy"
 						className="cursor-pointer border border-emerald-500 bg-emerald-950/20 px-6 py-3 font-mono text-xs font-bold uppercase text-emerald-400 transition-all hover:bg-emerald-500 hover:text-black flex items-center gap-2"
 					>
 						<FaCloud className="h-3 w-3" />
 						{currentCopy.ctaDeploy}
-					</button>
+					</click>
 
 					<pantura
 						to="features"

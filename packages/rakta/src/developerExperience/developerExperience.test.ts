@@ -32,6 +32,14 @@ import {
 	RAKTA_TERMINAL_GLYPH,
 } from "./terminal";
 
+function resolvePackagePath(relPath: string): string {
+	const cwd = process.cwd().replace(/\\/g, "/");
+	if (cwd.endsWith("/packages/rakta")) {
+		return join(cwd, relPath.replace(/^packages\/rakta\//, ""));
+	}
+	return join(cwd, relPath);
+}
+
 describe("Rakta Dev Terminal", () => {
 	test("terminal glyph is defined and non-empty", () => {
 		expect(typeof RAKTA_TERMINAL_GLYPH).toBe("string");
@@ -324,9 +332,8 @@ describe("Rakta Dev Indicator", () => {
 	test("production build excludes dev indicator (NODE_ENV guard exists in source)", async () => {
 		// Verify the clientEntry template contains the NODE_ENV guard
 		const { readFileSync } = await import("node:fs");
-		const { join } = await import("node:path");
 		const src = readFileSync(
-			join(process.cwd(), "packages/rakta/src/forge/clientEntry.ts"),
+			resolvePackagePath("packages/rakta/src/forge/clientEntry.ts"),
 			"utf8",
 		);
 		expect(src).toContain('process.env.NODE_ENV === "development"');
@@ -334,9 +341,8 @@ describe("Rakta Dev Indicator", () => {
 
 	test("devIndicator source uses Rakta.js SVG path", async () => {
 		const { readFileSync } = await import("node:fs");
-		const { join } = await import("node:path");
 		const src = readFileSync(
-			join(process.cwd(), "packages/rakta/src/forge/clientEntry.ts"),
+			resolvePackagePath("packages/rakta/src/forge/clientEntry.ts"),
 			"utf8",
 		);
 		expect(src).toContain("Rakta.js.svg");
@@ -394,8 +400,7 @@ describe("Rakta DevTools", () => {
 
 	test("uses the Rakta DevTools feature name in source", () => {
 		const source = readFileSync(
-			join(
-				process.cwd(),
+			resolvePackagePath(
 				"packages/rakta/src/developerExperience/devIndicator.ts",
 			),
 			"utf8",
@@ -490,7 +495,7 @@ describe("Rakta DevTools", () => {
 
 	test("restart and cache reset endpoints are development control endpoints", () => {
 		const source = readFileSync(
-			join(process.cwd(), "packages/rakta/src/forge/devServer.ts"),
+			resolvePackagePath("packages/rakta/src/forge/devServer.ts"),
 			"utf8",
 		);
 		expect(RAKTA_DEVTOOLS_CONTROL_BASE_PATH).toBe("/__rakta/devtools");
@@ -526,7 +531,7 @@ describe("Rakta DevTools", () => {
 
 	test("production client entry omits the dev indicator import when disabled", () => {
 		const source = readFileSync(
-			join(process.cwd(), "packages/rakta/src/forge/build.ts"),
+			resolvePackagePath("packages/rakta/src/forge/build.ts"),
 			"utf8",
 		);
 		expect(source).toContain("devToolsEnabled: false");
@@ -536,7 +541,7 @@ describe("Rakta DevTools", () => {
 
 	test("client entry references the actual Rakta.js SVG asset", () => {
 		const source = readFileSync(
-			join(process.cwd(), "packages/rakta/src/forge/clientEntry.ts"),
+			resolvePackagePath("packages/rakta/src/forge/clientEntry.ts"),
 			"utf8",
 		);
 		expect(source).toContain("public");
@@ -553,7 +558,7 @@ describe("Rakta DevTools", () => {
 			/\b(cfg|ctx|req|res|err|msg|opts|args|params|props|ref|el|evt|fn|cb|idx|tmp|val|obj|str|num|arr)\b/;
 
 		for (const sourceFile of modifiedSourceFiles) {
-			const source = readFileSync(join(process.cwd(), sourceFile), "utf8");
+			const source = readFileSync(resolvePackagePath(sourceFile), "utf8");
 			expect(source.match(unclearNamePattern)).toBeNull();
 		}
 	});
@@ -566,7 +571,7 @@ describe("Rakta DevTools", () => {
 		const separatorPattern = /[─━]{4,}|-{8,}/;
 
 		for (const sourceFile of modifiedSourceFiles) {
-			const source = readFileSync(join(process.cwd(), sourceFile), "utf8");
+			const source = readFileSync(resolvePackagePath(sourceFile), "utf8");
 			expect(source.match(separatorPattern)).toBeNull();
 		}
 	});

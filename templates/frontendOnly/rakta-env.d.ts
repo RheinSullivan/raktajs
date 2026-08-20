@@ -209,6 +209,38 @@ declare module "react" {
 			reborns: import("react").HTMLAttributes<HTMLElement> & {
 				readonly id: string;
 			};
+			// Rakta.js lazy boundary
+			lazy: {
+				readonly children: import("react").ReactNode;
+				readonly fallback?: import("react").ReactNode;
+				readonly delayMs?: number;
+			};
+			// Rakta.js route & authorization guard
+			guard: {
+				readonly isAllowed: boolean;
+				readonly children: import("react").ReactNode;
+				readonly fallback?: import("react").ReactNode;
+			};
+			// Rakta.js error boundary
+			seal: {
+				readonly children: import("react").ReactNode;
+				readonly fallback?: import("react").ReactNode | ((error: Error) => import("react").ReactNode);
+			};
+			// Rakta.js form wrapper with auto-CSRF
+			form: import("react").FormHTMLAttributes<HTMLFormElement> & {
+				readonly csrfToken?: string;
+			};
+			// Rakta.js declarative document title
+			title: {
+				readonly children?: import("react").ReactNode;
+				readonly text?: string;
+			};
+			// Rakta.js state persistence boundary
+			shelf: {
+				readonly storageKey: string;
+				readonly initialValue: any;
+				readonly children: (value: any, setValue: (val: any) => void) => import("react").ReactNode;
+			};
 		}
 	}
 }
@@ -308,9 +340,6 @@ declare global {
 
 	interface HeroSectionProps {
 		lang: "ID" | "EN";
-		onOpenDocs: () => void;
-		onOpenComponents: () => void;
-		onOpenDeploy: () => void;
 	}
 
 	interface ShrimpRunGameProps {
@@ -393,6 +422,14 @@ declare global {
 		style?: import("react").CSSProperties;
 	}>;
 	const FaCopy: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaEye: import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+	}>;
+	const FaEyeSlash: import("react").ComponentType<{
 		className?: string;
 		style?: import("react").CSSProperties;
 	}>;
@@ -519,10 +556,7 @@ declare global {
 	// ── App Components (auto-resolved from app/ directory) ──
 	const BackgroundFish: import("react").ComponentType<Record<string, unknown>>;
 	const BubbleLayer: import("react").ComponentType<Record<string, unknown>>;
-	const ComponentsModal: import("react").ComponentType<ModalProps>;
 	const CoralObstacle: import("react").ComponentType<Record<string, unknown>>;
-	const DeployModal: import("react").ComponentType<ModalProps>;
-	const DocsModal: import("react").ComponentType<ModalProps>;
 	const DonationSection: import("react").ComponentType<Record<string, unknown>>;
 	const FeatureGrid: import("react").ComponentType<Record<string, unknown>>;
 	const Footer: import("react").ComponentType<Record<string, unknown>>;

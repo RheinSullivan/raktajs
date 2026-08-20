@@ -1,103 +1,50 @@
-# Backend frameworks
+# Backend Framework Ecosystem
 
-## Overview
+Rakta.js supports a multi-language backend ecosystem grouped strictly by programming language. **Gaman.js** is the primary, native, default backend framework for Rakta.js fullstack applications.
 
-In fullstack mode, `create-rakta-app` generates a different `backend/`
-folder structure depending on which framework you choose - there is no
-single generic shape forced onto all four.
+## Backend Ecosystem Overview
 
-## When to use this
+### 1. JavaScript / TypeScript (Primary Ecosystem)
+- **Gaman.js**: Default & powered Rakta.js backend framework running natively on Bun.
+- **Nest.js**: Structured, enterprise-grade Node.js framework with modules and controllers.
+- **Express.js**: Minimal, unopinionated Node.js HTTP framework.
+- **Adonis.js**: Full-featured, TypeScript-first Node.js web framework.
+- **Hono.js**: Web-standard, multi-runtime framework for Bun, Node, Deno, and Cloudflare Workers.
 
-Read this after choosing a backend framework during `create-rakta-app`,
-or before adding support for a new backend framework to the generator.
+### 2. PHP
+- **Laravel**: Full-featured PHP web framework with Artisan CLI and Eloquent ORM.
+- **CodeIgniter**: Lightweight CodeIgniter 4 MVC framework.
 
-## Gaman.js
+### 3. Python
+- **Flask**: Lightweight Python WSGI web framework with application factory design.
+- **Django**: Full-featured Python framework with `manage.py`, apps, views, and ORM.
 
-```txt
-backend/
-├─ src/
-│  ├─ routes/
-│  ├─ controllers/
-│  ├─ services/
-│  ├─ middlewares/
-│  └─ app.ts
-├─ package.json
-└─ tsconfig.json
-```
+### 4. Go
+- **Prabogo**: Golang web framework using hexagonal architecture.
+- **Beego**: Beego v2 enterprise REST/MVC framework (`github.com/beego/beego/v2`).
 
-`app.ts` is the entry point that wires routes to controllers. This is the
-lightest of the four options and pairs naturally with CarubanWire if you
-want typed RPC instead of plain REST routes.
+### 5. Ruby
+- **Ruby on Rails**: Full-stack convention-driven Ruby web framework.
+- **Hanami**: Modern lightweight Ruby web framework with Hanami 2.x architecture.
 
-## Express.js
+### 6. Java
+- **Spring Boot**: Enterprise Java framework with Spring MVC and annotations.
+- **Jakarta EE / J2EE**: Standardized Jakarta EE 10 platform (`jakarta.*` APIs).
 
-```txt
-backend/
-├─ src/
-│  ├─ routes/
-│  ├─ controllers/
-│  ├─ services/
-│  ├─ middlewares/
-│  └─ server.ts
-├─ package.json
-└─ tsconfig.json
-```
-
-Same layered shape as Gaman.js, but the entry point is named `server.ts`
-to match Express community convention, and the generated `package.json`
-depends on `express` and its types.
-
-## Nest.js
-
-```txt
-backend/
-├─ src/
-│  ├─ app.module.ts
-│  ├─ main.ts
-│  ├─ modules/
-│  └─ common/
-├─ nest-cli.json
-├─ package.json
-└─ tsconfig.json
-```
-
-Nest.js gets its own conventions - a root `AppModule`, a `main.ts`
-bootstrap file, feature `modules/`, and `common/` for shared decorators,
-guards, and pipes, plus the `nest-cli.json` the Nest CLI itself expects.
-
-## Adonis.js
-
-```txt
-backend/
-├─ app/
-│  ├─ controllers/
-│  ├─ middleware/
-│  └─ services/
-├─ start/
-├─ config/
-├─ package.json
-└─ tsconfig.json
-```
-
-Adonis.js follows its own idiomatic layout - `app/` for application code,
-`start/` for boot-time route/middleware registration, and `config/` for
-framework configuration, matching what an Adonis.js developer already
-expects.
-
-## Common mistakes
-
-- Assuming all four backends share `src/app.ts` as the entry point - only
-  Gaman.js does; Express.js uses `server.ts`, Nest.js uses `main.ts`, and
-  Adonis.js has no single entry file in the same sense.
-- Forgetting that Nest.js needs `nest-cli.json` to use the Nest CLI's own
-  tooling (`nest build`, `nest start`) alongside or instead of Bun's
-  build pipeline.
-- Wiring CarubanWire's HTTP handler into a framework-specific middleware
-  signature incorrectly - each framework has its own request/response
-  types, so the adapter code differs even though the router definition
-  itself does not.
-
-## Related docs
-
-- [`templates.md`](./templates.md)
-- [`rpc.md`](./rpc.md)
+## Detailed Documentation Links
+- [Gaman.js (Default)](/en/backends/javascript/gaman.md)
+- [Nest.js](/en/backends/javascript/nestjs.md)
+- [Express.js](/en/backends/javascript/express.md)
+- [Adonis.js](/en/backends/javascript/adonis.md)
+- [Hono.js](/en/backends/javascript/hono.md)
+- [Laravel](/en/backends/php/laravel.md)
+- [CodeIgniter](/en/backends/php/codeigniter.md)
+- [Flask](/en/backends/python/flask.md)
+- [Django](/en/backends/python/django.md)
+- [Prabogo](/en/backends/go/prabogo.md)
+- [Beego](/en/backends/go/beego.md)
+- [Ruby on Rails](/en/backends/ruby/rails.md)
+- [Hanami](/en/backends/ruby/hanami.md)
+- [Spring Boot](/en/backends/java/spring-boot.md)
+- [Jakarta EE / J2EE](/en/backends/java/jakarta-ee.md)
+- [SawitDB Database Engine](/en/database/sawitdb.md)

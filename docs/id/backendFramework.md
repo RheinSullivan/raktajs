@@ -1,106 +1,50 @@
-# Backend framework
+# Ekosistem Framework Backend
 
-## Overview
+Rakta.js mendukung ekosistem backend multibahasa yang dikelompokkan secara ketat berdasarkan bahasa pemrograman. **Gaman.js** adalah framework backend utama, native, dan default untuk aplikasi fullstack Rakta.js.
 
-Di mode fullstack, `create-rakta-app` menghasilkan struktur folder
-`backend/` yang berbeda tergantung framework yang dipilih - tidak ada
-satu bentuk generik yang dipaksakan ke semua empat pilihan.
+## Ikhtisar Ekosistem Backend
 
-## Kapan dipakai
+### 1. JavaScript / TypeScript (Ekosistem Utama)
+- **Gaman.js**: Framework backend default & bertenaga untuk Rakta.js berbasis Bun.
+- **Nest.js**: Framework Node.js terstruktur untuk skala enterprise.
+- **Express.js**: Framework HTTP Node.js minimalis.
+- **Adonis.js**: Framework TypeScript-first fullstack untuk Node.js.
+- **Hono.js**: Framework multi-runtime berstandar web untuk Bun, Node, Deno, dan Cloudflare Workers.
 
-Baca ini setelah memilih backend framework saat menjalankan
-`create-rakta-app`, atau sebelum menambahkan dukungan backend framework
-baru ke generator.
+### 2. PHP
+- **Laravel**: Framework web PHP lengkap dengan Artisan CLI dan Eloquent ORM.
+- **CodeIgniter**: Framework CodeIgniter 4 MVC yang ringan dan cepat.
 
-## Gaman.js
+### 3. Python
+- **Flask**: Framework WSGI Python yang ringan.
+- **Django**: Framework Python lengkap dengan `manage.py`, aplikasi, views, dan ORM.
 
-```txt
-backend/
-├─ src/
-│  ├─ routes/
-│  ├─ controllers/
-│  ├─ services/
-│  ├─ middlewares/
-│  └─ app.ts
-├─ package.json
-└─ tsconfig.json
-```
+### 4. Go
+- **Prabogo**: Framework web Golang dengan arsitektur heksagonal.
+- **Beego**: Framework REST/MVC Go enterprise (`github.com/beego/beego/v2`).
 
-`app.ts` adalah entry point yang menghubungkan route ke controller. Ini
-adalah opsi paling ringan dari keempatnya dan cocok secara natural dengan
-CarubanWire kalau kalian ingin RPC typed dibanding route REST biasa.
+### 5. Ruby
+- **Ruby on Rails**: Framework web Ruby full-stack berbasis konvensi.
+- **Hanami**: Framework web Ruby modern arsitektur Hanami 2.x.
 
-## Express.js
+### 6. Java
+- **Spring Boot**: Framework Java enterprise dengan Spring MVC.
+- **Jakarta EE / J2EE**: Platform standar Java enterprise Jakarta EE 10 (paket `jakarta.*`).
 
-```txt
-backend/
-├─ src/
-│  ├─ routes/
-│  ├─ controllers/
-│  ├─ services/
-│  ├─ middlewares/
-│  └─ server.ts
-├─ package.json
-└─ tsconfig.json
-```
-
-Bentuk berlapis yang sama seperti Gaman.js, tapi entry point-nya bernama
-`server.ts` sesuai konvensi komunitas Express, dan `package.json` hasil
-generate bergantung pada `express` beserta tipenya.
-
-## Nest.js
-
-```txt
-backend/
-├─ src/
-│  ├─ app.module.ts
-│  ├─ main.ts
-│  ├─ modules/
-│  └─ common/
-├─ nest-cli.json
-├─ package.json
-└─ tsconfig.json
-```
-
-Nest.js punya konvensinya sendiri - `AppModule` di root, file bootstrap
-`main.ts`, `modules/` untuk fitur, dan `common/` untuk decorator, guard,
-dan pipe yang dipakai bersama, plus `nest-cli.json` yang dibutuhkan Nest
-CLI itu sendiri.
-
-## Adonis.js
-
-```txt
-backend/
-├─ app/
-│  ├─ controllers/
-│  ├─ middleware/
-│  └─ services/
-├─ start/
-├─ config/
-├─ package.json
-└─ tsconfig.json
-```
-
-Adonis.js mengikuti layout khasnya sendiri - `app/` untuk kode aplikasi,
-`start/` untuk registrasi route/middleware saat boot, dan `config/`
-untuk konfigurasi framework, sesuai yang sudah diharapkan developer
-Adonis.js.
-
-## Kesalahan umum
-
-- Mengasumsikan keempat backend berbagi `src/app.ts` sebagai entry point
-  - hanya Gaman.js yang begitu; Express.js memakai `server.ts`, Nest.js
-  memakai `main.ts`, dan Adonis.js tidak punya satu file entry dalam arti
-  yang sama.
-- Lupa bahwa Nest.js butuh `nest-cli.json` untuk memakai tooling Nest CLI
-  sendiri (`nest build`, `nest start`) berdampingan dengan atau sebagai
-  pengganti pipeline build Bun.
-- Menghubungkan handler HTTP CarubanWire ke signature middleware
-  spesifik-framework secara salah - setiap framework punya tipe
-  request/response sendiri, jadi kode adapter-nya berbeda meskipun
-  definisi router-nya sendiri tidak berubah.
-
-## Dokumen terkait
-
-- [`templates.md`](./templates.md)
-- [`rpc.md`](./rpc.md)
+## Tautan Dokumentasi Detail
+- [Gaman.js (Default)](/id/backends/javascript/gaman.md)
+- [Nest.js](/id/backends/javascript/nestjs.md)
+- [Express.js](/id/backends/javascript/express.md)
+- [Adonis.js](/id/backends/javascript/adonis.md)
+- [Hono.js](/id/backends/javascript/hono.md)
+- [Laravel](/id/backends/php/laravel.md)
+- [CodeIgniter](/id/backends/php/codeigniter.md)
+- [Flask](/id/backends/python/flask.md)
+- [Django](/id/backends/python/django.md)
+- [Prabogo](/id/backends/go/prabogo.md)
+- [Beego](/id/backends/go/beego.md)
+- [Ruby on Rails](/id/backends/ruby/rails.md)
+- [Hanami](/id/backends/ruby/hanami.md)
+- [Spring Boot](/id/backends/java/spring-boot.md)
+- [Jakarta EE / J2EE](/id/backends/java/jakarta-ee.md)
+- [Mesin Database SawitDB](/id/database/sawitdb.md)

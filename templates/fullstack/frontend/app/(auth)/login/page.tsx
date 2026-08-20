@@ -1,12 +1,12 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
-// Login Page - Rakta.js: gsap, <click>, react-icons, toast, RaktaAlert, useRef/useEffect
+// Login Page - Rakta.js: react-icons, RaktaAlert, Auto Import
 
 export default function LoginPage() {
 	const [email, setEmail] = useState("rheinsullivan@raktajs.dev");
 	const [password, setPassword] = useState("rakta-password");
-	const [status, setStatus] = useState<
-		"idle" | "loading" | "success" | "error"
-	>("idle");
+	const [showPassword, setShowPassword] = useState(false);
+	const [rememberMe, setRememberMe] = useState(true);
+	const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 	const formRef = useRef<HTMLFormElement>(null);
 
 	useEffect(() => {
@@ -42,7 +42,7 @@ export default function LoginPage() {
 	return (
 		<AuthShell
 			eyebrow="Session Gate"
-			title="Login to Rakta.js"
+			title="Sign In to Rakta.js"
 			description="Authenticate with JWT sessions, HTTP-only cookies, or single-session mode from the Rakta Gaman backend."
 		>
 			<form
@@ -71,7 +71,7 @@ export default function LoginPage() {
 
 				<label className="grid gap-2 font-mono text-xs uppercase text-gray-400">
 					<span className="flex items-center gap-1.5">
-						<FaCode className="h-3 w-3 text-brand-pink" /> Email Address
+						<FaCode className="h-3 w-3 text-brand-pink" /> Email Address / Username
 					</span>
 					<input
 						className="border border-surface-stroke bg-black px-4 py-3 font-mono text-sm text-white outline-none focus:border-brand-pink transition-colors"
@@ -86,50 +86,58 @@ export default function LoginPage() {
 					<span className="flex items-center gap-1.5">
 						<FaMicrochip className="h-3 w-3 text-brand-pink" /> Password
 					</span>
-					<input
-						className="border border-surface-stroke bg-black px-4 py-3 font-mono text-sm text-white outline-none focus:border-brand-pink transition-colors"
-						onChange={(e) => setPassword(e.target.value)}
-						type="password"
-						value={password}
-						required
-					/>
+					<div className="relative flex items-center">
+						<input
+							className="w-full border border-surface-stroke bg-black px-4 py-3 pr-10 font-mono text-sm text-white outline-none focus:border-brand-pink transition-colors"
+							onChange={(e) => setPassword(e.target.value)}
+							type={showPassword ? "text" : "password"}
+							value={password}
+							required
+						/>
+						<button
+							type="button"
+							onClick={() => setShowPassword((prev) => !prev)}
+							className="absolute right-3 text-gray-400 hover:text-white cursor-pointer"
+						>
+							{showPassword ? <FaEyeSlash className="h-4 w-4" /> : <FaEye className="h-4 w-4" />}
+						</button>
+					</div>
 				</label>
 
-				<div className="border border-brand-green/30 bg-brand-green/5 p-3 font-mono text-xs text-brand-green flex items-center gap-2">
-					<FaCircleCheck className="h-3 w-3 flex-shrink-0" />
-					<span>
-						<span className="font-bold">STATUS:</span>{" "}
-						{status === "loading"
-							? "Authenticating..."
-							: status === "success"
-								? "Authenticated."
-								: status === "error"
-									? "Auth failed."
-									: "Ready to authenticate."}
-					</span>
+				<div className="flex items-center justify-between font-mono text-xs text-gray-400">
+					<label className="flex items-center gap-2 cursor-pointer select-none">
+						<input
+							type="checkbox"
+							checked={rememberMe}
+							onChange={(e) => setRememberMe(e.target.checked)}
+							className="accent-brand-pink"
+						/>
+						<span>Remember Me</span>
+					</label>
+					<click to="/auth/forgot-password" className="text-brand-pink hover:underline">
+						Forgot Password?
+					</click>
 				</div>
 
 				<button
-					className="border border-brand-pink bg-brand-pink px-4 py-3 font-mono text-xs font-bold uppercase text-white hover:bg-white hover:text-black transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
 					type="submit"
 					disabled={status === "loading"}
+					className="cursor-pointer border-2 border-brand-pink bg-brand-pink px-6 py-3 font-mono text-xs font-bold uppercase text-white shadow-[4px_4px_0px_0px_rgba(244,63,94,0.4)] transition-all hover:bg-white hover:text-black flex items-center justify-center gap-2"
 				>
-					<FaPlay className="h-3 w-3 fill-current" />
-					{status === "loading" ? "Authenticating..." : "Sign In"}
+					{status === "loading" ? "Authenticating..." : "Sign In to Account"}
 				</button>
 
-				<div className="flex flex-wrap items-center justify-between border-t border-surface-stroke pt-4 font-mono text-xs uppercase text-gray-500">
-					<click
-						to="/register"
-						className="hover:text-brand-pink transition-colors flex items-center gap-1"
-					>
-						<FaArrowRight className="h-2.5 w-2.5" /> Create account
+				<div className="flex items-center justify-between font-mono text-xs text-gray-400 border-t border-surface-stroke pt-4">
+					<span>Need 2FA OTP Code?</span>
+					<click to="/auth/otp" className="text-brand-pink hover:underline font-bold">
+						Verify OTP →
 					</click>
-					<click
-						to="/forgotPassword"
-						className="hover:text-brand-pink transition-colors"
-					>
-						Forgot password?
+				</div>
+
+				<div className="text-center font-mono text-xs text-gray-400">
+					Don't have an account?{" "}
+					<click to="/auth/sign-up" className="text-brand-pink hover:underline font-bold">
+						Sign Up
 					</click>
 				</div>
 			</form>

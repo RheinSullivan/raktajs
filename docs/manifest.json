@@ -30,8 +30,153 @@
 			},
 			{
 				"id": "backendFrameworks",
-				"title": "Backendframeworks",
+				"title": "Backend Framework Ecosystem",
 				"path": "/en/backendFrameworks.md"
+			},
+			{
+				"id": "gaman",
+				"title": "Gaman.js (Default Backend)",
+				"path": "/en/backends/javascript/gaman.md"
+			},
+			{
+				"id": "nestjs",
+				"title": "Nest.js",
+				"path": "/en/backends/javascript/nestjs.md"
+			},
+			{
+				"id": "express",
+				"title": "Express.js",
+				"path": "/en/backends/javascript/express.md"
+			},
+			{
+				"id": "adonis",
+				"title": "Adonis.js",
+				"path": "/en/backends/javascript/adonis.md"
+			},
+			{
+				"id": "hono",
+				"title": "Hono.js",
+				"path": "/en/backends/javascript/hono.md"
+			},
+			{
+				"id": "laravel",
+				"title": "Laravel",
+				"path": "/en/backends/php/laravel.md"
+			},
+			{
+				"id": "codeigniter",
+				"title": "CodeIgniter",
+				"path": "/en/backends/php/codeigniter.md"
+			},
+			{
+				"id": "flask",
+				"title": "Flask",
+				"path": "/en/backends/python/flask.md"
+			},
+			{
+				"id": "django",
+				"title": "Django",
+				"path": "/en/backends/python/django.md"
+			},
+			{
+				"id": "prabogo",
+				"title": "Prabogo",
+				"path": "/en/backends/go/prabogo.md"
+			},
+			{
+				"id": "beego",
+				"title": "Beego",
+				"path": "/en/backends/go/beego.md"
+			},
+			{
+				"id": "rails",
+				"title": "Ruby on Rails",
+				"path": "/en/backends/ruby/rails.md"
+			},
+			{
+				"id": "hanami",
+				"title": "Hanami",
+				"path": "/en/backends/ruby/hanami.md"
+			},
+			{
+				"id": "springBoot",
+				"title": "Spring Boot",
+				"path": "/en/backends/java/spring-boot.md"
+			},
+			{
+				"id": "jakartaEe",
+				"title": "Jakarta EE / J2EE",
+				"path": "/en/backends/java/jakarta-ee.md"
+			},
+			{
+				"id": "dbOverview",
+				"title": "Database Overview",
+				"path": "/en/database/README.md"
+			},
+			{
+				"id": "sawitdb",
+				"title": "SawitDB Engine",
+				"path": "/en/database/sawitdb.md"
+			},
+			{
+				"id": "oracle",
+				"title": "Oracle Database",
+				"path": "/en/database/oracle.md"
+			},
+			{
+				"id": "postgresql",
+				"title": "PostgreSQL",
+				"path": "/en/database/postgresql.md"
+			},
+			{
+				"id": "mysql",
+				"title": "MySQL",
+				"path": "/en/database/mysql.md"
+			},
+			{
+				"id": "sqlite",
+				"title": "SQLite",
+				"path": "/en/database/sqlite.md"
+			},
+			{
+				"id": "mongodb",
+				"title": "MongoDB",
+				"path": "/en/database/mongodb.md"
+			},
+			{
+				"id": "firebase",
+				"title": "Firebase",
+				"path": "/en/database/firebase.md"
+			},
+			{
+				"id": "mariadb",
+				"title": "MariaDB",
+				"path": "/en/database/mariadb.md"
+			},
+			{
+				"id": "redis",
+				"title": "Redis",
+				"path": "/en/database/redis.md"
+			},
+			{
+				"id": "planetscale",
+				"title": "PlanetScale",
+				"path": "/en/database/planetscale.md"
+			},
+			{
+				"id": "neon",
+				"title": "Neon",
+				"path": "/en/database/neon.md"
+			},
+			{
+				"id": "turso",
+				"title": "Turso",
+				"path": "/en/database/turso.md"
+			},
+			{
+				"id": "customTags",
+				"title": "Custom Tags & Primitives",
+				"path": "/en/customTags.md"
 			},
 			{
 				"id": "cli",
@@ -223,6 +368,151 @@
 				"id": "backendFramework",
 				"title": "Backendframework",
 				"path": "/id/backendFramework.md"
+			},
+			{
+				"id": "gaman",
+				"title": "Gaman.js (Default Backend)",
+				"path": "/id/backends/javascript/gaman.md"
+			},
+			{
+				"id": "nestjs",
+				"title": "Nest.js",
+				"path": "/id/backends/javascript/nestjs.md"
+			},
+			{
+				"id": "express",
+				"title": "Express.js",
+				"path": "/id/backends/javascript/express.md"
+			},
+			{
+				"id": "adonis",
+				"title": "Adonis.js",
+				"path": "/id/backends/javascript/adonis.md"
+			},
+			{
+				"id": "hono",
+				"title": "Hono.js",
+				"path": "/id/backends/javascript/hono.md"
+			},
+			{
+				"id": "laravel",
+				"title": "Laravel",
+				"path": "/id/backends/php/laravel.md"
+			},
+			{
+				"id": "codeigniter",
+				"title": "CodeIgniter",
+				"path": "/id/backends/php/codeigniter.md"
+			},
+			{
+				"id": "flask",
+				"title": "Flask",
+				"path": "/id/backends/python/flask.md"
+			},
+			{
+				"id": "django",
+				"title": "Django",
+				"path": "/id/backends/python/django.md"
+			},
+			{
+				"id": "prabogo",
+				"title": "Prabogo",
+				"path": "/id/backends/go/prabogo.md"
+			},
+			{
+				"id": "beego",
+				"title": "Beego",
+				"path": "/id/backends/go/beego.md"
+			},
+			{
+				"id": "rails",
+				"title": "Ruby on Rails",
+				"path": "/id/backends/ruby/rails.md"
+			},
+			{
+				"id": "hanami",
+				"title": "Hanami",
+				"path": "/id/backends/ruby/hanami.md"
+			},
+			{
+				"id": "springBoot",
+				"title": "Spring Boot",
+				"path": "/id/backends/java/spring-boot.md"
+			},
+			{
+				"id": "jakartaEe",
+				"title": "Jakarta EE / J2EE",
+				"path": "/id/backends/java/jakarta-ee.md"
+			},
+			{
+				"id": "dbOverview",
+				"title": "Ikhtisar Database",
+				"path": "/id/database/README.md"
+			},
+			{
+				"id": "sawitdb",
+				"title": "SawitDB Engine",
+				"path": "/id/database/sawitdb.md"
+			},
+			{
+				"id": "oracle",
+				"title": "Oracle Database",
+				"path": "/id/database/oracle.md"
+			},
+			{
+				"id": "postgresql",
+				"title": "PostgreSQL",
+				"path": "/id/database/postgresql.md"
+			},
+			{
+				"id": "mysql",
+				"title": "MySQL",
+				"path": "/id/database/mysql.md"
+			},
+			{
+				"id": "sqlite",
+				"title": "SQLite",
+				"path": "/id/database/sqlite.md"
+			},
+			{
+				"id": "mongodb",
+				"title": "MongoDB",
+				"path": "/id/database/mongodb.md"
+			},
+			{
+				"id": "firebase",
+				"title": "Firebase",
+				"path": "/id/database/firebase.md"
+			},
+			{
+				"id": "mariadb",
+				"title": "MariaDB",
+				"path": "/id/database/mariadb.md"
+			},
+			{
+				"id": "redis",
+				"title": "Redis",
+				"path": "/id/database/redis.md"
+			},
+			{
+				"id": "planetscale",
+				"title": "PlanetScale",
+				"path": "/id/database/planetscale.md"
+			},
+			{
+				"id": "neon",
+				"title": "Neon",
+				"path": "/id/database/neon.md"
+			},
+			{
+				"id": "turso",
+				"title": "Turso",
+				"path": "/id/database/turso.md"
+			},
+			{
+				"id": "customTags",
+				"title": "Tag Kustom & Primitif",
+				"path": "/id/customTags.md"
 			},
 			{
 				"id": "cli",

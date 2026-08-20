@@ -156,7 +156,7 @@ describe("create-rakta fullstack generator", () => {
 		);
 
 		expect(fileByPath.get("frontend/package.json")).toContain(
-			'"raktajs": "^1.1.7"',
+			'"raktajs": "^1.1.8"',
 		);
 		expect(fileByPath.get("frontend/rakta.config.ts")).toContain(
 			'defaultMode: "hybrid"',
@@ -168,12 +168,148 @@ describe("create-rakta fullstack generator", () => {
 		);
 	});
 
-	test("does not prompt for a separate render mode", async () => {
-		const { readFileSync } = await import("node:fs");
-		const promptSource = readFileSync(
-			"packages/create-rakta/src/prompts.ts",
-			"utf8",
+	test("generates structural Laravel + MySQL backend when selected", () => {
+		const laravelConfig: ProjectConfig = {
+			...fullstackConfig,
+			projectName: "rakta-laravel-app",
+			backendFramework: "laravel",
+			database: "mysql",
+		};
+		const files = generateProjectFiles(laravelConfig);
+		const fileByPath = new Map(
+			files.map((file) => [
+				file.path,
+				typeof file.content === "string" ? file.content : "",
+			]),
 		);
+
+		expect(fileByPath.has("backend/composer.json")).toBe(true);
+		expect(fileByPath.has("backend/artisan")).toBe(true);
+		expect(fileByPath.has("backend/routes/api.php")).toBe(true);
+		expect(fileByPath.has("backend/config/database.php")).toBe(true);
+		expect(
+			fileByPath.has("backend/app/Http/Controllers/AuthController.php"),
+		).toBe(true);
+		expect(
+			fileByPath.has("backend/app/Http/Controllers/UserController.php"),
+		).toBe(true);
+		expect(fileByPath.has("backend/app/Models/User.php")).toBe(true);
+		expect(
+			fileByPath.has(
+				"backend/database/migrations/2026_01_01_000000_create_users_table.php",
+			),
+		).toBe(true);
+
+		expect(fileByPath.get("backend/composer.json")).toContain(
+			"laravel/framework",
+		);
+		expect(fileByPath.get("backend/.env.example")).toContain(
+			"DB_CONNECTION=mysql",
+		);
+		expect(fileByPath.get("backend/routes/api.php")).toContain(
+			"/auth/register",
+		);
+		expect(fileByPath.get("backend/routes/api.php")).toContain("/auth/login");
+	});
+
+	test("generates structural backends for all backend options", () => {
+		const backendFrameworks: ReadonlyArray<import("./types").BackendFramework> =
+			[
+				"gaman",
+				"nestjs",
+				"express",
+				"adonis",
+				"hono",
+				"laravel",
+				"codeigniter",
+				"flask",
+				"django",
+				"prabogo",
+				"beego",
+				"rails",
+				"hanami",
+				"spring-boot",
+				"jakarta-ee",
+			];
+
+		for (const backendFramework of backendFrameworks) {
+			const projectFiles = generateProjectFiles({
+				...fullstackConfig,
+				projectName: `test-${backendFramework}-app`,
+				backendFramework,
+			});
+			const filePaths = new Set(projectFiles.map((file) => file.path));
+
+			expect(filePaths.has("backend/README.md")).toBe(true);
+
+			if (backendFramework === "gaman") {
+				expect(filePaths.has("backend/package.json")).toBe(true);
+				expect(filePaths.has("backend/src/index.ts")).toBe(true);
+			} else if (backendFramework === "nestjs") {
+				expect(filePaths.has("backend/src/main.ts")).toBe(true);
+				expect(filePaths.has("backend/src/app.module.ts")).toBe(true);
+			} else if (backendFramework === "express") {
+				expect(filePaths.has("backend/src/index.ts")).toBe(true);
+			} else if (backendFramework === "adonis") {
+				expect(filePaths.has("backend/bin/server.ts")).toBe(true);
+			} else if (backendFramework === "hono") {
+				expect(filePaths.has("backend/src/index.ts")).toBe(true);
+			} else if (backendFramework === "laravel") {
+				expect(filePaths.has("backend/composer.json")).toBe(true);
+				expect(filePaths.has("backend/artisan")).toBe(true);
+			} else if (backendFramework === "codeigniter") {
+				expect(filePaths.has("backend/composer.json")).toBe(true);
+				expect(filePaths.has("backend/spark")).toBe(true);
+			} else if (backendFramework === "flask") {
+				expect(filePaths.has("backend/app.py")).toBe(true);
+			} else if (backendFramework === "django") {
+				expect(filePaths.has("backend/manage.py")).toBe(true);
+				expect(filePaths.has("backend/core/settings.py")).toBe(true);
+			} else if (backendFramework === "prabogo") {
+				expect(filePaths.has("backend/main.go")).toBe(true);
+				expect(filePaths.has("backend/go.mod")).toBe(true);
+			} else if (backendFramework === "beego") {
+				expect(filePaths.has("backend/main.go")).toBe(true);
+				expect(filePaths.has("backend/conf/app.conf")).toBe(true);
+			} else if (backendFramework === "rails") {
+				expect(filePaths.has("backend/Gemfile")).toBe(true);
+			} else if (backendFramework === "hanami") {
+				expect(filePaths.has("backend/Gemfile")).toBe(true);
+				expect(filePaths.has("backend/config/app.rb")).toBe(true);
+			} else if (backendFramework === "spring-boot") {
+				expect(filePaths.has("backend/pom.xml")).toBe(true);
+			} else if (backendFramework === "jakarta-ee") {
+				expect(filePaths.has("backend/pom.xml")).toBe(true);
+				expect(filePaths.has("backend/src/main/webapp/WEB-INF/web.xml")).toBe(true);
+			}
+		}
+	});
+
+	test("generates SawitDB database integration when selected", () => {
+		const sawitConfig: ProjectConfig = {
+			...fullstackConfig,
+			projectName: "rakta-sawit-app",
+			backendFramework: "gaman",
+			database: "sawitdb",
+		};
+		const files = generateProjectFiles(sawitConfig);
+		const fileByPath = new Map(
+			files.map((file) => [
+				file.path,
+				typeof file.content === "string" ? file.content : "",
+			]),
+		);
+
+		expect(fileByPath.get("backend/package.json")).toContain('"sawitdb"');
+		expect(fileByPath.get("backend/src/database/client.ts")).toContain("SawitDatabaseClient");
+	});
+
+	test("does not prompt for a separate render mode", async () => {
+		const { readFileSync, existsSync } = await import("node:fs");
+		const promptsPath = existsSync("src/prompts.ts")
+			? "src/prompts.ts"
+			: "packages/create-rakta/src/prompts.ts";
+		const promptSource = readFileSync(promptsPath, "utf8");
 
 		expect(promptSource).not.toContain("Choose a render mode");
 		expect(promptSource).not.toContain("promptRenderMode");
@@ -184,11 +320,7 @@ describe("create-rakta fullstack generator", () => {
 			"packages/create-rakta/dist/templates/fullStack/backend/src/index.ts";
 		const frontendDistPath =
 			"packages/create-rakta/dist/templates/frontendOnly/app/components/Header.tsx";
-		// This test requires the package to be built first.
-		// In CI, build runs before test (ci.yml step order: build → test).
-		// Locally: run `bun run build` before `bun run test`.
 		if (!existsSync("packages/create-rakta/dist/index.js")) {
-			// dist not built yet - skip gracefully
 			console.warn(
 				"[skip] create-rakta dist not found - run bun run build first",
 			);

@@ -115,12 +115,100 @@ export async function promptAutoImport(): Promise<boolean> {
 }
 
 export async function promptBackendFramework(): Promise<BackendFramework> {
-	clack.note(
-		`${BACKEND_DISPLAY.gaman} is used for fullstack Rakta.js projects.`,
-		"Backend",
-	);
+	const promptResult = await clack.select<BackendFramework>({
+		message: "Choose a backend framework (grouped by language):",
+		options: [
+			// JavaScript / TypeScript (Primary Rakta.js Ecosystem)
+			{
+				value: "gaman",
+				label: BACKEND_DISPLAY.gaman,
+				hint: "default / primary powered Rakta.js backend",
+			},
+			{
+				value: "nestjs",
+				label: BACKEND_DISPLAY.nestjs,
+				hint: "structured enterprise Node.js framework",
+			},
+			{
+				value: "express",
+				label: BACKEND_DISPLAY.express,
+				hint: "minimal Node.js API framework",
+			},
+			{
+				value: "adonis",
+				label: BACKEND_DISPLAY.adonis,
+				hint: "TypeScript-first fullstack Node.js framework",
+			},
+			{
+				value: "hono",
+				label: BACKEND_DISPLAY.hono,
+				hint: "web-standard multi-runtime JavaScript framework",
+			},
 
-	return "gaman";
+			// PHP
+			{
+				value: "laravel",
+				label: BACKEND_DISPLAY.laravel,
+				hint: "PHP web framework + Eloquent ORM",
+			},
+			{
+				value: "codeigniter",
+				label: BACKEND_DISPLAY.codeigniter,
+				hint: "CodeIgniter 4 MVC framework",
+			},
+
+			// Python
+			{
+				value: "flask",
+				label: BACKEND_DISPLAY.flask,
+				hint: "lightweight Python WSGI web framework",
+			},
+			{
+				value: "django",
+				label: BACKEND_DISPLAY.django,
+				hint: "full-featured Python web framework",
+			},
+
+			// Go
+			{
+				value: "prabogo",
+				label: BACKEND_DISPLAY.prabogo,
+				hint: "Golang web framework with hexagonal architecture",
+			},
+			{
+				value: "beego",
+				label: BACKEND_DISPLAY.beego,
+				hint: "Beego v2 enterprise REST/MVC framework",
+			},
+
+			// Ruby
+			{
+				value: "rails",
+				label: BACKEND_DISPLAY.rails,
+				hint: "convention-driven Ruby framework",
+			},
+			{
+				value: "hanami",
+				label: BACKEND_DISPLAY.hanami,
+				hint: "Hanami 2.x architecture for Ruby",
+			},
+
+			// Java
+			{
+				value: "spring-boot",
+				label: BACKEND_DISPLAY["spring-boot"],
+				hint: "enterprise Spring Boot framework",
+			},
+			{
+				value: "jakarta-ee",
+				label: BACKEND_DISPLAY["jakarta-ee"],
+				hint: "standardized Jakarta EE / J2EE platform",
+			},
+		],
+		initialValue: "gaman",
+	});
+
+	return getPromptValue(promptResult);
 }
 
 export async function promptDatabase(): Promise<Database> {
@@ -133,9 +221,15 @@ export async function promptDatabase(): Promise<Database> {
 				hint: "recommended",
 			},
 			{ value: "mysql", label: DATABASE_DISPLAY.mysql },
+			{
+				value: "sawitdb",
+				label: DATABASE_DISPLAY.sawitdb,
+				hint: "Rakta ecosystem single-file database engine",
+			},
+			{ value: "oracle", label: DATABASE_DISPLAY.oracle },
+			{ value: "sqlite", label: DATABASE_DISPLAY.sqlite },
 			{ value: "mongodb", label: DATABASE_DISPLAY.mongodb },
 			{ value: "firebase", label: DATABASE_DISPLAY.firebase },
-			{ value: "sqlite", label: DATABASE_DISPLAY.sqlite },
 			{ value: "mariadb", label: DATABASE_DISPLAY.mariadb },
 			{ value: "redis", label: DATABASE_DISPLAY.redis },
 			{ value: "planetscale", label: DATABASE_DISPLAY.planetscale },

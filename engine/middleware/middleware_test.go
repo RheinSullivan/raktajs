@@ -66,14 +66,22 @@ func TestSecurityAndCorsHeaders(test *testing.T) {
 
 	result := stack.Run(recorder, request)
 
-	if result.Aborted != http.StatusNoContent {
-		test.Fatalf("expected options preflight abort, got %+v", result)
+	// The CORS handler writes 204 directly and returns a non-Continue result
+	// to stop the chain. It does NOT use Abort() because that would double-write.
+	if result.Continue {
+		test.Fatalf("expected OPTIONS preflight to stop chain, got Continue=true")
+	}
+	if recorder.Code != http.StatusNoContent {
+		test.Fatalf("expected recorder status 204, got %d", recorder.Code)
 	}
 	if recorder.Header().Get("X-Frame-Options") != "DENY" {
 		test.Fatal("missing secure X-Frame-Options header")
 	}
 	if recorder.Header().Get("Access-Control-Allow-Origin") != "https://raktajs.dev" {
 		test.Fatal("missing CORS origin header")
+	}
+	if recorder.Header().Get("Vary") != "Origin" {
+		test.Fatal("missing Vary: Origin header")
 	}
 }
 

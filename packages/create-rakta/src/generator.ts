@@ -19,6 +19,7 @@ import type {
 	ProjectFile,
 } from "./types";
 import { BACKEND_DISPLAY, CSS_DISPLAY, DATABASE_DISPLAY } from "./types";
+import { generateBackendFiles } from "./backends/backendRegistry";
 
 const DEFAULT_METADATA_TITLE =
 	"Rakta.js | Small in size. Fierce in speed. Alive in every route";
@@ -299,7 +300,7 @@ function personalizeFrontendTemplate(
 				},
 				dependencies: {
 					...(packageJson.dependencies ?? {}),
-					raktajs: "^1.1.7",
+					raktajs: "^1.1.8",
 					react: "^19.2.7",
 					"react-dom": "^19.2.7",
 					gsap: "^3.12.7",
@@ -406,7 +407,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^1.1.7",
+						raktajs: "^1.1.8",
 						gsap: "^3.12.7",
 						clsx: "^2.1.1",
 						"tailwind-merge": "^3.0.2",
@@ -591,7 +592,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^1.1.7",
+						raktajs: "^1.1.8",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						gsap: "^3.12.7",
@@ -776,7 +777,808 @@ function processFilesForLanguage(
 }
 
 function getBackendFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	return getGamanTemplateFiles(projectConfig);
+	return generateBackendFiles(projectConfig);
+}
+
+function getNestTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+	const projectName = projectConfig.projectName;
+
+	const packageJsonContent = JSON.stringify(
+		{
+			name: `${projectName}-backend`,
+			version: "0.1.0",
+			private: true,
+			scripts: {
+				build: "nest build",
+				start: "nest start",
+				dev: "nest start --watch",
+				typecheck: "tsc --noEmit",
+			},
+			dependencies: {
+				"@nestjs/common": "^10.3.0",
+				"@nestjs/core": "^10.3.0",
+				"@nestjs/platform-express": "^10.3.0",
+				"reflect-metadata": "^0.2.1",
+				rxjs: "^7.8.1",
+			},
+			devDependencies: {
+				"@nestjs/cli": "^10.3.0",
+				"@types/node": "^20.11.0",
+				typescript: "^5.3.3",
+			},
+		},
+		null,
+		2,
+	);
+
+	const mainContent = `import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
+
+async function bootstrap(): Promise<void> {
+	const application = await NestFactory.create(AppModule);
+	application.enableCors({ origin: "http://localhost:3000" });
+	await application.listen(4000);
+	console.log("Nest.js backend running on http://localhost:4000");
+}
+
+bootstrap();
+`;
+
+	const appModuleContent = `import { Module } from "@nestjs/common";
+import { AppController } from "./app.controller";
+
+@Module({
+	controllers: [AppController],
+	providers: [],
+})
+export class AppModule {}
+`;
+
+	const appControllerContent = `import { Controller, Get } from "@nestjs/common";
+
+@Controller()
+export class AppController {
+	@Get("health")
+	getHealthStatus(): Record<string, string> {
+		return {
+			status: "ok",
+			framework: "Nest.js",
+			timestamp: new Date().toISOString(),
+		};
+	}
+}
+`;
+
+	const tsconfigContent = JSON.stringify(
+		{
+			compilerOptions: {
+				module: "commonjs",
+				target: "ES2021",
+				experimentalDecorators: true,
+				emitDecoratorMetadata: true,
+				strict: true,
+				outDir: "./dist",
+			},
+		},
+		null,
+		2,
+	);
+
+	const readmeContent = `# ${projectName} - Nest.js Backend
+
+Structured enterprise Node.js backend for Rakta.js frontend.
+
+## Commands
+
+\`\`\`bash
+bun install
+bun run dev
+\`\`\`
+`;
+
+	return [
+		{ path: "backend/package.json", content: packageJsonContent },
+		{ path: "backend/tsconfig.json", content: tsconfigContent },
+		{ path: "backend/src/main.ts", content: mainContent },
+		{ path: "backend/src/app.module.ts", content: appModuleContent },
+		{ path: "backend/src/app.controller.ts", content: appControllerContent },
+		{ path: "backend/README.md", content: readmeContent },
+	];
+}
+
+function getExpressTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+	const projectName = projectConfig.projectName;
+
+	const packageJsonContent = JSON.stringify(
+		{
+			name: `${projectName}-backend`,
+			version: "0.1.0",
+			private: true,
+			type: "module",
+			scripts: {
+				dev: "bun run --watch src/index.ts",
+				build: "tsc",
+				start: "node dist/index.js",
+			},
+			dependencies: {
+				express: "^4.19.2",
+				cors: "^2.8.5",
+				dotenv: "^16.4.5",
+			},
+			devDependencies: {
+				"@types/express": "^4.17.21",
+				"@types/cors": "^2.8.17",
+				"@types/node": "^20.11.0",
+				typescript: "^5.3.3",
+			},
+		},
+		null,
+		2,
+	);
+
+	const indexContent = `import express from "express";
+import cors from "cors";
+
+const application = express();
+application.use(cors({ origin: "http://localhost:3000" }));
+application.use(express.json());
+
+application.get("/health", (_request, response) => {
+	response.json({
+		status: "ok",
+		framework: "Express.js",
+		timestamp: new Date().toISOString(),
+	});
+});
+
+const portNumber = Number.parseInt(process.env["PORT"] ?? "4000", 10);
+application.listen(portNumber, () => {
+	console.log(\`Express.js backend running on http://localhost:\${portNumber}\`);
+});
+`;
+
+	const readmeContent = `# ${projectName} - Express.js Backend
+
+Minimal Node.js backend for Rakta.js frontend.
+
+## Commands
+
+\`\`\`bash
+bun install
+bun run dev
+\`\`\`
+`;
+
+	return [
+		{ path: "backend/package.json", content: packageJsonContent },
+		{ path: "backend/src/index.ts", content: indexContent },
+		{ path: "backend/README.md", content: readmeContent },
+	];
+}
+
+function getAdonisTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+	const projectName = projectConfig.projectName;
+
+	const packageJsonContent = JSON.stringify(
+		{
+			name: `${projectName}-backend`,
+			version: "0.1.0",
+			private: true,
+			type: "module",
+			scripts: {
+				dev: "node ace serve --watch",
+				build: "node ace build",
+				start: "node build/bin/server.js",
+			},
+			dependencies: {
+				"@adonisjs/core": "^6.3.0",
+				"@adonisjs/cors": "^2.2.1",
+			},
+			devDependencies: {
+				typescript: "^5.3.3",
+			},
+		},
+		null,
+		2,
+	);
+
+	const serverContent = `import { Ignitor, prettyPrintError } from "@adonisjs/core";
+
+const applicationRoot = new URL("../", import.meta.url);
+const ignitorInstance = new Ignitor(applicationRoot, { importer: (filePath) => import(filePath) });
+
+ignitorInstance
+	.tap((application) => {
+		application.listen(4000);
+	})
+	.catch((error) => {
+		prettyPrintError(error);
+		process.exitCode = 1;
+	});
+`;
+
+	const routesContent = `import router from "@adonisjs/core/services/router";
+
+router.get("/health", async () => {
+	return {
+		status: "ok",
+		framework: "AdonisJS",
+		timestamp: new Date().toISOString(),
+	};
+});
+`;
+
+	const readmeContent = `# ${projectName} - AdonisJS Backend
+
+Fullstack TypeScript Node.js backend for Rakta.js frontend.
+
+## Commands
+
+\`\`\`bash
+bun install
+bun run dev
+\`\`\`
+`;
+
+	return [
+		{ path: "backend/package.json", content: packageJsonContent },
+		{ path: "backend/bin/server.ts", content: serverContent },
+		{ path: "backend/start/routes.ts", content: routesContent },
+		{ path: "backend/README.md", content: readmeContent },
+	];
+}
+
+function getFlaskTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+	const projectName = projectConfig.projectName;
+
+	const requirementsContent = `Flask==3.0.3
+Flask-CORS==4.0.1
+python-dotenv==1.0.1
+`;
+
+	const appPyContent = `from flask import Flask, jsonify
+from flask_cors import CORS
+import datetime
+
+application = Flask(__name__)
+CORS(application, origins=["http://localhost:3000"])
+
+@application.route("/health", methods=["GET"])
+def health_status():
+    return jsonify({
+        "status": "ok",
+        "framework": "Flask (Python)",
+        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat()
+    })
+
+if __name__ == "__main__":
+    application.run(host="0.0.0.0", port=4000, debug=True)
+`;
+
+	const readmeContent = `# ${projectName} - Flask Backend
+
+Lightweight Python backend for Rakta.js frontend.
+
+## Commands
+
+\`\`\`bash
+pip install -r requirements.txt
+python app.py
+\`\`\`
+`;
+
+	return [
+		{ path: "backend/requirements.txt", content: requirementsContent },
+		{ path: "backend/app.py", content: appPyContent },
+		{ path: "backend/README.md", content: readmeContent },
+	];
+}
+
+function getPrabogoTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+	const projectName = projectConfig.projectName;
+	const moduleName = projectConfig.projectName.replaceAll("-", "_");
+
+	const goModContent = `module ${moduleName}/backend
+
+go 1.24.0
+`;
+
+	const mainGoContent = `package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"time"
+)
+
+func main() {
+	http.HandleFunc("/health", func(responseWriter http.ResponseWriter, request *http.Request) {
+		responseWriter.Header().Set("Content-Type", "application/json")
+		responseWriter.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		json.NewEncoder(responseWriter).Encode(map[string]string{
+			"status":    "ok",
+			"framework": "Prabogo (Golang)",
+			"timestamp": time.Now().Format(time.RFC3339),
+		})
+	})
+
+	fmt.Println("Prabogo (Golang) backend running on http://localhost:4000")
+	http.ListenAndServe(":4000", nil)
+}
+`;
+
+	const readmeContent = `# ${projectName} - Prabogo (Golang) Backend
+
+Golang web framework backend with hexagonal architecture for Rakta.js frontend.
+
+## Commands
+
+\`\`\`bash
+go run main.go
+\`\`\`
+`;
+
+	return [
+		{ path: "backend/go.mod", content: goModContent },
+		{ path: "backend/main.go", content: mainGoContent },
+		{ path: "backend/README.md", content: readmeContent },
+	];
+}
+
+function getRailsTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+	const projectName = projectConfig.projectName;
+
+	const gemfileContent = `source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
+ruby '3.4.1'
+
+gem 'rails', '~> 7.1.3'
+gem 'puma', '~> 6.4'
+gem 'rack-cors'
+`;
+
+	const routesRbContent = `Rails.application.routes.draw do
+  get '/health', to: proc { [200, { 'Content-Type' => 'application/json' }, [{ status: 'ok', framework: 'Ruby on Rails', timestamp: Time.now.iso8601 }.to_json]] }
+end
+`;
+
+	const readmeContent = `# ${projectName} - Ruby on Rails Backend
+
+Convention-driven Ruby backend for Rakta.js frontend.
+
+## Commands
+
+\`\`\`bash
+bundle install
+bin/rails server -p 4000
+\`\`\`
+`;
+
+	return [
+		{ path: "backend/Gemfile", content: gemfileContent },
+		{ path: "backend/config/routes.rb", content: routesRbContent },
+		{ path: "backend/README.md", content: readmeContent },
+	];
+}
+
+function getSpringBootTemplateFiles(
+	projectConfig: ProjectConfig,
+): ProjectFile[] {
+	const projectName = projectConfig.projectName;
+
+	const pomXmlContent = `<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.4</version>
+        <relativePath/>
+    </parent>
+    <groupId>com.example</groupId>
+    <artifactId>${projectName}-backend</artifactId>
+    <version>0.1.0</version>
+    <name>backend</name>
+    <properties>
+        <java.version>21</java.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    </dependencies>
+</project>
+`;
+
+	const applicationJavaContent = `package com.example.backend;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.time.Instant;
+import java.util.Map;
+
+@SpringBootApplication
+@RestController
+public class BackendApplication {
+
+    public static void main(String[] arguments) {
+        SpringApplication.run(BackendApplication.class, arguments);
+    }
+
+    @GetMapping("/health")
+    public Map<String, String> getHealthStatus() {
+        return Map.of(
+            "status", "ok",
+            "framework", "Spring Boot",
+            "timestamp", Instant.now().toString()
+        );
+    }
+}
+`;
+
+	const applicationPropertiesContent = `server.port=4000
+`;
+
+	const readmeContent = `# ${projectName} - Spring Boot Backend
+
+Enterprise Java backend for Rakta.js frontend.
+
+## Commands
+
+\`\`\`bash
+./mvnw spring-boot:run
+\`\`\`
+`;
+
+	return [
+		{ path: "backend/pom.xml", content: pomXmlContent },
+		{
+			path: "backend/src/main/java/com/example/backend/BackendApplication.java",
+			content: applicationJavaContent,
+		},
+		{
+			path: "backend/src/main/resources/application.properties",
+			content: applicationPropertiesContent,
+		},
+		{ path: "backend/README.md", content: readmeContent },
+	];
+}
+
+function getLaravelTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+	const projectName = projectConfig.projectName;
+	const databaseName = projectConfig.projectName.replaceAll("-", "_");
+
+	const composerContent = JSON.stringify(
+		{
+			name: `${projectName}/backend`,
+			type: "project",
+			description: `${projectName} Laravel + MySQL backend for Rakta.js`,
+			keywords: ["framework", "laravel", "mysql", "raktajs"],
+			license: "MIT",
+			require: {
+				php: "^8.2",
+				"laravel/framework": "^11.0",
+				"laravel/sanctum": "^4.0",
+				"laravel/tinker": "^2.9",
+			},
+			autoload: {
+				"psr-4": {
+					"App\\": "app/",
+					"Database\\Factories\\": "database/factories/",
+					"Database\\Seeders\\": "database/seeders/",
+				},
+			},
+			scripts: {
+				"post-autoload-dump": [
+					"Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+				],
+			},
+		},
+		null,
+		2,
+	);
+
+	const environmentContent = `APP_NAME="${projectName}"
+APP_ENV=local
+APP_KEY=base64:c3VwZXJzZWNyZXRyYWt0YWphdmFzY3JpcHRrZXkxMjM=
+APP_DEBUG=true
+APP_TIMEZONE=UTC
+APP_URL=http://localhost:4000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE="${databaseName}"
+DB_USERNAME=root
+DB_PASSWORD=
+
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+FRONTEND_URL=http://localhost:3000
+`;
+
+	const artisanContent = `#!/usr/bin/env php
+<?php
+
+define('LARAVEL_START', microtime(true));
+
+require __DIR__.'/vendor/autoload.php';
+
+$application = require_once __DIR__.'/bootstrap/app.php';
+
+$kernel = $application->make(Illuminate\\Contracts\\Console\\Kernel::class);
+
+$status = $kernel->handle(
+    $input = new Symfony\\Component\\Console\\Input\\ArgvInput,
+    new Symfony\\Component\\Console\\Output\\ConsoleOutput
+);
+
+$kernel->terminate($input, $status);
+
+exit($status);
+`;
+
+	const databaseConfigContent = `<?php
+
+return [
+    'default' => env('DB_CONNECTION', 'mysql'),
+    'connections' => [
+        'mysql' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', '${databaseName}'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+    ],
+];
+`;
+
+	const corsConfigContent = `<?php
+
+return [
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'allowed_methods' => ['*'],
+    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000')],
+    'allowed_headers' => ['*'],
+    'supports_credentials' => true,
+];
+`;
+
+	const apiRoutesContent = `<?php
+
+use Illuminate\\Http\\Request;
+use Illuminate\\Support\\Facades\\Route;
+use App\\Http\\Controllers\\AuthController;
+use App\\Http\\Controllers\\UserController;
+
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'ok',
+        'framework' => 'Rakta.js + Laravel',
+        'timestamp' => now()->toIso8601String(),
+    ]);
+});
+
+Route::post('/auth/register', [AuthController::class, 'register']);
+Route::post('/auth/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/auth/me', [AuthController::class, 'userInformation']);
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{user}', [UserController::class, 'show']);
+});
+`;
+
+	const authControllerContent = `<?php
+
+namespace App\\Http\\Controllers;
+
+use App\\Models\\User;
+use Illuminate\\Http\\Request;
+use Illuminate\\Support\\Facades\\Auth;
+use Illuminate\\Support\\Facades\\Hash;
+use Illuminate\\Validation\\ValidationException;
+
+class AuthController extends Controller
+{
+    public function register(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+        ]);
+
+        $user = User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+        ]);
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'user' => $user,
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ], 201);
+    }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        if (!Auth::attempt($credentials)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials do not match our records.'],
+            ]);
+        }
+
+        $user = User::where('email', $request->email)->firstOrFail();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'user' => $user,
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ]);
+    }
+
+    public function userInformation(Request $request)
+    {
+        return response()->json($request->user());
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json(['message' => 'Logged out successfully']);
+    }
+}
+`;
+
+	const userControllerContent = `<?php
+
+namespace App\\Http\\Controllers;
+
+use App\\Models\\User;
+
+class UserController extends Controller
+{
+    public function index()
+    {
+        return response()->json(User::paginate(15));
+    }
+
+    public function show(User $user)
+    {
+        return response()->json($user);
+    }
+}
+`;
+
+	const userModelContent = `<?php
+
+namespace App\\Models;
+
+use Illuminate\\Database\\Eloquent\\Factories\\HasFactory;
+use Illuminate\\Foundation\\Auth\\User as Authenticatable;
+use Illuminate\\Notifications\\Notifiable;
+use Laravel\\Sanctum\\HasApiTokens;
+
+class User extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+}
+`;
+
+	const migrationContent = `<?php
+
+use Illuminate\\Database\\Migrations\\Migration;
+use Illuminate\\Database\\Schema\\Blueprint;
+use Illuminate\\Support\\Facades\\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
+    }
+};
+`;
+
+	const readmeContent = `# ${projectName} - Laravel + MySQL Backend
+
+Integrated Laravel + MySQL backend for Rakta.js frontend.
+
+## Commands
+
+\`\`\`bash
+# Install PHP dependencies
+composer install
+
+# Copy environment file and generate key
+cp .env.example .env
+php artisan key:generate
+
+# Run database migrations
+php artisan migrate
+
+# Start development server
+php artisan serve --port=4000
+\`\`\`
+`;
+
+	return [
+		{ path: "backend/composer.json", content: composerContent },
+		{ path: "backend/.env.example", content: environmentContent },
+		{ path: "backend/artisan", content: artisanContent },
+		{ path: "backend/config/database.php", content: databaseConfigContent },
+		{ path: "backend/config/cors.php", content: corsConfigContent },
+		{ path: "backend/routes/api.php", content: apiRoutesContent },
+		{
+			path: "backend/app/Http/Controllers/Controller.php",
+			content:
+				"<?php\n\nnamespace App\\Http\\Controllers;\n\nabstract class Controller {}\n",
+		},
+		{
+			path: "backend/app/Http/Controllers/AuthController.php",
+			content: authControllerContent,
+		},
+		{
+			path: "backend/app/Http/Controllers/UserController.php",
+			content: userControllerContent,
+		},
+		{ path: "backend/app/Models/User.php", content: userModelContent },
+		{
+			path: "backend/database/migrations/2026_01_01_000000_create_users_table.php",
+			content: migrationContent,
+		},
+		{ path: "backend/README.md", content: readmeContent },
+	];
 }
 
 function getGamanTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
@@ -1677,8 +2479,6 @@ a { color: inherit; text-decoration: none; }
   transform-origin: bottom center !important;
   animation: seaweed-wave-2 3.8s infinite ease-in-out alternate !important;
 }
-`;
-}
 
 // ─── Inline template generators
 
@@ -1697,26 +2497,71 @@ type RaktaClickAttributes = Omit<
   readonly to: string;
 };
 
-// Rakta.js built-in image component - use <Photo path="..."> instead of <img>
+// Rakta.js built-in image component - use <Picture path="..."> instead of <img>
 type RaktaPhotoAttributes = Omit<
   import("react").ImgHTMLAttributes<HTMLImageElement>,
   "src"
 > & {
   readonly path: string;
+  readonly alt: string;
 };
 
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
-      // Rakta.js SPA anchor: compiles to <a> with client-side routing
+      // Rakta.js SPA anchor: client-side routing without full page reload
       click: RaktaClickAttributes;
-      // Rakta.js image: compiles to <img> with built-in lazy loading & optimization
+      // Rakta.js image: lazy loading, blur placeholder, responsive sizing
       photo: RaktaPhotoAttributes;
+      // Rakta.js smooth scroll trigger: navigates to <reborns id=""> target
+      pantura: Omit<import("react").AnchorHTMLAttributes<HTMLElement>, "href"> & {
+        readonly to: string;
+        readonly offset?: number;
+        readonly duration?: number;
+        readonly easing?: string;
+        readonly updateHash?: boolean;
+        readonly activeClassName?: string;
+      };
+      // Rakta.js scroll target marker: receives <pantura to=""> navigation
+      reborns: import("react").HTMLAttributes<HTMLElement> & {
+        readonly id: string;
+      };
+      // Rakta.js deferred rendering boundary: wraps Suspense with optional delay
+      lazy: {
+        readonly children: import("react").ReactNode;
+        readonly fallback?: import("react").ReactNode;
+        readonly delayMs?: number;
+      };
+      // Rakta.js authorization boundary: conditionally renders based on permission
+      guard: {
+        readonly isAllowed: boolean;
+        readonly children: import("react").ReactNode;
+        readonly fallback?: import("react").ReactNode;
+      };
+      // Rakta.js error boundary: catches runtime component errors safely
+      seal: {
+        readonly children: import("react").ReactNode;
+        readonly fallback?: import("react").ReactNode | ((error: Error) => import("react").ReactNode);
+      };
+      // Rakta.js form wrapper: injects hidden CSRF token automatically
+      form: import("react").FormHTMLAttributes<HTMLFormElement> & {
+        readonly csrfToken?: string;
+      };
+      // Rakta.js declarative document title: updates document.title from any component
+      title: {
+        readonly children?: import("react").ReactNode;
+        readonly text?: string;
+      };
+      // Rakta.js state persistence boundary: syncs state to localStorage
+      shelf: {
+        readonly storageKey: string;
+        readonly initialValue: any;
+        readonly children: (value: any, setValue: (val: any) => void) => import("react").ReactNode;
+      };
     }
   }
 }
 
-// Rakta.js auto-imported React hooks - no explicit import needed in component files
 declare global {
   type AestheticUnit = "LENIS-MODERN" | "RETRO-CYBER" | "NEO-BRUTALIST";
   type ReactNode = import("react").ReactNode;
@@ -1738,6 +2583,12 @@ declare global {
   const Photo: typeof import("raktajs/components").Picture;
   const photo: typeof import("raktajs/components").Picture;
   const Picture: typeof import("raktajs/components").Picture;
+  const Lazy: typeof import("raktajs/components").Lazy;
+  const Guard: typeof import("raktajs/components").Guard;
+  const Seal: typeof import("raktajs/components").Seal;
+  const Form: typeof import("raktajs/components").Form;
+  const Title: typeof import("raktajs/components").Title;
+  const Shelf: typeof import("raktajs/components").Shelf;
   const Pantura: typeof import("raktajs/components").Pantura;
   const Reborns: typeof import("raktajs/components").Reborns;
   const usePantura: typeof import("raktajs/components").usePantura;
@@ -1781,10 +2632,7 @@ declare global {
   const FaRibbon: IconComponent;
   const FaXmark: IconComponent;
 
-  const ComponentsModal: import("react").ComponentType<Record<string, unknown>>;
   const CoralObstacle: import("react").ComponentType<Record<string, unknown>>;
-  const DeployModal: import("react").ComponentType<Record<string, unknown>>;
-  const DocsModal: import("react").ComponentType<Record<string, unknown>>;
   const ShrimpCharacter: import("react").ComponentType<Record<string, unknown>>;
 
   const getMuteState: () => boolean;

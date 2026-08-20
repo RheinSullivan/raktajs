@@ -2,6 +2,7 @@ package forge
 
 import (
 	"fmt"
+	"html"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -24,7 +25,7 @@ type Config struct {
 type Server struct {
 	config     Config
 	httpServer *http.Server
-	clients    map[string]bool
+	clients    map[string]chan string
 	mutex      sync.RWMutex
 }
 
@@ -41,12 +42,12 @@ func NewServer(config Config) *Server {
 
 	return &Server{
 		config:  config,
-		clients: make(map[string]bool),
+		clients: make(map[string]chan string),
 	}
 }
 
 // engineVersion is the Rakta.js Go engine version.
-const engineVersion = "1.1.4"
+const engineVersion = "1.1.8"
 
 // detectionHeaders returns the standard Rakta.js framework fingerprint headers.
 // These are read by Wappalyzer, BuiltWith, Netcraft, and Shields.io.
@@ -136,6 +137,20 @@ func (server *Server) Stop() error {
 	return nil
 }
 
+// BroadcastHMR sends an HMR reload event to every connected SSE client.
+// This is called by the watcher when file changes are detected.
+func (server *Server) BroadcastHMR(eventData string) {
+	server.mutex.RLock()
+	defer server.mutex.RUnlock()
+	for _, ch := range server.clients {
+		select {
+		case ch <- eventData:
+		default:
+			// Drop if the client channel is full (slow consumer)
+		}
+	}
+}
+
 func (server *Server) handleHMR(responseWriter http.ResponseWriter, request *http.Request) {
 	responseWriter.Header().Set("Content-Type", "text/event-stream")
 	responseWriter.Header().Set("Cache-Control", "no-cache")
@@ -147,9 +162,11 @@ func (server *Server) handleHMR(responseWriter http.ResponseWriter, request *htt
 		return
 	}
 
-	clientID := request.RemoteAddr
+	clientID := fmt.Sprintf("%s-%d", request.RemoteAddr, time.Now().UnixNano())
+	eventCh := make(chan string, 16)
+
 	server.mutex.Lock()
-	server.clients[clientID] = true
+	server.clients[clientID] = eventCh
 	server.mutex.Unlock()
 
 	defer func() {
@@ -170,10 +187,15 @@ func (server *Server) handleHMR(responseWriter http.ResponseWriter, request *htt
 		select {
 		case <-request.Context().Done():
 			return
+		case data := <-eventCh:
+			_, writeErr := fmt.Fprintf(responseWriter, "event: hmr\ndata: %s\n\n", data)
+			if writeErr != nil {
+				return
+			}
+			flusher.Flush()
 		case <-ticker.C:
 			_, writeErr := fmt.Fprintf(responseWriter, "event: ping\ndata: {}\n\n")
 			if writeErr != nil {
-				// Client disconnected; stop the loop.
 				return
 			}
 			flusher.Flush()
@@ -197,5 +219,5 @@ func (server *Server) handleFallback(responseWriter http.ResponseWriter, request
 <p>Status: OPERATIONAL</p>
 <p>Path: %s</p>
 </body>
-</html>`, request.URL.Path)
+</html>`, html.EscapeString(request.URL.Path))
 }
