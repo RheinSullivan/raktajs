@@ -332,8 +332,8 @@ ORACLE_CONNECT_STRING=localhost:1521/XEPDB1
 
 ## Production
 
-- **Oracle Cloud Autonomous Database** — fully managed Oracle with automatic tuning
-- **Oracle Cloud Infrastructure** — VMs with Oracle DB installed
+- **Oracle Cloud Autonomous Database** - fully managed Oracle with automatic tuning
+- **Oracle Cloud Infrastructure** - VMs with Oracle DB installed
 - For TLS wallet connections (Autonomous DB), set `ORACLE_WALLET_LOCATION` to the unzipped wallet directory
 
 ## Architecture Summary

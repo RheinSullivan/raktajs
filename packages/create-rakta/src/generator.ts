@@ -2,14 +2,9 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import {
-	STARTER_AUDIO_CODE,
-	STARTER_COMPONENTS_MODAL_CODE,
 	STARTER_CORAL_OBSTACLE_CODE,
 	STARTER_CSS_CODE,
-	STARTER_DEPLOY_MODAL_CODE,
-	STARTER_DOCS_MODAL_CODE,
 	STARTER_PAGE_CODE,
-	STARTER_SHRIMP_CHARACTER_CODE,
 	STARTER_TYPES_CODE,
 } from "./starter";
 import type {
@@ -465,28 +460,8 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 			content: generateFrontendOnlyNotFound(),
 		},
 		{
-			path: `app/components/ComponentsModal.${pageExtension}`,
-			content: applyHookImportMode(STARTER_COMPONENTS_MODAL_CODE, autoImport),
-		},
-		{
 			path: `app/components/CoralObstacle.${pageExtension}`,
 			content: STARTER_CORAL_OBSTACLE_CODE,
-		},
-		{
-			path: `app/components/DeployModal.${pageExtension}`,
-			content: applyHookImportMode(STARTER_DEPLOY_MODAL_CODE, autoImport),
-		},
-		{
-			path: `app/components/DocsModal.${pageExtension}`,
-			content: applyHookImportMode(STARTER_DOCS_MODAL_CODE, autoImport),
-		},
-		{
-			path: `app/components/ShrimpCharacter.${pageExtension}`,
-			content: STARTER_SHRIMP_CHARACTER_CODE,
-		},
-		{
-			path: `app/utils/audio.${scriptExtension}`,
-			content: STARTER_AUDIO_CODE,
 		},
 		{
 			path: `app/types.${scriptExtension}`,
@@ -2480,6 +2455,9 @@ a { color: inherit; text-decoration: none; }
   animation: seaweed-wave-2 3.8s infinite ease-in-out alternate !important;
 }
 
+`;
+}
+
 // ─── Inline template generators
 
 function generateFrontendOnlyRaktaEnv(): string {
@@ -2513,6 +2491,8 @@ declare module "react" {
       click: RaktaClickAttributes;
       // Rakta.js image: lazy loading, blur placeholder, responsive sizing
       photo: RaktaPhotoAttributes;
+      // Rakta.js official image tag; supported when a path attribute is present.
+      picture: RaktaPhotoAttributes;
       // Rakta.js smooth scroll trigger: navigates to <reborns id=""> target
       pantura: Omit<import("react").AnchorHTMLAttributes<HTMLElement>, "href"> & {
         readonly to: string;
@@ -2527,22 +2507,11 @@ declare module "react" {
         readonly id: string;
       };
       // Rakta.js deferred rendering boundary: wraps Suspense with optional delay
-      lazy: {
-        readonly children: import("react").ReactNode;
-        readonly fallback?: import("react").ReactNode;
-        readonly delayMs?: number;
-      };
+      lazy: import("raktajs/components").LazyProps;
       // Rakta.js authorization boundary: conditionally renders based on permission
-      guard: {
-        readonly isAllowed: boolean;
-        readonly children: import("react").ReactNode;
-        readonly fallback?: import("react").ReactNode;
-      };
+      guard: import("raktajs/components").GuardProps;
       // Rakta.js error boundary: catches runtime component errors safely
-      seal: {
-        readonly children: import("react").ReactNode;
-        readonly fallback?: import("react").ReactNode | ((error: Error) => import("react").ReactNode);
-      };
+      seal: import("raktajs/components").SealProps;
       // Rakta.js form wrapper: injects hidden CSRF token automatically
       form: import("react").FormHTMLAttributes<HTMLFormElement> & {
         readonly csrfToken?: string;
@@ -2553,11 +2522,15 @@ declare module "react" {
         readonly text?: string;
       };
       // Rakta.js state persistence boundary: syncs state to localStorage
-      shelf: {
-        readonly storageKey: string;
-        readonly initialValue: any;
-        readonly children: (value: any, setValue: (val: any) => void) => import("react").ReactNode;
-      };
+      shelf: import("raktajs/components").ShelfProps<unknown>;
+      // Rakta.js client/hydration island boundary
+      island: import("raktajs/components").IslandProps;
+      // Rakta.js route/resource prefetch hint
+      prefetch: import("raktajs/components").PrefetchProps;
+      // Rakta.js route-state boundary
+      route: import("raktajs/components").RouteProps;
+      // Rakta.js declarative resource hint
+      resource: import("raktajs/components").ResourceProps;
     }
   }
 }
@@ -2589,6 +2562,10 @@ declare global {
   const Form: typeof import("raktajs/components").Form;
   const Title: typeof import("raktajs/components").Title;
   const Shelf: typeof import("raktajs/components").Shelf;
+  const Island: typeof import("raktajs/components").Island;
+  const Prefetch: typeof import("raktajs/components").Prefetch;
+  const Route: typeof import("raktajs/components").Route;
+  const Resource: typeof import("raktajs/components").Resource;
   const Pantura: typeof import("raktajs/components").Pantura;
   const Reborns: typeof import("raktajs/components").Reborns;
   const usePantura: typeof import("raktajs/components").usePantura;

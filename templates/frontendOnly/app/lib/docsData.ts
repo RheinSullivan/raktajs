@@ -1,5 +1,5 @@
-// Data artikel untuk DocsModal (System Manual)
-// Dipisah dari komponen supaya DocsModal.tsx hanya bertugas render dan navigasi.
+// Data artikel untuk docs view (System Manual)
+// Dipisah dari komponen supaya the docs view hanya bertugas render dan navigasi.
 
 export interface Article {
 	id: string;

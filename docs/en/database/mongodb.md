@@ -13,13 +13,13 @@ Use MongoDB when your application has:
 
 ## Installation
 
-### Node.js / Bun — Mongoose
+### Node.js / Bun - Mongoose
 
 ```bash
 bun add mongoose
 ```
 
-### Node.js / Bun — Official MongoDB Driver
+### Node.js / Bun - Official MongoDB Driver
 
 ```bash
 bun add mongodb
@@ -248,8 +248,8 @@ docker run -d \
 
 ## Production
 
-- **MongoDB Atlas** — fully managed, multi-region, with built-in search
-- **DigitalOcean Managed MongoDB** — simple cloud MongoDB
+- **MongoDB Atlas** - fully managed, multi-region, with built-in search
+- **DigitalOcean Managed MongoDB** - simple cloud MongoDB
 - **Self-hosted** on VPS with replica sets for high availability
 
 ## Architecture Summary

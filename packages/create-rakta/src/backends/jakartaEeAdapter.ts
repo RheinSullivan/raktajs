@@ -20,7 +20,7 @@ export const jakartaEeCapabilities: BackendCapabilities = {
 
 export const jakartaEeAdapter: BackendAdapter = {
 	identifier: "jakarta-ee",
-	name: "Jakarta EE / J2EE",
+	name: "Jakarta EE 10 / J2EE",
 	language: "Java",
 	runtime: "Java / JVM",
 	capabilities: jakartaEeCapabilities,

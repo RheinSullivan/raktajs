@@ -63,7 +63,7 @@ import { databaseClient } from "@wowoengine/sawitdb-ts";
 
 const SAWIT_FILE = process.env.SAWITDB_FILE ?? "./data/app.sawit";
 
-// Connect to the SawitDB file — created automatically if it doesn't exist
+// Connect to the SawitDB file - created automatically if it doesn't exist
 export const db = await databaseClient.connect(SAWIT_FILE, {
   pageSize: Number(process.env.SAWITDB_PAGE_SIZE ?? 4096),
   wal: process.env.SAWITDB_WAL === "true",
@@ -220,7 +220,7 @@ export default function UsersPage() {
 }
 ```
 
-## AQL — Agricultural Query Language
+## AQL - Agricultural Query Language
 
 SawitDB supports both standard SQL subset and AQL extensions. AQL adds syntax inspired by data farming concepts:
 

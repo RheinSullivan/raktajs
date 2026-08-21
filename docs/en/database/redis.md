@@ -1,15 +1,15 @@
 # Redis
 
-Redis is an in-memory data structure store used as a cache, session store, message broker, and rate-limiting backend. In Rakta.js applications, Redis typically sits as a layer between the backend and the database — it does not serve as the primary persistent store.
+Redis is an in-memory data structure store used as a cache, session store, message broker, and rate-limiting backend. In Rakta.js applications, Redis typically sits as a layer between the backend and the database - it does not serve as the primary persistent store.
 
 ## When to Use
 
 Use Redis for:
-- **Session management** — store user sessions server-side with automatic TTL expiry
-- **Caching** — cache expensive database queries or API responses
-- **Rate limiting** — count requests per IP per time window
-- **Real-time pub/sub** — broadcast events between backend services
-- **Job queues** — offload background processing (email, image resizing)
+- **Session management** - store user sessions server-side with automatic TTL expiry
+- **Caching** - cache expensive database queries or API responses
+- **Rate limiting** - count requests per IP per time window
+- **Real-time pub/sub** - broadcast events between backend services
+- **Job queues** - offload background processing (email, image resizing)
 
 Redis is not a primary relational database. Pair it with PostgreSQL, MySQL, or MongoDB for persistent data.
 
@@ -292,10 +292,10 @@ PONG
 
 ## Production
 
-- **Upstash** — serverless Redis, pay-per-request, edge-compatible
-- **Redis Cloud** — managed Redis with clustering and persistence
-- **AWS ElastiCache** — enterprise managed Redis
-- **Railway** — simple cloud Redis deployment
+- **Upstash** - serverless Redis, pay-per-request, edge-compatible
+- **Redis Cloud** - managed Redis with clustering and persistence
+- **AWS ElastiCache** - enterprise managed Redis
+- **Railway** - simple cloud Redis deployment
 
 ## Architecture Summary
 

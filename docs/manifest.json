@@ -64,8 +64,8 @@
 				"path": "/en/backends/php/laravel.md"
 			},
 			{
-				"id": "codeigniter",
-				"title": "CodeIgniter",
+				"id": "CodeIgniter 4",
+				"title": "CodeIgniter 4",
 				"path": "/en/backends/php/codeigniter.md"
 			},
 			{
@@ -84,8 +84,8 @@
 				"path": "/en/backends/go/prabogo.md"
 			},
 			{
-				"id": "beego",
-				"title": "Beego",
+				"id": "Beego v2",
+				"title": "Beego v2",
 				"path": "/en/backends/go/beego.md"
 			},
 			{
@@ -94,18 +94,18 @@
 				"path": "/en/backends/ruby/rails.md"
 			},
 			{
-				"id": "hanami",
-				"title": "Hanami",
+				"id": "Hanami 2.x",
+				"title": "Hanami 2.x",
 				"path": "/en/backends/ruby/hanami.md"
 			},
 			{
 				"id": "springBoot",
-				"title": "Spring Boot",
+				"title": "Spring Boot 3.x",
 				"path": "/en/backends/java/spring-boot.md"
 			},
 			{
 				"id": "jakartaEe",
-				"title": "Jakarta EE / J2EE",
+				"title": "Jakarta EE 10 / J2EE",
 				"path": "/en/backends/java/jakarta-ee.md"
 			},
 			{
@@ -400,8 +400,8 @@
 				"path": "/id/backends/php/laravel.md"
 			},
 			{
-				"id": "codeigniter",
-				"title": "CodeIgniter",
+				"id": "CodeIgniter 4",
+				"title": "CodeIgniter 4",
 				"path": "/id/backends/php/codeigniter.md"
 			},
 			{
@@ -420,8 +420,8 @@
 				"path": "/id/backends/go/prabogo.md"
 			},
 			{
-				"id": "beego",
-				"title": "Beego",
+				"id": "Beego v2",
+				"title": "Beego v2",
 				"path": "/id/backends/go/beego.md"
 			},
 			{
@@ -430,18 +430,18 @@
 				"path": "/id/backends/ruby/rails.md"
 			},
 			{
-				"id": "hanami",
-				"title": "Hanami",
+				"id": "Hanami 2.x",
+				"title": "Hanami 2.x",
 				"path": "/id/backends/ruby/hanami.md"
 			},
 			{
 				"id": "springBoot",
-				"title": "Spring Boot",
+				"title": "Spring Boot 3.x",
 				"path": "/id/backends/java/spring-boot.md"
 			},
 			{
 				"id": "jakartaEe",
-				"title": "Jakarta EE / J2EE",
+				"title": "Jakarta EE 10 / J2EE",
 				"path": "/id/backends/java/jakarta-ee.md"
 			},
 			{

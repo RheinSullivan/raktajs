@@ -1,6 +1,6 @@
 # Turso
 
-Turso is a distributed SQLite database built on libSQL, a fork of SQLite maintained by ChiselStrike. It provides globally distributed edge reads, low latency, and a familiar SQLite interface — with a generous free tier.
+Turso is a distributed SQLite database built on libSQL, a fork of SQLite maintained by ChiselStrike. It provides globally distributed edge reads, low latency, and a familiar SQLite interface - with a generous free tier.
 
 ## When to Use
 
@@ -287,7 +287,7 @@ Rakta.js page
   ↓ createRaktaHttp
 Backend route (Gaman.js / Hono.js / Bun)
   ↓ @libsql/client (HTTP or WSS)
-Turso (libSQL edge replica — closest region)
+Turso (libSQL edge replica - closest region)
   ↓ SQLite query result rows
 JSON response
   ↓

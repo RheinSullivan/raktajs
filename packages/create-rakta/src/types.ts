@@ -93,15 +93,15 @@ export const BACKEND_DISPLAY: Record<BackendFramework, string> = {
 	adonis: "Adonis.js (JavaScript / TypeScript)",
 	hono: "Hono.js (JavaScript / TypeScript)",
 	laravel: "Laravel (PHP)",
-	codeigniter: "CodeIgniter (PHP)",
+	codeigniter: "CodeIgniter 4 (PHP)",
 	flask: "Flask (Python)",
 	django: "Django (Python)",
 	prabogo: "Prabogo (Go)",
-	beego: "Beego (Go)",
+	beego: "Beego v2 (Go)",
 	rails: "Ruby on Rails (Ruby)",
-	hanami: "Hanami (Ruby)",
-	"spring-boot": "Spring Boot (Java)",
-	"jakarta-ee": "Jakarta EE / J2EE (Java)",
+	hanami: "Hanami 2.x (Ruby)",
+	"spring-boot": "Spring Boot 3.x (Java)",
+	"jakarta-ee": "Jakarta EE 10 / J2EE (Java)",
 };
 
 export const DATABASE_DISPLAY: Record<Database, string> = {

@@ -79,7 +79,6 @@ Assalamu'alaikum Warahmatullahi Wabarakatuh · Shalom · Om Swastiastu · Namo B
   <td width="50%" valign="top">
 
   **English**
-
   Rakta.js was created by **Muhammad Rizky Ramadhan**, a software developer from **Cirebon & South Jakarta, Indonesia**, known in the developer community as **Rhein Sullivan**, lead of **Vyagra Nexus™**.
 
   The vision behind Rakta.js is simple: stop repeating the same setup across every project. Features like *file-based routing*, *auto-import with zero manual import statements*, *type-safe RPC*, an integrated *frontend-backend monolith* architecture, and *built-in authentication* are all available in one unified package no fragmentation, no layered configuration, no fighting your tools.
@@ -90,7 +89,6 @@ Assalamu'alaikum Warahmatullahi Wabarakatuh · Shalom · Om Swastiastu · Namo B
   <td width="50%" valign="top">
 
   **Bahasa Indonesia**
-
   Rakta.js diciptakan oleh **Muhammad Rizky Ramadhan**, pengembang perangkat lunak asal **Cirebon & Jakarta Selatan, Indonesia**, yang dikenal di komunitas developer sebagai **Rhein Sullivan**, ketua dari tim **Vyagra Nexus™**.
 
   Visi di balik Rakta.js sederhana: berhenti mengulang setup yang sama di setiap project. Fitur-fitur seperti *routing berbasis file*, *auto-import tanpa satu pun pernyataan import manual*, *RPC type-safe*, arsitektur *monolith frontend-backend*, dan *autentikasi bawaan* tersedia dalam satu paket terpadu tanpa fragmentasi, tanpa konfigurasi berlapis, tanpa bersaing dengan tools sendiri.
@@ -106,7 +104,6 @@ Assalamu'alaikum Warahmatullahi Wabarakatuh · Shalom · Om Swastiastu · Namo B
 ## About Rakta.js | Tentang Rakta.js
 
 **English**
-
 Rakta.js is a lightweight, composable frontend framework built on React, Bun, and TypeScript. It provides file-based routing, flexible rendering modes (CSR, SSR, SSG, SPA, Hybrid), SEO tooling, PWA support, type-safe RPC, state management, schema validation, an HTTP client, and a project generator all in one package.
 
 The name **Rakta** comes from Sanskrit. It means red, life energy, courage, strength, identity, and movement. There is also a quiet reminder inside this name: when ordinary people carry heavy days in silence, every small tool should help them build something that truly belongs to them not something that keeps them waiting at the gate.
@@ -114,7 +111,6 @@ The name **Rakta** comes from Sanskrit. It means red, life energy, courage, stre
 The shrimp mascot represents Cirebon, a coastal city in West Java, Indonesia. Cirebon is known for its shrimp culture, the *Trusmi* batik craftsmanship, *Mega Mendung* cloud motifs, and its royal kraton heritage. Rakta.js uses this identity as a living foundation not as decoration, but as a real part of who built it and why.
 
 **Bahasa Indonesia**
-
 Rakta.js adalah Frontend Framework ringan yang dibangun di atas React, Bun, dan TypeScript. Tersedia routing berbasis file, berbagai mode rendering (CSR, SSR, SSG, SPA, Hybrid), SEO tooling, PWA, RPC type-safe, state management, validasi schema, HTTP client, dan generator project semuanya dalam satu paket.
 
 Nama **Rakta** berasal dari bahasa Sansekerta. Artinya merah, energi hidup, keberanian, kekuatan, identitas, dan gerak. Di dalam nama ini juga ada pengingat kecil: ketika orang biasa menanggung hari yang berat dalam diam, setiap tool kecil seharusnya membantu mereka membangun sesuatu yang benar-benar milik mereka bukan sesuatu yang membuat mereka terus menunggu di depan gerbang.
@@ -126,9 +122,7 @@ Maskot udang mewakili Cirebon, kota pesisir di Jawa Barat. Cirebon dikenal denga
 ## Philosophy | Filosofi
 
 **English**
-
 The core engineering principles of Rakta.js:
-
 1. **Reduce Repetitive Setup:** Provide coherent defaults so developers spend time building application logic instead of assembling toolchains.
 2. **Cohesive Framework Primitives:** Keep routing, state management, schema validation, HTTP requests, and RPC integrated within a single core API.
 3. **Preserve Developer Control:** Allow explicit configuration overrides for rendering modes, routing rules, and server options without opaque magic.
@@ -136,9 +130,7 @@ The core engineering principles of Rakta.js:
 5. **Ecosystem Compatibility:** Provide first-class project generators and integration paths for popular backend frameworks across multiple language ecosystems.
 
 **Bahasa Indonesia**
-
 Prinsip rekayasa utama Rakta.js:
-
 1. **Mengurangi Setup Berulang:** Menyediakan default yang terpadu agar pengembang fokus membangun logika aplikasi alih-alih merakit toolchain.
 2. **Primitif Framework yang Terpadu:** Menjaga routing, state management, validasi schema, HTTP request, dan RPC terintegrasi dalam satu API utama.
 3. **Menjaga Kontrol Pengembang:** Memungkinkan override konfigurasi eksplisit untuk mode rendering, aturan routing, dan opsi server tanpa keajaiban tersembunyi.
@@ -150,7 +142,6 @@ Prinsip rekayasa utama Rakta.js:
 ## Vision & Mission | Visi & Misi
 
 **English**
-
 - **Vision:** Make Rakta.js a practical, reliable fullstack web framework ecosystem that enables developers to build, test, document, and deploy production web applications efficiently.
 - **Mission:**
   1. Eliminate boilerplate setup across frontend and backend layers.
@@ -160,7 +151,6 @@ Prinsip rekayasa utama Rakta.js:
   5. Maintain complete English and Indonesian documentation.
 
 **Bahasa Indonesia**
-
 - **Visi:** Menjadikan Rakta.js sebagai ekosistem framework web fullstack yang praktis dan andal untuk membangun, menguji, mendokumentasikan, dan mempublikasikan aplikasi web produksi secara efisien.
 - **Misi:**
   1. Mengeliminasi setup boilerplate pada layer frontend dan backend.
@@ -210,63 +200,36 @@ Untuk dokumentasi lengkap dan panduan detail fitur, arsitektur, serta API publik
 
 ## Installation | Instalasi
 
-**English** There are multiple ways to create a new Rakta.js project. The recommended way is using Bun, but npm, pnpm, and yarn all work too.
+Create a project with any supported package manager:
 
-**Bahasa Indonesia** Ada beberapa cara untuk membuat project Rakta.js baru. Cara yang direkomendasikan adalah menggunakan Bun, tapi npm, pnpm, dan yarn juga bisa.
-
-### Using Bun (Recommended | Direkomendasikan)
-
+Buat project dengan package manager yang kamu pakai:
 ```bash
+# Bun (recommended)
 bun create rakta-app@latest my-app
-```
-
-### Using npm
-
-```bash
-npm create rakta-app@latest my-app
-```
-
-### Using pnpm
-
-```bash
-pnpm create rakta-app@latest my-app
-```
-
-### Using Yarn
-
-```bash
-yarn create rakta-app my-app
-```
-
-### Using bunx / npx directly
-
-```bash
-# Bun
-bunx create-rakta-app@latest my-app
 
 # npm
+npm create rakta-app@latest my-app
+
+# pnpm
+pnpm create rakta-app@latest my-app
+
+# Yarn
+yarn create rakta-app my-app
+
+# Direct runners
+bunx create-rakta-app@latest my-app
 npx create-rakta-app@latest my-app
-```
 
-After creating the project, move into the folder and start the dev server:
-
-Setelah membuat project, masuk ke folder dan jalankan dev server:
-
-```bash
+# Start development
 cd my-app
 bun run dev
 ```
 
-Dependencies are installed automatically by `create-rakta-app`. If you intentionally used `--no-install`, run `bun install` once before `bun run dev`.
+Dependencies are installed automatically by `create-rakta-app`. If you use `--no-install`, run `bun install` once before `bun run dev`. The dev server runs at `http://localhost:3000` by default.
 
-Dependencies otomatis di-install oleh `create-rakta-app`. Jika kamu sengaja memakai `--no-install`, jalankan `bun install` sekali sebelum `bun run dev`.
-
-The dev server runs at `http://localhost:3000` by default.
-
-Dev server berjalan di `http://localhost:3000` secara default.
+Dependencies otomatis di-install oleh `create-rakta-app`. Jika memakai `--no-install`, jalankan `bun install` sebelum `bun run dev`. Dev server berjalan di `http://localhost:3000` secara default.
 
 ---
-
 ## Project Modes | Mode Project
 
 **English** When you run `create-rakta-app`, you will be asked to choose between two project modes. Both modes are production-ready out of the box.
@@ -315,9 +278,9 @@ Mode ini **tidak** menghasilkan file server-only.
 
 ### Fullstack App (Powered by Gaman.js & Multi-Backend Adapters)
 
-**English** Use this when you need both a frontend and a backend in one monorepo. Fullstack Rakta.js defaults to **Gaman.js** a lightweight functional-first Bun server framework. You can also select alternative backend options such as **Laravel (PHP + MySQL)**, Nest.js, Express.js, Adonis.js, Flask, Prabogo (Go), Ruby on Rails, or Spring Boot.
+**English** Use this when you need both a frontend and a backend in one monorepo. Fullstack Rakta.js defaults to **Gaman.js** a lightweight functional-first Bun server framework. You can also select alternative backend options such as **Laravel (PHP + MySQL)**, Nest.js, Express.js, Adonis.js, Flask, Prabogo (Go), Ruby on Rails, or Spring Boot 3.x.
 
-**Bahasa Indonesia** Gunakan ini saat kamu butuh frontend dan backend sekaligus dalam satu monorepo. Fullstack Rakta.js menggunakan default **Gaman.js** framework server Bun berbasis fungsional yang ringan. Kamu juga bisa memilih alternatif backend seperti **Laravel (PHP + MySQL)**, Nest.js, Express.js, Adonis.js, Flask, Prabogo (Go), Ruby on Rails, atau Spring Boot.
+**Bahasa Indonesia** Gunakan ini saat kamu butuh frontend dan backend sekaligus dalam satu monorepo. Fullstack Rakta.js menggunakan default **Gaman.js** framework server Bun berbasis fungsional yang ringan. Kamu juga bisa memilih alternatif backend seperti **Laravel (PHP + MySQL)**, Nest.js, Express.js, Adonis.js, Flask, Prabogo (Go), Ruby on Rails, atau Spring Boot 3.x.
 
 ```bash
 bun create rakta-app@latest my-fullstack
@@ -372,148 +335,46 @@ my-fullstack/
 
 ---
 
-## Backend Ecosystem | Ekosistem Backend
+## Backend & Database Integrations | Integrasi Backend & Database
 
-Gaman.js is the default backend for fullstack Rakta.js projects.
+Detailed backend and database guides live in `docs/`, not in the root README.
 
-### JavaScript / TypeScript
+Panduan backend dan database lengkap ada di `docs/`, bukan di README root.
 
-| Framework | Role |
-| --- | --- |
-| Gaman.js | Default and powered backend |
-| Nest.js | Structured Node.js backend |
-| Express.js | Minimal Node.js backend |
-| Adonis.js | TypeScript-first full-featured Node.js backend |
-| Hono.js | Web-standard, multi-runtime JavaScript backend |
+- Backend integrations: [English](./docs/en/backendFrameworks.md) | [Indonesia](./docs/id/backendFramework.md)
+- Database integrations: [English](./docs/en/database/README.md) | [Indonesia](./docs/id/database/README.md)
+- Data seeders for testing: [English](./docs/en/dataSeeders.md) | [Indonesia](./docs/id/dataSeeders.md)
 
-### PHP
+Supported backend list: Gaman.js, Nest.js, Express.js, Adonis.js, Hono.js, Laravel, CodeIgniter 4, Flask, Django, Prabogo, Beego v2, Ruby on Rails, Hanami 2.x, Spring Boot 3.x, and Jakarta EE 10 / J2EE.
 
-| Framework |
-| --- |
-| Laravel |
-| CodeIgniter |
-
-### Python
-
-| Framework |
-| --- |
-| Flask |
-| Django |
-
-### Go
-
-| Framework |
-| --- |
-| Prabogo |
-| Beego |
-
-### Ruby
-
-| Framework |
-| --- |
-| Ruby on Rails |
-| Hanami |
-
-### Java
-
-| Framework / Platform |
-| --- |
-| Spring Boot |
-| Jakarta EE / J2EE |
-
-## Databases | Database
-
-SawitDB is supported as a database adapter within the Rakta ecosystem.
-
-| Database | Description |
-| --- | --- |
-| PostgreSQL | Relational database (recommended) |
-| MySQL | Relational database |
-| SawitDB | Rakta ecosystem single-file database engine |
-| Oracle Database | Enterprise relational database |
-| SQLite | Embedded SQL database |
-| MongoDB | Document-oriented database |
-| Firebase | Realtime cloud database |
-| MariaDB | Relational database |
-| Redis | In-memory data store |
-| PlanetScale | Serverless MySQL platform |
-| Neon | Serverless PostgreSQL platform |
-| Turso | Serverless SQLite platform |
+Supported database list: SawitDB, Oracle Database, PostgreSQL, MySQL, SQLite, MongoDB, Firebase, MariaDB, Redis, PlanetScale, Neon, and Turso.
 
 ---
 
-## 10 Official Custom Tags & Primitives | 10 Tag Kustom & Primitif Resmi
+## 10 Official Custom Tags | 10 Tag Kustom Resmi
 
-Rakta.js includes **EXACTLY 10 official custom tags and primitives** designed for application intent, instant navigation, boundaries, and declarative metadata:
+Rakta.js has exactly 10 official custom tags:
 
-| Primitive Tag | Purpose | Ideal Use Case |
-| --- | --- | --- |
-| `<click to="/path">` | Client-side SPA navigation | Instant route transitions |
-| `<picture path="/img.png">` | Optimized responsive image | Lazy loading & CLS prevention |
-| `<pantura to="section">` | Smooth section scroll trigger | Single-page section scroll |
-| `<reborns id="section">` | Section scroll target marker | Target anchor for `<pantura>` |
-| `<lazy fallback={...}>` | Deferred rendering boundary | Component loading fallback |
-| `<guard isAllowed={...}>` | Route authorization protection | Role & permission UI guard |
-| `<seal fallback={...}>` | Component error boundary | Runtime exception safety |
-| `<form action="...">` | Form wrapper primitive | Auto-CSRF token injection |
-| `<title>` | Declarative document title | Dynamic page tab title |
-| `<shelf storageKey="...">` | Local state persistence | Automatic `localStorage` sync |
+`<click>`, `<picture>`, `<lazy>`, `<guard>`, `<seal>`, `<shelf>`, `<island>`, `<prefetch>`, `<route>`, and `<resource>`.
+
+The compatibility tags `<pantura>`, `<reborns>`, `<form>`, and `<title>` remain supported and documented, but are not counted as official custom tags.
+
+See [Custom Tags](./docs/en/customTags.md) for props, runtime behavior, and examples.
 
 ---
-
-## Data Seeders for Testing | Data Seeder untuk Pengujian
-
-**English** Gaman.js backend includes built-in database seeders located in `backend/src/database/seeders/`. Seeders automatically populate initial mock users, CMS posts, and test data during startup or on-demand testing commands.
-
-**Bahasa Indonesia** Backend Gaman.js memiliki seeder database bawaan di folder `backend/src/database/seeders/`. Seeder secara otomatis mengisi mock data user, artikel CMS, dan data pengujian saat aplikasi startup atau saat menjalankan perintah testing.
-
-Run database seeders manually:
-
-Jalankan data seeder secara manual:
-
-```bash
-cd backend
-bun run db:seed
-```
-
-Or via code in your entry point:
-
-Atau via kode di entry point:
-
-```ts
-import { runDatabaseSeeders } from "./database/seeders/index";
-
-await runDatabaseSeeders();
-```
-
----
-
 ## Documentation & Features | Dokumentasi & Fitur
 
-**English**
-For detailed guides and complete code examples on all Rakta.js features (Rendering Modes, Public Components `<click>` / `<picture>` / `<pantura>`, Schema Validation, Type-Safe RPC, Kernel & Plugin System, Auto Import, Security, and Deployment), please refer to the official documentation in the `docs/` folder:
+Use the documentation pages for the detailed guides:
 
-- **[Getting Started Guide](./docs/en/gettingStarted.md)**
-- **[API Reference](./docs/en/apiReference.md)**
-- **[Architecture & Core Kernel](./docs/en/architecture.md)**
-- **[Routing & Rendering Modes](./docs/en/routing.md)**
-- **[Type-Safe RPC & Data](./docs/en/rpc.md)**
-- **[Middleware & Security](./docs/en/security.md)**
-- **[Deployment Adapters](./docs/en/deployment.md)**
-
-**Bahasa Indonesia**
-Untuk panduan detail dan contoh kode lengkap mengenai seluruh fitur Rakta.js (Mode Rendering, Komponen Publik `<click>` / `<picture>` / `<pantura>`, Validasi Schema, RPC Type-Safe, Sistem Kernel & Plugin, Auto Import, Keamanan, dan Deployment), silakan buka dokumentasi resmi pada folder `docs/`:
-
-- **[Panduan Memulai](./docs/id/gettingStarted.md)**
-- **[Referensi API](./docs/id/apiReference.md)**
-- **[Arsitektur & Inti Kernel](./docs/id/architecture.md)**
-- **[Routing & Mode Rendering](./docs/id/routing.md)**
-- **[RPC Type-Safe & Data](./docs/id/rpc.md)**
-- **[Middleware & Keamanan](./docs/id/security.md)**
-- **[Adapter Deployment](./docs/id/deployment.md)**
+Gunakan halaman dokumentasi untuk panduan lengkap:
+- Documentation: [English](./docs/en/gettingStarted.md) | [Indonesia](./docs/id/gettingStarted.md)
+- Custom tags: [English](./docs/en/customTags.md) | [Indonesia](./docs/id/customTags.md)
+- Backend integrations: [English](./docs/en/backendFrameworks.md) | [Indonesia](./docs/id/backendFramework.md)
+- Database integrations: [English](./docs/en/database/README.md) | [Indonesia](./docs/id/database/README.md)
+- Roadmap: [English](./docs/en/roadmap.md) | [Indonesia](./docs/id/roadmap.md)
+- Architecture: [English](./docs/en/architecture.md) | [Indonesia](./docs/id/architecture.md)
 
 ---
-
 ## Roadmap
 
 | Priority | Focus (EN) | Fokus (ID) |

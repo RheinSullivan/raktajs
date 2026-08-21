@@ -258,10 +258,10 @@ docker run -d \
 ## Production
 
 Use managed PostgreSQL providers:
-- **Neon** — serverless PostgreSQL, great for edge/serverless
-- **Supabase** — PostgreSQL with built-in auth and realtime
-- **AWS RDS** — enterprise managed PostgreSQL
-- **DigitalOcean Managed Database** — simple cloud PostgreSQL
+- **Neon** - serverless PostgreSQL, great for edge/serverless
+- **Supabase** - PostgreSQL with built-in auth and realtime
+- **AWS RDS** - enterprise managed PostgreSQL
+- **DigitalOcean Managed Database** - simple cloud PostgreSQL
 
 ## Architecture Summary
 

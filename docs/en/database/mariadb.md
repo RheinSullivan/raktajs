@@ -22,7 +22,7 @@ bun add mysql2
 
 ### PHP (Laravel)
 
-Set `DB_CONNECTION=mysql` in `.env` — Laravel treats MariaDB as MySQL internally.
+Set `DB_CONNECTION=mysql` in `.env` - Laravel treats MariaDB as MySQL internally.
 
 ### Python
 

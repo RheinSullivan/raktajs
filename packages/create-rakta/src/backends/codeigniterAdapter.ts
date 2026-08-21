@@ -20,7 +20,7 @@ export const codeigniterCapabilities: BackendCapabilities = {
 
 export const codeigniterAdapter: BackendAdapter = {
 	identifier: "codeigniter",
-	name: "CodeIgniter",
+	name: "CodeIgniter 4",
 	language: "PHP",
 	runtime: "PHP",
 	capabilities: codeigniterCapabilities,

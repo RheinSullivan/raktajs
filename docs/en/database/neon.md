@@ -8,7 +8,7 @@ Use Neon when:
 - You need PostgreSQL on a serverless backend (Vercel, Cloudflare Workers, AWS Lambda)
 - You want instant database branching for development and preview environments
 - You want auto-scaling that scales to zero during idle periods to save cost
-- Your application uses Drizzle, Prisma, or raw `pg` — all are compatible with Neon
+- Your application uses Drizzle, Prisma, or raw `pg` - all are compatible with Neon
 
 ## Installation
 
@@ -159,7 +159,7 @@ export default function AnalyticsPage() {
 
   return (
     <main>
-      <title>Analytics — Top Pages</title>
+      <title>Analytics - Top Pages</title>
       <lazy fallback={<p>Loading analytics...</p>}>
         <table>
           <thead>

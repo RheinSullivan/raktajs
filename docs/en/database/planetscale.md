@@ -176,7 +176,7 @@ export default function OrdersPage() {
           <ul>
             {orders.map((o) => (
               <li key={o.id}>
-                Order #{o.id} — ${o.total} — <strong>{o.status}</strong>
+                Order #{o.id} - ${o.total} - <strong>{o.status}</strong>
               </li>
             ))}
           </ul>
@@ -210,7 +210,7 @@ pscale deploy-request create your-db feature/add-shipping
 PlanetScale supports non-blocking schema changes without table locks:
 
 ```sql
--- Run directly on a branch — no ALTER TABLE locks
+-- Run directly on a branch - no ALTER TABLE locks
 ALTER TABLE orders ADD COLUMN shipping_address TEXT;
 ```
 

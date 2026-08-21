@@ -135,7 +135,7 @@ export default defineRoute({
 
 ## Rakta.js Frontend Integration
 
-### Option 1 — Via Backend API (recommended)
+### Option 1 - Via Backend API (recommended)
 
 ```typescript
 // frontend/services/posts.ts
@@ -149,7 +149,7 @@ export async function fetchPosts() {
 }
 ```
 
-### Option 2 — Direct Firestore with real-time updates
+### Option 2 - Direct Firestore with real-time updates
 
 ```typescript
 // frontend/services/firebase.ts

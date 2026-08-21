@@ -20,7 +20,7 @@ export const beegoCapabilities: BackendCapabilities = {
 
 export const beegoAdapter: BackendAdapter = {
 	identifier: "beego",
-	name: "Beego",
+	name: "Beego v2",
 	language: "Go",
 	runtime: "Go",
 	capabilities: beegoCapabilities,

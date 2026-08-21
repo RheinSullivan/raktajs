@@ -15,11 +15,11 @@ SQLite is not designed for multi-server setups or high-concurrency writes. For t
 
 ## Installation
 
-### Bun — Native (zero dependencies)
+### Bun - Native (zero dependencies)
 
 Bun includes SQLite natively via the `bun:sqlite` module. No extra package needed.
 
-### Node.js — better-sqlite3
+### Node.js - better-sqlite3
 
 ```bash
 bun add better-sqlite3
@@ -66,7 +66,7 @@ project/
 
 ## Backend Integration
 
-### Bun — Native SQLite
+### Bun - Native SQLite
 
 ```typescript
 // backend/db/sqlite.ts

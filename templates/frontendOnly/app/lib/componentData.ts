@@ -1,4 +1,4 @@
-// Data komponen demo untuk ComponentsModal (Component Library)
+// Data komponen demo untuk component library
 // NOTE: Rakta.js Auto Import menyediakan ReactNode secara global.
 
 export interface ComponentItem {
@@ -12,7 +12,7 @@ export interface ComponentItem {
 	code: string;
 }
 
-// Data ini dipakai di ComponentsModal , preview function berisi JSX
+// Data ini dipakai di component library , preview function berisi JSX
 // sehingga tetap berada di sini sebagai data, bukan inline di komponen.
 export const COMPONENT_IDS = [
 	"button",

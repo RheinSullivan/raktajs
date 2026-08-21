@@ -248,6 +248,10 @@ import {
 	Form,
 	Title,
 	Shelf,
+	Island,
+	Prefetch,
+	Route,
+	Resource,
 	Pantura,
 	Reborns,
 	usePantura,
@@ -324,6 +328,14 @@ ${devIndicatorImport}
 (globalThis as typeof globalThis & Record<string, unknown>).title = Title;
 (globalThis as typeof globalThis & Record<string, unknown>).Shelf = Shelf;
 (globalThis as typeof globalThis & Record<string, unknown>).shelf = Shelf;
+(globalThis as typeof globalThis & Record<string, unknown>).Island = Island;
+(globalThis as typeof globalThis & Record<string, unknown>).island = Island;
+(globalThis as typeof globalThis & Record<string, unknown>).Prefetch = Prefetch;
+(globalThis as typeof globalThis & Record<string, unknown>).prefetch = Prefetch;
+(globalThis as typeof globalThis & Record<string, unknown>).Route = Route;
+(globalThis as typeof globalThis & Record<string, unknown>).route = Route;
+(globalThis as typeof globalThis & Record<string, unknown>).Resource = Resource;
+(globalThis as typeof globalThis & Record<string, unknown>).resource = Resource;
 (globalThis as typeof globalThis & Record<string, unknown>).Pantura = Pantura;
 (globalThis as typeof globalThis & Record<string, unknown>).Reborns = Reborns;
 (globalThis as typeof globalThis & Record<string, unknown>).usePantura = usePantura;
@@ -478,6 +490,20 @@ pantura * {
 reborns {
   display: contents;
 }
+
+lazy,
+guard,
+seal,
+shelf,
+island,
+prefetch,
+route {
+  display: contents;
+}
+
+resource {
+  display: none;
+}
 \`;
 document.head.appendChild(raktaElementStyle);
 
@@ -527,6 +553,158 @@ function syncPhotoElement(photoElement: Element): void {
   imageElement.decoding = photoElement.getAttribute("priority") === "true" ? "sync" : "async";
 }
 
+function syncGuardElement(guardElement: Element): void {
+  const rawAllowed =
+    guardElement.getAttribute("isallowed") ??
+    guardElement.getAttribute("isAllowed") ??
+    guardElement.getAttribute("allowed");
+  const isAllowed = rawAllowed === "" || rawAllowed === "true" || rawAllowed === "1";
+  guardElement.toggleAttribute("hidden", !isAllowed);
+  guardElement.setAttribute("aria-hidden", isAllowed ? "false" : "true");
+}
+
+function syncLazyElement(lazyElement: Element): void {
+  if (lazyElement.getAttribute("data-rakta-ready") === "true") {
+    return;
+  }
+
+  const rawDelay = Number(lazyElement.getAttribute("delayms") ?? lazyElement.getAttribute("delayMs") ?? "0");
+  const delayMs = Number.isFinite(rawDelay) ? Math.max(0, rawDelay) : 0;
+  lazyElement.setAttribute("aria-busy", "true");
+
+  window.setTimeout(() => {
+    lazyElement.setAttribute("data-rakta-ready", "true");
+    lazyElement.setAttribute("aria-busy", "false");
+  }, delayMs);
+}
+
+function syncShelfElement(shelfElement: Element): void {
+  const storageKey = shelfElement.getAttribute("storagekey") ?? shelfElement.getAttribute("storageKey");
+  if (!storageKey || shelfElement.getAttribute("data-rakta-shelf-ready") === "true") {
+    return;
+  }
+
+  try {
+    const savedState = window.localStorage.getItem(storageKey);
+    if (savedState !== null) {
+      const values = JSON.parse(savedState) as Record<string, string>;
+      shelfElement.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>("input[name], textarea[name], select[name]").forEach((field) => {
+        const fieldName = field.getAttribute("name");
+        if (fieldName && values[fieldName] !== undefined) {
+          field.value = values[fieldName];
+        }
+      });
+    }
+  } catch {}
+
+  shelfElement.addEventListener("input", () => {
+    const values: Record<string, string> = {};
+    shelfElement.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>("input[name], textarea[name], select[name]").forEach((field) => {
+      const fieldName = field.getAttribute("name");
+      if (fieldName) {
+        values[fieldName] = field.value;
+      }
+    });
+    try {
+      window.localStorage.setItem(storageKey, JSON.stringify(values));
+    } catch {}
+  });
+
+  shelfElement.setAttribute("data-rakta-shelf-ready", "true");
+}
+
+function appendHintLink(rel: string, href: string, as?: string | null): void {
+  const absoluteHref = new URL(href, window.location.origin).href;
+  const selector = \`link[rel="\${rel}"][href="\${absoluteHref}"]\`;
+  const existing = document.querySelector<HTMLLinkElement>(selector);
+
+  if (existing) {
+    return;
+  }
+
+  const link = document.createElement("link");
+  link.rel = rel;
+  link.href = absoluteHref;
+  if (as) {
+    link.as = as;
+  }
+  document.head.appendChild(link);
+}
+
+function syncPrefetchElement(prefetchElement: Element): void {
+  const to = prefetchElement.getAttribute("to");
+  if (!to) {
+    return;
+  }
+
+  const as = prefetchElement.getAttribute("as") ?? "document";
+  const when = prefetchElement.getAttribute("when") ?? "mount";
+
+  if (when === "mount") {
+    appendHintLink("prefetch", to, as);
+  }
+}
+
+function syncResourceElement(resourceElement: Element): void {
+  const href = resourceElement.getAttribute("href");
+  if (!href) {
+    return;
+  }
+
+  const rel = resourceElement.getAttribute("rel") ?? "preload";
+  const as = resourceElement.getAttribute("as");
+  appendHintLink(rel, href, as);
+}
+
+function syncRouteElement(routeElement: Element): void {
+  const path = routeElement.getAttribute("path");
+  if (!path) {
+    return;
+  }
+
+  const exact = routeElement.getAttribute("exact") !== "false";
+  const currentPathname = window.location.pathname;
+  const normalizedPath = path.replace(/\\/$/, "");
+  const matches = exact
+    ? currentPathname === path
+    : currentPathname === path || currentPathname.startsWith(\`\${normalizedPath}/\`);
+
+  routeElement.toggleAttribute("hidden", !matches);
+  routeElement.setAttribute("aria-hidden", matches ? "false" : "true");
+}
+
+function syncIslandElement(islandElement: Element): void {
+  const mode = islandElement.getAttribute("mode") ?? "load";
+
+  if (islandElement.getAttribute("data-rakta-ready") === "true") {
+    return;
+  }
+
+  const markReady = () => {
+    islandElement.setAttribute("data-rakta-ready", "true");
+    islandElement.dispatchEvent(new CustomEvent("rakta:island-ready", { bubbles: true }));
+  };
+
+  if (mode === "idle") {
+    const requestIdle = window.requestIdleCallback ?? ((callback) => window.setTimeout(callback, 1));
+    requestIdle(markReady);
+    return;
+  }
+
+  if (mode === "visible" && typeof IntersectionObserver !== "undefined") {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        markReady();
+        observer.disconnect();
+      }
+    }, { rootMargin: islandElement.getAttribute("rootmargin") ?? islandElement.getAttribute("rootMargin") ?? "200px" });
+    observer.observe(islandElement);
+    return;
+  }
+
+  markReady();
+}
+
 function syncPanturaElement(panturaElement: Element): void {
   if (!panturaElement.hasAttribute("role")) {
     panturaElement.setAttribute("role", "button");
@@ -539,7 +717,15 @@ function syncPanturaElement(panturaElement: Element): void {
 
 function syncRaktaElements(): void {
   document.querySelectorAll("photo").forEach(syncPhotoElement);
+  document.querySelectorAll("picture[path]").forEach(syncPhotoElement);
   document.querySelectorAll("pantura").forEach(syncPanturaElement);
+  document.querySelectorAll("guard").forEach(syncGuardElement);
+  document.querySelectorAll("lazy").forEach(syncLazyElement);
+  document.querySelectorAll("shelf").forEach(syncShelfElement);
+  document.querySelectorAll("island").forEach(syncIslandElement);
+  document.querySelectorAll("prefetch").forEach(syncPrefetchElement);
+  document.querySelectorAll("resource").forEach(syncResourceElement);
+  document.querySelectorAll("route").forEach(syncRouteElement);
 }
 
 ${routeModules}
@@ -605,6 +791,7 @@ function navigate(to: string): void {
   }
 
   window.history.pushState({ source: "rakta-click", to }, "", to);
+  window.dispatchEvent(new Event("rakta:route-change"));
   window.dispatchEvent(new PopStateEvent("popstate", { state: { to } }));
 }
 

@@ -1,5 +1,5 @@
-// Data log deployment simulasi untuk DeployModal
-// Dipisah dari komponen supaya DeployModal.tsx fokus pada UI dan interaksi.
+// Data log deployment simulasi untuk deployment view
+// Dipisah dari komponen supaya the deployment view fokus pada UI dan interaksi.
 
 export type DeployLogType = "system" | "info" | "success";
 

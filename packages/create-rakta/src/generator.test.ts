@@ -168,6 +168,79 @@ describe("create-rakta fullstack generator", () => {
 		);
 	});
 
+	test("generates primitive declarations for frontend-only and fullstack projects", () => {
+		const frontendFiles = generateProjectFiles({
+			...fullstackConfig,
+			projectMode: "frontend-only",
+		});
+		const fullstackFiles = generateProjectFiles(fullstackConfig);
+
+		const frontendEnv =
+			frontendFiles.find((file) => file.path === "rakta-env.d.ts")
+				?.content ?? "";
+		const fullstackEnv =
+			fullstackFiles.find((file) => file.path === "frontend/rakta-env.d.ts")
+				?.content ?? "";
+
+		for (const envContent of [frontendEnv, fullstackEnv]) {
+			expect(envContent).toContain("click: RaktaClickAttributes");
+			expect(envContent).toContain("picture: RaktaPhotoAttributes");
+			expect(envContent).toContain(
+				'lazy: import("raktajs/components").LazyProps',
+			);
+			expect(envContent).toContain(
+				'guard: import("raktajs/components").GuardProps',
+			);
+			expect(envContent).toContain(
+				'seal: import("raktajs/components").SealProps',
+			);
+			expect(envContent).toContain(
+				'shelf: import("raktajs/components").ShelfProps<unknown>',
+			);
+			expect(envContent).toContain(
+				'island: import("raktajs/components").IslandProps',
+			);
+			expect(envContent).toContain(
+				'prefetch: import("raktajs/components").PrefetchProps',
+			);
+			expect(envContent).toContain(
+				'route: import("raktajs/components").RouteProps',
+			);
+			expect(envContent).toContain(
+				'resource: import("raktajs/components").ResourceProps',
+			);
+			expect(envContent).toContain(
+				'form: import("react").FormHTMLAttributes<HTMLFormElement>',
+			);
+			expect(envContent).toContain("readonly csrfToken?: string");
+			expect(envContent).toContain("const Island");
+			expect(envContent).toContain("const Resource");
+		}
+	});
+
+	test("does not generate stale modal starter files or lucide-react dependency", () => {
+		const generatedSets = [
+			generateProjectFiles({
+				...fullstackConfig,
+				projectMode: "frontend-only",
+			}),
+			generateProjectFiles(fullstackConfig),
+		];
+
+		for (const files of generatedSets) {
+			for (const file of files) {
+				const content = typeof file.content === "string" ? file.content : "";
+				expect(file.path).not.toContain("ComponentsModal");
+				expect(file.path).not.toContain("DocsModal");
+				expect(file.path).not.toContain("DeployModal");
+				expect(content).not.toContain("ComponentsModal");
+				expect(content).not.toContain("DocsModal");
+				expect(content).not.toContain("DeployModal");
+				expect(content).not.toContain("lucide-react");
+			}
+		}
+	});
+
 	test("generates structural Laravel + MySQL backend when selected", () => {
 		const laravelConfig: ProjectConfig = {
 			...fullstackConfig,

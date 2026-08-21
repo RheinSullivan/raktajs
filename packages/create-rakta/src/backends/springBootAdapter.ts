@@ -20,7 +20,7 @@ export const springBootCapabilities: BackendCapabilities = {
 
 export const springBootAdapter: BackendAdapter = {
 	identifier: "spring-boot",
-	name: "Spring Boot",
+	name: "Spring Boot 3.x",
 	language: "Java",
 	runtime: "Java / JVM",
 	capabilities: springBootCapabilities,

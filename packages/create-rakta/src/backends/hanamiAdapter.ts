@@ -20,7 +20,7 @@ export const hanamiCapabilities: BackendCapabilities = {
 
 export const hanamiAdapter: BackendAdapter = {
 	identifier: "hanami",
-	name: "Hanami",
+	name: "Hanami 2.x",
 	language: "Ruby",
 	runtime: "Ruby",
 	capabilities: hanamiCapabilities,

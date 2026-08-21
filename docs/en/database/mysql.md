@@ -190,7 +190,7 @@ export default function ProductsPage() {
             {products.map((p) => (
               <li key={p.id}>
                 <click to={`/products/${p.id}`}>
-                  {p.name} — ${p.price}
+                  {p.name} - ${p.price}
                 </click>
               </li>
             ))}
@@ -234,10 +234,10 @@ docker run -d \
 
 ## Production
 
-- **PlanetScale** — serverless MySQL with branching workflow
-- **AWS RDS MySQL** — managed, multi-AZ
-- **DigitalOcean Managed MySQL** — simple cloud MySQL
-- **Railway** — zero-config MySQL hosting
+- **PlanetScale** - serverless MySQL with branching workflow
+- **AWS RDS MySQL** - managed, multi-AZ
+- **DigitalOcean Managed MySQL** - simple cloud MySQL
+- **Railway** - zero-config MySQL hosting
 
 ## Architecture Summary
 

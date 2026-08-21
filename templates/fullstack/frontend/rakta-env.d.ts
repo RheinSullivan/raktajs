@@ -67,11 +67,11 @@ declare module "raktajs/seo" {
 	}
 	export interface JsonLdObject {
 		readonly [key: string]:
-			| string
-			| number
-			| boolean
-			| JsonLdObject
-			| readonly (string | number | boolean | JsonLdObject)[];
+		| string
+		| number
+		| boolean
+		| JsonLdObject
+		| readonly (string | number | boolean | JsonLdObject)[];
 	}
 	export interface JsonLd extends JsonLdObject {
 		"@context": string;
@@ -168,6 +168,84 @@ declare module "raktajs/components" {
 		removeToast: (id: string) => void;
 		clearToasts: () => void;
 	};
+	// ── Official custom tag components ──
+	export interface ClickProps extends Omit<import("react").AnchorHTMLAttributes<HTMLElement>, "href"> {
+		readonly to: string;
+	}
+	export function Click(props: ClickProps): import("react").ReactElement;
+	export interface PictureProps extends Omit<import("react").ImgHTMLAttributes<HTMLImageElement>, "src"> {
+		readonly path: string;
+		readonly alt: string;
+	}
+	export function Picture(props: PictureProps): import("react").ReactElement;
+	export interface LazyProps {
+		readonly children: import("react").ReactNode;
+		readonly fallback?: import("react").ReactNode;
+		readonly delay?: number;
+	}
+	export function Lazy(props: LazyProps): import("react").ReactElement;
+	export interface GuardProps {
+		readonly allowed: boolean;
+		readonly children: import("react").ReactNode;
+		readonly fallback?: import("react").ReactNode;
+	}
+	export function Guard(props: GuardProps): import("react").ReactElement;
+	export interface SealProps {
+		readonly children: import("react").ReactNode;
+		readonly fallback?: import("react").ReactNode;
+		readonly onError?: (error: Error, info: unknown) => void;
+	}
+	export function Seal(props: SealProps): import("react").ReactElement;
+	export interface ShelfProps<T> {
+		readonly children: import("react").ReactNode;
+		readonly storageKey: string;
+		readonly initialState?: T;
+	}
+	export function Shelf<T>(props: ShelfProps<T>): import("react").ReactElement;
+	export type IslandMode = "load" | "idle" | "visible";
+	export interface IslandProps extends Omit<import("react").HTMLAttributes<HTMLElement>, "children"> {
+		readonly children: import("react").ReactNode;
+		readonly fallback?: import("react").ReactNode;
+		readonly mode?: IslandMode;
+		readonly rootMargin?: string;
+	}
+	export function Island(props: IslandProps): import("react").ReactElement;
+	export type PrefetchAs = "document" | "fetch" | "script" | "style" | "image";
+	export type PrefetchWhen = "mount" | "hover";
+	export interface PrefetchProps extends Omit<import("react").HTMLAttributes<HTMLElement>, "children"> {
+		readonly to: string;
+		readonly as?: PrefetchAs;
+		readonly when?: PrefetchWhen;
+		readonly children?: import("react").ReactNode;
+	}
+	export function Prefetch(props: PrefetchProps): import("react").ReactElement;
+	export interface RouteProps {
+		readonly path: string;
+		readonly exact?: boolean;
+		readonly fallback?: import("react").ReactNode;
+		readonly children: import("react").ReactNode;
+	}
+	export function Route(props: RouteProps): import("react").ReactElement;
+	export type ResourceAs = "audio" | "document" | "fetch" | "font" | "image" | "script" | "style" | "track" | "video" | "worker";
+	export type ResourceRel = "dns-prefetch" | "modulepreload" | "preconnect" | "prefetch" | "preload" | "stylesheet";
+	export interface ResourceProps {
+		readonly href: string;
+		readonly rel?: ResourceRel;
+		readonly as?: ResourceAs;
+		readonly crossOrigin?: "" | "anonymous" | "use-credentials";
+		readonly media?: string;
+		readonly type?: string;
+	}
+	export function Resource(props: ResourceProps): import("react").ReactElement | null;
+	export interface FormProps extends import("react").FormHTMLAttributes<HTMLFormElement> {
+		readonly csrfToken?: string;
+	}
+	export function Form(props: FormProps): import("react").ReactElement;
+	export interface TitleProps {
+		readonly children?: import("react").ReactNode;
+		readonly text?: string;
+	}
+	export function Title(props: TitleProps): import("react").ReactElement | null;
 }
 
 // Rakta.js built-in anchor component - use <click to="/path"> instead of <a href>
@@ -184,6 +262,7 @@ type RaktaPhotoAttributes = Omit<
 	"src"
 > & {
 	readonly path: string;
+	readonly alt: string;
 };
 
 declare module "react" {
@@ -193,6 +272,8 @@ declare module "react" {
 			click: RaktaClickAttributes;
 			// Rakta.js image: compiles to <img> with built-in lazy loading & optimization
 			photo: RaktaPhotoAttributes;
+			// Rakta.js official image tag; supported when a path attribute is present.
+			picture: RaktaPhotoAttributes;
 			// Rakta.js smooth scroll trigger: navigates to <reborns id="">
 			pantura: Omit<
 				import("react").AnchorHTMLAttributes<HTMLElement>,
@@ -210,22 +291,11 @@ declare module "react" {
 				readonly id: string;
 			};
 			// Rakta.js lazy boundary
-			lazy: {
-				readonly children: import("react").ReactNode;
-				readonly fallback?: import("react").ReactNode;
-				readonly delayMs?: number;
-			};
+			lazy: import("raktajs/components").LazyProps;
 			// Rakta.js route & authorization guard
-			guard: {
-				readonly isAllowed: boolean;
-				readonly children: import("react").ReactNode;
-				readonly fallback?: import("react").ReactNode;
-			};
+			guard: import("raktajs/components").GuardProps;
 			// Rakta.js error boundary
-			seal: {
-				readonly children: import("react").ReactNode;
-				readonly fallback?: import("react").ReactNode | ((error: Error) => import("react").ReactNode);
-			};
+			seal: import("raktajs/components").SealProps;
 			// Rakta.js form wrapper with auto-CSRF
 			form: import("react").FormHTMLAttributes<HTMLFormElement> & {
 				readonly csrfToken?: string;
@@ -236,11 +306,15 @@ declare module "react" {
 				readonly text?: string;
 			};
 			// Rakta.js state persistence boundary
-			shelf: {
-				readonly storageKey: string;
-				readonly initialValue: any;
-				readonly children: (value: any, setValue: (val: any) => void) => import("react").ReactNode;
-			};
+			shelf: import("raktajs/components").ShelfProps<unknown>;
+			// Rakta.js client/hydration island boundary
+			island: import("raktajs/components").IslandProps;
+			// Rakta.js route/resource prefetch hint
+			prefetch: import("raktajs/components").PrefetchProps;
+			// Rakta.js route-state boundary
+			route: import("raktajs/components").RouteProps;
+			// Rakta.js declarative resource hint
+			resource: import("raktajs/components").ResourceProps;
 		}
 	}
 }
@@ -461,6 +535,16 @@ declare global {
 	const Photo: typeof import("raktajs/components").Picture;
 	const photo: typeof import("raktajs/components").Picture;
 	const Picture: typeof import("raktajs/components").Picture;
+	const Lazy: typeof import("raktajs/components").Lazy;
+	const Guard: typeof import("raktajs/components").Guard;
+	const Seal: typeof import("raktajs/components").Seal;
+	const Shelf: typeof import("raktajs/components").Shelf;
+	const Island: typeof import("raktajs/components").Island;
+	const Prefetch: typeof import("raktajs/components").Prefetch;
+	const Route: typeof import("raktajs/components").Route;
+	const Resource: typeof import("raktajs/components").Resource;
+	const Form: typeof import("raktajs/components").Form;
+	const Title: typeof import("raktajs/components").Title;
 
 	// ── Icons (react-icons/fa6 - auto-imported by Rakta.js) ──
 	const FaArrowRight: import("react").ComponentType<{

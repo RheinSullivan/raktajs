@@ -13,7 +13,7 @@ Rakta.js mendukung ekosistem backend multibahasa yang dikelompokkan secara ketat
 
 ### 2. PHP
 - **Laravel**: Framework web PHP lengkap dengan Artisan CLI dan Eloquent ORM.
-- **CodeIgniter**: Framework CodeIgniter 4 MVC yang ringan dan cepat.
+- **CodeIgniter 4**: Framework CodeIgniter 4 MVC yang ringan dan cepat.
 
 ### 3. Python
 - **Flask**: Framework WSGI Python yang ringan.
@@ -21,15 +21,15 @@ Rakta.js mendukung ekosistem backend multibahasa yang dikelompokkan secara ketat
 
 ### 4. Go
 - **Prabogo**: Framework web Golang dengan arsitektur heksagonal.
-- **Beego**: Framework REST/MVC Go enterprise (`github.com/beego/beego/v2`).
+- **Beego v2**: Framework REST/MVC Go enterprise (`github.com/Beego v2/Beego v2/v2`).
 
 ### 5. Ruby
 - **Ruby on Rails**: Framework web Ruby full-stack berbasis konvensi.
-- **Hanami**: Framework web Ruby modern arsitektur Hanami 2.x.
+- **Hanami 2.x**: Framework web Ruby modern arsitektur Hanami 2.x.
 
 ### 6. Java
-- **Spring Boot**: Framework Java enterprise dengan Spring MVC.
-- **Jakarta EE / J2EE**: Platform standar Java enterprise Jakarta EE 10 (paket `jakarta.*`).
+- **Spring Boot 3.x**: Framework Java enterprise dengan Spring MVC.
+- **Jakarta EE 10 / J2EE**: Platform standar Java enterprise Jakarta EE 10 (paket `jakarta.*`).
 
 ## Tautan Dokumentasi Detail
 - [Gaman.js (Default)](/id/backends/javascript/gaman.md)
@@ -38,13 +38,13 @@ Rakta.js mendukung ekosistem backend multibahasa yang dikelompokkan secara ketat
 - [Adonis.js](/id/backends/javascript/adonis.md)
 - [Hono.js](/id/backends/javascript/hono.md)
 - [Laravel](/id/backends/php/laravel.md)
-- [CodeIgniter](/id/backends/php/codeigniter.md)
+- [CodeIgniter 4](/id/backends/php/CodeIgniter 4.md)
 - [Flask](/id/backends/python/flask.md)
 - [Django](/id/backends/python/django.md)
 - [Prabogo](/id/backends/go/prabogo.md)
-- [Beego](/id/backends/go/beego.md)
+- [Beego v2](/id/backends/go/Beego v2.md)
 - [Ruby on Rails](/id/backends/ruby/rails.md)
-- [Hanami](/id/backends/ruby/hanami.md)
-- [Spring Boot](/id/backends/java/spring-boot.md)
-- [Jakarta EE / J2EE](/id/backends/java/jakarta-ee.md)
+- [Hanami 2.x](/id/backends/ruby/Hanami 2.x.md)
+- [Spring Boot 3.x](/id/backends/java/spring-boot.md)
+- [Jakarta EE 10 / J2EE](/id/backends/java/jakarta-ee.md)
 - [Mesin Database SawitDB](/id/database/sawitdb.md)
