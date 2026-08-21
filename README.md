@@ -62,8 +62,11 @@
 </p>
 
 ---
-
-🇮🇩 Built with pride from Cirebon & South Jakarta, Indonesia. 🇵🇸 Free Palestine.
+<p align="center">
+  Assalamu'alaikum Warahmatullahi Wabarakatuh · Shalom · Om Swastiastu · Namo Buddhaya · Wei De Dong Tian
+  <br/>
+  🇮🇩 Built with pride from Cirebon & South Jakarta, Indonesia. 🇵🇸 Free Palestine.
+</p>
 
 ---
 
