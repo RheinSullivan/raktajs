@@ -1,4 +1,4 @@
-import React, { type ReactNode, Suspense, useEffect, useState } from "react";
+import { type ReactNode, Suspense, useEffect, useState } from "react";
 
 export interface LazyProps {
 	readonly children: ReactNode;

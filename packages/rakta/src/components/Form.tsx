@@ -1,4 +1,4 @@
-import React, { type FormHTMLAttributes, type FormEvent, type ReactNode } from "react";
+import type { FormEvent, FormHTMLAttributes, ReactNode } from "react";
 
 export interface FormProps extends FormHTMLAttributes<HTMLFormElement> {
 	readonly action?: string;
@@ -7,7 +7,13 @@ export interface FormProps extends FormHTMLAttributes<HTMLFormElement> {
 	readonly onSubmit?: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-export function Form({ action, csrfToken, children, onSubmit, ...rest }: FormProps) {
+export function Form({
+	action,
+	csrfToken,
+	children,
+	onSubmit,
+	...rest
+}: FormProps) {
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		if (onSubmit) {
 			onSubmit(event);

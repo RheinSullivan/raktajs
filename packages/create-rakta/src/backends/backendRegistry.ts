@@ -1,6 +1,6 @@
 import type { BackendFramework, ProjectConfig, ProjectFile } from "../types";
-import type { BackendAdapter } from "./backendAdapter";
 import { adonisAdapter } from "./adonisAdapter";
+import type { BackendAdapter } from "./backendAdapter";
 import { beegoAdapter } from "./beegoAdapter";
 import { codeigniterAdapter } from "./codeigniterAdapter";
 import { djangoAdapter } from "./djangoAdapter";
@@ -34,9 +34,13 @@ export const backendAdapters: Record<BackendFramework, BackendAdapter> = {
 	"jakarta-ee": jakartaEeAdapter,
 };
 
-export function generateBackendFiles(projectConfiguration: ProjectConfig): ProjectFile[] {
-	const selectedBackendIdentifier = projectConfiguration.backendFramework || "gaman";
-	const selectedAdapter = backendAdapters[selectedBackendIdentifier] ?? gamanAdapter;
+export function generateBackendFiles(
+	projectConfiguration: ProjectConfig,
+): ProjectFile[] {
+	const selectedBackendIdentifier =
+		projectConfiguration.backendFramework || "gaman";
+	const selectedAdapter =
+		backendAdapters[selectedBackendIdentifier] ?? gamanAdapter;
 
 	return selectedAdapter.generateFiles(projectConfiguration);
 }

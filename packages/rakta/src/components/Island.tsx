@@ -38,7 +38,8 @@ export function Island({
 
 		if (mode === "idle") {
 			const requestIdle =
-				window.requestIdleCallback ?? ((callback) => window.setTimeout(callback, 1));
+				window.requestIdleCallback ??
+				((callback) => window.setTimeout(callback, 1));
 			const cancelIdle =
 				window.cancelIdleCallback ?? ((handle) => window.clearTimeout(handle));
 			const idleHandle = requestIdle(() => setIsReady(true));

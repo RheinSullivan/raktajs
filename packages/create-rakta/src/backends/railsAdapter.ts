@@ -68,9 +68,18 @@ end
 		return [
 			{ path: "backend/Gemfile", content: gemfileContent },
 			{ path: "backend/config/routes.rb", content: routesContent },
-			{ path: "backend/app/controllers/application_controller.rb", content: applicationControllerContent },
-			{ path: "backend/app/controllers/health_controller.rb", content: healthControllerContent },
-			{ path: "backend/app/controllers/users_controller.rb", content: usersControllerContent },
+			{
+				path: "backend/app/controllers/application_controller.rb",
+				content: applicationControllerContent,
+			},
+			{
+				path: "backend/app/controllers/health_controller.rb",
+				content: healthControllerContent,
+			},
+			{
+				path: "backend/app/controllers/users_controller.rb",
+				content: usersControllerContent,
+			},
 			{
 				path: "backend/README.md",
 				content: `# ${projectName} Backend (Ruby on Rails)\n\nFull-stack convention-driven Ruby framework.\n\n## Commands\n- Install: \`bundle install\`\n- Dev: \`bin/rails server -p 4000\`\n`,

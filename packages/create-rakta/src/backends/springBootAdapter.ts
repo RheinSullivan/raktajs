@@ -123,10 +123,22 @@ spring.application.name=${projectName}-backend
 
 		return [
 			{ path: "backend/pom.xml", content: pomXmlContent },
-			{ path: "backend/src/main/resources/application.properties", content: applicationPropertiesContent },
-			{ path: "backend/src/main/java/com/rakta/app/Application.java", content: applicationJavaContent },
-			{ path: "backend/src/main/java/com/rakta/app/controller/HealthController.java", content: healthControllerJavaContent },
-			{ path: "backend/src/main/java/com/rakta/app/controller/UserController.java", content: userControllerJavaContent },
+			{
+				path: "backend/src/main/resources/application.properties",
+				content: applicationPropertiesContent,
+			},
+			{
+				path: "backend/src/main/java/com/rakta/app/Application.java",
+				content: applicationJavaContent,
+			},
+			{
+				path: "backend/src/main/java/com/rakta/app/controller/HealthController.java",
+				content: healthControllerJavaContent,
+			},
+			{
+				path: "backend/src/main/java/com/rakta/app/controller/UserController.java",
+				content: userControllerJavaContent,
+			},
 			{
 				path: "backend/README.md",
 				content: `# ${projectName} Backend (Spring Boot 3)\n\nEnterprise Spring Boot Java backend.\n\n## Commands\n- Dev: \`./mvnw spring-boot:run\`\n- Build: \`./mvnw clean package\`\n`,

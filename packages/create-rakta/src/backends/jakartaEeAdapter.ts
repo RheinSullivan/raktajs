@@ -134,10 +134,22 @@ public class UserResource {
 
 		return [
 			{ path: "backend/pom.xml", content: pomXmlContent },
-			{ path: "backend/src/main/webapp/WEB-INF/web.xml", content: webXmlContent },
-			{ path: "backend/src/main/java/com/rakta/jakarta/RestApplication.java", content: restApplicationJavaContent },
-			{ path: "backend/src/main/java/com/rakta/jakarta/resource/HealthResource.java", content: healthResourceJavaContent },
-			{ path: "backend/src/main/java/com/rakta/jakarta/resource/UserResource.java", content: userResourceJavaContent },
+			{
+				path: "backend/src/main/webapp/WEB-INF/web.xml",
+				content: webXmlContent,
+			},
+			{
+				path: "backend/src/main/java/com/rakta/jakarta/RestApplication.java",
+				content: restApplicationJavaContent,
+			},
+			{
+				path: "backend/src/main/java/com/rakta/jakarta/resource/HealthResource.java",
+				content: healthResourceJavaContent,
+			},
+			{
+				path: "backend/src/main/java/com/rakta/jakarta/resource/UserResource.java",
+				content: userResourceJavaContent,
+			},
 			{
 				path: "backend/README.md",
 				content: `# ${projectName} Backend (Jakarta EE / J2EE)\n\nStandardized Jakarta EE 10 web application.\n\nHistorical Evolution: J2EE -> Java EE -> Jakarta EE\n\n## Commands\n- Build: \`mvn clean package\`\n`,

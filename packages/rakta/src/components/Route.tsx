@@ -1,4 +1,4 @@
-import React, { type ReactElement, type ReactNode, useEffect, useState } from "react";
+import { type ReactElement, type ReactNode, useEffect, useState } from "react";
 
 export interface RouteProps {
 	readonly path: string;
@@ -20,7 +20,9 @@ function matchesRoute(pathname: string, path: string, exact: boolean): boolean {
 		return pathname === path;
 	}
 
-	return pathname === path || pathname.startsWith(`${path.replace(/\/$/, "")}/`);
+	return (
+		pathname === path || pathname.startsWith(`${path.replace(/\/$/, "")}/`)
+	);
 }
 
 export function Route({
@@ -43,11 +45,7 @@ export function Route({
 		};
 	}, []);
 
-	return (
-		<>
-			{matchesRoute(pathname, path, exact) ? children : fallback}
-		</>
-	);
+	return <>{matchesRoute(pathname, path, exact) ? children : fallback}</>;
 }
 
 export default Route;

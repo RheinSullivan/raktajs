@@ -3,7 +3,9 @@
 
 export default function OtpPage() {
 	const [otpValues, setOtpValues] = useState<string[]>(Array(6).fill(""));
-	const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+	const [status, setStatus] = useState<
+		"idle" | "loading" | "success" | "error"
+	>("idle");
 	const [countdown, setCountdown] = useState(60);
 	const [isResendDisabled, setIsResendDisabled] = useState(true);
 	const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
@@ -31,7 +33,10 @@ export default function OtpPage() {
 		}
 	};
 
-	const handleKeyDown = (index: number, event: React.KeyboardEvent<HTMLInputElement>) => {
+	const handleKeyDown = (
+		index: number,
+		event: React.KeyboardEvent<HTMLInputElement>,
+	) => {
 		if (event.key === "Backspace" && !otpValues[index] && index > 0) {
 			inputRefs.current[index - 1]?.focus();
 		}
@@ -40,7 +45,9 @@ export default function OtpPage() {
 	const handleResend = () => {
 		setCountdown(60);
 		setIsResendDisabled(true);
-		toast.info("A new OTP code has been sent to your email.", { title: "OTP SENT" });
+		toast.info("A new OTP code has been sent to your email.", {
+			title: "OTP SENT",
+		});
 	};
 
 	const handleSubmit = useCallback(
@@ -58,7 +65,9 @@ export default function OtpPage() {
 				await new Promise<void>((resolve) => setTimeout(resolve, 800));
 				if (code === "123456" || code === "999999") {
 					setStatus("success");
-					toast.success("OTP verified successfully. Redirecting to dashboard...");
+					toast.success(
+						"OTP verified successfully. Redirecting to dashboard...",
+					);
 				} else {
 					setStatus("error");
 					toast.error("Invalid OTP code. Use 123456 or 999999 for demo.");
@@ -107,7 +116,9 @@ export default function OtpPage() {
 						{otpValues.map((val, idx) => (
 							<input
 								key={idx}
-								ref={(el) => { inputRefs.current[idx] = el; }}
+								ref={(el) => {
+									inputRefs.current[idx] = el;
+								}}
 								type="text"
 								inputMode="numeric"
 								maxLength={1}
@@ -122,7 +133,9 @@ export default function OtpPage() {
 
 				<div className="flex items-center justify-between font-mono text-xs text-gray-400">
 					<span>
-						{isResendDisabled ? `Resend code in ${countdown}s` : "Didn't receive code?"}
+						{isResendDisabled
+							? `Resend code in ${countdown}s`
+							: "Didn't receive code?"}
 					</span>
 					<button
 						type="button"

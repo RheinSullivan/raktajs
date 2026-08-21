@@ -39,11 +39,11 @@ export const laravelAdapter: BackendAdapter = {
 					"laravel/sanctum": "^4.0",
 					...(isSawitDatabase ? { "wowoengine/sawitdb-php": "^1.0" } : {}),
 				},
-				"autoload": {
+				autoload: {
 					"psr-4": {
-						"App\\\\": "app/"
-					}
-				}
+						"App\\\\": "app/",
+					},
+				},
 			},
 			null,
 			2,
@@ -228,8 +228,14 @@ return new class extends Migration
 			{ path: "backend/.env", content: environmentContent },
 			{ path: "backend/routes/api.php", content: apiRoutesContent },
 			{ path: "backend/config/database.php", content: databaseConfigContent },
-			{ path: "backend/app/Http/Controllers/AuthController.php", content: authControllerContent },
-			{ path: "backend/app/Http/Controllers/UserController.php", content: userControllerContent },
+			{
+				path: "backend/app/Http/Controllers/AuthController.php",
+				content: authControllerContent,
+			},
+			{
+				path: "backend/app/Http/Controllers/UserController.php",
+				content: userControllerContent,
+			},
 			{ path: "backend/app/Models/User.php", content: userModelContent },
 			{
 				path: "backend/database/migrations/2026_01_01_000000_create_users_table.php",

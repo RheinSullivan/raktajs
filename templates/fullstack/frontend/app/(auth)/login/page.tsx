@@ -6,7 +6,9 @@ export default function LoginPage() {
 	const [password, setPassword] = useState("rakta-password");
 	const [showPassword, setShowPassword] = useState(false);
 	const [rememberMe, setRememberMe] = useState(true);
-	const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+	const [status, setStatus] = useState<
+		"idle" | "loading" | "success" | "error"
+	>("idle");
 	const formRef = useRef<HTMLFormElement>(null);
 
 	useEffect(() => {
@@ -71,7 +73,8 @@ export default function LoginPage() {
 
 				<label className="grid gap-2 font-mono text-xs uppercase text-gray-400">
 					<span className="flex items-center gap-1.5">
-						<FaCode className="h-3 w-3 text-brand-pink" /> Email Address / Username
+						<FaCode className="h-3 w-3 text-brand-pink" /> Email Address /
+						Username
 					</span>
 					<input
 						className="border border-surface-stroke bg-black px-4 py-3 font-mono text-sm text-white outline-none focus:border-brand-pink transition-colors"
@@ -99,7 +102,11 @@ export default function LoginPage() {
 							onClick={() => setShowPassword((prev) => !prev)}
 							className="absolute right-3 text-gray-400 hover:text-white cursor-pointer"
 						>
-							{showPassword ? <FaEyeSlash className="h-4 w-4" /> : <FaEye className="h-4 w-4" />}
+							{showPassword ? (
+								<FaEyeSlash className="h-4 w-4" />
+							) : (
+								<FaEye className="h-4 w-4" />
+							)}
 						</button>
 					</div>
 				</label>
@@ -114,7 +121,10 @@ export default function LoginPage() {
 						/>
 						<span>Remember Me</span>
 					</label>
-					<click to="/auth/forgot-password" className="text-brand-pink hover:underline">
+					<click
+						to="/auth/forgot-password"
+						className="text-brand-pink hover:underline"
+					>
 						Forgot Password?
 					</click>
 				</div>
@@ -129,14 +139,20 @@ export default function LoginPage() {
 
 				<div className="flex items-center justify-between font-mono text-xs text-gray-400 border-t border-surface-stroke pt-4">
 					<span>Need 2FA OTP Code?</span>
-					<click to="/auth/otp" className="text-brand-pink hover:underline font-bold">
+					<click
+						to="/auth/otp"
+						className="text-brand-pink hover:underline font-bold"
+					>
 						Verify OTP →
 					</click>
 				</div>
 
 				<div className="text-center font-mono text-xs text-gray-400">
 					Don't have an account?{" "}
-					<click to="/auth/sign-up" className="text-brand-pink hover:underline font-bold">
+					<click
+						to="/auth/sign-up"
+						className="text-brand-pink hover:underline font-bold"
+					>
 						Sign Up
 					</click>
 				</div>

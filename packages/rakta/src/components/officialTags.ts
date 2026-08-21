@@ -20,4 +20,5 @@ export const RAKTA_EXCLUDED_COMPAT_TAGS = [
 
 export type RaktaOfficialCustomTag =
 	(typeof RAKTA_OFFICIAL_CUSTOM_TAGS)[number];
-export type RaktaExcludedCompatTag = (typeof RAKTA_EXCLUDED_COMPAT_TAGS)[number];
+export type RaktaExcludedCompatTag =
+	(typeof RAKTA_EXCLUDED_COMPAT_TAGS)[number];

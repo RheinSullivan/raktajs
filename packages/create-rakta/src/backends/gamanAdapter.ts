@@ -35,7 +35,8 @@ export const gamanAdapter: BackendAdapter = {
 		const projectName = projectConfiguration.projectName;
 		const isSawitDatabase = projectConfiguration.database === "sawitdb";
 		const oauthProviders = projectConfiguration.oauthProviders ?? ["none"];
-		const hasOAuth = oauthProviders.length > 0 && !oauthProviders.includes("none");
+		const hasOAuth =
+			oauthProviders.length > 0 && !oauthProviders.includes("none");
 
 		const packageJsonContent = JSON.stringify(
 			{
@@ -446,10 +447,22 @@ export const databaseClient = {
 			{ path: "backend/src/app.ts", content: appContent },
 			{ path: "backend/src/routes/router.ts", content: routerContent },
 			{ path: "backend/src/routes/api.ts", content: apiRoutesContent },
-			{ path: "backend/src/modules/user/UserRouter.ts", content: userRouterModuleContent },
-			{ path: "backend/src/controllers/auth.controller.ts", content: authControllerContent },
-			{ path: "backend/src/controllers/user.controller.ts", content: userControllerContent },
-			{ path: "backend/src/controllers/cms.controller.ts", content: cmsControllerContent },
+			{
+				path: "backend/src/modules/user/UserRouter.ts",
+				content: userRouterModuleContent,
+			},
+			{
+				path: "backend/src/controllers/auth.controller.ts",
+				content: authControllerContent,
+			},
+			{
+				path: "backend/src/controllers/user.controller.ts",
+				content: userControllerContent,
+			},
+			{
+				path: "backend/src/controllers/cms.controller.ts",
+				content: cmsControllerContent,
+			},
 			{ path: "backend/src/auth/auth.service.ts", content: authServiceContent },
 			{ path: "backend/src/security/jwt.ts", content: jwtContent },
 			{ path: "backend/src/database/client.ts", content: databaseContent },
@@ -467,7 +480,10 @@ export const databaseClient = {
   }
 };
 `;
-			resultFiles.push({ path: "backend/src/auth/oauth.config.ts", content: oauthConfigContent });
+			resultFiles.push({
+				path: "backend/src/auth/oauth.config.ts",
+				content: oauthConfigContent,
+			});
 		}
 
 		return resultFiles;

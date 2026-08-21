@@ -1,4 +1,4 @@
-import React, { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 export interface ShelfProps<T> {
 	readonly storageKey: string;
@@ -6,7 +6,11 @@ export interface ShelfProps<T> {
 	readonly children: (value: T, setValue: (newValue: T) => void) => ReactNode;
 }
 
-export function Shelf<T>({ storageKey, initialValue, children }: ShelfProps<T>) {
+export function Shelf<T>({
+	storageKey,
+	initialValue,
+	children,
+}: ShelfProps<T>) {
 	const [value, setValue] = useState<T>(() => {
 		if (typeof window === "undefined") return initialValue;
 		try {

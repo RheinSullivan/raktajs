@@ -176,8 +176,8 @@ describe("create-rakta fullstack generator", () => {
 		const fullstackFiles = generateProjectFiles(fullstackConfig);
 
 		const frontendEnv =
-			frontendFiles.find((file) => file.path === "rakta-env.d.ts")
-				?.content ?? "";
+			frontendFiles.find((file) => file.path === "rakta-env.d.ts")?.content ??
+			"";
 		const fullstackEnv =
 			fullstackFiles.find((file) => file.path === "frontend/rakta-env.d.ts")
 				?.content ?? "";
@@ -353,7 +353,9 @@ describe("create-rakta fullstack generator", () => {
 				expect(filePaths.has("backend/pom.xml")).toBe(true);
 			} else if (backendFramework === "jakarta-ee") {
 				expect(filePaths.has("backend/pom.xml")).toBe(true);
-				expect(filePaths.has("backend/src/main/webapp/WEB-INF/web.xml")).toBe(true);
+				expect(filePaths.has("backend/src/main/webapp/WEB-INF/web.xml")).toBe(
+					true,
+				);
 			}
 		}
 	});
@@ -374,7 +376,9 @@ describe("create-rakta fullstack generator", () => {
 		);
 
 		expect(fileByPath.get("backend/package.json")).toContain('"sawitdb"');
-		expect(fileByPath.get("backend/src/database/client.ts")).toContain("SawitDatabaseClient");
+		expect(fileByPath.get("backend/src/database/client.ts")).toContain(
+			"SawitDatabaseClient",
+		);
 	});
 
 	test("does not prompt for a separate render mode", async () => {

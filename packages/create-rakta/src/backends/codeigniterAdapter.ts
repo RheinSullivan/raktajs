@@ -40,9 +40,9 @@ export const codeigniterAdapter: BackendAdapter = {
 				},
 				autoload: {
 					"psr-4": {
-						"App\\\\": "app/"
-					}
-				}
+						"App\\\\": "app/",
+					},
+				},
 			},
 			null,
 			2,
@@ -151,10 +151,22 @@ abstract class BaseController extends Controller
 			{ path: "backend/composer.json", content: composerContent },
 			{ path: "backend/spark", content: sparkContent },
 			{ path: "backend/app/Config/Routes.php", content: routesContent },
-			{ path: "backend/app/Controllers/BaseController.php", content: baseControllerContent },
-			{ path: "backend/app/Controllers/HealthController.php", content: healthControllerContent },
-			{ path: "backend/app/Controllers/AuthController.php", content: authControllerContent },
-			{ path: "backend/app/Controllers/UserController.php", content: userControllerContent },
+			{
+				path: "backend/app/Controllers/BaseController.php",
+				content: baseControllerContent,
+			},
+			{
+				path: "backend/app/Controllers/HealthController.php",
+				content: healthControllerContent,
+			},
+			{
+				path: "backend/app/Controllers/AuthController.php",
+				content: authControllerContent,
+			},
+			{
+				path: "backend/app/Controllers/UserController.php",
+				content: userControllerContent,
+			},
 			{
 				path: "backend/README.md",
 				content: `# ${projectName} Backend (CodeIgniter 4)\n\nCodeIgniter 4 MVC backend.\n\n## Commands\n- Dev: \`php spark serve --port 4000\`\n`,

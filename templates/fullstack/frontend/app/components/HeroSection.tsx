@@ -58,11 +58,7 @@ const heroCopyData = {
 	},
 } as const;
 
-export default function HeroSection({
-	lang,
-}: {
-	lang: "ID" | "EN";
-}) {
+export default function HeroSection({ lang }: { lang: "ID" | "EN" }) {
 	const langKey = lang.toLowerCase() as "id" | "en";
 	const currentCopy = heroCopyData[langKey];
 	const heroRef = useRef<HTMLElement>(null);

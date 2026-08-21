@@ -91,8 +91,14 @@ end
 			{ path: "backend/Gemfile", content: gemfileContent },
 			{ path: "backend/config/app.rb", content: appConfigContent },
 			{ path: "backend/config/routes.rb", content: routesContent },
-			{ path: "backend/app/actions/health/show.rb", content: healthActionContent },
-			{ path: "backend/app/actions/users/index.rb", content: usersActionContent },
+			{
+				path: "backend/app/actions/health/show.rb",
+				content: healthActionContent,
+			},
+			{
+				path: "backend/app/actions/users/index.rb",
+				content: usersActionContent,
+			},
 			{
 				path: "backend/README.md",
 				content: `# ${projectName} Backend (Hanami 2.x)\n\nModern Hanami 2.x Ruby framework.\n\n## Commands\n- Install: \`bundle install\`\n- Dev: \`bundle exec hanami server -p 4000\`\n`,

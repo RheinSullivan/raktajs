@@ -67,11 +67,11 @@ declare module "raktajs/seo" {
 	}
 	export interface JsonLdObject {
 		readonly [key: string]:
-		| string
-		| number
-		| boolean
-		| JsonLdObject
-		| readonly (string | number | boolean | JsonLdObject)[];
+			| string
+			| number
+			| boolean
+			| JsonLdObject
+			| readonly (string | number | boolean | JsonLdObject)[];
 	}
 	export interface JsonLd extends JsonLdObject {
 		"@context": string;
@@ -169,11 +169,13 @@ declare module "raktajs/components" {
 		clearToasts: () => void;
 	};
 	// ── Official custom tag components ──
-	export interface ClickProps extends Omit<import("react").AnchorHTMLAttributes<HTMLElement>, "href"> {
+	export interface ClickProps
+		extends Omit<import("react").AnchorHTMLAttributes<HTMLElement>, "href"> {
 		readonly to: string;
 	}
 	export function Click(props: ClickProps): import("react").ReactElement;
-	export interface PictureProps extends Omit<import("react").ImgHTMLAttributes<HTMLImageElement>, "src"> {
+	export interface PictureProps
+		extends Omit<import("react").ImgHTMLAttributes<HTMLImageElement>, "src"> {
 		readonly path: string;
 		readonly alt: string;
 	}
@@ -203,7 +205,8 @@ declare module "raktajs/components" {
 	}
 	export function Shelf<T>(props: ShelfProps<T>): import("react").ReactElement;
 	export type IslandMode = "load" | "idle" | "visible";
-	export interface IslandProps extends Omit<import("react").HTMLAttributes<HTMLElement>, "children"> {
+	export interface IslandProps
+		extends Omit<import("react").HTMLAttributes<HTMLElement>, "children"> {
 		readonly children: import("react").ReactNode;
 		readonly fallback?: import("react").ReactNode;
 		readonly mode?: IslandMode;
@@ -212,7 +215,8 @@ declare module "raktajs/components" {
 	export function Island(props: IslandProps): import("react").ReactElement;
 	export type PrefetchAs = "document" | "fetch" | "script" | "style" | "image";
 	export type PrefetchWhen = "mount" | "hover";
-	export interface PrefetchProps extends Omit<import("react").HTMLAttributes<HTMLElement>, "children"> {
+	export interface PrefetchProps
+		extends Omit<import("react").HTMLAttributes<HTMLElement>, "children"> {
 		readonly to: string;
 		readonly as?: PrefetchAs;
 		readonly when?: PrefetchWhen;
@@ -226,8 +230,24 @@ declare module "raktajs/components" {
 		readonly children: import("react").ReactNode;
 	}
 	export function Route(props: RouteProps): import("react").ReactElement;
-	export type ResourceAs = "audio" | "document" | "fetch" | "font" | "image" | "script" | "style" | "track" | "video" | "worker";
-	export type ResourceRel = "dns-prefetch" | "modulepreload" | "preconnect" | "prefetch" | "preload" | "stylesheet";
+	export type ResourceAs =
+		| "audio"
+		| "document"
+		| "fetch"
+		| "font"
+		| "image"
+		| "script"
+		| "style"
+		| "track"
+		| "video"
+		| "worker";
+	export type ResourceRel =
+		| "dns-prefetch"
+		| "modulepreload"
+		| "preconnect"
+		| "prefetch"
+		| "preload"
+		| "stylesheet";
 	export interface ResourceProps {
 		readonly href: string;
 		readonly rel?: ResourceRel;
@@ -236,8 +256,11 @@ declare module "raktajs/components" {
 		readonly media?: string;
 		readonly type?: string;
 	}
-	export function Resource(props: ResourceProps): import("react").ReactElement | null;
-	export interface FormProps extends import("react").FormHTMLAttributes<HTMLFormElement> {
+	export function Resource(
+		props: ResourceProps,
+	): import("react").ReactElement | null;
+	type _ReactFormAttrs = import("react").FormHTMLAttributes<HTMLFormElement>;
+	export interface FormProps extends _ReactFormAttrs {
 		readonly csrfToken?: string;
 	}
 	export function Form(props: FormProps): import("react").ReactElement;

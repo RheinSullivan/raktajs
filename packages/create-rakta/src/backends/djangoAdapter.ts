@@ -7,7 +7,8 @@ export const djangoCapabilities: BackendCapabilities = {
 	runtime: "Python 3.10+",
 	defaultDatabase: "sqlite",
 	supportedDatabases: ["sqlite", "postgresql", "mysql"],
-	authentication: "Django Authentication System / djangorestframework-simplejwt",
+	authentication:
+		"Django Authentication System / djangorestframework-simplejwt",
 	middleware: "Django Middleware Classes",
 	validation: "Django Forms / DRF Serializers",
 	apiType: "REST / MVT",

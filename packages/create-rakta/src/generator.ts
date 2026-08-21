@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { generateBackendFiles } from "./backends/backendRegistry";
 import {
 	STARTER_CORAL_OBSTACLE_CODE,
 	STARTER_CSS_CODE,
@@ -14,7 +15,6 @@ import type {
 	ProjectFile,
 } from "./types";
 import { BACKEND_DISPLAY, CSS_DISPLAY, DATABASE_DISPLAY } from "./types";
-import { generateBackendFiles } from "./backends/backendRegistry";
 
 const DEFAULT_METADATA_TITLE =
 	"Rakta.js | Small in size. Fierce in speed. Alive in every route";
@@ -755,7 +755,7 @@ function getBackendFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	return generateBackendFiles(projectConfig);
 }
 
-function getNestTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+function _getNestTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	const projectName = projectConfig.projectName;
 
 	const packageJsonContent = JSON.stringify(
@@ -861,7 +861,7 @@ bun run dev
 	];
 }
 
-function getExpressTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+function _getExpressTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	const projectName = projectConfig.projectName;
 
 	const packageJsonContent = JSON.stringify(
@@ -931,7 +931,7 @@ bun run dev
 	];
 }
 
-function getAdonisTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+function _getAdonisTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	const projectName = projectConfig.projectName;
 
 	const packageJsonContent = JSON.stringify(
@@ -1003,7 +1003,7 @@ bun run dev
 	];
 }
 
-function getFlaskTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+function _getFlaskTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	const projectName = projectConfig.projectName;
 
 	const requirementsContent = `Flask==3.0.3
@@ -1049,7 +1049,7 @@ python app.py
 	];
 }
 
-function getPrabogoTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+function _getPrabogoTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	const projectName = projectConfig.projectName;
 	const moduleName = projectConfig.projectName.replaceAll("-", "_");
 
@@ -1101,7 +1101,7 @@ go run main.go
 	];
 }
 
-function getRailsTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+function _getRailsTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	const projectName = projectConfig.projectName;
 
 	const gemfileContent = `source 'https://rubygems.org'
@@ -1138,7 +1138,7 @@ bin/rails server -p 4000
 	];
 }
 
-function getSpringBootTemplateFiles(
+function _getSpringBootTemplateFiles(
 	projectConfig: ProjectConfig,
 ): ProjectFile[] {
 	const projectName = projectConfig.projectName;
@@ -1226,7 +1226,7 @@ Enterprise Java backend for Rakta.js frontend.
 	];
 }
 
-function getLaravelTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+function _getLaravelTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	const projectName = projectConfig.projectName;
 	const databaseName = projectConfig.projectName.replaceAll("-", "_");
 
@@ -1556,7 +1556,7 @@ php artisan serve --port=4000
 	];
 }
 
-function getGamanTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
+function _getGamanTemplateFiles(projectConfig: ProjectConfig): ProjectFile[] {
 	const templateUrl = BACKEND_TEMPLATE_URLS.find((candidateUrl) =>
 		existsSync(candidateUrl),
 	);
