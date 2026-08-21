@@ -174,9 +174,9 @@
 				"path": "/en/database/turso.md"
 			},
 			{
-				"id": "customTags",
-				"title": "Custom Tags & Primitives",
-				"path": "/en/customTags.md"
+				"id": "elements",
+				"title": "Framework Elements",
+				"path": "/en/elements.md"
 			},
 			{
 				"id": "cli",
@@ -510,9 +510,9 @@
 				"path": "/id/database/turso.md"
 			},
 			{
-				"id": "customTags",
-				"title": "Tag Kustom & Primitif",
-				"path": "/id/customTags.md"
+				"id": "elements",
+				"title": "Framework Elements",
+				"path": "/id/elements.md"
 			},
 			{
 				"id": "cli",
