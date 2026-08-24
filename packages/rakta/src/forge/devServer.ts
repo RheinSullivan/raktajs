@@ -85,6 +85,26 @@ function withRaktaDetectionHeaders(response: Response): Response {
 	});
 }
 
+function formatBuildDiagnostic(log: {
+	message: string;
+	level: string;
+	position?: { file?: string; line?: number; column?: number } | null;
+}): string {
+	const level = log.level.toUpperCase();
+	const pos = log.position;
+	if (pos?.file) {
+		const location = [
+			pos.file,
+			pos.line != null ? `line ${pos.line}` : null,
+			pos.column != null ? `col ${pos.column}` : null,
+		]
+			.filter(Boolean)
+			.join(", ");
+		return `  [${level}] ${log.message}\n         at ${location}`;
+	}
+	return `  [${level}] ${log.message}`;
+}
+
 async function buildDevClientBundle(
 	options: ForgeDevServerOptions,
 	manifest: ReturnType<typeof generateManifest>,
@@ -115,10 +135,27 @@ async function buildDevClientBundle(
 	});
 
 	if (!buildResult.success) {
-		const buildErrors = buildResult.logs
-			.map((buildLog) => buildLog.message)
-			.join("\n");
-		throw new Error(`Failed to build Rakta.js client bundle.\n${buildErrors}`);
+		const errors = buildResult.logs.filter((l) => l.level === "error");
+		const warnings = buildResult.logs.filter((l) => l.level === "warning");
+
+		const lines: string[] = ["Bundle failed - Rakta.js client build error\n"];
+
+		if (errors.length > 0) {
+			lines.push(`Errors (${errors.length}):`);
+			for (const log of errors) lines.push(formatBuildDiagnostic(log));
+		}
+		if (warnings.length > 0) {
+			lines.push(`\nWarnings (${warnings.length}):`);
+			for (const log of warnings) lines.push(formatBuildDiagnostic(log));
+		}
+		lines.push(
+			`\nEntry file: ${clientEntry}`,
+			`Project:    ${options.projectRoot}`,
+			`\nHint: Check that all imports in your app/ directory resolve correctly.`,
+			`      Run "bun install" to ensure dependencies are installed.`,
+		);
+
+		throw new Error(lines.join("\n"));
 	}
 
 	return clientOutDir;

@@ -1,6 +1,6 @@
 # Rakta.js Framework Elements
 
-Rakta.js ships **10 built-in JSX elements** that look like HTML but carry framework-level behavior at runtime. You use them directly in your components — no import needed when auto-import is enabled.
+Rakta.js ships **10 built-in JSX elements** that look like HTML but carry framework-level behavior at runtime. You use them directly in your components - no import needed when auto-import is enabled.
 
 Four older elements remain fully supported for compatibility but are not counted in the core set.
 
@@ -25,8 +25,8 @@ These elements remain implemented and exported but are not part of the core set:
 
 | Element | What It Does |
 | --- | --- |
-| `<pantura>` | Smooth scroll trigger — navigates to a `<reborns>` target by ID |
-| `<reborns>` | Scroll anchor target — receives `<pantura>` navigation |
+| `<pantura>` | Smooth scroll trigger - navigates to a `<reborns>` target by ID |
+| `<reborns>` | Scroll anchor target - receives `<pantura>` navigation |
 | `<form>` | Form wrapper with automatic CSRF token injection |
 | `<title>` | Declarative document title update from any component |
 

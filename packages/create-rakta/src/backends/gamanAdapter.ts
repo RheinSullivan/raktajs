@@ -54,18 +54,12 @@ export const gamanAdapter: BackendAdapter = {
 					"db:seed": "bun src/database/seed.ts",
 				},
 				dependencies: {
-					gaman: "^1.0.0",
-					"@gaman/core": "^1.0.0",
-					"@gaman/michi": "^1.0.0",
-					"@gaman/cors": "^1.0.0",
-					cors: "^2.8.5",
 					dotenv: "^16.4.5",
 					jsonwebtoken: "^9.0.2",
 					...(isSawitDatabase ? { sawitdb: "^1.0.0" } : {}),
 				},
 				devDependencies: {
 					"@types/bun": "latest",
-					"@types/cors": "^2.8.17",
 					"@types/jsonwebtoken": "^9.0.5",
 					typescript: "^5.3.3",
 				},
@@ -108,33 +102,20 @@ SAWIT_DB_FILE=./storage/database.sawit
 			}
 		}
 
-		const indexContent = `import { gaman } from "gaman";
-import { appRouter } from "./app";
+		const indexContent = `import { appRouter } from "./app";
 
 const port = Number(process.env.PORT) || 4000;
 
-console.log(\`Gaman.js powered Rakta backend starting on port \${port}...\`);
+console.log(\`Gaman.js backend starting on port \${port}...\`);
 
-const application = gaman({
-  router: appRouter,
-});
-
-export default {
+Bun.serve({
   port,
-  fetch(request: Request): Promise<Response> | Response {
+  fetch(request: Request) {
     return appRouter.handle(request);
   },
-};
+});
 
-if (typeof Bun !== "undefined") {
-  Bun.serve({
-    port,
-    fetch(request: Request) {
-      return appRouter.handle(request);
-    },
-  });
-  console.log(\`Gaman.js backend running on http://localhost:\${port}\`);
-}
+console.log(\`Gaman.js backend running on http://localhost:\${port}\`);
 `;
 
 		const appContent = `import { Router } from "./routes/router";

@@ -63,7 +63,21 @@ export async function buildProject(
 
 	if (!buildResult.success) {
 		for (const log of buildResult.logs) {
-			errors.push(log.message);
+			const pos = log.position;
+			if (pos?.file) {
+				const location = [
+					pos.file,
+					pos.line != null ? `line ${pos.line}` : null,
+					pos.column != null ? `col ${pos.column}` : null,
+				]
+					.filter(Boolean)
+					.join(", ");
+				errors.push(
+					`[${log.level.toUpperCase()}] ${log.message} (at ${location})`,
+				);
+			} else {
+				errors.push(`[${log.level.toUpperCase()}] ${log.message}`);
+			}
 		}
 		return {
 			success: false,

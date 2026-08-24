@@ -73,7 +73,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 						<span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
 						<span>CONNECTED TO GAMAN SERVER</span>
 					</div>
-					<p className="text-gray-600">v1.1.8 · Cirebon &amp; Jakarta 🇮🇩</p>
+					<p className="text-gray-600">v1.1.9 · Cirebon &amp; Jakarta 🇮🇩</p>
 				</div>
 			</aside>
 

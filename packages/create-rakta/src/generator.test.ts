@@ -40,7 +40,8 @@ describe("create-rakta fullstack generator", () => {
 		expect(fileByPath.has("backend/src/controllers/cms.controller.ts")).toBe(
 			true,
 		);
-		expect(fileByPath.get("backend/package.json")).toContain('"gaman"');
+		expect(fileByPath.get("backend/package.json")).toContain('"jsonwebtoken"');
+		expect(fileByPath.get("backend/package.json")).not.toContain('"gaman":');
 		expect(fileByPath.get("backend/src/index.ts")).toContain("Bun.serve");
 		expect(fileByPath.get("backend/src/index.ts")).toContain(
 			"appRouter.handle",
@@ -156,7 +157,7 @@ describe("create-rakta fullstack generator", () => {
 		);
 
 		expect(fileByPath.get("frontend/package.json")).toContain(
-			'"raktajs": "^1.1.8"',
+			'"raktajs": "^1.1.9"',
 		);
 		expect(fileByPath.get("frontend/rakta.config.ts")).toContain(
 			'defaultMode: "hybrid"',
@@ -405,5 +406,55 @@ describe("create-rakta fullstack generator", () => {
 		}
 		expect(existsSync(distPath)).toBe(true);
 		expect(existsSync(frontendDistPath)).toBe(true);
+	});
+
+	test("fullstack project with non-Node backend does not include backend in workspaces", () => {
+		const springBootConfig: ProjectConfig = {
+			...fullstackConfig,
+			backendFramework: "spring-boot",
+			database: "oracle" as import("./types").Database,
+		};
+		const files = generateProjectFiles(springBootConfig);
+		const rootPkg = files.find((f) => f.path === "package.json");
+		const pkg = JSON.parse(
+			typeof rootPkg?.content === "string" ? rootPkg.content : "{}",
+		) as { workspaces?: string[] };
+		expect(pkg.workspaces).not.toContain("backend");
+		expect(pkg.workspaces).toContain("frontend");
+		expect(pkg.workspaces).toContain("shared");
+	});
+
+	test("fullstack project with Gaman.js backend includes backend in workspaces", () => {
+		const files = generateProjectFiles(fullstackConfig);
+		const rootPkg = files.find((f) => f.path === "package.json");
+		const pkg = JSON.parse(
+			typeof rootPkg?.content === "string" ? rootPkg.content : "{}",
+		) as { workspaces?: string[] };
+		expect(pkg.workspaces).toContain("backend");
+		expect(pkg.workspaces).toContain("frontend");
+		expect(pkg.workspaces).toContain("shared");
+	});
+
+	test("gaman backend package.json does not reference phantom dependencies", () => {
+		const files = generateProjectFiles(fullstackConfig);
+		const backendPkg = files.find((f) => f.path === "backend/package.json");
+		const pkg = JSON.parse(
+			typeof backendPkg?.content === "string" ? backendPkg.content : "{}",
+		) as { dependencies?: Record<string, string> };
+		expect(pkg.dependencies).not.toHaveProperty("gaman");
+		expect(pkg.dependencies).not.toHaveProperty("@gaman/core");
+		expect(pkg.dependencies).not.toHaveProperty("@gaman/michi");
+		expect(pkg.dependencies).not.toHaveProperty("@gaman/cors");
+		expect(pkg.dependencies).toHaveProperty("jsonwebtoken");
+	});
+
+	test("gaman backend index.ts does not import from nonexistent gaman package", () => {
+		const files = generateProjectFiles(fullstackConfig);
+		const indexFile = files.find((f) => f.path === "backend/src/index.ts");
+		expect(typeof indexFile?.content).toBe("string");
+		const content = indexFile?.content as string;
+		expect(content).not.toContain('from "gaman"');
+		expect(content).not.toContain('from "@gaman/');
+		expect(content).toContain("Bun.serve");
 	});
 });

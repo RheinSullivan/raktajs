@@ -64,10 +64,27 @@ const FULLSTACK_FRONTEND_TEMPLATE_URLS = [
 
 //  Root files
 function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
-	const { projectName, projectMode, useTypeScript } = projectConfig;
+	const { projectName, projectMode, useTypeScript, backendFramework } =
+		projectConfig;
+
+	// Only Node/Bun backends generate a backend/package.json that Bun workspaces can reference.
+	const NODE_BACKEND_FRAMEWORKS = new Set([
+		"gaman",
+		"nestjs",
+		"express",
+		"adonis",
+		"hono",
+	]);
+	const isNodeBackend = backendFramework
+		? NODE_BACKEND_FRAMEWORKS.has(backendFramework)
+		: false;
 
 	const workspaces =
-		projectMode === "fullstack" ? ["frontend", "backend", "shared"] : [];
+		projectMode === "fullstack"
+			? isNodeBackend
+				? ["frontend", "backend", "shared"]
+				: ["frontend", "shared"]
+			: [];
 
 	const files: ProjectFile[] = [
 		{
@@ -81,21 +98,40 @@ function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
 					scripts:
 						projectMode === "fullstack"
 							? {
-									dev: "bun run dev:frontend & bun run dev:backend",
+									dev: isNodeBackend
+										? "bun run dev:frontend & bun run dev:backend"
+										: "bun run dev:frontend",
 									"dev:frontend": "cd frontend && bun run dev",
-									"dev:backend": "cd backend && bun run dev",
+									...(isNodeBackend
+										? { "dev:backend": "cd backend && bun run dev" }
+										: {}),
 									"build:frontend": "cd frontend && bun run build",
-									"build:backend": "cd backend && bun run build",
-									build: "bun run build:frontend && bun run build:backend",
-									start: "cd backend && bun run start",
-									migration: "cd backend && bun run migration",
-									migrate: "cd backend && bun run migrate",
-									seed: "cd backend && bun run seed",
-									"db:seed": "cd backend && bun run db:seed",
+									...(isNodeBackend
+										? { "build:backend": "cd backend && bun run build" }
+										: {}),
+									build: isNodeBackend
+										? "bun run build:frontend && bun run build:backend"
+										: "bun run build:frontend",
+									...(isNodeBackend
+										? { start: "cd backend && bun run start" }
+										: {}),
+									...(isNodeBackend
+										? { migration: "cd backend && bun run migration" }
+										: {}),
+									...(isNodeBackend
+										? { migrate: "cd backend && bun run migrate" }
+										: {}),
+									...(isNodeBackend
+										? { seed: "cd backend && bun run seed" }
+										: {}),
+									...(isNodeBackend
+										? { "db:seed": "cd backend && bun run db:seed" }
+										: {}),
 									...(useTypeScript
 										? {
-												typecheck:
-													"cd frontend && bun run typecheck && cd ../backend && bun run typecheck",
+												typecheck: isNodeBackend
+													? "cd frontend && bun run typecheck && cd ../backend && bun run typecheck"
+													: "cd frontend && bun run typecheck",
 											}
 										: {}),
 								}
@@ -105,7 +141,7 @@ function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
 									start: "rakta start",
 									...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 								},
-					description: `${projectName} -” built with Rakta.js`,
+					description: `${projectName} - built with Rakta.js`,
 				},
 				null,
 				2,
@@ -295,7 +331,7 @@ function personalizeFrontendTemplate(
 				},
 				dependencies: {
 					...(packageJson.dependencies ?? {}),
-					raktajs: "^1.1.8",
+					raktajs: "^1.1.9",
 					react: "^19.2.7",
 					"react-dom": "^19.2.7",
 					gsap: "^3.12.7",
@@ -402,7 +438,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^1.1.8",
+						raktajs: "^1.1.9",
 						gsap: "^3.12.7",
 						clsx: "^2.1.1",
 						"tailwind-merge": "^3.0.2",
@@ -567,7 +603,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^1.1.8",
+						raktajs: "^1.1.9",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						gsap: "^3.12.7",

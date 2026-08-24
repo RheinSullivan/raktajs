@@ -62,14 +62,45 @@ function formatFrontendOnlyCommands(projectName: string): string {
 }
 
 async function installDependencies(projectDirectory: string): Promise<void> {
+	// On Windows, using shell: true with bun causes Node.js DEP0190 security warning.
+	// Use bun.cmd instead, which is the CMD-friendly entry point for bun on Windows.
+	const bunCommand = process.platform === "win32" ? "bun.cmd" : "bun";
+
 	await new Promise<void>((resolveInstall, rejectInstall) => {
-		const installProcess = spawn("bun", ["install"], {
+		const installProcess = spawn(bunCommand, ["install"], {
 			cwd: projectDirectory,
 			stdio: "inherit",
-			shell: process.platform === "win32",
+			shell: false,
 		});
 
-		installProcess.on("error", rejectInstall);
+		installProcess.on("error", (err) => {
+			// Fallback for Windows: if bun.cmd is not on PATH, retry with shell: true
+			if (
+				process.platform === "win32" &&
+				(err as NodeJS.ErrnoException).code === "ENOENT"
+			) {
+				const fallback = spawn("bun", ["install"], {
+					cwd: projectDirectory,
+					stdio: "inherit",
+					shell: true,
+				});
+				fallback.on("error", rejectInstall);
+				fallback.on("exit", (exitCode) => {
+					if (exitCode === 0) {
+						resolveInstall();
+					} else {
+						rejectInstall(
+							new Error(
+								`bun install failed with exit code ${exitCode ?? "unknown"}.`,
+							),
+						);
+					}
+				});
+				return;
+			}
+			rejectInstall(err);
+		});
+
 		installProcess.on("exit", (exitCode) => {
 			if (exitCode === 0) {
 				resolveInstall();

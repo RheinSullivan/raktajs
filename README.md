@@ -279,7 +279,7 @@ Rakta.js ships 10 built-in JSX elements that carry framework-level behavior at r
 
 `<click>`, `<picture>`, `<lazy>`, `<guard>`, `<seal>`, `<shelf>`, `<island>`, `<prefetch>`, `<route>`, and `<resource>`.
 
-Four additional compatibility elements — `<pantura>`, `<reborns>`, `<form>`, and `<title>` — remain fully supported but are not part of the core set.
+Four additional compatibility elements - `<pantura>`, `<reborns>`, `<form>`, and `<title>` - remain fully supported but are not part of the core set.
 
 See [Framework Elements](./docs/en/elements.md) for props, runtime behavior, and examples.
 
