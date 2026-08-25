@@ -73,7 +73,7 @@ function formatFrontendOnlyCommands(projectName: string): string {
  *   normally. On Unix systems shell:false is preferred for security and
  *   avoids the Node.js DEP0190 warning.
  */
-function resolveBunSpawnOptions(cwd: string): {
+function resolveBunSpawnOptions(_cwd: string): {
 	command: string;
 	args: string[];
 	shell: boolean | string;
@@ -113,9 +113,9 @@ async function installDependencies(projectDirectory: string): Promise<void> {
 			rejectInstall(
 				new Error(
 					`Failed to spawn bun install (${errnoError.code ?? "unknown"}: ${errnoError.message}). ` +
-					`Platform: ${process.platform}. ` +
-					`Command: ${command} ${args.join(" ")}. ` +
-					`Ensure bun is installed and available on PATH. See https://bun.sh/docs/installation`,
+						`Platform: ${process.platform}. ` +
+						`Command: ${command} ${args.join(" ")}. ` +
+						`Ensure bun is installed and available on PATH. See https://bun.sh/docs/installation`,
 				),
 			);
 		});

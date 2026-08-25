@@ -464,11 +464,14 @@ describe("create-rakta fullstack generator", () => {
 describe("v1.2.0 regression tests", () => {
 	// BUG #1 / BUG #7: spawn EINVAL on Windows
 	test("resolveBunSpawnOptions routes through cmd.exe on Windows", async () => {
-		// We test the logic in index.ts indirectly through its exported types.
+		// We test the logic in index.ts indirectly by reading the source.
 		// The core logic: on win32, command should be cmd.exe with /d /s /c prefix.
-		// We cannot execute child processes in this test, but we validate the source.
+		// We cannot execute child processes in this test, but we can validate the source.
 		const { readFileSync } = await import("node:fs");
-		const indexSource = readFileSync("packages/create-rakta/src/index.ts", "utf8");
+		const indexSource = readFileSync(
+			"packages/create-rakta/src/index.ts",
+			"utf8",
+		);
 		expect(indexSource).toContain("resolveBunSpawnOptions");
 		expect(indexSource).toContain("cmd.exe");
 		expect(indexSource).toContain('"/d", "/s", "/c", "bun install"');
@@ -486,7 +489,7 @@ describe("v1.2.0 regression tests", () => {
 			autoImport: true,
 			cssFramework: "tailwind",
 		});
-		const config = files.find((f) => f.path === "rakta.config.ts");
+		const config = files.find((file) => file.path === "rakta.config.ts");
 		expect(typeof config?.content).toBe("string");
 		const content = config?.content as string;
 		// The right double quotation mark U+201D must not appear in the
@@ -494,41 +497,32 @@ describe("v1.2.0 regression tests", () => {
 		// break the TypeScript string literal.
 		expect(content).not.toContain("\u201d");
 		// The description must be a valid plain-ASCII hyphen, not a curly quote.
-		// Either the description contains a plain hyphen or it simply doesn't
-		// contain the broken pattern.
-		expect(content).not.toContain('Rakta.js -\u201d');
+		expect(content).not.toContain("Rakta.js -\u201d");
 	});
 
 	// BUG #2: Fullstack frontend rakta.config.ts must not have broken description
-	test("fullstack frontend rakta.config.ts inline fallback has no broken smart quotes", () => {
-		const files = generateProjectFiles({
-			...fullstackConfig,
-			projectMode: "fullstack",
-			backendFramework: "gaman",
-		});
-		// The fullstack config is only produced when no template is found,
-		// but we can verify the generator source doesn't contain broken quotes.
-		const { readFileSync } = require("node:fs");
+	test("fullstack frontend rakta.config.ts inline fallback has no broken smart quotes", async () => {
+		// Verify the generator source itself doesn't contain the broken pattern.
+		const { readFileSync } = await import("node:fs");
 		const generatorSource = readFileSync(
 			"packages/create-rakta/src/generator.ts",
 			"utf8",
-		) as string;
+		);
 		// No right double quotation mark should appear inside any JS/TS string
 		// that generates TypeScript source code for description fields.
-		// We check the specific pattern that was broken.
 		expect(generatorSource).not.toContain(
 			'defaultDescription: "Built with Rakta.js -\u201d',
 		);
 	});
 
-	// BUG #4 / Workspace integrity: every file in workspaces must have package.json
+	// BUG #4 / Workspace integrity: every directory in workspaces must have package.json
 	test("every directory listed in root workspaces has a package.json", () => {
 		const files = generateProjectFiles(fullstackConfig);
-		const rootPkg = files.find((f) => f.path === "package.json");
+		const rootPkg = files.find((file) => file.path === "package.json");
 		const pkg = JSON.parse(
 			typeof rootPkg?.content === "string" ? rootPkg.content : "{}",
 		) as { workspaces?: string[] };
-		const filePaths = new Set(files.map((f) => f.path));
+		const filePaths = new Set(files.map((file) => file.path));
 
 		for (const workspace of pkg.workspaces ?? []) {
 			const expectedPkgJson = `${workspace}/package.json`;
@@ -539,31 +533,32 @@ describe("v1.2.0 regression tests", () => {
 	// BUG #5: @gaman/michi — the version that was previously generated
 	// (@gaman/michi@^1.0.0) doesn't exist. Verify NO adapter generates it.
 	test("no adapter generates @gaman/michi dependency", () => {
-		const backendFrameworks: ReadonlyArray<import("./types").BackendFramework> = [
-			"gaman",
-			"nestjs",
-			"express",
-			"adonis",
-			"hono",
-			"laravel",
-			"codeigniter",
-			"flask",
-			"django",
-			"prabogo",
-			"beego",
-			"rails",
-			"hanami",
-			"spring-boot",
-			"jakarta-ee",
-		];
+		const backendFrameworks: ReadonlyArray<import("./types").BackendFramework> =
+			[
+				"gaman",
+				"nestjs",
+				"express",
+				"adonis",
+				"hono",
+				"laravel",
+				"codeigniter",
+				"flask",
+				"django",
+				"prabogo",
+				"beego",
+				"rails",
+				"hanami",
+				"spring-boot",
+				"jakarta-ee",
+			];
 
 		for (const backendFramework of backendFrameworks) {
-			const files = generateProjectFiles({
+			const generatedFiles = generateProjectFiles({
 				...fullstackConfig,
 				projectName: `test-michi-${backendFramework}`,
 				backendFramework,
 			});
-			for (const file of files) {
+			for (const file of generatedFiles) {
 				const content = typeof file.content === "string" ? file.content : "";
 				expect(content).not.toContain("@gaman/michi");
 			}
@@ -579,8 +574,11 @@ describe("v1.2.0 regression tests", () => {
 		];
 
 		for (const override of configs) {
-			const files = generateProjectFiles({ ...fullstackConfig, ...override });
-			for (const file of files) {
+			const generatedFiles = generateProjectFiles({
+				...fullstackConfig,
+				...override,
+			});
+			for (const file of generatedFiles) {
 				const content = typeof file.content === "string" ? file.content : "";
 				expect(content).not.toContain("framer-motion");
 			}
@@ -589,11 +587,11 @@ describe("v1.2.0 regression tests", () => {
 
 	// Dependency versions: lucide-react must never appear in generated projects
 	test("generated projects never reference lucide-react", () => {
-		const files = generateProjectFiles({
+		const generatedFiles = generateProjectFiles({
 			...fullstackConfig,
 			projectMode: "frontend-only",
 		});
-		for (const file of files) {
+		for (const file of generatedFiles) {
 			const content = typeof file.content === "string" ? file.content : "";
 			expect(content).not.toContain("lucide-react");
 		}
@@ -606,7 +604,7 @@ describe("v1.2.0 regression tests", () => {
 			projectMode: "frontend-only",
 			autoImport: true,
 		});
-		const config = files.find((f) => f.path === "rakta.config.ts");
+		const config = files.find((file) => file.path === "rakta.config.ts");
 		expect(config?.content).toContain("autoImport:");
 		expect(config?.content).toContain("enabled: true");
 	});
@@ -617,7 +615,7 @@ describe("v1.2.0 regression tests", () => {
 			projectMode: "frontend-only",
 			autoImport: false,
 		});
-		const config = files.find((f) => f.path === "rakta.config.ts");
+		const config = files.find((file) => file.path === "rakta.config.ts");
 		expect(config?.content).toContain("enabled: false");
 	});
 
@@ -628,7 +626,8 @@ describe("v1.2.0 regression tests", () => {
 			projectMode: "frontend-only",
 		});
 		const pageFiles = files.filter(
-			(f) => f.path.endsWith("page.tsx") || f.path.endsWith("page.jsx"),
+			(file) =>
+				file.path.endsWith("page.tsx") || file.path.endsWith("page.jsx"),
 		);
 		expect(pageFiles.length).toBeGreaterThanOrEqual(1);
 	});
@@ -641,14 +640,22 @@ describe("v1.2.0 regression tests", () => {
 		});
 		// In frontend-only mode there can be two package.json files (root + template).
 		// The one with actual dependencies is the template-sourced package.json.
-		const allPkgs = files.filter((f) => f.path === "package.json");
-		const depsPackage = allPkgs.find((pkg) => {
+		const allPackageJsonFiles = files.filter(
+			(file) => file.path === "package.json",
+		);
+		const depsPackage = allPackageJsonFiles.find((packageFile) => {
 			try {
-				const data = JSON.parse(typeof pkg.content === "string" ? pkg.content : "{}") as { dependencies?: Record<string, string> };
+				const data = JSON.parse(
+					typeof packageFile.content === "string" ? packageFile.content : "{}",
+				) as { dependencies?: Record<string, string> };
 				return Boolean(data.dependencies?.raktajs);
-			} catch { return false; }
+			} catch {
+				return false;
+			}
 		});
-		const pkgData = JSON.parse(typeof depsPackage?.content === "string" ? depsPackage.content : "{}") as {
+		const pkgData = JSON.parse(
+			typeof depsPackage?.content === "string" ? depsPackage.content : "{}",
+		) as {
 			dependencies?: Record<string, string>;
 		};
 		expect(pkgData.dependencies).toHaveProperty("gsap");
@@ -661,33 +668,38 @@ describe("v1.2.0 regression tests", () => {
 			...fullstackConfig,
 			projectMode: "frontend-only",
 		});
-		const allPkgs = files.filter((f) => f.path === "package.json");
-		const depsPackage = allPkgs.find((pkg) => {
+		const allPackageJsonFiles = files.filter(
+			(file) => file.path === "package.json",
+		);
+		const depsPackage = allPackageJsonFiles.find((packageFile) => {
 			try {
-				const data = JSON.parse(typeof pkg.content === "string" ? pkg.content : "{}") as { dependencies?: Record<string, string> };
+				const data = JSON.parse(
+					typeof packageFile.content === "string" ? packageFile.content : "{}",
+				) as { dependencies?: Record<string, string> };
 				return Boolean(data.dependencies?.raktajs);
-			} catch { return false; }
+			} catch {
+				return false;
+			}
 		});
-		const pkgData = JSON.parse(typeof depsPackage?.content === "string" ? depsPackage.content : "{}") as {
+		const pkgData = JSON.parse(
+			typeof depsPackage?.content === "string" ? depsPackage.content : "{}",
+		) as {
 			dependencies?: Record<string, string>;
 		};
 		expect(pkgData.dependencies).toHaveProperty("react-icons");
 		expect(pkgData.dependencies).not.toHaveProperty("lucide-react");
 	});
 
-	// Gaman + PostgreSQL: must generate valid database dependency
-	test("gaman + postgresql generates postgres dependency", () => {
+	// Gaman + PostgreSQL: must generate valid backend project files
+	test("gaman + postgresql generates a backend package.json", () => {
 		const files = generateProjectFiles({
 			...fullstackConfig,
 			backendFramework: "gaman",
 			database: "postgresql",
 		});
-		const backendPkg = files.find((f) => f.path === "backend/package.json");
-		const pkg = JSON.parse(
-			typeof backendPkg?.content === "string" ? backendPkg.content : "{}",
-		) as { dependencies?: Record<string, string> };
-		// gamanAdapter includes postgres dep via getDatabaseDependencies in generator
-		// (it's added in personalizeGamanTemplate)
+		const backendPkg = files.find(
+			(file) => file.path === "backend/package.json",
+		);
 		expect(backendPkg).toBeDefined();
 	});
 
@@ -700,22 +712,26 @@ describe("v1.2.0 regression tests", () => {
 		const fullstackFiles = generateProjectFiles(fullstackConfig);
 
 		// In frontend-only mode, there are two package.json files (workspace root + template deps).
-		// Find the one that actually has raktajs.
+		// Concatenate both so the assertion finds the one with raktajs.
 		const frontendDepsContent = frontendFiles
-			.filter((f) => f.path === "package.json")
-			.map((f) => typeof f.content === "string" ? f.content : "")
+			.filter((file) => file.path === "package.json")
+			.map((file) => (typeof file.content === "string" ? file.content : ""))
 			.join("\n");
 		expect(frontendDepsContent).toContain('"raktajs": "^1.2.0"');
 
 		// In fullstack, frontend package.json is under frontend/
-		const fullstackFrontendPkg = fullstackFiles.find((f) => f.path === "frontend/package.json");
+		const fullstackFrontendPkg = fullstackFiles.find(
+			(file) => file.path === "frontend/package.json",
+		);
 		expect(fullstackFrontendPkg?.content).toContain('"raktajs": "^1.2.0"');
 	});
 
 	// RPC: fullstack project must have rpc:types script in frontend
 	test("fullstack frontend has rpc:types script", () => {
 		const files = generateProjectFiles(fullstackConfig);
-		const frontendPkg = files.find((f) => f.path === "frontend/package.json");
+		const frontendPkg = files.find(
+			(file) => file.path === "frontend/package.json",
+		);
 		const pkg = JSON.parse(
 			typeof frontendPkg?.content === "string" ? frontendPkg.content : "{}",
 		) as { scripts?: Record<string, string> };
@@ -739,15 +755,19 @@ describe("v1.2.0 regression tests", () => {
 		const singleFiles = generateProjectFiles(singleSessionConfig);
 		const multiFiles = generateProjectFiles(multiSessionConfig);
 
-		const singleEnv = singleFiles.find((f) => f.path === "backend/.env.example");
-		const multiEnv = multiFiles.find((f) => f.path === "backend/.env.example");
+		const singleEnv = singleFiles.find(
+			(file) => file.path === "backend/.env.example",
+		);
+		const multiEnv = multiFiles.find(
+			(file) => file.path === "backend/.env.example",
+		);
 
 		// Both should have JWT_SECRET
 		expect(singleEnv?.content).toContain("JWT_SECRET");
 		expect(multiEnv?.content).toContain("JWT_SECRET");
 	});
 
-	// Database dependency coverage: all DB types should have a valid dep or none
+	// Database dependency coverage: all DB types should produce files without throwing
 	test("getDatabaseDependencies returns valid packages for all database types", () => {
 		const databases: ReadonlyArray<import("./types").Database> = [
 			"postgresql",
@@ -765,7 +785,7 @@ describe("v1.2.0 regression tests", () => {
 		];
 
 		for (const database of databases) {
-			// Just verify the generator runs without throwing
+			// Verify the generator runs without throwing for every database type.
 			const files = generateProjectFiles({
 				...fullstackConfig,
 				database,
@@ -777,7 +797,7 @@ describe("v1.2.0 regression tests", () => {
 	// Shared directory must always be present in fullstack projects
 	test("fullstack project always has shared/package.json", () => {
 		const files = generateProjectFiles(fullstackConfig);
-		const sharedPkg = files.find((f) => f.path === "shared/package.json");
+		const sharedPkg = files.find((file) => file.path === "shared/package.json");
 		expect(sharedPkg).toBeDefined();
 		const pkg = JSON.parse(
 			typeof sharedPkg?.content === "string" ? sharedPkg.content : "{}",
@@ -792,7 +812,7 @@ describe("v1.2.0 regression tests", () => {
 			projectMode: "frontend-only",
 			useTypeScript: true,
 		});
-		const tsconfig = files.find((f) => f.path === "tsconfig.json");
+		const tsconfig = files.find((file) => file.path === "tsconfig.json");
 		if (tsconfig && typeof tsconfig.content === "string") {
 			expect(() => JSON.parse(tsconfig.content as string)).not.toThrow();
 		}
@@ -805,7 +825,7 @@ describe("v1.2.0 regression tests", () => {
 			projectMode: "frontend-only",
 			cssFramework: "tailwind",
 		});
-		const postcss = files.find((f) => f.path === "postcss.config.ts");
+		const postcss = files.find((file) => file.path === "postcss.config.ts");
 		expect(postcss).toBeDefined();
 		expect(postcss?.content).toContain("@tailwindcss/postcss");
 	});
@@ -818,9 +838,9 @@ describe("v1.2.0 regression tests", () => {
 			cssFramework: "tailwind",
 		});
 		const hasGlobalsCss = files.some(
-			(f) =>
-				f.path === "styles/globals.css" ||
-				f.path === "styles/globals.scss",
+			(file) =>
+				file.path === "styles/globals.css" ||
+				file.path === "styles/globals.scss",
 		);
 		expect(hasGlobalsCss).toBe(true);
 	});
