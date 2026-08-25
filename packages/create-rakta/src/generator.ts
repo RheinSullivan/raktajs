@@ -331,7 +331,7 @@ function personalizeFrontendTemplate(
 				},
 				dependencies: {
 					...(packageJson.dependencies ?? {}),
-					raktajs: "^1.1.9",
+					raktajs: "^1.2.0",
 					react: "^19.2.7",
 					"react-dom": "^19.2.7",
 					gsap: "^3.12.7",
@@ -438,7 +438,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^1.1.9",
+						raktajs: "^1.2.0",
 						gsap: "^3.12.7",
 						clsx: "^2.1.1",
 						"tailwind-merge": "^3.0.2",
@@ -603,7 +603,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^1.1.9",
+						raktajs: "^1.2.0",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						gsap: "^3.12.7",
@@ -652,7 +652,7 @@ function getFullstackFrontendFiles(
 		},
 		{
 			path: "frontend/rakta.config.ts",
-			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n${getAutoImportConfig(projectConfig.autoImport)}  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js -” Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {\n      "/": "ssg",\n      "/about": "ssg",\n      "/blog": "csg",\n      "/blog/:slug": "csg",\n      "/dashboard": "csr"\n    }\n  }\n});\n`,
+			content: `import { defineRaktaConfig } from "raktajs";\n\nexport default defineRaktaConfig({\n  appName: "${projectName}",\n${getAutoImportConfig(projectConfig.autoImport)}  seo: {\n    defaultTitle: "${DEFAULT_METADATA_TITLE}",\n    defaultDescription: "Built with Rakta.js - Small in size. Fierce in speed. Alive in every route.",\n  },\n  render: {\n    defaultMode: "csr",\n    routes: {\n      "/": "ssg",\n      "/about": "ssg",\n      "/blog": "csg",\n      "/blog/:slug": "csg",\n      "/dashboard": "csr"\n    }\n  }\n});\n`,
 		},
 		{
 			path: "frontend/rakta-env.d.ts",
@@ -2766,7 +2766,7 @@ function _generateShrimpMascotComponent(): string {
 }
 
 /**
- * RaktaShrimpMascot -” The animated shrimp hero of ShrimpRun.
+ * RaktaShrimpMascot - The animated shrimp hero of ShrimpRun.
  * Drawn entirely with inline SVG. No external assets required.
  */
 export default function RaktaShrimpMascot({
@@ -3011,13 +3011,13 @@ function checkCollision(
 //  Component
 
 /**
- * ShrimpRun -” Default Rakta.js interactive starter game.
+ * ShrimpRun - Default Rakta.js interactive starter game.
  *
  * Like the Chrome offline Dino game, but the dinosaur is an animated shrimp.
  * Press Space or click the game canvas to jump. Avoid the red obstacles!
  *
  * Features:
- * - React state only -” no external game library
+ * - React state only - no external game library
  * - requestAnimationFrame game loop
  * - Physics: gravity + jump velocity
  * - Score that increases over time
@@ -3026,7 +3026,7 @@ function checkCollision(
  * - High score tracked in component state
  * - Keyboard (Space) and click/tap support
  * - Accessible button game canvas
- * - SVG shrimp mascot -” no external assets
+ * - SVG shrimp mascot - no external assets
  */
 export default function ShrimpRunGame() {
   const [gameStatus, setGameStatus] = useState<GameStatus>("idle");
@@ -3326,7 +3326,7 @@ function generateFullstackHomePage(projectName: string): string {
         <p className="eyebrow">THE RED ROUTER FRAMEWORK</p>
         <h1>Welcome to ${projectName}</h1>
         <p>
-          Built with Rakta.js -” Small in size. Fierce in speed. Alive in every route.
+          Built with Rakta.js - Small in size. Fierce in speed. Alive in every route.
         </p>
         <div className="button-row">
           <Click to="/about">About</Click>

@@ -1,24 +1,24 @@
 {
-	"name": "rakta-fullstack-template",
-	"version": "1.1.9",
-	"private": true,
-	"type": "module",
-	"workspaces": [
-		"frontend",
-		"backend",
-		"shared"
-	],
-	"scripts": {
-		"dev:frontend": "cd frontend && bun run dev",
-		"dev:backend": "cd backend && bun run dev",
-		"build:frontend": "cd frontend && bun run build",
-		"build:backend": "cd backend && bun run build",
-		"build": "bun run build:frontend && bun run build:backend",
-		"start": "cd backend && bun run start",
-		"migration": "cd backend && bun run migration",
-		"migrate": "cd backend && bun run migrate",
-		"seed": "cd backend && bun run seed",
-		"db:seed": "cd backend && bun run db:seed",
-		"typecheck": "cd frontend && bun run typecheck && cd ../backend && bun run typecheck"
-	}
+  "name": "rakta-fullstack-template",
+  "version": "1.2.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "scripts": {
+    "dev:frontend": "cd frontend && bun run dev",
+    "dev:backend": "cd backend && bun run dev",
+    "build:frontend": "cd frontend && bun run build",
+    "build:backend": "cd backend && bun run build",
+    "build": "bun run build:frontend && bun run build:backend",
+    "start": "cd backend && bun run start",
+    "migration": "cd backend && bun run migration",
+    "migrate": "cd backend && bun run migrate",
+    "seed": "cd backend && bun run seed",
+    "db:seed": "cd backend && bun run db:seed",
+    "typecheck": "cd frontend && bun run typecheck && cd ../backend && bun run typecheck"
+  }
 }

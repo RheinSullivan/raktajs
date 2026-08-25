@@ -61,44 +61,63 @@ function formatFrontendOnlyCommands(projectName: string): string {
 		.join("\n");
 }
 
+/**
+ * Resolve the bun executable for the current platform.
+ *
+ * Windows + Git Bash quirk:
+ *   spawn("bun", ..., { shell: false }) fails with EINVAL when the process
+ *   is launched from Git Bash or any MSYS2 shell because the Windows native
+ *   Bun executable (bun.exe) is not on the POSIX-style PATH that Git Bash
+ *   exposes to Node/Bun child_process.spawn. Using shell:true routes the
+ *   command through cmd.exe which can locate bun.exe via PATHEXT/PATH
+ *   normally. On Unix systems shell:false is preferred for security and
+ *   avoids the Node.js DEP0190 warning.
+ */
+function resolveBunSpawnOptions(cwd: string): {
+	command: string;
+	args: string[];
+	shell: boolean | string;
+} {
+	const isWindows = process.platform === "win32";
+
+	if (isWindows) {
+		// On Windows route through cmd.exe so bun.exe is found regardless of
+		// whether the caller is PowerShell, cmd.exe, or Git Bash (MSYS2).
+		return {
+			command: "cmd.exe",
+			args: ["/d", "/s", "/c", "bun install"],
+			shell: false,
+		};
+	}
+
+	// macOS / Linux: spawn bun directly, no shell indirection needed.
+	return {
+		command: "bun",
+		args: ["install"],
+		shell: false,
+	};
+}
+
 async function installDependencies(projectDirectory: string): Promise<void> {
-	// On Windows, using shell: true with bun causes Node.js DEP0190 security warning.
-	// Use bun.cmd instead, which is the CMD-friendly entry point for bun on Windows.
-	const bunCommand = process.platform === "win32" ? "bun.cmd" : "bun";
+	const { command, args, shell } = resolveBunSpawnOptions(projectDirectory);
 
 	await new Promise<void>((resolveInstall, rejectInstall) => {
-		const installProcess = spawn(bunCommand, ["install"], {
+		const installProcess = spawn(command, args, {
 			cwd: projectDirectory,
 			stdio: "inherit",
-			shell: false,
+			shell,
 		});
 
 		installProcess.on("error", (err) => {
-			// Fallback for Windows: if bun.cmd is not on PATH, retry with shell: true
-			if (
-				process.platform === "win32" &&
-				(err as NodeJS.ErrnoException).code === "ENOENT"
-			) {
-				const fallback = spawn("bun", ["install"], {
-					cwd: projectDirectory,
-					stdio: "inherit",
-					shell: true,
-				});
-				fallback.on("error", rejectInstall);
-				fallback.on("exit", (exitCode) => {
-					if (exitCode === 0) {
-						resolveInstall();
-					} else {
-						rejectInstall(
-							new Error(
-								`bun install failed with exit code ${exitCode ?? "unknown"}.`,
-							),
-						);
-					}
-				});
-				return;
-			}
-			rejectInstall(err);
+			const errnoError = err as NodeJS.ErrnoException;
+			rejectInstall(
+				new Error(
+					`Failed to spawn bun install (${errnoError.code ?? "unknown"}: ${errnoError.message}). ` +
+					`Platform: ${process.platform}. ` +
+					`Command: ${command} ${args.join(" ")}. ` +
+					`Ensure bun is installed and available on PATH. See https://bun.sh/docs/installation`,
+				),
+			);
 		});
 
 		installProcess.on("exit", (exitCode) => {

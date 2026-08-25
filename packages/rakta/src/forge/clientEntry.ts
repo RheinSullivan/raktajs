@@ -191,12 +191,23 @@ function buildClientEntrySource(
 		? `data:image/svg+xml;base64,${readFileSync(svgPath).toString("base64")}`
 		: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHBhdGggZmlsbD0iI0M2MDAwNSIgZD0iTTE2IDJMNCA4djE2bDEyIDYgMTItNlY4TDE2IDJ6Ii8+PC9zdmc+";
 
-	const devIndicatorSourcePath = join(
-		__dirname,
-		"..",
-		"developerExperience",
-		"devIndicator.ts",
-	);
+	const devIndicatorSourcePath = (() => {
+		// In the repository (dev mode), __dirname is src/forge/ and .ts source exists.
+		// In the installed npm package, __dirname is dist/forge/ and only .js exists.
+		const tsPath = join(
+			__dirname,
+			"..",
+			"developerExperience",
+			"devIndicator.ts",
+		);
+		const jsPath = join(
+			__dirname,
+			"..",
+			"developerExperience",
+			"devIndicator.js",
+		);
+		return existsSync(tsPath) ? tsPath : jsPath;
+	})();
 	const devIndicatorImport = options.devToolsEnabled
 		? `import { mountDevIndicator } from "${toModuleSpecifier(entryPath, devIndicatorSourcePath)}";\n`
 		: "";

@@ -1,23 +1,23 @@
 {
-	"name": "rakta-fullstack-template-backend",
-	"version": "1.1.9",
-	"private": true,
-	"type": "module",
-	"scripts": {
-		"dev": "bun run --watch src/index.ts",
-		"build": "bun build src/index.ts --outfile dist/index.js --target bun",
-		"start": "bun run dist/index.js",
-		"migration": "bun run src/database/migrations/index.ts",
-		"migrate": "bun run src/database/migrations/index.ts",
-		"seed": "bun run src/database/seeders/index.ts",
-		"db:seed": "bun run src/database/seeders/index.ts",
-		"typecheck": "tsc --noEmit"
-	},
-	"dependencies": {
-		"gaman": "^2.1.5"
-	},
-	"devDependencies": {
-		"@types/bun": "^1.3.14",
-		"typescript": "^6.0.3"
-	}
+  "name": "rakta-fullstack-template-backend",
+  "version": "1.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "build": "bun build src/index.ts --outfile dist/index.js --target bun",
+    "start": "bun run dist/index.js",
+    "migration": "bun run src/database/migrations/index.ts",
+    "migrate": "bun run src/database/migrations/index.ts",
+    "seed": "bun run src/database/seeders/index.ts",
+    "db:seed": "bun run src/database/seeders/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "gaman": "^2.1.5"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "typescript": "^6.0.3"
+  }
 }

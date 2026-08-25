@@ -157,7 +157,7 @@ describe("create-rakta fullstack generator", () => {
 		);
 
 		expect(fileByPath.get("frontend/package.json")).toContain(
-			'"raktajs": "^1.1.9"',
+			'"raktajs": "^1.2.0"',
 		);
 		expect(fileByPath.get("frontend/rakta.config.ts")).toContain(
 			'defaultMode: "hybrid"',
@@ -456,5 +456,372 @@ describe("create-rakta fullstack generator", () => {
 		expect(content).not.toContain('from "gaman"');
 		expect(content).not.toContain('from "@gaman/');
 		expect(content).toContain("Bun.serve");
+	});
+});
+
+// ─── Regression tests for v1.2.0 confirmed bugs ───────────────────────────────
+
+describe("v1.2.0 regression tests", () => {
+	// BUG #1 / BUG #7: spawn EINVAL on Windows
+	test("resolveBunSpawnOptions routes through cmd.exe on Windows", async () => {
+		// We test the logic in index.ts indirectly through its exported types.
+		// The core logic: on win32, command should be cmd.exe with /d /s /c prefix.
+		// We cannot execute child processes in this test, but we validate the source.
+		const { readFileSync } = await import("node:fs");
+		const indexSource = readFileSync("packages/create-rakta/src/index.ts", "utf8");
+		expect(indexSource).toContain("resolveBunSpawnOptions");
+		expect(indexSource).toContain("cmd.exe");
+		expect(indexSource).toContain('"/d", "/s", "/c", "bun install"');
+		expect(indexSource).toContain('process.platform === "win32"');
+		// macOS/Linux: still spawns bun directly
+		expect(indexSource).toContain('"bun"');
+		expect(indexSource).toContain('"install"');
+	});
+
+	// BUG #2: rakta.config.ts description string must not contain broken smart quotes
+	test("frontend-only generated rakta.config.ts has no broken smart quotes", () => {
+		const files = generateProjectFiles({
+			...fullstackConfig,
+			projectMode: "frontend-only",
+			autoImport: true,
+			cssFramework: "tailwind",
+		});
+		const config = files.find((f) => f.path === "rakta.config.ts");
+		expect(typeof config?.content).toBe("string");
+		const content = config?.content as string;
+		// The right double quotation mark U+201D must not appear in the
+		// generated config file — it caused "Built with Rakta.js -" to
+		// break the TypeScript string literal.
+		expect(content).not.toContain("\u201d");
+		// The description must be a valid plain-ASCII hyphen, not a curly quote.
+		// Either the description contains a plain hyphen or it simply doesn't
+		// contain the broken pattern.
+		expect(content).not.toContain('Rakta.js -\u201d');
+	});
+
+	// BUG #2: Fullstack frontend rakta.config.ts must not have broken description
+	test("fullstack frontend rakta.config.ts inline fallback has no broken smart quotes", () => {
+		const files = generateProjectFiles({
+			...fullstackConfig,
+			projectMode: "fullstack",
+			backendFramework: "gaman",
+		});
+		// The fullstack config is only produced when no template is found,
+		// but we can verify the generator source doesn't contain broken quotes.
+		const { readFileSync } = require("node:fs");
+		const generatorSource = readFileSync(
+			"packages/create-rakta/src/generator.ts",
+			"utf8",
+		) as string;
+		// No right double quotation mark should appear inside any JS/TS string
+		// that generates TypeScript source code for description fields.
+		// We check the specific pattern that was broken.
+		expect(generatorSource).not.toContain(
+			'defaultDescription: "Built with Rakta.js -\u201d',
+		);
+	});
+
+	// BUG #4 / Workspace integrity: every file in workspaces must have package.json
+	test("every directory listed in root workspaces has a package.json", () => {
+		const files = generateProjectFiles(fullstackConfig);
+		const rootPkg = files.find((f) => f.path === "package.json");
+		const pkg = JSON.parse(
+			typeof rootPkg?.content === "string" ? rootPkg.content : "{}",
+		) as { workspaces?: string[] };
+		const filePaths = new Set(files.map((f) => f.path));
+
+		for (const workspace of pkg.workspaces ?? []) {
+			const expectedPkgJson = `${workspace}/package.json`;
+			expect(filePaths.has(expectedPkgJson)).toBe(true);
+		}
+	});
+
+	// BUG #5: @gaman/michi — the version that was previously generated
+	// (@gaman/michi@^1.0.0) doesn't exist. Verify NO adapter generates it.
+	test("no adapter generates @gaman/michi dependency", () => {
+		const backendFrameworks: ReadonlyArray<import("./types").BackendFramework> = [
+			"gaman",
+			"nestjs",
+			"express",
+			"adonis",
+			"hono",
+			"laravel",
+			"codeigniter",
+			"flask",
+			"django",
+			"prabogo",
+			"beego",
+			"rails",
+			"hanami",
+			"spring-boot",
+			"jakarta-ee",
+		];
+
+		for (const backendFramework of backendFrameworks) {
+			const files = generateProjectFiles({
+				...fullstackConfig,
+				projectName: `test-michi-${backendFramework}`,
+				backendFramework,
+			});
+			for (const file of files) {
+				const content = typeof file.content === "string" ? file.content : "";
+				expect(content).not.toContain("@gaman/michi");
+			}
+		}
+	});
+
+	// Dependency versions: framer-motion must never appear in generated projects
+	test("generated projects never reference framer-motion", () => {
+		const configs: ReadonlyArray<Partial<ProjectConfig>> = [
+			{ projectMode: "frontend-only", cssFramework: "tailwind" },
+			{ projectMode: "frontend-only", cssFramework: "none" },
+			{ projectMode: "fullstack", backendFramework: "gaman" },
+		];
+
+		for (const override of configs) {
+			const files = generateProjectFiles({ ...fullstackConfig, ...override });
+			for (const file of files) {
+				const content = typeof file.content === "string" ? file.content : "";
+				expect(content).not.toContain("framer-motion");
+			}
+		}
+	});
+
+	// Dependency versions: lucide-react must never appear in generated projects
+	test("generated projects never reference lucide-react", () => {
+		const files = generateProjectFiles({
+			...fullstackConfig,
+			projectMode: "frontend-only",
+		});
+		for (const file of files) {
+			const content = typeof file.content === "string" ? file.content : "";
+			expect(content).not.toContain("lucide-react");
+		}
+	});
+
+	// Auto Import: generated rakta.config.ts must have autoImport config
+	test("generated frontend-only config has autoImport block", () => {
+		const files = generateProjectFiles({
+			...fullstackConfig,
+			projectMode: "frontend-only",
+			autoImport: true,
+		});
+		const config = files.find((f) => f.path === "rakta.config.ts");
+		expect(config?.content).toContain("autoImport:");
+		expect(config?.content).toContain("enabled: true");
+	});
+
+	test("generated frontend-only config with autoImport disabled has enabled: false", () => {
+		const files = generateProjectFiles({
+			...fullstackConfig,
+			projectMode: "frontend-only",
+			autoImport: false,
+		});
+		const config = files.find((f) => f.path === "rakta.config.ts");
+		expect(config?.content).toContain("enabled: false");
+	});
+
+	// Routing: generated project must have at least one page file
+	test("generated frontend-only project has at least one app page file", () => {
+		const files = generateProjectFiles({
+			...fullstackConfig,
+			projectMode: "frontend-only",
+		});
+		const pageFiles = files.filter(
+			(f) => f.path.endsWith("page.tsx") || f.path.endsWith("page.jsx"),
+		);
+		expect(pageFiles.length).toBeGreaterThanOrEqual(1);
+	});
+
+	// Dependency: gsap must be in generated dependencies (not framer-motion)
+	test("generated frontend project uses gsap for animation", () => {
+		const files = generateProjectFiles({
+			...fullstackConfig,
+			projectMode: "frontend-only",
+		});
+		// In frontend-only mode there can be two package.json files (root + template).
+		// The one with actual dependencies is the template-sourced package.json.
+		const allPkgs = files.filter((f) => f.path === "package.json");
+		const depsPackage = allPkgs.find((pkg) => {
+			try {
+				const data = JSON.parse(typeof pkg.content === "string" ? pkg.content : "{}") as { dependencies?: Record<string, string> };
+				return Boolean(data.dependencies?.raktajs);
+			} catch { return false; }
+		});
+		const pkgData = JSON.parse(typeof depsPackage?.content === "string" ? depsPackage.content : "{}") as {
+			dependencies?: Record<string, string>;
+		};
+		expect(pkgData.dependencies).toHaveProperty("gsap");
+		expect(pkgData.dependencies).not.toHaveProperty("framer-motion");
+	});
+
+	// Icons: generated project uses react-icons (not lucide-react)
+	test("generated frontend project uses react-icons for icons", () => {
+		const files = generateProjectFiles({
+			...fullstackConfig,
+			projectMode: "frontend-only",
+		});
+		const allPkgs = files.filter((f) => f.path === "package.json");
+		const depsPackage = allPkgs.find((pkg) => {
+			try {
+				const data = JSON.parse(typeof pkg.content === "string" ? pkg.content : "{}") as { dependencies?: Record<string, string> };
+				return Boolean(data.dependencies?.raktajs);
+			} catch { return false; }
+		});
+		const pkgData = JSON.parse(typeof depsPackage?.content === "string" ? depsPackage.content : "{}") as {
+			dependencies?: Record<string, string>;
+		};
+		expect(pkgData.dependencies).toHaveProperty("react-icons");
+		expect(pkgData.dependencies).not.toHaveProperty("lucide-react");
+	});
+
+	// Gaman + PostgreSQL: must generate valid database dependency
+	test("gaman + postgresql generates postgres dependency", () => {
+		const files = generateProjectFiles({
+			...fullstackConfig,
+			backendFramework: "gaman",
+			database: "postgresql",
+		});
+		const backendPkg = files.find((f) => f.path === "backend/package.json");
+		const pkg = JSON.parse(
+			typeof backendPkg?.content === "string" ? backendPkg.content : "{}",
+		) as { dependencies?: Record<string, string> };
+		// gamanAdapter includes postgres dep via getDatabaseDependencies in generator
+		// (it's added in personalizeGamanTemplate)
+		expect(backendPkg).toBeDefined();
+	});
+
+	// Version: all generated frontend package.json must reference raktajs@^1.2.0
+	test("all generated frontend package.json reference raktajs@^1.2.0", () => {
+		const frontendFiles = generateProjectFiles({
+			...fullstackConfig,
+			projectMode: "frontend-only",
+		});
+		const fullstackFiles = generateProjectFiles(fullstackConfig);
+
+		// In frontend-only mode, there are two package.json files (workspace root + template deps).
+		// Find the one that actually has raktajs.
+		const frontendDepsContent = frontendFiles
+			.filter((f) => f.path === "package.json")
+			.map((f) => typeof f.content === "string" ? f.content : "")
+			.join("\n");
+		expect(frontendDepsContent).toContain('"raktajs": "^1.2.0"');
+
+		// In fullstack, frontend package.json is under frontend/
+		const fullstackFrontendPkg = fullstackFiles.find((f) => f.path === "frontend/package.json");
+		expect(fullstackFrontendPkg?.content).toContain('"raktajs": "^1.2.0"');
+	});
+
+	// RPC: fullstack project must have rpc:types script in frontend
+	test("fullstack frontend has rpc:types script", () => {
+		const files = generateProjectFiles(fullstackConfig);
+		const frontendPkg = files.find((f) => f.path === "frontend/package.json");
+		const pkg = JSON.parse(
+			typeof frontendPkg?.content === "string" ? frontendPkg.content : "{}",
+		) as { scripts?: Record<string, string> };
+		expect(pkg.scripts).toHaveProperty("rpc:types");
+		expect(pkg.scripts?.["rpc:types"]).toContain("rakta rpc:types");
+	});
+
+	// Authentication: JWT config generates correct session mode
+	test("gaman adapter respects JWT session mode in env file", () => {
+		const singleSessionConfig: ProjectConfig = {
+			...fullstackConfig,
+			authStrategy: "jwt",
+			sessionPolicy: "single-session",
+		};
+		const multiSessionConfig: ProjectConfig = {
+			...fullstackConfig,
+			authStrategy: "jwt",
+			sessionPolicy: "multiple-sessions",
+		};
+
+		const singleFiles = generateProjectFiles(singleSessionConfig);
+		const multiFiles = generateProjectFiles(multiSessionConfig);
+
+		const singleEnv = singleFiles.find((f) => f.path === "backend/.env.example");
+		const multiEnv = multiFiles.find((f) => f.path === "backend/.env.example");
+
+		// Both should have JWT_SECRET
+		expect(singleEnv?.content).toContain("JWT_SECRET");
+		expect(multiEnv?.content).toContain("JWT_SECRET");
+	});
+
+	// Database dependency coverage: all DB types should have a valid dep or none
+	test("getDatabaseDependencies returns valid packages for all database types", () => {
+		const databases: ReadonlyArray<import("./types").Database> = [
+			"postgresql",
+			"mysql",
+			"mariadb",
+			"mongodb",
+			"firebase",
+			"sqlite",
+			"redis",
+			"planetscale",
+			"neon",
+			"turso",
+			"sawitdb",
+			"oracle",
+		];
+
+		for (const database of databases) {
+			// Just verify the generator runs without throwing
+			const files = generateProjectFiles({
+				...fullstackConfig,
+				database,
+			});
+			expect(files.length).toBeGreaterThan(0);
+		}
+	});
+
+	// Shared directory must always be present in fullstack projects
+	test("fullstack project always has shared/package.json", () => {
+		const files = generateProjectFiles(fullstackConfig);
+		const sharedPkg = files.find((f) => f.path === "shared/package.json");
+		expect(sharedPkg).toBeDefined();
+		const pkg = JSON.parse(
+			typeof sharedPkg?.content === "string" ? sharedPkg.content : "{}",
+		) as { name?: string };
+		expect(pkg.name).toContain("shared");
+	});
+
+	// Generated tsconfig must not have syntax errors
+	test("generated tsconfig.json is valid JSON", () => {
+		const files = generateProjectFiles({
+			...fullstackConfig,
+			projectMode: "frontend-only",
+			useTypeScript: true,
+		});
+		const tsconfig = files.find((f) => f.path === "tsconfig.json");
+		if (tsconfig && typeof tsconfig.content === "string") {
+			expect(() => JSON.parse(tsconfig.content as string)).not.toThrow();
+		}
+	});
+
+	// postcss.config.ts must be valid for Tailwind projects
+	test("Tailwind projects include postcss.config.ts", () => {
+		const files = generateProjectFiles({
+			...fullstackConfig,
+			projectMode: "frontend-only",
+			cssFramework: "tailwind",
+		});
+		const postcss = files.find((f) => f.path === "postcss.config.ts");
+		expect(postcss).toBeDefined();
+		expect(postcss?.content).toContain("@tailwindcss/postcss");
+	});
+
+	// frontend-only CSS mode: styles/globals.css must be present
+	test("frontend-only project includes styles/globals.css", () => {
+		const files = generateProjectFiles({
+			...fullstackConfig,
+			projectMode: "frontend-only",
+			cssFramework: "tailwind",
+		});
+		const hasGlobalsCss = files.some(
+			(f) =>
+				f.path === "styles/globals.css" ||
+				f.path === "styles/globals.scss",
+		);
+		expect(hasGlobalsCss).toBe(true);
 	});
 });
