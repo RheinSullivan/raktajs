@@ -137,15 +137,6 @@ function colorStatus(code: number): string {
 	return red(s);
 }
 
-function pad(
-	value: string,
-	width: number,
-	align: "left" | "right" = "left",
-): string {
-	if (align === "right") return value.padStart(width);
-	return value.padEnd(width);
-}
-
 // RaktaDevTerminal
 
 export interface DevTerminalOptions {
@@ -197,117 +188,143 @@ export class RaktaDevTerminal {
 	/**
 	 * Prints the startup header once the server is ready.
 	 *
-	 * Example output (with color):
+	 * Required output format:
 	 *
-	 *   ⩛ Rakta.js 1.1.7 (CherbonsEngine)
-	 *
-	 *     Local:        http://localhost:3000
-	 *     Network:      http://192.168.1.8:3000
-	 *     Environments: .env.local
-	 *     Mode:         development
-	 *
-	 *   ✓ Ready in 421ms
+	 *     $ rakta dev
+	 *         ⩛ Rakta.js 1.2.0 (CherbonsEngine)
+	 *             Local        : http://localhost:3000
+	 *             Network      : http://192.168.1.8:3000
+	 *         ✓ Ready in 421ms
+	 *         ✓ Running rakta.config.ts took 291ms
 	 */
-	printStartup(localUrl: string): void {
+	printStartup(localUrl: string, configMs?: number): void {
 		const readyMs = Date.now() - this.#startedAt;
 		const glyph = bold(red(RAKTA_TERMINAL_GLYPH));
 		const version = bold(`Rakta.js ${this.#opts.version}`);
 		const engine = dim("(CherbonsEngine)");
 
-		console.log();
-		console.log(`  ${glyph} ${version} ${engine}`);
-		console.log();
+		const I1 = "    ";
+		const I2 = "        ";
 
-		const labelWidth = 14;
-		const label = (name: string) => dim(pad(`${name}:`, labelWidth));
+		console.log();
+		console.log(`${I1}${glyph} ${version} ${engine}`);
 
-		console.log(`  ${label("Local")}  ${cyan(localUrl)}`);
+		console.log(`${I2}${dim("Local        :")} ${cyan(localUrl)}`);
 
 		const lan = detectLanAddress();
 		if (lan) {
 			const networkUrl = localUrl.replace(/localhost|127\.0\.0\.1/, lan);
-			console.log(`  ${label("Network")}  ${cyan(networkUrl)}`);
+			console.log(`${I2}${dim("Network      :")} ${cyan(networkUrl)}`);
 		}
 
 		const envFiles = detectEnvFiles(this.#opts.projectRoot);
 		if (envFiles.length > 0) {
-			console.log(`  ${label("Environments")}  ${dim(envFiles.join(", "))}`);
+			console.log(`${I2}${dim("Environments :")} ${dim(envFiles.join(", "))}`);
 		}
 
-		console.log(`  ${label("Mode")}  ${dim("development")}`);
 		console.log();
-		console.log(`  ${green("✓")} Ready in ${bold(String(readyMs))}ms`);
+		console.log(
+			`${I1}${green("✓")} Ready in ${bold(this.#formatDuration(readyMs))}`,
+		);
+
+		if (configMs !== undefined && configMs >= 0) {
+			console.log(
+				`${I1}${green("✓")} Running ${dim("rakta.config.ts")} took ${bold(this.#formatDuration(configMs))}`,
+			);
+		}
+
 		console.log();
 	}
 
 	/**
-	 * Logs a single request.
+	 * Prints the "compiling route" indicator when a route bundle starts building.
 	 *
-	 * Normal:   GET  /api/report  200  42ms
-	 * Slow:     GET  /api/report  200  1.4s  [slow]
-	 * Detailed: GET  /api/report  200  42ms
-	 *             router:   1.2ms
-	 *             app:     38.1ms
-	 *             total:   42.0ms
+	 *     ○ Compiling /dashboard ...
+	 */
+	printCompileStart(routePath: string): void {
+		const I1 = "    ";
+		console.log(`\n${I1}${dim("○")} Compiling ${cyan(routePath)} ...`);
+	}
+
+	/**
+	 * Prints the compile completion line.
+	 *
+	 *     ✓ Compiled /dashboard in 212ms
+	 */
+	printCompileEnd(routePath: string, durationMs: number): void {
+		const I1 = "    ";
+		console.log(
+			`${I1}${green("✓")} Compiled ${cyan(routePath)} in ${bold(this.#formatDuration(durationMs))}`,
+		);
+	}
+
+	#formatDuration(ms: number): string {
+		if (ms >= 10_000) return `${(ms / 1000).toFixed(1)}s`;
+		if (ms >= 1000) return `${(ms / 1000).toFixed(2)}s`;
+		return `${ms}ms`;
+	}
+
+	/**
+	 * Logs a single request in the new structured format.
+	 *
+	 * Normal:
+	 *     GET / 200 in 42ms (rakta.js: 4ms, application-code: 38ms)
+	 *
+	 * Slow:
+	 *     GET / 200 in 1.4s  [slow]  (rakta.js: 17ms, application-code: 1.4s)
 	 */
 	logRequest(entry: RequestLogEntry): void {
-		const requestKind =
-			entry.kind ?? (entry.pathname.startsWith("/api/") ? "api" : "page");
-		const kindLabel =
-			requestKind === "api"
-				? cyan("API")
-				: requestKind === "asset"
-					? dim("ASSET")
-					: dim("PAGE");
-		const method = pad(entry.method.toUpperCase(), 6);
-		const pathname = pad(entry.pathname, 30);
+		const I1 = "    ";
+		const method = entry.method.toUpperCase();
 		const status = colorStatus(entry.status);
 		const sym = statusSymbol(entry.status);
 
 		const ms = entry.totalMs;
-		const timeStr =
-			ms >= 1000
-				? yellow(`${(ms / 1000).toFixed(1)}s`)
-				: ms >= 500
-					? yellow(`${ms}ms`)
-					: dim(`${ms}ms`);
+		const totalStr = this.#colorDuration(ms);
 
 		const isSlow = ms >= this.#opts.slowRequestThresholdMs;
 		const slowTag = isSlow ? ` ${yellow("[slow]")}` : "";
 
-		console.log(
-			`  ${sym} ${kindLabel} ${dim(method)} ${pathname} ${status} ${dim("in")} ${timeStr}${slowTag}`,
-		);
-
-		if (
-			this.#opts.detailedTiming &&
-			entry.frameworkMs !== undefined &&
-			entry.applicationMs !== undefined
-		) {
-			console.log(
-				`       ${dim("router+middleware:")} ${dim(`${entry.frameworkMs.toFixed(1)}ms`)}`,
-			);
-			console.log(
-				`       ${dim("application:")}      ${dim(`${entry.applicationMs.toFixed(1)}ms`)}`,
-			);
+		let timingDetail = "";
+		if (entry.frameworkMs !== undefined && entry.applicationMs !== undefined) {
+			timingDetail = ` ${dim(`(rakta.js: ${this.#formatDuration(entry.frameworkMs)}, application-code: ${this.#formatDuration(entry.applicationMs)})`)}`;
 		}
+
+		console.log(
+			`${I1}${sym} ${dim(method)} ${entry.pathname} ${status} ${dim("in")} ${totalStr}${slowTag}${timingDetail}`,
+		);
+	}
+
+	#colorDuration(ms: number): string {
+		const str = this.#formatDuration(ms);
+		if (ms >= 1000) return yellow(str);
+		if (ms >= 500) return yellow(str);
+		return dim(str);
 	}
 
 	/**
 	 * Logs a dev-server error.
+	 *
+	 *     ✗ Bundle failed: Cannot resolve "missing-module"
 	 */
 	logError(message: string, error?: unknown): void {
+		const I1 = "    ";
 		const detail = error instanceof Error ? error.message : String(error ?? "");
 		console.error(
-			`  ${red("✗")} ${message}${detail ? `: ${dim(detail)}` : ""}`,
+			`${I1}${red("✗")} ${message}${detail ? `: ${dim(detail)}` : ""}`,
 		);
 	}
 
 	/**
 	 * Logs an HMR/rebuild event.
+	 *
+	 *     ↺ Rebuilt in 237ms
 	 */
 	logRebuild(durationMs: number): void {
-		console.log(`  ${cyan("↺")} Rebuilt in ${bold(String(durationMs))}ms`);
+		const I1 = "    ";
+		console.log(
+			`${I1}${cyan("↺")} Rebuilt in ${bold(this.#formatDuration(durationMs))}`,
+		);
 	}
 }
 

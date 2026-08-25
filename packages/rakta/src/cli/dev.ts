@@ -3,17 +3,15 @@ import { loadConfig } from "../config/loadConfig";
 import { startDevServer } from "../forge/devServer";
 
 export async function devCommand(cwd: string = process.cwd()): Promise<void> {
+	const configStart = Date.now();
 	const config = await loadConfig(cwd);
+	const configMs = Date.now() - configStart;
+
 	const devToolsEnabled =
 		typeof config.devTools === "boolean"
 			? config.devTools
 			: config.devTools.enabled;
 
-	// startDevServer already handles terminal output:
-	// - markStart() before build
-	// - printStartup() after server is ready (shows version, Local, Network, env files, ready time)
-	// - logRequest() for every incoming request
-	// dev.ts does NOT print anything extra to avoid duplicate output.
 	await startDevServer({
 		projectRoot: cwd,
 		port: config.port,
@@ -24,5 +22,6 @@ export async function devCommand(cwd: string = process.cwd()): Promise<void> {
 		seo: config.seo,
 		renderConfig: config.render,
 		devTools: devToolsEnabled,
+		configMs,
 	});
 }

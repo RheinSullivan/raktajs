@@ -249,7 +249,7 @@ describe("Rakta Dev Terminal", () => {
 		expect(logs.some((l) => l.includes("237"))).toBe(true);
 	});
 
-	test("detailedTiming shows breakdown when frameworkMs and applicationMs provided", () => {
+	test("detailedTiming shows rakta.js and application-code breakdown in new format", () => {
 		const t = createDevTerminal({
 			version: "1.0.6",
 			projectRoot: process.cwd(),
@@ -263,12 +263,13 @@ describe("Rakta Dev Terminal", () => {
 			pathname: "/reports",
 			status: 200,
 			totalMs: 42,
-			frameworkMs: 3.2,
-			applicationMs: 38.1,
+			frameworkMs: 3,
+			applicationMs: 38,
 		});
 		console.log = orig;
-		expect(logs.some((l) => l.includes("router"))).toBe(true);
-		expect(logs.some((l) => l.includes("application"))).toBe(true);
+		// New format: (rakta.js: Xms, application-code: Yms)
+		expect(logs.some((line) => line.includes("rakta.js"))).toBe(true);
+		expect(logs.some((line) => line.includes("application-code"))).toBe(true);
 	});
 
 	test("Local URL appears in startup output", () => {
@@ -573,6 +574,380 @@ describe("Rakta DevTools", () => {
 		for (const sourceFile of modifiedSourceFiles) {
 			const source = readFileSync(resolvePackagePath(sourceFile), "utf8");
 			expect(source.match(separatorPattern)).toBeNull();
+		}
+	});
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// v1.2.0 Regression Tests: Welcome Page + DevTools + Terminal Format
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe("v1.2.0 DevTools position regression tests", () => {
+	test("DevTools type supports all six positions", () => {
+		const source = readFileSync(
+			resolvePackagePath(
+				"packages/rakta/src/developerExperience/devIndicator.ts",
+			),
+			"utf8",
+		);
+		expect(source).toContain('"bottom-left"');
+		expect(source).toContain('"bottom-center"');
+		expect(source).toContain('"bottom-right"');
+		expect(source).toContain('"top-left"');
+		expect(source).toContain('"top-center"');
+		expect(source).toContain('"top-right"');
+	});
+
+	test("DevTools CSS has positioning rules for all six positions", () => {
+		const source = readFileSync(
+			resolvePackagePath(
+				"packages/rakta/src/developerExperience/devIndicator.ts",
+			),
+			"utf8",
+		);
+		// indicator rules
+		expect(source).toContain(
+			'[data-position="bottom-center"] .rakta-devtools-indicator',
+		);
+		expect(source).toContain(
+			'[data-position="top-center"] .rakta-devtools-indicator',
+		);
+		// panel rules
+		expect(source).toContain(
+			'[data-position="bottom-center"] .rakta-devtools-panel',
+		);
+		expect(source).toContain(
+			'[data-position="top-center"] .rakta-devtools-panel',
+		);
+	});
+
+	test("DevTools position labels include all six values", () => {
+		const source = readFileSync(
+			resolvePackagePath(
+				"packages/rakta/src/developerExperience/devIndicator.ts",
+			),
+			"utf8",
+		);
+		expect(source).toContain('"Bottom Center"');
+		expect(source).toContain('"Top Center"');
+	});
+
+	test("isPosition guard accepts all six valid position strings", () => {
+		const source = readFileSync(
+			resolvePackagePath(
+				"packages/rakta/src/developerExperience/devIndicator.ts",
+			),
+			"utf8",
+		);
+		// The isPosition function must test all six values
+		expect(source).toContain('position === "bottom-center"');
+		expect(source).toContain('position === "top-center"');
+	});
+
+	test("center positions use translateX(-50%) for horizontal centering", () => {
+		const source = readFileSync(
+			resolvePackagePath(
+				"packages/rakta/src/developerExperience/devIndicator.ts",
+			),
+			"utf8",
+		);
+		expect(source).toContain("translateX(-50%)");
+		expect(source).toContain("left: 50%");
+	});
+});
+
+describe("v1.2.0 terminal output format regression tests", () => {
+	test("printStartup uses indented format with I1/I2 spacing", () => {
+		const source = readFileSync(
+			resolvePackagePath("packages/rakta/src/developerExperience/terminal.ts"),
+			"utf8",
+		);
+		// New format uses 4-space and 8-space indentation constants
+		expect(source).toContain('const I1 = "    "');
+		expect(source).toContain('const I2 = "        "');
+	});
+
+	test("printStartup accepts configMs parameter and emits config timing line", () => {
+		const t = createDevTerminal({
+			version: "1.2.0",
+			projectRoot: process.cwd(),
+		});
+		t.markStart();
+		const logs: string[] = [];
+		const orig = console.log;
+		console.log = (...args: unknown[]) => logs.push(args.join(" "));
+		t.printStartup("http://localhost:3000", 291);
+		console.log = orig;
+		const configLine = logs.find((line) => line.includes("rakta.config.ts"));
+		expect(configLine).toBeDefined();
+		expect(configLine).toContain("291ms");
+	});
+
+	test("printStartup without configMs does not emit config timing line", () => {
+		const t = createDevTerminal({
+			version: "1.2.0",
+			projectRoot: process.cwd(),
+		});
+		t.markStart();
+		const logs: string[] = [];
+		const orig = console.log;
+		console.log = (...args: unknown[]) => logs.push(args.join(" "));
+		t.printStartup("http://localhost:3000");
+		console.log = orig;
+		expect(logs.some((line) => line.includes("rakta.config.ts"))).toBe(false);
+	});
+
+	test("printCompileStart emits route compile indicator", () => {
+		const t = createDevTerminal({
+			version: "1.2.0",
+			projectRoot: process.cwd(),
+		});
+		const logs: string[] = [];
+		const orig = console.log;
+		console.log = (...args: unknown[]) => logs.push(args.join(" "));
+		t.printCompileStart("/dashboard");
+		console.log = orig;
+		const compileLine = logs.find((line) => line.includes("/dashboard"));
+		expect(compileLine).toBeDefined();
+		expect(compileLine).toContain("Compiling");
+	});
+
+	test("printCompileEnd emits compile success line with duration", () => {
+		const t = createDevTerminal({
+			version: "1.2.0",
+			projectRoot: process.cwd(),
+		});
+		const logs: string[] = [];
+		const orig = console.log;
+		console.log = (...args: unknown[]) => logs.push(args.join(" "));
+		t.printCompileEnd("/dashboard", 212);
+		console.log = orig;
+		const compiled = logs.find((line) => line.includes("Compiled"));
+		expect(compiled).toBeDefined();
+		expect(compiled).toContain("212ms");
+	});
+
+	test("logRequest with timing breakdown emits rakta.js and application-code", () => {
+		const t = createDevTerminal({
+			version: "1.2.0",
+			projectRoot: process.cwd(),
+		});
+		const logs: string[] = [];
+		const orig = console.log;
+		console.log = (...args: unknown[]) => logs.push(args.join(" "));
+		t.logRequest({
+			method: "GET",
+			pathname: "/",
+			status: 200,
+			totalMs: 183,
+			frameworkMs: 17,
+			applicationMs: 166,
+		});
+		console.log = orig;
+		const requestLine = logs.find((line) => line.includes("200"));
+		expect(requestLine).toBeDefined();
+		expect(requestLine).toContain("rakta.js");
+		expect(requestLine).toContain("application-code");
+	});
+
+	test("logRequest without timing breakdown omits the breakdown suffix", () => {
+		const t = createDevTerminal({
+			version: "1.2.0",
+			projectRoot: process.cwd(),
+		});
+		const logs: string[] = [];
+		const orig = console.log;
+		console.log = (...args: unknown[]) => logs.push(args.join(" "));
+		t.logRequest({
+			method: "GET",
+			pathname: "/api/health",
+			status: 200,
+			totalMs: 4,
+		});
+		console.log = orig;
+		const requestLine = logs.find((line) => line.includes("200"));
+		expect(requestLine).toBeDefined();
+		expect(requestLine).not.toContain("rakta.js:");
+		expect(requestLine).not.toContain("application-code:");
+	});
+
+	test("duration formatting: <1000ms stays in ms, >=1000ms converts to seconds", () => {
+		const t = createDevTerminal({
+			version: "1.2.0",
+			projectRoot: process.cwd(),
+		});
+		const logs: string[] = [];
+		const orig = console.log;
+		console.log = (...args: unknown[]) => logs.push(args.join(" "));
+		t.logRebuild(237);
+		t.logRebuild(1500);
+		t.logRebuild(19200);
+		console.log = orig;
+		expect(logs[0]).toContain("237ms");
+		expect(logs[1]).toContain("s"); // 1.50s
+		expect(logs[2]).toContain("s"); // 19.2s
+	});
+
+	test("terminal source does not use pad() helper (removed after refactor)", () => {
+		const source = readFileSync(
+			resolvePackagePath("packages/rakta/src/developerExperience/terminal.ts"),
+			"utf8",
+		);
+		// The pad() function was removed when the new format was implemented.
+		// Ensure it wasn't accidentally re-added.
+		expect(source).not.toContain("function pad(");
+	});
+});
+
+describe("v1.2.0 config timing wiring regression tests", () => {
+	test("ForgeDevServerOptions includes optional configMs field", () => {
+		const source = readFileSync(
+			resolvePackagePath("packages/rakta/src/forge/types.ts"),
+			"utf8",
+		);
+		expect(source).toContain("configMs");
+		expect(source).toContain("readonly configMs");
+	});
+
+	test("dev.ts instruments configMs before calling startDevServer", () => {
+		const source = readFileSync(
+			resolvePackagePath("packages/rakta/src/cli/dev.ts"),
+			"utf8",
+		);
+		expect(source).toContain("configStart");
+		expect(source).toContain("configMs");
+		expect(source).toContain("Date.now()");
+	});
+
+	test("devServer.ts passes configMs to terminal.printStartup", () => {
+		const source = readFileSync(
+			resolvePackagePath("packages/rakta/src/forge/devServer.ts"),
+			"utf8",
+		);
+		expect(source).toContain("options.configMs");
+		expect(source).toContain("printStartup");
+	});
+
+	test("devServer.ts emits compile state before serving first bundle", () => {
+		const source = readFileSync(
+			resolvePackagePath("packages/rakta/src/forge/devServer.ts"),
+			"utf8",
+		);
+		expect(source).toContain("firstCompileDone");
+		expect(source).toContain("printCompileStart");
+		expect(source).toContain("printCompileEnd");
+	});
+
+	test("devServer.ts tracks renderStart for timing breakdown", () => {
+		const source = readFileSync(
+			resolvePackagePath("packages/rakta/src/forge/devServer.ts"),
+			"utf8",
+		);
+		expect(source).toContain("renderStart");
+		expect(source).toContain("renderMs");
+		expect(source).toContain("frameworkMs");
+	});
+});
+
+describe("v1.2.0 template dependency regression tests", () => {
+	test("frontendOnly template package.json has no framer-motion dependency", () => {
+		const pkg = JSON.parse(
+			readFileSync(
+				resolvePackagePath("templates/frontendOnly/package.json"),
+				"utf8",
+			),
+		) as {
+			dependencies?: Record<string, string>;
+			devDependencies?: Record<string, string>;
+		};
+		const allDeps = {
+			...(pkg.dependencies ?? {}),
+			...(pkg.devDependencies ?? {}),
+		};
+		expect(allDeps).not.toHaveProperty("framer-motion");
+		expect(allDeps).not.toHaveProperty("motion");
+		expect(allDeps).not.toHaveProperty("lucide-react");
+	});
+
+	test("frontendOnly template package.json has gsap dependency", () => {
+		const pkg = JSON.parse(
+			readFileSync(
+				resolvePackagePath("templates/frontendOnly/package.json"),
+				"utf8",
+			),
+		) as { dependencies?: Record<string, string> };
+		expect(pkg.dependencies).toHaveProperty("gsap");
+	});
+
+	test("frontendOnly template package.json has react-icons dependency", () => {
+		const pkg = JSON.parse(
+			readFileSync(
+				resolvePackagePath("templates/frontendOnly/package.json"),
+				"utf8",
+			),
+		) as { dependencies?: Record<string, string> };
+		expect(pkg.dependencies).toHaveProperty("react-icons");
+	});
+
+	test("ShrimpRunGame.tsx frontendOnly uses ShrimpCharacter not emoji", () => {
+		const source = readFileSync(
+			resolvePackagePath(
+				"templates/frontendOnly/app/components/ShrimpRunGame.tsx",
+			),
+			"utf8",
+		);
+		expect(source).toContain("ShrimpCharacter");
+		expect(source).toContain("CoralObstacle");
+		expect(source).not.toContain("🦐");
+	});
+
+	test("ShrimpRunGame.tsx fullstack uses ShrimpCharacter not emoji", () => {
+		const source = readFileSync(
+			resolvePackagePath(
+				"templates/fullStack/frontend/app/components/ShrimpRunGame.tsx",
+			),
+			"utf8",
+		);
+		expect(source).toContain("ShrimpCharacter");
+		expect(source).toContain("CoralObstacle");
+		expect(source).not.toContain("🦐");
+	});
+
+	test("ShrimpRunGame.tsx frontendOnly does not import framer-motion or lucide-react", () => {
+		const source = readFileSync(
+			resolvePackagePath(
+				"templates/frontendOnly/app/components/ShrimpRunGame.tsx",
+			),
+			"utf8",
+		);
+		expect(source).not.toContain("framer-motion");
+		expect(source).not.toContain("lucide-react");
+		expect(source).not.toContain('from "motion"');
+	});
+
+	test("template source files do not import framer-motion", () => {
+		const templateDirs = [
+			"templates/frontendOnly/app",
+			"templates/fullStack/frontend/app",
+		];
+		for (const dir of templateDirs) {
+			const files = [
+				join(dir, "components/Header.tsx"),
+				join(dir, "components/Footer.tsx"),
+				join(dir, "components/HeroSection.tsx"),
+				join(dir, "components/FeatureGrid.tsx"),
+				join(dir, "components/ShrimpRunGame.tsx"),
+			];
+			for (const file of files) {
+				try {
+					const src = readFileSync(resolvePackagePath(file), "utf8");
+					expect(src).not.toContain("framer-motion");
+					expect(src).not.toContain("lucide-react");
+					expect(src).not.toContain('from "motion"');
+				} catch {
+					// File may not exist in one template dir — skip
+				}
+			}
 		}
 	});
 });

@@ -447,6 +447,9 @@ declare global {
 
 	interface HeroSectionProps {
 		lang: "ID" | "EN";
+		onOpenDocs: () => void;
+		onOpenComponents: () => void;
+		onOpenDeploy: () => void;
 	}
 
 	interface ShrimpRunGameProps {
@@ -655,6 +658,11 @@ declare global {
 	const ShrimpCharacter: import("react").ComponentType<Record<string, unknown>>;
 	const ShrimpRunGame: import("react").ComponentType<ShrimpRunGameProps>;
 	const AuthShell: import("react").ComponentType<AuthShellProps>;
+
+	// Modal overlay components (auto-resolved from app/components/)
+	const DocsModal: import("react").ComponentType<ModalProps>;
+	const ComponentsModal: import("react").ComponentType<ModalProps>;
+	const DeployModal: import("react").ComponentType<ModalProps>;
 
 	// ── Custom Hooks ──
 	const useShrimpRun: () => {

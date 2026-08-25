@@ -195,6 +195,12 @@ export async function startDevServer(
 ): Promise<ForgeDevServerHandle> {
 	let manifest = generateManifest(options.appDir);
 	const resolvedPort = resolveDevPort(options.port);
+
+	// Track first-request compile start for compile state logging.
+	// We print "○ Compiling / ..." before the initial bundle is served.
+	let firstCompileDone = false;
+	let compilingFor: string | null = null;
+
 	let clientOutDir = await buildDevClientBundle(options, manifest);
 	let isClientBundleDirty = false;
 	let clientBundleRebuild: Promise<void> | null = null;
@@ -251,17 +257,22 @@ export async function startDevServer(
 	async function ensureFreshClientBundle(): Promise<void> {
 		if (!isClientBundleDirty) return;
 
-		clientBundleRebuild ??= buildDevClientBundle(options, manifest).then(
-			(nextClientOutDir) => {
-				clientOutDir = nextClientOutDir;
-				isClientBundleDirty = false;
-				clientBundleRebuild = null;
-			},
-			(caughtError: unknown) => {
-				clientBundleRebuild = null;
-				throw caughtError;
-			},
-		);
+		clientBundleRebuild ??= (async () => {
+			const rebuildStart = Date.now();
+			if (compilingFor !== null) {
+				terminal.printCompileStart(compilingFor);
+			}
+			const nextClientOutDir = await buildDevClientBundle(options, manifest);
+			clientOutDir = nextClientOutDir;
+			isClientBundleDirty = false;
+			clientBundleRebuild = null;
+			const rebuildMs = Date.now() - rebuildStart;
+			terminal.logRebuild(rebuildMs);
+		})().catch((caughtError: unknown) => {
+			clientBundleRebuild = null;
+			terminal.logError("Incremental rebuild failed", caughtError);
+			isClientBundleDirty = false;
+		});
 
 		await clientBundleRebuild;
 	}
@@ -425,7 +436,20 @@ export async function startDevServer(
 			}
 
 			// Rebuild bundle if source changed since last request.
+			// Track which route triggered the compile for the compile state log.
+			compilingFor = pathname;
+			if (!firstCompileDone) {
+				terminal.printCompileStart(pathname);
+			}
+			const bundleStart = Date.now();
 			await ensureFreshClientBundle();
+			const bundleMs = Date.now() - bundleStart;
+			if (!firstCompileDone) {
+				if (bundleMs > 50) {
+					terminal.printCompileEnd(pathname, bundleMs);
+				}
+				firstCompileDone = true;
+			}
 
 			if (clientOutDir.length > 0) {
 				const clientBundlePath = safePathJoin(clientOutDir, pathname);
@@ -524,6 +548,7 @@ export async function startDevServer(
 				requestHeaders[key] = value;
 			});
 
+			const renderStart = Date.now();
 			const result = await render(
 				{
 					routePath: pathname,
@@ -544,6 +569,8 @@ export async function startDevServer(
 			);
 
 			const ms = Date.now() - requestStartMs;
+			const renderMs = Date.now() - renderStart;
+			const frameworkMs = ms - renderMs;
 
 			if (result.kind === "failure") {
 				terminal.logRequest({
@@ -552,6 +579,8 @@ export async function startDevServer(
 					status: result.httpStatus,
 					totalMs: ms,
 					kind: "page",
+					frameworkMs,
+					applicationMs: renderMs,
 				});
 				return withRaktaDetectionHeaders(
 					new Response(result.reason, { status: result.httpStatus }),
@@ -660,6 +689,8 @@ export async function startDevServer(
 				status: result.httpStatus,
 				totalMs: ms,
 				kind: "page",
+				frameworkMs,
+				applicationMs: renderMs,
 			});
 
 			return withRaktaDetectionHeaders(
@@ -681,8 +712,8 @@ export async function startDevServer(
 
 	const localUrl = `http://${displayHost}:${serverPort}`;
 
-	// Print startup banner now that the server is accepting connections.
-	terminal.printStartup(localUrl);
+	// Print startup banner — version, local/network URLs, env files, ready time, config timing.
+	terminal.printStartup(localUrl, options.configMs);
 
 	try {
 		watch(options.projectRoot, { recursive: true }, (_eventType, filename) => {

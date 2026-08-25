@@ -12,6 +12,12 @@ export interface ForgeDevServerOptions {
 	readonly seo: SeoConfig;
 	readonly renderConfig: RenderConfig;
 	readonly devTools: boolean;
+	/**
+	 * How long the config file took to load and execute, in milliseconds.
+	 * Reported in the startup banner as:
+	 *   ✓ Running rakta.config.ts took <configMs>
+	 */
+	readonly configMs?: number;
 }
 
 export interface ForgeBuildOptions {

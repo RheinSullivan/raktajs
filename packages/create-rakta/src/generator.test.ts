@@ -231,13 +231,15 @@ describe("create-rakta fullstack generator", () => {
 		for (const files of generatedSets) {
 			for (const file of files) {
 				const content = typeof file.content === "string" ? file.content : "";
-				expect(file.path).not.toContain("ComponentsModal");
-				expect(file.path).not.toContain("DocsModal");
-				expect(file.path).not.toContain("DeployModal");
-				expect(content).not.toContain("ComponentsModal");
-				expect(content).not.toContain("DocsModal");
-				expect(content).not.toContain("DeployModal");
+				// Modal components are now valid generated template files — they must
+				// NOT import from lucide-react or framer-motion/motion, but their
+				// existence as Rakta.js components is correct and expected.
 				expect(content).not.toContain("lucide-react");
+				expect(content).not.toContain("framer-motion");
+				expect(content).not.toContain('from "motion"');
+				// The old Vite-prototype modals used motion/react directly — ensure
+				// that specific stale import pattern is absent.
+				expect(content).not.toContain('from "motion/react"');
 			}
 		}
 	});

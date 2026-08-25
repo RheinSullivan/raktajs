@@ -1,8 +1,10 @@
 export type RaktaDevToolsTheme = "system" | "light" | "dark";
 export type RaktaDevToolsPosition =
 	| "bottom-left"
+	| "bottom-center"
 	| "bottom-right"
 	| "top-left"
+	| "top-center"
 	| "top-right";
 export type RaktaDevToolsSize = "small" | "medium" | "large";
 export type RaktaDevToolsPanelView = "main" | "route-info" | "preferences";
@@ -79,8 +81,10 @@ export const DEFAULT_RAKTA_DEVTOOLS_PREFERENCES: RaktaDevToolsPreferences = {
 
 const POSITION_LABELS: Readonly<Record<RaktaDevToolsPosition, string>> = {
 	"bottom-left": "Bottom Left",
+	"bottom-center": "Bottom Center",
 	"bottom-right": "Bottom Right",
 	"top-left": "Top Left",
+	"top-center": "Top Center",
 	"top-right": "Top Right",
 };
 
@@ -217,6 +221,11 @@ const CSS = `
   bottom: var(--rakta-devtools-edge);
   left: var(--rakta-devtools-edge);
 }
+[data-position="bottom-center"] .rakta-devtools-indicator {
+  bottom: var(--rakta-devtools-edge);
+  left: 50%;
+  transform: translateX(-50%);
+}
 [data-position="bottom-right"] .rakta-devtools-indicator {
   bottom: var(--rakta-devtools-edge);
   right: var(--rakta-devtools-edge);
@@ -224,6 +233,11 @@ const CSS = `
 [data-position="top-left"] .rakta-devtools-indicator {
   top: var(--rakta-devtools-edge);
   left: var(--rakta-devtools-edge);
+}
+[data-position="top-center"] .rakta-devtools-indicator {
+  top: var(--rakta-devtools-edge);
+  left: 50%;
+  transform: translateX(-50%);
 }
 [data-position="top-right"] .rakta-devtools-indicator {
   top: var(--rakta-devtools-edge);
@@ -233,6 +247,11 @@ const CSS = `
   bottom: calc(var(--rakta-devtools-edge) + var(--rakta-devtools-button-size) + 10px);
   left: var(--rakta-devtools-edge);
 }
+[data-position="bottom-center"] .rakta-devtools-panel {
+  bottom: calc(var(--rakta-devtools-edge) + var(--rakta-devtools-button-size) + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+}
 [data-position="bottom-right"] .rakta-devtools-panel {
   bottom: calc(var(--rakta-devtools-edge) + var(--rakta-devtools-button-size) + 10px);
   right: var(--rakta-devtools-edge);
@@ -240,6 +259,11 @@ const CSS = `
 [data-position="top-left"] .rakta-devtools-panel {
   top: calc(var(--rakta-devtools-edge) + var(--rakta-devtools-button-size) + 10px);
   left: var(--rakta-devtools-edge);
+}
+[data-position="top-center"] .rakta-devtools-panel {
+  top: calc(var(--rakta-devtools-edge) + var(--rakta-devtools-button-size) + 10px);
+  left: 50%;
+  transform: translateX(-50%);
 }
 [data-position="top-right"] .rakta-devtools-panel {
   top: calc(var(--rakta-devtools-edge) + var(--rakta-devtools-button-size) + 10px);
@@ -554,8 +578,10 @@ function isTheme(theme: unknown): theme is RaktaDevToolsTheme {
 function isPosition(position: unknown): position is RaktaDevToolsPosition {
 	return (
 		position === "bottom-left" ||
+		position === "bottom-center" ||
 		position === "bottom-right" ||
 		position === "top-left" ||
+		position === "top-center" ||
 		position === "top-right"
 	);
 }
