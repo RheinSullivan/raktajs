@@ -23,8 +23,8 @@ describe("Rakta.js workspace", () => {
 		const templateFiles = [
 			"templates/frontendOnly/app/components/PackageStatsStrip.tsx",
 			"templates/frontendOnly/app/lib/packageStats.ts",
-			"templates/fullstack/frontend/app/components/PackageStatsStrip.tsx",
-			"templates/fullstack/frontend/app/lib/packageStats.ts",
+			"templates/fullStack/frontend/app/components/PackageStatsStrip.tsx",
+			"templates/fullStack/frontend/app/lib/packageStats.ts",
 		];
 
 		for (const templateFile of templateFiles) {

@@ -8,7 +8,6 @@ const workspaceRoot = resolve(packageRoot, "../..");
 const outDirectory = resolve(packageRoot, "dist");
 const backendTemplateSources = [
 	resolve(workspaceRoot, "templates/fullStack/backend"),
-	resolve(workspaceRoot, "templates/fullstack/backend"),
 ];
 const backendTemplateTarget = resolve(
 	outDirectory,
@@ -30,7 +29,6 @@ const frontendOnlyTemplateSource = frontendOnlyTemplateSources.find(
 );
 const fullstackFrontendTemplateSources = [
 	resolve(workspaceRoot, "templates/fullStack/frontend"),
-	resolve(workspaceRoot, "templates/fullstack/frontend"),
 ];
 const fullstackFrontendTemplateTarget = resolve(
 	outDirectory,
