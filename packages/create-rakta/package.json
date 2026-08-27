@@ -1,10 +1,10 @@
 {
 	"name": "create-rakta-app",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "Create a fullstack Rakta.js application with frontend, backend, database, rendering mode, and CSS framework choices.",
 	"type": "module",
 	"license": "MIT",
-	"author": "Rhein Sullivan | Vyagra Nexus\u00e2\u201e\u00a2",
+	"author": "Rhein Sullivan | Vyagra Nexusâ„¢",
 	"homepage": "https://raktajs.dev",
 	"repository": {
 		"type": "git",

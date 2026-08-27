@@ -945,7 +945,7 @@ describe("v1.2.0 template dependency regression tests", () => {
 					expect(src).not.toContain("lucide-react");
 					expect(src).not.toContain('from "motion"');
 				} catch {
-					// File may not exist in one template dir — skip
+					// File may not exist in one template dir - skip
 				}
 			}
 		}

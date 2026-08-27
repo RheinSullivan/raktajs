@@ -28,7 +28,7 @@ export const RENDER_MODE_DESCRIPTORS: Readonly<
 		serverRequired: true,
 		buildTimeGenerated: false,
 		clientHydration: true,
-		roadmap: true, // Roadmap: v1.0.5
+		roadmap: false,
 	},
 	ssg: {
 		mode: "ssg",
@@ -38,8 +38,8 @@ export const RENDER_MODE_DESCRIPTORS: Readonly<
 			"Pages are fully rendered at build time. Output is static HTML files. No server required at runtime.",
 		serverRequired: false,
 		buildTimeGenerated: true,
-		clientHydration: false,
-		roadmap: true, // Roadmap: v1.0.5
+		clientHydration: true,
+		roadmap: false,
 	},
 	csg: {
 		mode: "csg",
@@ -50,7 +50,7 @@ export const RENDER_MODE_DESCRIPTORS: Readonly<
 		serverRequired: false,
 		buildTimeGenerated: true,
 		clientHydration: true,
-		roadmap: true, // Roadmap: v1.0.5
+		roadmap: false,
 	},
 	spa: {
 		mode: "spa",

@@ -1,8 +1,7 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
 // biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
-// ComponentsModal — Component Library overlay.
-// Uses: react-icons (FiX, FiCpu, FiCopy, FiCheck, FiCode), gsap.
-// Uses Rakta.js approved libraries only.
+// ComponentsModal - overlay galeri komponen UI.
+// Menggunakan icon dari react-icons/fa6 yang sudah di-auto-import oleh Rakta.js.
 
 interface ComponentsModalProps {
 	readonly isOpen: boolean;
@@ -18,7 +17,7 @@ export default function ComponentsModal({
 	const overlayRef = useRef<HTMLDivElement>(null);
 	const panelRef = useRef<HTMLDivElement>(null);
 
-	// GSAP entrance
+	// Animasi masuk dengan GSAP, menghormati prefers-reduced-motion
 	useEffect(() => {
 		const prefersReduced =
 			typeof window !== "undefined" &&
@@ -43,7 +42,7 @@ export default function ComponentsModal({
 		}
 	}, [isOpen]);
 
-	// Escape key
+	// Tutup dengan Escape
 	useEffect(() => {
 		if (!isOpen) return;
 		const handleKey = (event: KeyboardEvent) => {
@@ -70,7 +69,7 @@ export default function ComponentsModal({
 			.catch(() => {});
 	};
 
-	// Inline live previews — no external dependencies
+	// Preview langsung tanpa dependensi eksternal
 	const renderPreview = (compId: ComponentId): ReactNode => {
 		if (compId === "button") {
 			return (
@@ -166,7 +165,7 @@ export default function ComponentsModal({
 				{/* Header */}
 				<div className="flex items-center justify-between border-b border-surface-stroke p-5">
 					<div className="flex items-center gap-3">
-						<FiCpu className="w-5 h-5 text-brand-pink" aria-hidden="true" />
+						<Cpu className="w-5 h-5 text-brand-pink" aria-hidden="true" />
 						<h2 className="text-xl font-bold font-mono tracking-tight uppercase">
 							Rakta <span className="text-brand-pink">Component Library</span>
 						</h2>
@@ -177,13 +176,13 @@ export default function ComponentsModal({
 						className="p-2 border border-surface-stroke hover:bg-brand-pink hover:text-white transition-colors cursor-pointer"
 						aria-label="Close Component Library"
 					>
-						<FiX className="w-5 h-5" aria-hidden="true" />
+						<FaXmark className="w-5 h-5" aria-hidden="true" />
 					</button>
 				</div>
 
 				{/* Layout */}
 				<div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-					{/* Sidebar */}
+					{/* Sidebar daftar komponen */}
 					<div className="w-full md:w-56 border-r border-surface-stroke overflow-y-auto bg-[#080808] divide-y divide-surface-stroke flex-shrink-0">
 						{componentIds.map((compId) => {
 							const metadata =
@@ -208,7 +207,7 @@ export default function ComponentsModal({
 						})}
 					</div>
 
-					{/* Canvas + code */}
+					{/* Area preview dan kode */}
 					{activeMetadata && (
 						<div className="flex-1 flex flex-col overflow-y-auto bg-black p-6 md:p-8">
 							<div className="mb-6">
@@ -220,7 +219,7 @@ export default function ComponentsModal({
 								</p>
 							</div>
 
-							{/* Live preview */}
+							{/* Preview langsung */}
 							<div className="border border-surface-stroke bg-[#050505] p-12 flex items-center justify-center min-h-[160px] relative">
 								<span className="absolute top-2 left-2 text-[8px] font-mono text-gray-600 uppercase tracking-widest">
 									LIVE PLAYGROUND
@@ -228,11 +227,11 @@ export default function ComponentsModal({
 								{renderPreview(activeCompId)}
 							</div>
 
-							{/* Code block */}
+							{/* Blok kode dengan tombol salin */}
 							<div className="mt-8 flex-1 flex flex-col min-h-[150px]">
 								<div className="flex items-center justify-between bg-zinc-950 border-t border-x border-surface-stroke px-4 py-2">
 									<span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest flex items-center gap-1.5">
-										<FiCode className="w-3.5 h-3.5" aria-hidden="true" /> HTML /
+										<Code className="w-3.5 h-3.5" aria-hidden="true" /> HTML /
 										Tailwind Markup
 									</span>
 									<button
@@ -245,7 +244,7 @@ export default function ComponentsModal({
 									>
 										{copiedId === activeCompId ? (
 											<>
-												<FiCheck
+												<Check
 													className="w-3.5 h-3.5 text-brand-green"
 													aria-hidden="true"
 												/>{" "}
@@ -253,8 +252,8 @@ export default function ComponentsModal({
 											</>
 										) : (
 											<>
-												<FiCopy className="w-3.5 h-3.5" aria-hidden="true" />{" "}
-												COPY TO CLIPBOARD
+												<Copy className="w-3.5 h-3.5" aria-hidden="true" /> COPY
+												TO CLIPBOARD
 											</>
 										)}
 									</button>

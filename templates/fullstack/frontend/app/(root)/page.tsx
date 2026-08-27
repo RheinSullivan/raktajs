@@ -1,6 +1,6 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
 // biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
-// Halaman utama Rakta.js fullstack — first-run welcome experience.
+// Halaman utama Rakta.js fullstack - first-run welcome experience.
 // Menggunakan react-icons dan gsap. Lihat package.json untuk daftar lengkap dependensi.
 
 export default function App() {
@@ -45,7 +45,7 @@ export default function App() {
 
 	// Data status grid: ENGINE / STATUS / PORT / REGION
 	const statusGrid = [
-		{ label: "ENGINE", value: "v1.2.0-STABLE", pulse: false },
+		{ label: "ENGINE", value: "v1.2.1-STABLE", pulse: false },
 		{ label: "STATUS", value: "OPERATIONAL", pulse: true },
 		{ label: "PORT", value: "3000", pulse: false },
 		{ label: "REGION", value: "LOCAL", pulse: false },
@@ -102,7 +102,7 @@ export default function App() {
 			{/* Strip statistik paket npm */}
 			<PackageStatsStrip lang={lang} />
 
-			{/* ShrimpRun — arena fisika interaktif */}
+			{/* ShrimpRun - arena fisika interaktif */}
 			<ShrimpRunGame
 				isPlaying={isPlaying}
 				score={score}
@@ -126,7 +126,7 @@ export default function App() {
 
 			{/* Kartu aksi: Docs, Components, Deploy */}
 			<section className="grid grid-cols-1 md:grid-cols-3 border-t border-surface-stroke">
-				{/* 01 — Docs */}
+				{/* 01 - Docs */}
 				<div
 					role="button"
 					tabIndex={0}
@@ -157,7 +157,7 @@ export default function App() {
 					</div>
 				</div>
 
-				{/* 02 — Components */}
+				{/* 02 - Components */}
 				<div
 					role="button"
 					tabIndex={0}
@@ -187,7 +187,7 @@ export default function App() {
 					</div>
 				</div>
 
-				{/* 03 — Deploy */}
+				{/* 03 - Deploy */}
 				<div
 					role="button"
 					tabIndex={0}

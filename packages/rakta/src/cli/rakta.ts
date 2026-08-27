@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { loadConfig } from "../config/loadConfig";
 import { inspectBuild, printInspectReport } from "../forge/inspect";
 import { buildCommand } from "./build";
+import { deployCommand } from "./deploy";
 import { devCommand } from "./dev";
 import { doctorCommand } from "./doctor";
 import { importsGenerateCommand } from "./imports";
@@ -59,9 +60,14 @@ function printHelp(): void {
 	console.log(`${BOLD}Commands:${RESET}`);
 	console.log("  rakta dev");
 	console.log("  rakta build");
+	console.log("  rakta build --mode csr|spa|ssg|csg|ssr|hybrid|isr|edge");
 	console.log("  rakta build --analyze");
 	console.log("  rakta start");
 	console.log("  rakta routes");
+	console.log("");
+	console.log(
+		"  rakta deploy --platform vercel|netlify|cloudflare|railway|render|fly|docker",
+	);
 	console.log("");
 	console.log("  rakta create <page|layout|component|api> <name>");
 	console.log("  rakta add <page|layout|component|api> <name>");
@@ -135,8 +141,8 @@ async function main(): Promise<void> {
 			break;
 
 		case "build":
-			await buildCommand(cwd);
-			if (firstArgument === "--analyze") {
+			await buildCommand(cwd, cliArgs.slice(1));
+			if (cliArgs.includes("--analyze")) {
 				await analyzeCommand(cwd);
 			}
 			break;
@@ -262,6 +268,10 @@ async function main(): Promise<void> {
 
 		case "telemetry":
 			await telemetryCommand(firstArgument, cwd);
+			break;
+
+		case "deploy":
+			await deployCommand(cwd, cliArgs.slice(1));
 			break;
 
 		case "tide:render":

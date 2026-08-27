@@ -1,6 +1,7 @@
 import type { SeoConfig } from "../config/defineConfig.js";
 import type { RenderConfig, RenderMode } from "../render/types.js";
 import type { RouteManifest } from "../router/types.js";
+import type { BuildManifest } from "./buildManifest.js";
 
 export interface ForgeDevServerOptions {
 	readonly projectRoot: string;
@@ -27,11 +28,14 @@ export interface ForgeBuildOptions {
 	readonly appDir: string;
 	readonly publicDir: string;
 	readonly appName: string;
+	readonly seo?: SeoConfig;
 	readonly sourcemap: boolean;
 	readonly minify: boolean;
 	readonly splitting: boolean;
 	readonly target: "browser" | "bun" | "node";
 	readonly renderConfig: RenderConfig;
+	/** Optional server port for SSR server entry generation. */
+	readonly port?: number;
 }
 
 export type ArtifactKind = "script" | "stylesheet" | "asset" | "manifest";
@@ -48,6 +52,10 @@ export interface ForgeBuildResult {
 	readonly manifest: RouteManifest;
 	readonly buildMs: number;
 	readonly errors: ReadonlyArray<string>;
+	/** Machine-readable build manifest. Present on successful builds. */
+	readonly buildManifest?: BuildManifest;
+	/** The effective render mode used for the build (hybrid resolves to csr). */
+	readonly effectiveMode?: RenderMode;
 }
 
 export interface ForgeRouteModeEntry {

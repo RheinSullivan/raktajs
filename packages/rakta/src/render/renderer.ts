@@ -6,7 +6,6 @@ import {
 	RAKTA_VERSION,
 	RAKTA_WEBSITE,
 } from "../frameworkIdentity";
-import { isRoadmapMode } from "./modes";
 import type {
 	RenderContext,
 	RenderFailure,
@@ -48,7 +47,7 @@ export interface RendererOptions {
 // tab but UI doesn't appear for ~10 seconds" issue reported by users.
 // The blank-screen delay was caused by late JS discovery + no loading indicator.
 
-function buildHtmlShell(options: RendererOptions): string {
+export function buildHtmlShell(options: RendererOptions): string {
 	const title = options.title ?? options.appName;
 	const faviconPath = options.faviconPath ?? "/favicon.ico";
 	const faviconHref = faviconPath.includes("?")
@@ -157,8 +156,13 @@ function makeFailure(
 
 /**
  * Render a page using the resolved mode from the context.
- * Roadmap modes (ssr, ssg, csg) fall back to a CSR shell in the current
- * release. SSR/SSG are tracked as roadmap items.
+ *
+ * CSR / SPA / hybrid — returns the HTML shell. React renders in browser.
+ * SSR / streaming_ssr / edge / isr — returns the HTML shell. The production
+ *   tide adapter performs server-side rendering by loading compiled route
+ *   modules and calling ReactDOMServer.renderToString at request time.
+ * SSG / CSG — the HTML shell is served in dev mode; forge/ssg.ts drives
+ *   static generation at build time, writing per-route HTML files.
  */
 export async function render(
 	context: RenderContext,
@@ -166,30 +170,20 @@ export async function render(
 ): Promise<RenderResult> {
 	const startMs = Date.now();
 
-	if (isRoadmapMode(context.mode)) {
-		console.warn(
-			`[Rakta.js] Render mode "${context.mode}" is a roadmap feature. ` +
-				`Falling back to CSR for: ${context.routePath}`,
-		);
-		return makeSuccess(buildHtmlShell(options), "csr", Date.now() - startMs);
-	}
-
 	switch (context.mode) {
 		case "csr":
 		case "spa":
+		case "hybrid":
 			return makeSuccess(
 				buildHtmlShell(options),
 				context.mode,
 				Date.now() - startMs,
 			);
 
-		case "hybrid":
-			return makeSuccess(buildHtmlShell(options), "csr", Date.now() - startMs);
-
-		case "isr":
+		case "ssr":
 		case "streaming_ssr":
 		case "edge":
-		case "ssr":
+		case "isr":
 		case "ssg":
 		case "csg":
 			return makeSuccess(

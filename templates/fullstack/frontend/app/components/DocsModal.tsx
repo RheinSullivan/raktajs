@@ -1,8 +1,7 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
 // biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
-// DocsModal — System Manual overlay.
-// Uses: react-icons (FiX, FiSearch, FiBook, FiChevronRight), gsap, Rakta.js runtime.
-// Uses Rakta.js approved libraries only.
+// DocsModal - overlay System Manual dokumentasi Rakta.js.
+// Menggunakan icon dari react-icons/fa6 dan react-icons/lu yang sudah di-auto-import oleh Rakta.js.
 
 interface DocsModalProps {
 	readonly isOpen: boolean;
@@ -15,7 +14,7 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 	const overlayRef = useRef<HTMLDivElement>(null);
 	const panelRef = useRef<HTMLDivElement>(null);
 
-	// GSAP entrance / exit
+	// Animasi masuk dengan GSAP, menghormati prefers-reduced-motion
 	useEffect(() => {
 		const prefersReduced =
 			typeof window !== "undefined" &&
@@ -40,7 +39,7 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 		}
 	}, [isOpen]);
 
-	// Close on Escape
+	// Tutup dengan Escape
 	useEffect(() => {
 		if (!isOpen) return;
 		const handleKey = (event: KeyboardEvent) => {
@@ -52,18 +51,19 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 
 	if (!isOpen) return null;
 
-	const filteredArticles = (
-		typeof ARTICLES !== "undefined" ? ARTICLES : []
-	).filter(
-		(article: Article) =>
+	const allArticles: ReadonlyArray<Article> =
+		typeof ARTICLES !== "undefined" ? ARTICLES : [];
+
+	const filteredArticles = allArticles.filter(
+		(article) =>
 			article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
 			article.content.toLowerCase().includes(searchQuery.toLowerCase()),
 	);
 
 	const activeArticle =
-		(typeof ARTICLES !== "undefined" ? ARTICLES : []).find(
-			(article: Article) => article.id === activeArticleId,
-		) ?? (typeof ARTICLES !== "undefined" ? ARTICLES[0] : null);
+		allArticles.find((article) => article.id === activeArticleId) ??
+		allArticles[0] ??
+		null;
 
 	return (
 		<div
@@ -84,7 +84,7 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 				{/* Header */}
 				<div className="flex items-center justify-between border-b border-surface-stroke p-5">
 					<div className="flex items-center gap-3">
-						<FiBook className="w-5 h-5 text-brand-pink" aria-hidden="true" />
+						<FaBook className="w-5 h-5 text-brand-pink" aria-hidden="true" />
 						<h2 className="text-xl font-bold font-mono tracking-tight uppercase">
 							Rakta.js <span className="text-brand-pink">System Manual</span>
 						</h2>
@@ -95,13 +95,13 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 						className="p-2 border border-surface-stroke hover:bg-brand-pink hover:text-white transition-colors cursor-pointer"
 						aria-label="Close System Manual"
 					>
-						<FiX className="w-5 h-5" aria-hidden="true" />
+						<FaXmark className="w-5 h-5" aria-hidden="true" />
 					</button>
 				</div>
 
 				{/* Search */}
 				<div className="p-3 bg-zinc-950 border-b border-surface-stroke flex items-center gap-2">
-					<FiSearch
+					<Search
 						className="w-4 h-4 text-gray-500 ml-2 flex-shrink-0"
 						aria-hidden="true"
 					/>
@@ -117,13 +117,13 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 
 				{/* Body */}
 				<div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-					{/* Sidebar */}
+					{/* Sidebar daftar artikel */}
 					<div className="w-full md:w-64 border-r border-surface-stroke overflow-y-auto bg-[#080808] flex-shrink-0">
 						<div className="p-3 font-mono text-[10px] font-bold text-gray-500 tracking-wider uppercase border-b border-surface-stroke">
 							Manual Sections
 						</div>
 						<div className="divide-y divide-surface-stroke">
-							{filteredArticles.map((article: Article) => {
+							{filteredArticles.map((article) => {
 								const isSelected = article.id === activeArticleId;
 								return (
 									<button
@@ -136,7 +136,7 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 												: "text-gray-400 hover:bg-white/5 hover:text-white"
 										}`}
 									>
-										<FiBook
+										<FaBook
 											className={`w-4 h-4 flex-shrink-0 ${isSelected ? "text-white" : "text-brand-pink"}`}
 											aria-hidden="true"
 										/>
@@ -161,7 +161,7 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 						</div>
 					</div>
 
-					{/* Article viewer */}
+					{/* Viewer artikel aktif */}
 					{activeArticle && (
 						<div className="flex-1 overflow-y-auto p-6 md:p-8 bg-black">
 							<div className="max-w-3xl">
@@ -232,23 +232,24 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 										})}
 								</div>
 
-								{/* Next chapter */}
+								{/* Navigasi ke chapter berikutnya */}
 								<div className="mt-12 pt-6 border-t border-surface-stroke flex justify-end">
 									<button
 										type="button"
 										onClick={() => {
-											const allArticles =
-												typeof ARTICLES !== "undefined" ? ARTICLES : [];
 											const currentIndex = allArticles.findIndex(
-												(article: Article) => article.id === activeArticleId,
+												(article) => article.id === activeArticleId,
 											);
 											const nextIndex = (currentIndex + 1) % allArticles.length;
-											setActiveArticleId(allArticles[nextIndex].id);
+											const nextArticle = allArticles[nextIndex];
+											if (nextArticle !== undefined) {
+												setActiveArticleId(nextArticle.id);
+											}
 										}}
 										className="flex items-center gap-2 border border-white hover:bg-white hover:text-black transition-colors px-4 py-2 font-mono text-xs uppercase cursor-pointer"
 									>
 										Next Chapter{" "}
-										<FiChevronRight className="w-4 h-4" aria-hidden="true" />
+										<ArrowRight className="w-4 h-4" aria-hidden="true" />
 									</button>
 								</div>
 							</div>

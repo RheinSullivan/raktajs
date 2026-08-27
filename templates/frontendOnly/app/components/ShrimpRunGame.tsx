@@ -88,7 +88,7 @@ export default function ShrimpRunGame({
 					{/* Top accent bar */}
 					<div className="absolute top-0 left-0 right-0 h-px bg-brand-pink/40 z-20 pointer-events-none" />
 
-					{/* Shrimp character — positioned by bottom offset */}
+					{/* Shrimp character - positioned by bottom offset */}
 					<div
 						className="absolute left-[15%] z-20"
 						style={{ bottom: `${playerY}px` }}

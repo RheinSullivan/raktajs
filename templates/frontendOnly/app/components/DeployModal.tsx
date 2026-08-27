@@ -1,10 +1,14 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
 // biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
-// DeployModal — Edge Deployment wizard overlay.
-// Uses: react-icons (FiX, FiCloud, FiPlay, FiRotateCcw, FiCheckCircle), gsap.
-// Uses Rakta.js approved libraries only.
+// DeployModal - wizard overlay simulasi deployment edge.
+// Menggunakan icon dari react-icons/fa6 yang sudah di-auto-import oleh Rakta.js.
 
 type DeployStatus = "idle" | "building" | "success";
+
+interface DeployLogEntry {
+	readonly text: string;
+	readonly type: string;
+}
 
 interface DeployModalProps {
 	readonly isOpen: boolean;
@@ -13,16 +17,14 @@ interface DeployModalProps {
 
 export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 	const [status, setStatus] = useState<DeployStatus>("idle");
-	const [logs, setLogs] = useState<
-		ReadonlyArray<{ text: string; type: string }>
-	>([]);
+	const [logs, setLogs] = useState<ReadonlyArray<DeployLogEntry>>([]);
 	const [progress, setProgress] = useState(0);
 	const overlayRef = useRef<HTMLDivElement>(null);
 	const panelRef = useRef<HTMLDivElement>(null);
 	const terminalEndRef = useRef<HTMLDivElement>(null);
 	const stepTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-	// GSAP entrance
+	// Animasi masuk dengan GSAP, menghormati prefers-reduced-motion
 	useEffect(() => {
 		const prefersReduced =
 			typeof window !== "undefined" &&
@@ -47,12 +49,12 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 		}
 	}, [isOpen]);
 
-	// Auto-scroll terminal to bottom
+	// Auto-scroll terminal ke baris terbaru
 	useEffect(() => {
 		terminalEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [logs]);
 
-	// Escape key + cleanup on unmount
+	// Tutup dengan Escape, bersihkan timeout saat unmount
 	useEffect(() => {
 		if (!isOpen) return;
 		const handleKey = (event: KeyboardEvent) => {
@@ -69,7 +71,8 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 
 	if (!isOpen) return null;
 
-	const deployLogs = typeof DEPLOY_LOGS !== "undefined" ? DEPLOY_LOGS : [];
+	const deployLogs: ReadonlyArray<DeployLogEntry> =
+		typeof DEPLOY_LOGS !== "undefined" ? DEPLOY_LOGS : [];
 
 	const startDeployment = () => {
 		setStatus("building");
@@ -80,8 +83,13 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 
 		const runStep = () => {
 			if (currentIndex < deployLogs.length) {
-				const currentLog = deployLogs[currentIndex];
-				setLogs((previous) => [...previous, currentLog]);
+				const entry = deployLogs[currentIndex];
+				if (entry !== undefined) {
+					setLogs((previous) => [
+						...previous,
+						{ text: entry.text, type: entry.type },
+					]);
+				}
 				setProgress(Math.round(((currentIndex + 1) / deployLogs.length) * 100));
 				currentIndex++;
 				stepTimeoutRef.current = setTimeout(runStep, Math.random() * 250 + 150);
@@ -129,7 +137,7 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 				{/* Header */}
 				<div className="flex items-center justify-between border-b border-surface-stroke p-5">
 					<div className="flex items-center gap-3">
-						<FiCloud className="w-5 h-5 text-brand-pink" aria-hidden="true" />
+						<FaCloud className="w-5 h-5 text-brand-pink" aria-hidden="true" />
 						<h2 className="text-xl font-bold font-mono tracking-tight uppercase">
 							Rakta <span className="text-brand-pink">Edge Deployment</span>
 						</h2>
@@ -140,7 +148,7 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 						className="p-2 border border-surface-stroke hover:bg-brand-pink hover:text-white transition-colors cursor-pointer"
 						aria-label="Close Edge Deployment"
 					>
-						<FiX className="w-5 h-5" aria-hidden="true" />
+						<FaXmark className="w-5 h-5" aria-hidden="true" />
 					</button>
 				</div>
 
@@ -154,19 +162,19 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 							{status === "idle" && (
 								<span className="font-mono text-sm text-yellow-500 font-bold uppercase flex items-center gap-1.5">
 									<span className="w-2 h-2 bg-yellow-500 animate-pulse rounded-full" />
-									IDLE — READY TO LAUNCH
+									IDLE - READY TO LAUNCH
 								</span>
 							)}
 							{status === "building" && (
 								<span className="font-mono text-sm text-brand-pink font-bold uppercase flex items-center gap-1.5 animate-pulse">
-									<span className="w-2 h-2 bg-brand-pink rounded-none" />
+									<span className="w-2 h-2 bg-brand-pink" />
 									COMPILING IN PROGRESS ({progress}%)
 								</span>
 							)}
 							{status === "success" && (
 								<span className="font-mono text-sm text-brand-green font-bold uppercase flex items-center gap-1.5">
 									<span className="w-2 h-2 bg-brand-green rounded-full" />
-									LIVE — PRODUCTION DEPLOYED
+									LIVE - PRODUCTION DEPLOYED
 								</span>
 							)}
 						</div>
@@ -179,7 +187,7 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 								onClick={startDeployment}
 								className="bg-brand-pink hover:bg-white text-white hover:text-black px-6 py-2.5 font-mono text-xs font-bold uppercase transition-all border border-transparent active:scale-95 flex items-center gap-2 cursor-pointer"
 							>
-								<FiPlay className="w-4 h-4" aria-hidden="true" />
+								<FaPlay className="w-4 h-4" aria-hidden="true" />
 								INITIATE LAUNCH
 							</button>
 						)}
@@ -197,14 +205,14 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 								onClick={resetDeployment}
 								className="border border-white hover:bg-white hover:text-black px-4 py-2.5 font-mono text-xs uppercase transition-all flex items-center gap-1.5 cursor-pointer"
 							>
-								<FiRotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
+								<RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
 								RE-BUILD PIPELINE
 							</button>
 						)}
 					</div>
 				</div>
 
-				{/* Terminal */}
+				{/* Terminal log */}
 				<div
 					className="flex-1 bg-black p-5 font-mono text-xs overflow-y-auto flex flex-col gap-2 select-text"
 					aria-live="polite"
@@ -221,7 +229,7 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 
 					{status === "idle" && (
 						<div className="text-gray-600 italic mt-4 text-center">
-							Terminal is silent. Click 'INITIATE LAUNCH' to begin
+							Terminal is silent. Click INITIATE LAUNCH to begin
 							containerization.
 						</div>
 					)}
@@ -236,7 +244,7 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 						<div className="mt-6 p-4 border border-brand-green bg-emerald-950/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 							<div>
 								<span className="font-bold text-brand-green uppercase flex items-center gap-1.5 text-xs mb-1">
-									<FiCheckCircle className="w-4 h-4" aria-hidden="true" />
+									<CheckCircle2 className="w-4 h-4" aria-hidden="true" />
 									Edge Application Online
 								</span>
 								<p className="text-[10px] text-gray-500 leading-normal">

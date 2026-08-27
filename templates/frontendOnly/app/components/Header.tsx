@@ -63,12 +63,20 @@ export default function Header({
 					</span>
 					<span className="hidden sm:inline-flex items-center gap-1 border border-surface-stroke bg-zinc-900/80 px-2 py-0.5 font-mono text-[10px] uppercase text-gray-400 leading-none">
 						<Terminal className="h-2.5 w-2.5" />
-						v1.1.7 · FULLSTACK ENGINE
+						v1.2.1 · FULLSTACK ENGINE
 					</span>
 				</click>
 
 				{/* Controls */}
 				<div className="flex items-center gap-3">
+					{/* Solidarity link */}
+					<a
+						href="#humanitarian"
+						className="hidden lg:inline-flex items-center gap-1 border border-green-900/50 bg-green-950/10 px-2.5 py-1 font-mono text-[10px] uppercase text-green-400 hover:border-green-500/60 hover:text-green-300 transition-colors"
+						aria-label="Palestine Solidarity"
+					>
+						🇵🇸 <span>SOLIDARITY</span>
+					</a>
 					{/* Aesthetic switcher */}
 					<div className="hidden md:flex items-center gap-2 border border-surface-stroke bg-black p-1 font-mono text-[10px]">
 						{(["LENIS-MODERN", "RETRO-CYBER", "NEO-BRUTALIST"] as const).map(

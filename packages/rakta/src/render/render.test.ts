@@ -85,9 +85,10 @@ describe("Rakta Render Engine", () => {
 	// -------------- isRoadmapMode, getModeDescriptor --------------
 
 	test("isRoadmapMode correctly identifies roadmap modes", () => {
-		expect(isRoadmapMode("ssr")).toBe(true);
-		expect(isRoadmapMode("ssg")).toBe(true);
-		expect(isRoadmapMode("csg")).toBe(true);
+		// SSR, SSG, CSG are now fully implemented (no longer roadmap)
+		expect(isRoadmapMode("ssr")).toBe(false);
+		expect(isRoadmapMode("ssg")).toBe(false);
+		expect(isRoadmapMode("csg")).toBe(false);
 		expect(isRoadmapMode("csr")).toBe(false);
 		expect(isRoadmapMode("hybrid")).toBe(false);
 	});
@@ -95,7 +96,8 @@ describe("Rakta Render Engine", () => {
 	test("getModeDescriptor returns correct labels", () => {
 		expect(getModeDescriptor("csr").shortLabel).toBe("CSR");
 		expect(getModeDescriptor("hybrid").shortLabel).toBe("Hybrid");
-		expect(getModeDescriptor("ssr").roadmap).toBe(true);
+		// SSR is now fully implemented
+		expect(getModeDescriptor("ssr").roadmap).toBe(false);
 	});
 
 	// -------------- render() --------------
@@ -120,22 +122,48 @@ describe("Rakta Render Engine", () => {
 		}
 	});
 
-	test("render hybrid returns success with csr fallback", async () => {
+	test("render hybrid returns success", async () => {
 		const result = await render(createTestContext("/", "hybrid"), rendererOpts);
 		expect(result.kind).toBe("success");
 		if (result.kind === "success") {
-			expect(result.mode).toBe("csr");
+			expect(result.mode).toBe("hybrid");
+			expect(result.html).toContain("rakta-root");
 		}
 	});
 
-	test("render ssr falls back to csr with console warning (roadmap)", async () => {
+	test("render ssr returns success with correct mode header", async () => {
 		const result = await render(
 			createTestContext("/page", "ssr"),
 			rendererOpts,
 		);
 		expect(result.kind).toBe("success");
 		if (result.kind === "success") {
-			expect(result.mode).toBe("csr");
+			// SSR returns its own mode, not csr fallback
+			expect(result.mode).toBe("ssr");
+			expect(result.html).toContain("rakta-root");
+		}
+	});
+
+	test("render ssg returns success with ssg mode", async () => {
+		const result = await render(
+			createTestContext("/about", "ssg"),
+			rendererOpts,
+		);
+		expect(result.kind).toBe("success");
+		if (result.kind === "success") {
+			expect(result.mode).toBe("ssg");
+			expect(result.html).toContain("<!DOCTYPE html>");
+		}
+	});
+
+	test("render csg returns success with csg mode", async () => {
+		const result = await render(
+			createTestContext("/blog/post", "csg"),
+			rendererOpts,
+		);
+		expect(result.kind).toBe("success");
+		if (result.kind === "success") {
+			expect(result.mode).toBe("csg");
 		}
 	});
 

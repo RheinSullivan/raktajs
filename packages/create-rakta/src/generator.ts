@@ -99,7 +99,7 @@ function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						projectMode === "fullstack"
 							? {
 									dev: isNodeBackend
-										? "bun run dev:frontend & bun run dev:backend"
+										? "bun --filter '*' run dev"
 										: "bun run dev:frontend",
 									"dev:frontend": "cd frontend && bun run dev",
 									...(isNodeBackend
@@ -130,7 +130,7 @@ function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
 									...(useTypeScript
 										? {
 												typecheck: isNodeBackend
-													? "cd frontend && bun run typecheck && cd ../backend && bun run typecheck"
+													? "bun --filter 'frontend' run typecheck && bun --filter 'backend' run typecheck"
 													: "cd frontend && bun run typecheck",
 											}
 										: {}),
@@ -139,6 +139,7 @@ function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
 									dev: "rakta dev",
 									build: "rakta build",
 									start: "rakta start",
+									lint: "rakta lint",
 									...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 								},
 					description: `${projectName} - built with Rakta.js`,
@@ -331,7 +332,7 @@ function personalizeFrontendTemplate(
 				},
 				dependencies: {
 					...(packageJson.dependencies ?? {}),
-					raktajs: "^1.2.0",
+					raktajs: "^1.2.1",
 					react: "^19.2.7",
 					"react-dom": "^19.2.7",
 					gsap: "^3.12.7",
@@ -438,7 +439,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^1.2.0",
+						raktajs: "^1.2.1",
 						gsap: "^3.12.7",
 						clsx: "^2.1.1",
 						"tailwind-merge": "^3.0.2",
@@ -603,7 +604,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^1.2.0",
+						raktajs: "^1.2.1",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						gsap: "^3.12.7",

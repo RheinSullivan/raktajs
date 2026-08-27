@@ -21,6 +21,8 @@ export interface DeploymentAdapterOptions {
 	readonly serverEntry?: string;
 	readonly staticDir?: string;
 	readonly port?: number;
+	/** The rendering mode configured for this application. Affects adapter behavior. */
+	readonly rendering?: import("../render/types").RenderMode;
 }
 
 export interface DeploymentFile {

@@ -323,6 +323,10 @@ export type {
 export { createMemoryStorage } from "./ecosystem/storage";
 export type {
 	ArtifactKind,
+	BuildManifest,
+	BuildManifestClient,
+	BuildManifestRoute,
+	BuildManifestServer,
 	ForgeBuildArtifact,
 	ForgeBuildOptions,
 	ForgeBuildResult,
@@ -331,6 +335,25 @@ export type {
 	ForgeInspectReport,
 	ForgeRouteModeEntry,
 	InspectOptions,
+	SsgGenerateOptions,
+	SsgGenerateResult,
+	SsrBuildOptions,
+	SsrBuildResult,
+	ValidationIssue,
+	ValidationResult,
+} from "./forge/index";
+export {
+	BUILD_MANIFEST_VERSION,
+	buildProject,
+	buildServerEntry,
+	createBuildManifest,
+	formatValidationDiagnostics,
+	generateStaticPages,
+	readBuildManifest,
+	validateAndReport,
+	validateBuildManifest,
+	writeBuildManifest,
+	writeCsrIndexHtml,
 } from "./forge/index";
 export {
 	applyRaktaDetectionHeaders,
@@ -657,7 +680,12 @@ export {
 	publicProcedure,
 	RaktaRpcError,
 } from "./rpc/index";
-
+export type { RaktaServerRuntimeOptions } from "./runtime/server";
+// Runtime - Production server handler
+export {
+	createRaktaRequestHandler,
+	startProductionServer,
+} from "./runtime/server";
 // Scene - MegaScape (optional 3D layer, requires three as peer dep)
 export { clearAssetCache, loadGLTF, loadTexture } from "./scene/loader";
 export {
@@ -676,7 +704,6 @@ export type {
 	ScrollSceneConfig,
 	TrusmiMaterialConfig,
 } from "./scene/types";
-
 // Schema
 export type {
 	Infer,
@@ -703,7 +730,6 @@ export {
 	StringType,
 	string,
 } from "./schema/index";
-
 // Security
 export type {
 	CspDirectives,
@@ -723,7 +749,6 @@ export {
 	SecretManager,
 	verifyCsrfToken,
 } from "./security/index";
-
 // SEO
 export type {
 	AlternateLinks,
@@ -801,6 +826,7 @@ export {
 	renderComponent,
 	runRaktaTests,
 } from "./testing/index";
+
 // Tide - NorthCoastFlow
 export type {
 	TideAdapter,

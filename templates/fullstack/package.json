@@ -9,6 +9,7 @@
     "shared"
   ],
   "scripts": {
+    "dev": "bun --filter '*' run dev",
     "dev:frontend": "cd frontend && bun run dev",
     "dev:backend": "cd backend && bun run dev",
     "build:frontend": "cd frontend && bun run build",
@@ -19,6 +20,6 @@
     "migrate": "cd backend && bun run migrate",
     "seed": "cd backend && bun run seed",
     "db:seed": "cd backend && bun run db:seed",
-    "typecheck": "cd frontend && bun run typecheck && cd ../backend && bun run typecheck"
+    "typecheck": "bun --filter 'frontend' run typecheck && bun --filter 'backend' run typecheck"
   }
 }

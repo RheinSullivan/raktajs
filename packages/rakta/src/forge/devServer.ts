@@ -177,7 +177,7 @@ interface ApiRouteExports {
  *
  * Terminal output (development only):
  *
- *   ⩛ Rakta.js 1.1.7 (CherbonsEngine)
+ *   ⩛ Rakta.js 1.2.0 (CherbonsEngine)
  *
  *     Local:        http://localhost:3000
  *     Network:      http://192.168.1.x:3000
@@ -712,7 +712,7 @@ export async function startDevServer(
 
 	const localUrl = `http://${displayHost}:${serverPort}`;
 
-	// Print startup banner — version, local/network URLs, env files, ready time, config timing.
+	// Print startup banner - version, local/network URLs, env files, ready time, config timing.
 	terminal.printStartup(localUrl, options.configMs);
 
 	try {

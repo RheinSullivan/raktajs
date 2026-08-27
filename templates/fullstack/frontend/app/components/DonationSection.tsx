@@ -131,9 +131,10 @@ export default function DonationSection({ lang }: { lang: "ID" | "EN" }) {
 		<section
 			ref={sectionRef}
 			className="border-t border-surface-stroke bg-black px-4 py-16 sm:px-6"
-			id="donation"
+			id="humanitarian"
 		>
 			<reborns id="donation" />
+			<reborns id="humanitarian" />
 			<div className="mx-auto max-w-6xl">
 				{/* RaktaAlert for call-to-action */}
 				{showAlert && (

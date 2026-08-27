@@ -352,10 +352,8 @@ ${devIndicatorImport}
 (globalThis as typeof globalThis & Record<string, unknown>).usePantura = usePantura;
 (globalThis as typeof globalThis & Record<string, unknown>).toast = toast;
 (globalThis as typeof globalThis & Record<string, unknown>).useToast = useToast;
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 (globalThis as typeof globalThis & Record<string, unknown>).gsap = gsap;
 (globalThis as typeof globalThis & Record<string, unknown>).ScrollTrigger = ScrollTrigger;
-(globalThis as typeof globalThis & Record<string, unknown>).ScrollToPlugin = ScrollToPlugin;
 (globalThis as typeof globalThis & Record<string, unknown>).ArrowRight = ArrowRight;
 (globalThis as typeof globalThis & Record<string, unknown>).Book = Book;
 (globalThis as typeof globalThis & Record<string, unknown>).Check = Check;
@@ -397,74 +395,80 @@ ${starterGlobalLoaders}
 
 await loadRaktaGlobals();
 
-function setupUrlPreview(): void {
-	if (typeof document === "undefined") return;
+// All DOM interaction is guarded so the module can be evaluated server-side
+// (SSG / SSR) without crashing on missing browser globals.
+if (typeof document !== "undefined") {
+  // Register GSAP plugins only in a browser context. ScrollToPlugin accesses
+  // document at registration time and will throw in a Node/Bun environment.
+  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-	const urlPreview = document.createElement("div");
-	urlPreview.id = "rakta-url-preview";
-	Object.assign(urlPreview.style, {
-		position: "fixed",
-		bottom: "6px",
-		left: "6px",
-		zIndex: "999998",
-		background: "#18181b",
-		color: "#38bdf8",
-		border: "1px solid #3f3f46",
-		borderRadius: "4px",
-		padding: "3px 8px",
-		fontFamily: "ui-monospace, SFMono-Regular, Consolas, monospace",
-		fontSize: "11px",
-		pointerEvents: "none",
-		opacity: "0",
-		transform: "translateY(2px)",
-		transition: "opacity 0.15s ease, transform 0.15s ease",
-		boxShadow: "0 4px 12px rgba(0,0,0,0.6)",
-	});
-	document.body.appendChild(urlPreview);
+  function setupUrlPreview(): void {
+    const urlPreview = document.createElement("div");
+    urlPreview.id = "rakta-url-preview";
+    Object.assign(urlPreview.style, {
+      position: "fixed",
+      bottom: "6px",
+      left: "6px",
+      zIndex: "999998",
+      background: "#18181b",
+      color: "#38bdf8",
+      border: "1px solid #3f3f46",
+      borderRadius: "4px",
+      padding: "3px 8px",
+      fontFamily: "ui-monospace, SFMono-Regular, Consolas, monospace",
+      fontSize: "11px",
+      pointerEvents: "none",
+      opacity: "0",
+      transform: "translateY(2px)",
+      transition: "opacity 0.15s ease, transform 0.15s ease",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.6)",
+    });
+    document.body.appendChild(urlPreview);
 
-	document.addEventListener("mouseover", (event) => {
-		const target = event.target;
-		if (!(target instanceof Element)) return;
-		const clickElem = target.closest("click");
-		if (!clickElem) return;
-		const to = clickElem.getAttribute("to");
-		if (!to) return;
+    document.addEventListener("mouseover", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const clickElem = target.closest("click");
+      if (!clickElem) return;
+      const to = clickElem.getAttribute("to");
+      if (!to) return;
 
-		const fullUrl = isExternalTo(to)
-			? to
-			: \`\${window.location.origin}\${to.startsWith("/") ? "" : "/"}\${to}\`;
-		urlPreview.textContent = fullUrl;
-		urlPreview.style.opacity = "1";
-		urlPreview.style.transform = "translateY(0)";
-	});
+      const fullUrl = isExternalTo(to)
+        ? to
+        : \`\${window.location.origin}\${to.startsWith("/") ? "" : "/"}\${to}\`;
+      urlPreview.textContent = fullUrl;
+      urlPreview.style.opacity = "1";
+      urlPreview.style.transform = "translateY(0)";
+    });
 
-	document.addEventListener("mouseout", (event) => {
-		const target = event.target;
-		if (!(target instanceof Element)) return;
-		if (target.closest("click")) {
-			urlPreview.style.opacity = "0";
-			urlPreview.style.transform = "translateY(2px)";
-		}
-	});
-}
+    document.addEventListener("mouseout", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      if (target.closest("click")) {
+        urlPreview.style.opacity = "0";
+        urlPreview.style.transform = "translateY(2px)";
+      }
+    });
+  }
 
-setupUrlPreview();
+  setupUrlPreview();
 
-${
-	options.devToolsEnabled
-		? `// Rakta DevTools stays behind the development guard so production builds do not import or mount the browser overlay.
-if (process.env.NODE_ENV === "development") {
-  mountDevIndicator({
-    version: "${rVersionSafe}",
-    logoDataUrl: \`${logoDataUrlSafe}\`,
-    bundler: "${RAKTA_DEVTOOLS_BUNDLER_NAME}",
-  });
-}`
-		: ""
-}
+  ${
+		options.devToolsEnabled
+			? `// Dev indicator is mounted only in development mode so it is never
+  // included in production bundles.
+  if (process.env.NODE_ENV === "development") {
+    mountDevIndicator({
+      version: "${rVersionSafe}",
+      logoDataUrl: \`${logoDataUrlSafe}\`,
+      bundler: "${RAKTA_DEVTOOLS_BUNDLER_NAME}",
+    });
+  }`
+			: ""
+	}
 
-const raktaElementStyle = document.createElement("style");
-raktaElementStyle.textContent = \`
+  const raktaElementStyle = document.createElement("style");
+  raktaElementStyle.textContent = \`
 click {
   display: inline-flex;
   align-items: center;
@@ -516,9 +520,8 @@ resource {
   display: none;
 }
 \`;
-document.head.appendChild(raktaElementStyle);
+  document.head.appendChild(raktaElementStyle);
 
-if (typeof window !== "undefined") {
   const browserWindow = window as unknown as {
     __RAKTA__?: Record<string, unknown>;
   };
@@ -530,9 +533,8 @@ if (typeof window !== "undefined") {
   if (document.documentElement) {
     document.documentElement.dataset.rakta = "true";
   }
-}
 
-const photoAttributeMap = {
+  const photoAttributeMap = {
   path: "src",
   alt: "alt",
   title: "title",
@@ -1080,21 +1082,22 @@ function RaktaAppShell(): React.ReactElement {
 
 const rootElement = document.getElementById("rakta-root");
 
-if (!rootElement) {
-  throw new Error("Rakta.js root element #rakta-root was not found.");
-}
+  if (!rootElement) {
+    throw new Error("Rakta.js root element #rakta-root was not found.");
+  }
 
-rootElement.setAttribute("data-rakta", "true");
+  rootElement.setAttribute("data-rakta", "true");
 
-createRoot(rootElement).render(
-  React.createElement(RaktaErrorBoundary, null, React.createElement(RaktaAppShell))
-);
+  createRoot(rootElement).render(
+    React.createElement(RaktaErrorBoundary, null, React.createElement(RaktaAppShell))
+  );
 
-// Notify the HTML shell that the app has mounted so the loading overlay
-// can be dismissed. This fires after React's first commit.
-requestAnimationFrame(function() {
-  document.dispatchEvent(new Event("rakta:mounted"));
-});
+  // Notify the HTML shell that the app has mounted so the loading overlay
+  // can be dismissed. This fires after React's first commit.
+  requestAnimationFrame(function() {
+    document.dispatchEvent(new Event("rakta:mounted"));
+  });
+} // end browser-only block
 `;
 }
 

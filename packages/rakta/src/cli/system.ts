@@ -254,6 +254,7 @@ export async function generateCommand(
 		const adapterOptions = {
 			appName: config.appName,
 			port: config.port,
+			rendering: config.render.defaultMode,
 			...(config.build.outDir === undefined
 				? {}
 				: { outDir: config.build.outDir }),

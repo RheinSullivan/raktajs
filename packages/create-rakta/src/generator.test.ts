@@ -157,7 +157,7 @@ describe("create-rakta fullstack generator", () => {
 		);
 
 		expect(fileByPath.get("frontend/package.json")).toContain(
-			'"raktajs": "^1.2.0"',
+			'"raktajs": "^1.2.1"',
 		);
 		expect(fileByPath.get("frontend/rakta.config.ts")).toContain(
 			'defaultMode: "hybrid"',
@@ -231,13 +231,13 @@ describe("create-rakta fullstack generator", () => {
 		for (const files of generatedSets) {
 			for (const file of files) {
 				const content = typeof file.content === "string" ? file.content : "";
-				// Modal components are now valid generated template files — they must
+				// Modal components are now valid generated template files - they must
 				// NOT import from lucide-react or framer-motion/motion, but their
 				// existence as Rakta.js components is correct and expected.
 				expect(content).not.toContain("lucide-react");
 				expect(content).not.toContain("framer-motion");
 				expect(content).not.toContain('from "motion"');
-				// The old Vite-prototype modals used motion/react directly — ensure
+				// The old Vite-prototype modals used motion/react directly - ensure
 				// that specific stale import pattern is absent.
 				expect(content).not.toContain('from "motion/react"');
 			}
@@ -495,7 +495,7 @@ describe("v1.2.0 regression tests", () => {
 		expect(typeof config?.content).toBe("string");
 		const content = config?.content as string;
 		// The right double quotation mark U+201D must not appear in the
-		// generated config file — it caused "Built with Rakta.js -" to
+		// generated config file - it caused "Built with Rakta.js -" to
 		// break the TypeScript string literal.
 		expect(content).not.toContain("\u201d");
 		// The description must be a valid plain-ASCII hyphen, not a curly quote.
@@ -532,7 +532,7 @@ describe("v1.2.0 regression tests", () => {
 		}
 	});
 
-	// BUG #5: @gaman/michi — the version that was previously generated
+	// BUG #5: @gaman/michi - the version that was previously generated
 	// (@gaman/michi@^1.0.0) doesn't exist. Verify NO adapter generates it.
 	test("no adapter generates @gaman/michi dependency", () => {
 		const backendFrameworks: ReadonlyArray<import("./types").BackendFramework> =
@@ -719,13 +719,13 @@ describe("v1.2.0 regression tests", () => {
 			.filter((file) => file.path === "package.json")
 			.map((file) => (typeof file.content === "string" ? file.content : ""))
 			.join("\n");
-		expect(frontendDepsContent).toContain('"raktajs": "^1.2.0"');
+		expect(frontendDepsContent).toContain('"raktajs": "^1.2.1"');
 
 		// In fullstack, frontend package.json is under frontend/
 		const fullstackFrontendPkg = fullstackFiles.find(
 			(file) => file.path === "frontend/package.json",
 		);
-		expect(fullstackFrontendPkg?.content).toContain('"raktajs": "^1.2.0"');
+		expect(fullstackFrontendPkg?.content).toContain('"raktajs": "^1.2.1"');
 	});
 
 	// RPC: fullstack project must have rpc:types script in frontend
