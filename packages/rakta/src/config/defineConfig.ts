@@ -80,7 +80,7 @@ export function defineConfig(config: RaktaConfig): RaktaConfig {
 export const defineRaktaConfig = defineConfig;
 
 export const defaultConfig: Required<RaktaConfig> = {
-	appName: "Rakta.js App",
+	appName: "Rakta.js - Free Palestine",
 	appDir: "app",
 	publicDir: "public",
 	port: 3000,
@@ -88,8 +88,8 @@ export const defaultConfig: Required<RaktaConfig> = {
 		framework: "tailwind",
 	},
 	seo: {
-		defaultTitle: "Rakta.js App",
-		titleTemplate: "%s | Rakta.js App",
+		defaultTitle: "Rakta.js - Free Palestine",
+		titleTemplate: "%s | Rakta.js",
 		defaultDescription: "Built with Rakta.js",
 		siteUrl: "http://localhost:3000",
 	},

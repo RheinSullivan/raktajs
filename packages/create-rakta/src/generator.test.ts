@@ -157,7 +157,7 @@ describe("create-rakta fullstack generator", () => {
 		);
 
 		expect(fileByPath.get("frontend/package.json")).toContain(
-			'"raktajs": "^1.2.1"',
+			'"raktajs": "^1.2.2"',
 		);
 		expect(fileByPath.get("frontend/rakta.config.ts")).toContain(
 			'defaultMode: "hybrid"',
@@ -719,13 +719,13 @@ describe("v1.2.0 regression tests", () => {
 			.filter((file) => file.path === "package.json")
 			.map((file) => (typeof file.content === "string" ? file.content : ""))
 			.join("\n");
-		expect(frontendDepsContent).toContain('"raktajs": "^1.2.1"');
+		expect(frontendDepsContent).toContain('"raktajs": "^1.2.2"');
 
 		// In fullstack, frontend package.json is under frontend/
 		const fullstackFrontendPkg = fullstackFiles.find(
 			(file) => file.path === "frontend/package.json",
 		);
-		expect(fullstackFrontendPkg?.content).toContain('"raktajs": "^1.2.1"');
+		expect(fullstackFrontendPkg?.content).toContain('"raktajs": "^1.2.2"');
 	});
 
 	// RPC: fullstack project must have rpc:types script in frontend
@@ -845,5 +845,36 @@ describe("v1.2.0 regression tests", () => {
 				file.path === "styles/globals.scss",
 		);
 		expect(hasGlobalsCss).toBe(true);
+	});
+
+	// Fullstack process orchestrator regression tests
+	test("fullstack generated root package.json dev script uses bun run scripts/dev.ts without shell &", () => {
+		const files = generateProjectFiles(fullstackConfig);
+		const rootPkgFile = files.find((file) => file.path === "package.json");
+		expect(rootPkgFile).toBeDefined();
+		const rootPkg = JSON.parse(
+			typeof rootPkgFile?.content === "string" ? rootPkgFile.content : "{}",
+		) as { scripts?: Record<string, string> };
+
+		expect(rootPkg.scripts?.dev).toBe("bun run scripts/dev.ts");
+		expect(rootPkg.scripts?.dev).not.toContain("&");
+		expect(rootPkg.scripts?.dev).not.toContain("&&");
+		expect(rootPkg.scripts?.dev).not.toContain("||");
+		expect(rootPkg.scripts?.["dev:frontend"]).toBe(
+			"bun --cwd frontend run dev",
+		);
+		expect(rootPkg.scripts?.["dev:backend"]).toBe(
+			"bun --cwd backend run dev",
+		);
+	});
+
+	test("fullstack generated project includes scripts/dev.ts cross-platform orchestrator", () => {
+		const files = generateProjectFiles(fullstackConfig);
+		const devScript = files.find((file) => file.path === "scripts/dev.ts");
+		expect(devScript).toBeDefined();
+		expect(devScript?.content).toContain("Bun.spawn");
+		expect(devScript?.content).toContain("[frontend]");
+		expect(devScript?.content).toContain("[backend]");
+		expect(devScript?.content).toContain("SIGINT");
 	});
 });

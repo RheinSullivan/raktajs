@@ -268,4 +268,30 @@ describe("Rakta deployment adapters", () => {
 		expect(toml?.content).not.toContain('to = "/"');
 		expect(toml?.content).toContain('to = "/index.html"');
 	});
+
+	test("Vercel deployment artifact structure prevents 404 NOT_FOUND on GET /", () => {
+		const adapter = createDeploymentAdapter("vercel", {
+			appName: "rakta-app",
+			outDir: "dist",
+			rendering: "csr",
+		});
+
+		const configFile = adapter.files.find(
+			(f) => f.path === ".vercel/output/config.json",
+		);
+		expect(configFile).toBeDefined();
+		const config = JSON.parse(configFile?.content ?? "{}") as {
+			version: number;
+			routes: Array<{ src?: string; dest?: string; handle?: string }>;
+		};
+
+		expect(config.version).toBe(3);
+		// Must have handle: filesystem and destination to /index.html
+		const hasFilesystem = config.routes.some((r) => r.handle === "filesystem");
+		const hasIndexFallback = config.routes.some(
+			(r) => r.src === "/(.*)" && r.dest === "/index.html",
+		);
+		expect(hasFilesystem).toBe(true);
+		expect(hasIndexFallback).toBe(true);
+	});
 });

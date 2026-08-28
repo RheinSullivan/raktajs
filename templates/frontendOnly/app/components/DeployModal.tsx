@@ -1,7 +1,6 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
 // biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
 // DeployModal - wizard overlay simulasi deployment edge.
-// Menggunakan icon dari react-icons/fa6 yang sudah di-auto-import oleh Rakta.js.
 
 type DeployStatus = "idle" | "building" | "success";
 
@@ -205,7 +204,7 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 								onClick={resetDeployment}
 								className="border border-white hover:bg-white hover:text-black px-4 py-2.5 font-mono text-xs uppercase transition-all flex items-center gap-1.5 cursor-pointer"
 							>
-								<RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
+								<FaRotateLeft className="w-3.5 h-3.5" aria-hidden="true" />
 								RE-BUILD PIPELINE
 							</button>
 						)}
@@ -244,7 +243,7 @@ export default function DeployModal({ isOpen, onClose }: DeployModalProps) {
 						<div className="mt-6 p-4 border border-brand-green bg-emerald-950/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 							<div>
 								<span className="font-bold text-brand-green uppercase flex items-center gap-1.5 text-xs mb-1">
-									<CheckCircle2 className="w-4 h-4" aria-hidden="true" />
+									<FaCircleCheck className="w-4 h-4" aria-hidden="true" />
 									Edge Application Online
 								</span>
 								<p className="text-[10px] text-gray-500 leading-normal">

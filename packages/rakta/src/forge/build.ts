@@ -18,7 +18,14 @@
  *   → validate output
  */
 
-import { cpSync, existsSync, mkdirSync, readdirSync, statSync } from "node:fs";
+import {
+	cpSync,
+	existsSync,
+	mkdirSync,
+	readdirSync,
+	statSync,
+	writeFileSync,
+} from "node:fs";
 import { join, resolve } from "node:path";
 import { isBuildTimeMode, requiresServer } from "../render/modes";
 import type { RenderMode } from "../render/types";
@@ -401,6 +408,15 @@ export async function buildProject(
 		kind: "manifest",
 	});
 
+	// 9. Generate deployment adapter outputs (Vercel Build Output API v3, Netlify, etc.)
+	generateDeploymentOutputs({
+		projectRoot: options.projectRoot,
+		outDir: resolve(options.outDir),
+		effectiveMode,
+		needsServer,
+		artifacts,
+	});
+
 	return {
 		success: errors.length === 0,
 		artifacts,
@@ -410,4 +426,139 @@ export async function buildProject(
 		buildManifest,
 		effectiveMode,
 	};
+}
+
+/**
+ * Generates platform-specific deployment artifacts:
+ * - Netlify/Cloudflare: dist/_redirects for SPA routing
+ * - Vercel: .vercel/output with config.json and static assets (Vercel Build Output API v3)
+ */
+function generateDeploymentOutputs(opts: {
+	projectRoot: string;
+	outDir: string;
+	effectiveMode: RenderMode;
+	needsServer: boolean;
+	artifacts: ForgeBuildArtifact[];
+}): void {
+	const { projectRoot, outDir, effectiveMode: _mode, needsServer, artifacts } = opts;
+
+	// 1. Static host redirects (Netlify / Cloudflare Pages / Static hosts)
+	const redirectsPath = join(outDir, "_redirects");
+	try {
+		writeFileSync(
+			redirectsPath,
+			needsServer
+				? `/*  /.netlify/functions/server  200\n`
+				: `/*  /index.html  200\n`,
+			"utf8",
+		);
+		artifacts.push({
+			outputPath: redirectsPath,
+			sizeBytes: statSync(redirectsPath).size,
+			kind: "asset",
+		});
+	} catch {
+		// Non-fatal
+	}
+
+	// 2. Vercel Build Output API v3 (.vercel/output)
+	try {
+		const vercelOutputDir = join(projectRoot, ".vercel", "output");
+		const vercelStaticDir = join(vercelOutputDir, "static");
+		mkdirSync(vercelStaticDir, { recursive: true });
+
+		// Copy static assets from outDir to .vercel/output/static
+		cpSync(outDir, vercelStaticDir, { recursive: true });
+
+		// Vercel config.json
+		const vercelConfig = {
+			version: 3,
+			routes: [
+				{
+					src: "^/chunks/(.+\\.[a-f0-9]{8,}\\.(js|css))$",
+					headers: {
+						"cache-control": "public, max-age=31536000, immutable",
+					},
+					continue: true,
+				},
+				{
+					handle: "filesystem",
+				},
+				{
+					src: "/(.*)",
+					dest: needsServer ? "/index.func" : "/index.html",
+				},
+			],
+		};
+
+		const vercelConfigPath = join(vercelOutputDir, "config.json");
+		writeFileSync(
+			vercelConfigPath,
+			JSON.stringify(vercelConfig, null, 2),
+			"utf8",
+		);
+
+		// Vercel project metadata
+		const vercelProjectDir = join(projectRoot, ".vercel");
+		const vercelProjectPath = join(vercelProjectDir, "project.json");
+		writeFileSync(
+			vercelProjectPath,
+			JSON.stringify(
+				{ framework: "raktajs", buildOutputPath: ".vercel/output" },
+				null,
+				2,
+			),
+			"utf8",
+		);
+
+		if (needsServer) {
+			const functionsDir = join(
+				vercelOutputDir,
+				"functions",
+				"index.func",
+			);
+			mkdirSync(functionsDir, { recursive: true });
+			writeFileSync(
+				join(functionsDir, ".vc-config.json"),
+				JSON.stringify(
+					{
+						runtime: "nodejs20.x",
+						handler: "index.js",
+						launcherType: "Nodejs",
+						shouldAddHelpers: true,
+					},
+					null,
+					2,
+				),
+				"utf8",
+			);
+			writeFileSync(
+				join(functionsDir, "index.js"),
+				`const { createRaktaRequestHandler } = await import("raktajs/runtime/server");
+const { loadConfig } = await import("raktajs/config");
+const path = await import("node:path");
+
+const cwd = process.cwd();
+const config = await loadConfig(cwd);
+
+const handler = createRaktaRequestHandler({
+  projectRoot: cwd,
+  appDir: path.join(cwd, config.appDir),
+  publicDir: path.join(cwd, config.publicDir),
+  outDir: path.join(cwd, config.build.outDir ?? "dist"),
+  appName: config.appName,
+  seo: config.seo,
+  renderConfig: config.render,
+});
+
+export default async function (request) {
+  return handler(request);
+}
+`,
+				"utf8",
+			);
+		}
+	} catch {
+		// Non-fatal
+	}
 }

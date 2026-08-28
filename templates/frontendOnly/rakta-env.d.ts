@@ -3,6 +3,10 @@ import "react";
 declare module "*.css";
 declare module "*.scss";
 declare module "*.sass";
+declare module "react-icons/*";
+declare module "react-icons/fa6";
+declare module "react-icons/ri";
+declare module "react-icons/fa";
 
 declare module "raktajs/seo" {
 	export interface MetadataAuthor {
@@ -492,75 +496,60 @@ declare global {
 	const toast: typeof import("raktajs/components").toast;
 	const useToast: typeof import("raktajs/components").useToast;
 
-	// ── Icons (react-icons/fa6 - auto-imported by Rakta.js build scanner) ──
-	const FaArrowRight: import("react").ComponentType<{
+	// ── React Types ──
+	namespace React {
+		type ReactNode = import("react").ReactNode;
+		type CSSProperties = import("react").CSSProperties;
+		type MouseEvent<T = Element> = import("react").MouseEvent<T>;
+		type ChangeEvent<T = Element> = import("react").ChangeEvent<T>;
+		type FormEvent<T = Element> = import("react").FormEvent<T>;
+		type ComponentType<P = Record<string, unknown>> = import("react").ComponentType<P>;
+	}
+
+	// ── Icons (react-icons/fa6 & react-icons/ri - auto-imported by Rakta.js build scanner) ──
+	type IconComponent = import("react").ComponentType<{
 		className?: string;
 		style?: import("react").CSSProperties;
+		size?: number | string;
+		color?: string;
+		title?: string;
+		[key: string]: any;
 	}>;
-	const FaArrowRotateRight: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaBook: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaCheck: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaCircleCheck: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaCloud: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaCode: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaCopy: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaEye: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaEyeSlash: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaHandHoldingHeart: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaHeart: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaMagnifyingGlass: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaMicrochip: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaPlay: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaRibbon: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaXmark: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
+
+	const FaArrowRight: IconComponent;
+	const FaArrowRotateRight: IconComponent;
+	const FaBook: IconComponent;
+	const FaCheck: IconComponent;
+	const FaCircleCheck: IconComponent;
+	const FaCircleInfo: IconComponent;
+	const FaCloud: IconComponent;
+	const FaCode: IconComponent;
+	const FaCopy: IconComponent;
+	const FaEye: IconComponent;
+	const FaEyeSlash: IconComponent;
+	const FaGithub: IconComponent;
+	const FaGlobe: IconComponent;
+	const FaHandHoldingHeart: IconComponent;
+	const FaHeart: IconComponent;
+	const FaMagnifyingGlass: IconComponent;
+	const FaMicrochip: IconComponent;
+	const FaPlay: IconComponent;
+	const FaRibbon: IconComponent;
+	const FaRotateLeft: IconComponent;
+	const FaServer: IconComponent;
+	const FaTerminal: IconComponent;
+	const FaVolumeHigh: IconComponent;
+	const FaVolumeXmark: IconComponent;
+	const FaXmark: IconComponent;
+	const RiArrowRightLine: IconComponent;
+	const RiCheckFill: IconComponent;
+	const RiCupFill: IconComponent;
+	const RiFileCopyFill: IconComponent;
+	const RiGlobalFill: IconComponent;
+	const RiHandHeartFill: IconComponent;
+	const RiHeartFill: IconComponent;
+	const RiShieldCheckFill: IconComponent;
+	const RiSparklingFill: IconComponent;
 	// ── Rakta.js Built-in Components ──
 	const Click: typeof import("raktajs/components").Click;
 	const click: typeof import("raktajs/components").Click;

@@ -69,7 +69,7 @@ export default function Footer({ lang }: { lang: "ID" | "EN" }) {
 									Rakta<span className="text-brand-pink">.js</span>
 								</pantura>
 								<span className="border border-surface-stroke px-1.5 py-0.5 text-[9px] uppercase text-gray-600">
-									v1.2.1
+									v1.2.2
 								</span>
 							</div>
 							<span className="text-gray-400 text-[11px] mt-0.5 block">
@@ -121,7 +121,7 @@ export default function Footer({ lang }: { lang: "ID" | "EN" }) {
 								rel="noreferrer"
 								className="flex items-center gap-1 transition-colors hover:text-brand-pink"
 							>
-								<Github className="h-3 w-3" />
+								<FaGithub className="h-3 w-3" />
 								{currentCopy.github}
 							</a>
 							<span className="text-gray-700">|</span>
@@ -136,7 +136,7 @@ export default function Footer({ lang }: { lang: "ID" | "EN" }) {
 							</a>
 						</div>
 						<p className="text-gray-700 text-[9px] flex items-center gap-1">
-							<Heart className="h-2.5 w-2.5 text-brand-pink" />
+							<FaHeart className="h-2.5 w-2.5 text-brand-pink" />
 							{currentCopy.rights}
 						</p>
 					</div>

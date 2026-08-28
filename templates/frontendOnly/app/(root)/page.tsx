@@ -1,7 +1,6 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
 // biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
 // Halaman utama Rakta.js - first-run welcome experience.
-// Menggunakan react-icons dan gsap. Lihat package.json untuk daftar lengkap dependensi.
 
 export default function App() {
 	// State bahasa dan audio
@@ -45,7 +44,7 @@ export default function App() {
 
 	// Data status grid: ENGINE / STATUS / PORT / REGION
 	const statusGrid = [
-		{ label: "ENGINE", value: "v1.2.1-STABLE", pulse: false },
+		{ label: "ENGINE", value: "v1.2.2-STABLE", pulse: false },
 		{ label: "STATUS", value: "OPERATIONAL", pulse: true },
 		{ label: "PORT", value: "3000", pulse: false },
 		{ label: "REGION", value: "LOCAL", pulse: false },

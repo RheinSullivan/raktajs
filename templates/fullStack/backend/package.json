@@ -1,6 +1,6 @@
 {
-  "name": "rakta-fullstack-template-backend",
-  "version": "1.2.0",
+  "name": "my-rakta-fullstack-backend",
+  "version": "1.2.2",
   "private": true,
   "type": "module",
   "scripts": {

@@ -9,7 +9,7 @@ export default defineRaktaConfig({
 		dts: true,
 	},
 	seo: {
-		defaultTitle: "Rakta.js - 🇵🇸 Free Palestine",
+		defaultTitle: "Rakta.js - Free Palestine",
 		defaultDescription:
 			"Fullstack Rakta.js app with auth, API, and deployment-ready structure.",
 	},

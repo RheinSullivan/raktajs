@@ -101,7 +101,7 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 
 				{/* Search */}
 				<div className="p-3 bg-zinc-950 border-b border-surface-stroke flex items-center gap-2">
-					<Search
+					<FaMagnifyingGlass
 						className="w-4 h-4 text-gray-500 ml-2 flex-shrink-0"
 						aria-hidden="true"
 					/>
@@ -249,7 +249,7 @@ export default function DocsModal({ isOpen, onClose }: DocsModalProps) {
 										className="flex items-center gap-2 border border-white hover:bg-white hover:text-black transition-colors px-4 py-2 font-mono text-xs uppercase cursor-pointer"
 									>
 										Next Chapter{" "}
-										<ArrowRight className="w-4 h-4" aria-hidden="true" />
+										<FaArrowRight className="w-4 h-4" aria-hidden="true" />
 									</button>
 								</div>
 							</div>

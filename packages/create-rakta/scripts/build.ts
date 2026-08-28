@@ -85,4 +85,18 @@ cpSync(fullstackFrontendTemplateSource, fullstackFrontendTemplateTarget, {
 	recursive: true,
 });
 
+const fullstackScriptsSource = resolve(
+	workspaceRoot,
+	"templates/fullStack/scripts",
+);
+const fullstackScriptsTarget = resolve(
+	outDirectory,
+	"templates/fullStack/scripts",
+);
+if (existsSync(fullstackScriptsSource)) {
+	cpSync(fullstackScriptsSource, fullstackScriptsTarget, {
+		recursive: true,
+	});
+}
+
 console.log("Bundled create-rakta-app templates.");

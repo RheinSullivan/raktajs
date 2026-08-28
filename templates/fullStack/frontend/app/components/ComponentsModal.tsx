@@ -1,7 +1,6 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
 // biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
 // ComponentsModal - overlay galeri komponen UI.
-// Menggunakan icon dari react-icons/fa6 dan react-icons/lu yang sudah di-auto-import oleh Rakta.js.
 
 interface ComponentsModalProps {
 	readonly isOpen: boolean;
@@ -165,7 +164,7 @@ export default function ComponentsModal({
 				{/* Header */}
 				<div className="flex items-center justify-between border-b border-surface-stroke p-5">
 					<div className="flex items-center gap-3">
-						<Cpu className="w-5 h-5 text-brand-pink" aria-hidden="true" />
+						<FaMicrochip className="w-5 h-5 text-brand-pink" aria-hidden="true" />
 						<h2 className="text-xl font-bold font-mono tracking-tight uppercase">
 							Rakta <span className="text-brand-pink">Component Library</span>
 						</h2>
@@ -231,7 +230,7 @@ export default function ComponentsModal({
 							<div className="mt-8 flex-1 flex flex-col min-h-[150px]">
 								<div className="flex items-center justify-between bg-zinc-950 border-t border-x border-surface-stroke px-4 py-2">
 									<span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest flex items-center gap-1.5">
-										<Code className="w-3.5 h-3.5" aria-hidden="true" /> HTML /
+										<FaCode className="w-3.5 h-3.5" aria-hidden="true" /> HTML /
 										Tailwind Markup
 									</span>
 									<button
@@ -244,7 +243,7 @@ export default function ComponentsModal({
 									>
 										{copiedId === activeCompId ? (
 											<>
-												<Check
+												<FaCheck
 													className="w-3.5 h-3.5 text-brand-green"
 													aria-hidden="true"
 												/>{" "}
@@ -252,7 +251,7 @@ export default function ComponentsModal({
 											</>
 										) : (
 											<>
-												<Copy className="w-3.5 h-3.5" aria-hidden="true" /> COPY
+												<FaCopy className="w-3.5 h-3.5" aria-hidden="true" /> COPY
 												TO CLIPBOARD
 											</>
 										)}

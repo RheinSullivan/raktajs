@@ -62,8 +62,8 @@ export default function Header({
 						Rakta<span className="text-brand-pink">.js</span>
 					</span>
 					<span className="hidden sm:inline-flex items-center gap-1 border border-surface-stroke bg-zinc-900/80 px-2 py-0.5 font-mono text-[10px] uppercase text-gray-400 leading-none">
-						<Terminal className="h-2.5 w-2.5" />
-						v1.2.1 · FULLSTACK ENGINE
+						<FaTerminal className="h-2.5 w-2.5" />
+						v1.2.2 · FULLSTACK ENGINE
 					</span>
 				</click>
 
@@ -121,9 +121,9 @@ export default function Header({
 						aria-label="Toggle Audio"
 					>
 						{isMuted ? (
-							<VolumeX className="h-3.5 w-3.5" />
+							<FaVolumeXmark className="h-3.5 w-3.5 text-brand-pink" />
 						) : (
-							<Volume2 className="h-3.5 w-3.5" />
+							<FaVolumeHigh className="h-3.5 w-3.5 text-brand-green" />
 						)}
 					</button>
 
@@ -133,7 +133,7 @@ export default function Header({
 						onClick={handleLangToggle}
 						className="border border-brand-pink bg-brand-pink/10 px-3 py-1 font-mono text-xs font-bold uppercase text-brand-pink hover:bg-brand-pink hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
 					>
-						<Globe className="h-3 w-3" />
+						<FaGlobe className="h-3 w-3" />
 						{lang}
 					</button>
 				</div>

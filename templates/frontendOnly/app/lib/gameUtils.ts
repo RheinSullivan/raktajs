@@ -79,8 +79,11 @@ export function checkCollision(
  * Baca high score dari localStorage. Kembalikan 0 jika tidak ada atau error.
  */
 export function readHighScore(key: string): number {
+	if (typeof window === "undefined" || typeof localStorage === "undefined") {
+		return 0;
+	}
 	try {
-		return parseInt(localStorage.getItem(key) ?? "0", 10);
+		return parseInt(localStorage.getItem(key) ?? "0", 10) || 0;
 	} catch {
 		return 0;
 	}
@@ -90,6 +93,9 @@ export function readHighScore(key: string): number {
  * Simpan high score ke localStorage. Abaikan error (mode private browsing dll).
  */
 export function saveHighScore(key: string, score: number): void {
+	if (typeof window === "undefined" || typeof localStorage === "undefined") {
+		return;
+	}
 	try {
 		localStorage.setItem(key, score.toString());
 	} catch {

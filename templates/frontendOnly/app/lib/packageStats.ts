@@ -105,9 +105,10 @@ export function parseDependentsCount(responseData: unknown): number | null {
 }
 
 export function getCachedPackageStats(): PackageStats | null {
+	if (typeof window === "undefined") return null;
 	try {
-		const raw = window.localStorage.getItem(CACHE_KEY);
-		if (raw === null) return null;
+		const raw = window.localStorage?.getItem(CACHE_KEY);
+		if (raw === null || raw === undefined) return null;
 
 		const cached = JSON.parse(raw) as CachedPackageStats;
 		return cached.expiresAt > Date.now() ? cached.stats : null;
@@ -117,8 +118,9 @@ export function getCachedPackageStats(): PackageStats | null {
 }
 
 function setCachedPackageStats(stats: PackageStats): void {
+	if (typeof window === "undefined") return;
 	try {
-		window.localStorage.setItem(
+		window.localStorage?.setItem(
 			CACHE_KEY,
 			JSON.stringify({ expiresAt: Date.now() + CACHE_TTL_MS, stats }),
 		);

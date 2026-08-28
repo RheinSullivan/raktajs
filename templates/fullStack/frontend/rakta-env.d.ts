@@ -3,6 +3,10 @@ import "react";
 declare module "*.css";
 declare module "*.scss";
 declare module "*.sass";
+declare module "react-icons/*";
+declare module "react-icons/fa6";
+declare module "react-icons/ri";
+declare module "react-icons/fa";
 
 declare module "raktajs/seo" {
 	export interface MetadataAuthor {
@@ -532,28 +536,60 @@ declare global {
 	const toast: typeof import("raktajs/components").toast;
 	const useToast: typeof import("raktajs/components").useToast;
 
-	// ── Icons ──
-	const ArrowRight: import("react").ComponentType<Record<string, unknown>>;
-	const Book: import("react").ComponentType<Record<string, unknown>>;
-	const Check: import("react").ComponentType<Record<string, unknown>>;
-	const CheckCircle2: import("react").ComponentType<Record<string, unknown>>;
-	const Cloud: import("react").ComponentType<Record<string, unknown>>;
-	const Code: import("react").ComponentType<Record<string, unknown>>;
-	const Coffee: import("react").ComponentType<Record<string, unknown>>;
-	const Copy: import("react").ComponentType<Record<string, unknown>>;
-	const Cpu: import("react").ComponentType<Record<string, unknown>>;
-	const Github: import("react").ComponentType<Record<string, unknown>>;
-	const Globe: import("react").ComponentType<Record<string, unknown>>;
-	const Heart: import("react").ComponentType<Record<string, unknown>>;
-	const Info: import("react").ComponentType<Record<string, unknown>>;
-	const Play: import("react").ComponentType<Record<string, unknown>>;
-	const RotateCcw: import("react").ComponentType<Record<string, unknown>>;
-	const Search: import("react").ComponentType<Record<string, unknown>>;
-	const Server: import("react").ComponentType<Record<string, unknown>>;
-	const Terminal: import("react").ComponentType<Record<string, unknown>>;
-	const Volume2: import("react").ComponentType<Record<string, unknown>>;
-	const VolumeX: import("react").ComponentType<Record<string, unknown>>;
-	const X: import("react").ComponentType<Record<string, unknown>>;
+	// ── React Types ──
+	namespace React {
+		type ReactNode = import("react").ReactNode;
+		type CSSProperties = import("react").CSSProperties;
+		type MouseEvent<T = Element> = import("react").MouseEvent<T>;
+		type ChangeEvent<T = Element> = import("react").ChangeEvent<T>;
+		type FormEvent<T = Element> = import("react").FormEvent<T>;
+		type ComponentType<P = Record<string, unknown>> = import("react").ComponentType<P>;
+	}
+
+	// ── Icons (react-icons/fa6 & react-icons/ri - auto-imported by Rakta.js build scanner) ──
+	type IconComponent = import("react").ComponentType<{
+		className?: string;
+		style?: import("react").CSSProperties;
+		size?: number | string;
+		color?: string;
+		title?: string;
+		[key: string]: any;
+	}>;
+
+	const FaArrowRight: IconComponent;
+	const FaArrowRotateRight: IconComponent;
+	const FaBook: IconComponent;
+	const FaCheck: IconComponent;
+	const FaCircleCheck: IconComponent;
+	const FaCircleInfo: IconComponent;
+	const FaCloud: IconComponent;
+	const FaCode: IconComponent;
+	const FaCopy: IconComponent;
+	const FaEye: IconComponent;
+	const FaEyeSlash: IconComponent;
+	const FaGithub: IconComponent;
+	const FaGlobe: IconComponent;
+	const FaHandHoldingHeart: IconComponent;
+	const FaHeart: IconComponent;
+	const FaMagnifyingGlass: IconComponent;
+	const FaMicrochip: IconComponent;
+	const FaPlay: IconComponent;
+	const FaRibbon: IconComponent;
+	const FaRotateLeft: IconComponent;
+	const FaServer: IconComponent;
+	const FaTerminal: IconComponent;
+	const FaVolumeHigh: IconComponent;
+	const FaVolumeXmark: IconComponent;
+	const FaXmark: IconComponent;
+	const RiArrowRightLine: IconComponent;
+	const RiCheckFill: IconComponent;
+	const RiCupFill: IconComponent;
+	const RiFileCopyFill: IconComponent;
+	const RiGlobalFill: IconComponent;
+	const RiHandHeartFill: IconComponent;
+	const RiHeartFill: IconComponent;
+	const RiShieldCheckFill: IconComponent;
+	const RiSparklingFill: IconComponent;
 
 	// ── Rakta.js Built-in Components ──
 	const Click: typeof import("raktajs/components").Click;

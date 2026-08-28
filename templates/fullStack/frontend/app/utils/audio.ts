@@ -5,12 +5,17 @@ let isMuted = false;
 
 function getAudioContext(): AudioContext | null {
 	if (typeof window === "undefined") return null;
+	const AudioCtx =
+		window.AudioContext ||
+		(window as unknown as { webkitAudioContext?: typeof AudioContext })
+			.webkitAudioContext;
+	if (!AudioCtx) return null;
 	if (!sharedAudioContext) {
 		// Lazy initialize to bypass browser autoplay policies until user interaction
-		sharedAudioContext = new window.AudioContext();
+		sharedAudioContext = new AudioCtx();
 	}
 	if (sharedAudioContext.state === "suspended") {
-		sharedAudioContext.resume();
+		sharedAudioContext.resume().catch(() => {});
 	}
 	return sharedAudioContext;
 }

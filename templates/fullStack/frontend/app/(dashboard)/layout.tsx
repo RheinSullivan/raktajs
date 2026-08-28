@@ -44,25 +44,25 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 							to="/dashboard"
 							className="flex items-center gap-2 border border-brand-pink/50 bg-rose-950/20 px-3 py-2.5 text-brand-pink font-bold transition-colors hover:bg-rose-950/40"
 						>
-							<Terminal className="h-3.5 w-3.5" /> Overview
+							<FaTerminal className="h-3.5 w-3.5" /> Overview
 						</click>
 						<click
 							to="/dashboard/1"
 							className="flex items-center gap-2 border border-surface-stroke bg-black px-3 py-2.5 text-gray-400 hover:text-white hover:border-gray-700 transition-colors"
 						>
-							<Info className="h-3.5 w-3.5" /> User #1 Detail
+							<FaCircleInfo className="h-3.5 w-3.5" /> User #1 Detail
 						</click>
 						<click
 							to="/dashboard/2"
 							className="flex items-center gap-2 border border-surface-stroke bg-black px-3 py-2.5 text-gray-400 hover:text-white hover:border-gray-700 transition-colors"
 						>
-							<Globe className="h-3.5 w-3.5" /> User #2 Detail
+							<FaGlobe className="h-3.5 w-3.5" /> User #2 Detail
 						</click>
 						<click
 							to="/"
 							className="flex items-center gap-2 border border-surface-stroke bg-black px-3 py-2.5 text-gray-400 hover:text-white hover:border-gray-700 transition-colors"
 						>
-							<ArrowRight className="h-3.5 w-3.5" /> Main Landing
+							<FaArrowRight className="h-3.5 w-3.5" /> Main Landing
 						</click>
 					</nav>
 				</div>
@@ -73,7 +73,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 						<span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
 						<span>CONNECTED TO GAMAN SERVER</span>
 					</div>
-					<p className="text-gray-600">v1.2.1 · Cirebon &amp; Jakarta 🇮🇩</p>
+					<p className="text-gray-600">v1.2.2 · Cirebon &amp; Jakarta 🇮🇩</p>
 				</div>
 			</aside>
 

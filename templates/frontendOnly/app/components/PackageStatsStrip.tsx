@@ -88,7 +88,7 @@ export default function PackageStatsStrip({ lang }: PackageStatsStripProps) {
 				<details className="group border border-surface-stroke bg-black transition-colors hover:border-brand-pink">
 					<summary className="flex cursor-pointer list-none items-center gap-4 p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink">
 						<span className="grid h-9 w-9 place-items-center border border-brand-pink/40 text-brand-pink">
-							<Server className="h-4 w-4" aria-hidden="true" />
+							<FaServer className="h-4 w-4" aria-hidden="true" />
 						</span>
 						<span className="min-w-0">
 							<span className="block font-mono text-[10px] font-bold uppercase tracking-widest text-gray-500">
@@ -126,7 +126,7 @@ export default function PackageStatsStrip({ lang }: PackageStatsStripProps) {
 					aria-label={copy.npmLink}
 				>
 					<span className="grid h-9 w-9 place-items-center border border-brand-pink/40 text-brand-pink">
-						<Globe className="h-4 w-4" aria-hidden="true" />
+						<FaGlobe className="h-4 w-4" aria-hidden="true" />
 					</span>
 					<span className="min-w-0">
 						<span className="block font-mono text-[10px] font-bold uppercase tracking-widest text-gray-500">

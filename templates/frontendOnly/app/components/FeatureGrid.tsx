@@ -20,11 +20,11 @@ export default function FeatureGrid({ lang }: { lang: "ID" | "EN" }) {
 
 	const featureIcons = useMemo(
 		() => [
-			<Terminal key="terminal" className="h-4 w-4" />,
-			<Server key="server" className="h-4 w-4" />,
+			<FaTerminal key="terminal" className="h-4 w-4" />,
+			<FaServer key="server" className="h-4 w-4" />,
 			<FaArrowRotateRight key="rotate" className="h-4 w-4" />,
-			<Globe key="globe" className="h-4 w-4" />,
-			<Search key="search" className="h-4 w-4" />,
+			<FaGlobe key="globe" className="h-4 w-4" />,
+			<FaMagnifyingGlass key="search" className="h-4 w-4" />,
 			<FaCloud key="cloud" className="h-4 w-4" />,
 		],
 		[],

@@ -129,7 +129,7 @@ export default function RegisterPage() {
 
 				<label className="grid gap-2 font-mono text-xs uppercase text-gray-400">
 					<span className="flex items-center gap-1.5">
-						<Globe className="h-3 w-3 text-brand-pink" /> Role Assignment
+						<FaGlobe className="h-3 w-3 text-brand-pink" /> Role Assignment
 					</span>
 					<select
 						className="border border-surface-stroke bg-black px-4 py-3 font-mono text-sm text-white outline-none focus:border-brand-pink transition-colors"

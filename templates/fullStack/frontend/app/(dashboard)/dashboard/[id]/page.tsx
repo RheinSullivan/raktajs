@@ -50,9 +50,9 @@ export default function UserDetailPage() {
 					to="/dashboard"
 					className="hover:text-brand-pink transition-colors flex items-center gap-1"
 				>
-					<Terminal className="h-3 w-3" /> Dashboard
+					<FaTerminal className="h-3 w-3" /> Dashboard
 				</click>
-				<ArrowRight className="h-3 w-3" />
+				<FaArrowRight className="h-3 w-3" />
 				<span className="text-white">User Record #{idParam}</span>
 			</div>
 
@@ -128,7 +128,7 @@ export default function UserDetailPage() {
 					to="/dashboard"
 					className="inline-flex items-center gap-2 border border-brand-pink bg-brand-pink px-6 py-3 font-mono text-xs font-bold uppercase text-white hover:bg-white hover:text-black transition-colors"
 				>
-					<ArrowRight className="h-3 w-3 rotate-180" /> Back to Dashboard
+					<FaArrowRight className="h-3 w-3 rotate-180" /> Back to Dashboard
 				</click>
 			</div>
 		</div>

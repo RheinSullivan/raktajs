@@ -1,6 +1,6 @@
 {
-  "name": "rakta-fullstack-template",
-  "version": "1.2.0",
+  "name": "my-rakta-fullstack-app",
+  "version": "1.2.2",
   "private": true,
   "type": "module",
   "workspaces": [
@@ -9,17 +9,17 @@
     "shared"
   ],
   "scripts": {
-    "dev": "bun --filter '*' run dev",
-    "dev:frontend": "cd frontend && bun run dev",
-    "dev:backend": "cd backend && bun run dev",
-    "build:frontend": "cd frontend && bun run build",
-    "build:backend": "cd backend && bun run build",
+    "dev": "bun run scripts/dev.ts",
+    "dev:frontend": "bun --cwd frontend run dev",
+    "dev:backend": "bun --cwd backend run dev",
+    "build:frontend": "bun --cwd frontend run build",
+    "build:backend": "bun --cwd backend run build",
     "build": "bun run build:frontend && bun run build:backend",
-    "start": "cd backend && bun run start",
-    "migration": "cd backend && bun run migration",
-    "migrate": "cd backend && bun run migrate",
-    "seed": "cd backend && bun run seed",
-    "db:seed": "cd backend && bun run db:seed",
+    "start": "bun --cwd backend run start",
+    "migration": "bun --cwd backend run migration",
+    "migrate": "bun --cwd backend run migrate",
+    "seed": "bun --cwd backend run seed",
+    "db:seed": "bun --cwd backend run db:seed",
     "typecheck": "bun --filter 'frontend' run typecheck && bun --filter 'backend' run typecheck"
   }
 }

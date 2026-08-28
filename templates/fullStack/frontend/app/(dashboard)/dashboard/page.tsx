@@ -101,7 +101,7 @@ export default function DashboardOverviewPage() {
 						to="/"
 						className="border border-brand-pink bg-brand-pink px-4 py-2 font-mono text-xs font-bold uppercase text-white hover:bg-white hover:text-black transition-colors flex items-center gap-1.5"
 					>
-						<ArrowRight className="h-3 w-3" /> View App
+						<FaArrowRight className="h-3 w-3" /> View App
 					</click>
 				</div>
 			</div>
@@ -116,21 +116,21 @@ export default function DashboardOverviewPage() {
 						label: "TOTAL USERS",
 						value: "3",
 						note: "Seeders Operational",
-						icon: <Globe className="h-4 w-4 text-brand-pink" />,
+						icon: <FaGlobe className="h-4 w-4 text-brand-pink" />,
 						color: "text-white",
 					},
 					{
 						label: "ACTIVE SESSIONS",
 						value: "1",
 						note: "HTTP-Only Cookie",
-						icon: <Server className="h-4 w-4 text-brand-pink" />,
+						icon: <FaServer className="h-4 w-4 text-brand-pink" />,
 						color: "text-brand-pink",
 					},
 					{
 						label: "DATABASE STATUS",
 						value: "ONLINE",
 						note: "@gaman/db SQLite",
-						icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
+						icon: <FaCircleCheck className="h-4 w-4 text-emerald-400" />,
 						color: "text-emerald-400",
 					},
 					{
@@ -170,7 +170,7 @@ export default function DashboardOverviewPage() {
 			>
 				<div className="flex items-center justify-between mb-4 border-b border-surface-stroke pb-3">
 					<h2 className="font-mono text-base font-bold uppercase text-white flex items-center gap-2">
-						<Terminal className="h-4 w-4 text-brand-pink" /> Database Seeded
+						<FaTerminal className="h-4 w-4 text-brand-pink" /> Database Seeded
 						Users
 					</h2>
 					<span className="font-mono text-[10px] uppercase text-gray-500">

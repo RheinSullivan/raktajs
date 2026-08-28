@@ -16,8 +16,7 @@ import type {
 } from "./types";
 import { BACKEND_DISPLAY, CSS_DISPLAY, DATABASE_DISPLAY } from "./types";
 
-const DEFAULT_METADATA_TITLE =
-	"Rakta.js | Small in size. Fierce in speed. Alive in every route";
+const DEFAULT_METADATA_TITLE = "Rakta.js - Free Palestine";
 const FAVICON_BYTES = readFileSync(
 	new URL("../assets/favicon.ico", import.meta.url),
 );
@@ -99,39 +98,39 @@ function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						projectMode === "fullstack"
 							? {
 									dev: isNodeBackend
-										? "bun --filter '*' run dev"
+										? "bun run scripts/dev.ts"
 										: "bun run dev:frontend",
-									"dev:frontend": "cd frontend && bun run dev",
+									"dev:frontend": "bun --cwd frontend run dev",
 									...(isNodeBackend
-										? { "dev:backend": "cd backend && bun run dev" }
+										? { "dev:backend": "bun --cwd backend run dev" }
 										: {}),
-									"build:frontend": "cd frontend && bun run build",
+									"build:frontend": "bun --cwd frontend run build",
 									...(isNodeBackend
-										? { "build:backend": "cd backend && bun run build" }
+										? { "build:backend": "bun --cwd backend run build" }
 										: {}),
 									build: isNodeBackend
 										? "bun run build:frontend && bun run build:backend"
 										: "bun run build:frontend",
 									...(isNodeBackend
-										? { start: "cd backend && bun run start" }
+										? { start: "bun --cwd backend run start" }
 										: {}),
 									...(isNodeBackend
-										? { migration: "cd backend && bun run migration" }
+										? { migration: "bun --cwd backend run migration" }
 										: {}),
 									...(isNodeBackend
-										? { migrate: "cd backend && bun run migrate" }
+										? { migrate: "bun --cwd backend run migrate" }
 										: {}),
 									...(isNodeBackend
-										? { seed: "cd backend && bun run seed" }
+										? { seed: "bun --cwd backend run seed" }
 										: {}),
 									...(isNodeBackend
-										? { "db:seed": "cd backend && bun run db:seed" }
+										? { "db:seed": "bun --cwd backend run db:seed" }
 										: {}),
 									...(useTypeScript
 										? {
 												typecheck: isNodeBackend
 													? "bun --filter 'frontend' run typecheck && bun --filter 'backend' run typecheck"
-													: "cd frontend && bun run typecheck",
+													: "bun --cwd frontend run typecheck",
 											}
 										: {}),
 								}
@@ -196,6 +195,13 @@ function getRootFiles(projectConfig: ProjectConfig): ProjectFile[] {
 				null,
 				2,
 			),
+		});
+	}
+
+	if (projectMode === "fullstack") {
+		files.push({
+			path: "scripts/dev.ts",
+			content: _generateDevOrchestratorScript(),
 		});
 	}
 
@@ -332,7 +338,7 @@ function personalizeFrontendTemplate(
 				},
 				dependencies: {
 					...(packageJson.dependencies ?? {}),
-					raktajs: "^1.2.1",
+					raktajs: "^1.2.2",
 					react: "^19.2.7",
 					"react-dom": "^19.2.7",
 					gsap: "^3.12.7",
@@ -439,7 +445,7 @@ function getFrontendOnlyFiles(projectConfig: ProjectConfig): ProjectFile[] {
 						...(useTypeScript ? { typecheck: "tsc --noEmit" } : {}),
 					},
 					dependencies: {
-						raktajs: "^1.2.1",
+						raktajs: "^1.2.2",
 						gsap: "^3.12.7",
 						clsx: "^2.1.1",
 						"tailwind-merge": "^3.0.2",
@@ -604,7 +610,7 @@ function getFullstackFrontendFiles(
 						typecheck: "tsc --noEmit",
 					},
 					dependencies: {
-						raktajs: "^1.2.1",
+						raktajs: "^1.2.2",
 						react: "^19.2.7",
 						"react-dom": "^19.2.7",
 						gsap: "^3.12.7",
@@ -2503,6 +2509,10 @@ function generateFrontendOnlyRaktaEnv(): string {
 declare module "*.css";
 declare module "*.scss";
 declare module "*.sass";
+declare module "react-icons/*";
+declare module "react-icons/fa6";
+declare module "react-icons/ri";
+declare module "react-icons/fa";
 
 // Rakta.js built-in anchor component - use <Click to="/path"> instead of <a href>
 type RaktaClickAttributes = Omit<
@@ -2607,44 +2617,58 @@ declare global {
   const Reborns: typeof import("raktajs/components").Reborns;
   const usePantura: typeof import("raktajs/components").usePantura;
   const toast: typeof import("raktajs/components").toast;
-  const useToast: typeof import("raktajs/components").useToast;
+  namespace React {
+    type ReactNode = import("react").ReactNode;
+    type CSSProperties = import("react").CSSProperties;
+    type MouseEvent<T = Element> = import("react").MouseEvent<T>;
+    type ChangeEvent<T = Element> = import("react").ChangeEvent<T>;
+    type FormEvent<T = Element> = import("react").FormEvent<T>;
+    type ComponentType<P = Record<string, unknown>> = import("react").ComponentType<P>;
+  }
 
-  type IconComponent = import("react").ComponentType<{ className?: string; style?: import("react").CSSProperties }>;
-
-  const ArrowRight: IconComponent;
-  const Book: IconComponent;
-  const Check: IconComponent;
-  const CheckCircle2: IconComponent;
-  const Cloud: IconComponent;
-  const Code: IconComponent;
-  const Copy: IconComponent;
-  const Cpu: IconComponent;
-  const Github: IconComponent;
-  const Info: IconComponent;
-  const Play: IconComponent;
-  const RotateCcw: IconComponent;
-  const Search: IconComponent;
-  const Server: IconComponent;
-  const Terminal: IconComponent;
-  const Volume2: IconComponent;
-  const VolumeX: IconComponent;
-  const X: IconComponent;
+  type IconComponent = import("react").ComponentType<{
+    className?: string;
+    style?: import("react").CSSProperties;
+    size?: number | string;
+    color?: string;
+    title?: string;
+    [key: string]: any;
+  }>;
 
   const FaArrowRight: IconComponent;
   const FaArrowRotateRight: IconComponent;
   const FaBook: IconComponent;
   const FaCheck: IconComponent;
   const FaCircleCheck: IconComponent;
+  const FaCircleInfo: IconComponent;
   const FaCloud: IconComponent;
   const FaCode: IconComponent;
   const FaCopy: IconComponent;
+  const FaEye: IconComponent;
+  const FaEyeSlash: IconComponent;
+  const FaGithub: IconComponent;
+  const FaGlobe: IconComponent;
   const FaHandHoldingHeart: IconComponent;
   const FaHeart: IconComponent;
   const FaMagnifyingGlass: IconComponent;
   const FaMicrochip: IconComponent;
   const FaPlay: IconComponent;
   const FaRibbon: IconComponent;
+  const FaRotateLeft: IconComponent;
+  const FaServer: IconComponent;
+  const FaTerminal: IconComponent;
+  const FaVolumeHigh: IconComponent;
+  const FaVolumeXmark: IconComponent;
   const FaXmark: IconComponent;
+  const RiArrowRightLine: IconComponent;
+  const RiCheckFill: IconComponent;
+  const RiCupFill: IconComponent;
+  const RiFileCopyFill: IconComponent;
+  const RiGlobalFill: IconComponent;
+  const RiHandHeartFill: IconComponent;
+  const RiHeartFill: IconComponent;
+  const RiShieldCheckFill: IconComponent;
+  const RiSparklingFill: IconComponent;
 
   const CoralObstacle: import("react").ComponentType<Record<string, unknown>>;
   const ShrimpCharacter: import("react").ComponentType<Record<string, unknown>>;
@@ -3368,6 +3392,137 @@ function getDatabaseDependencies(
 		default:
 			return {};
 	}
+}
+
+function _generateDevOrchestratorScript(): string {
+	return `#!/usr/bin/env bun
+/**
+ * Rakta.js Fullstack Development Orchestrator
+ * Cross-platform process runner using Bun.spawn with stdout/stderr forwarding and [frontend]/[backend] prefixes.
+ */
+import { spawn } from "bun";
+
+const isWindows = process.platform === "win32";
+
+// Child process references for graceful cleanup
+const children: ReturnType<typeof spawn>[] = [];
+
+function cleanup() {
+	for (const child of children) {
+		try {
+			if (isWindows) {
+				spawn(["taskkill", "/pid", child.pid.toString(), "/T", "/F"], {
+					stdout: "ignore",
+					stderr: "ignore",
+				});
+			} else {
+				child.kill("SIGTERM");
+			}
+		} catch {
+			// Process might already be terminated
+		}
+	}
+}
+
+// Register termination handlers
+process.on("SIGINT", () => {
+	cleanup();
+	process.exit(0);
+});
+
+process.on("SIGTERM", () => {
+	cleanup();
+	process.exit(0);
+});
+
+process.on("exit", () => {
+	cleanup();
+});
+
+async function streamOutput(
+	readable: ReadableStream<Uint8Array> | null,
+	prefix: string,
+	color: string,
+	isError = false,
+) {
+	if (!readable) return;
+	const reader = readable.getReader();
+	const decoder = new TextDecoder();
+	let buffer = "";
+
+	try {
+		while (true) {
+			const { done, value } = await reader.read();
+			if (done) break;
+			buffer += decoder.decode(value, { stream: true });
+			const lines = buffer.split("\\n");
+			buffer = lines.pop() ?? "";
+			for (const line of lines) {
+				if (line.trim().length > 0 || line.length > 0) {
+					const target = isError ? process.stderr : process.stdout;
+					target.write(\`\${color}\${prefix}\\x1b[0m \${line}\\n\`);
+				}
+			}
+		}
+		if (buffer.length > 0) {
+			const target = isError ? process.stderr : process.stdout;
+			target.write(\`\${color}\${prefix}\\x1b[0m \${buffer}\\n\`);
+		}
+	} catch {
+		// Stream closed
+	}
+}
+
+async function start() {
+	console.log(
+		"\\x1b[36m⩛ Starting Rakta.js Fullstack Development Server...\\x1b[0m\\n",
+	);
+
+	// Spawn frontend
+	const frontendProc = spawn({
+		cmd: isWindows
+			? ["cmd.exe", "/c", "bun", "run", "dev"]
+			: ["bun", "run", "dev"],
+		cwd: "./frontend",
+		env: { ...process.env, FORCE_COLOR: "1" },
+		stdout: "pipe",
+		stderr: "pipe",
+	});
+	children.push(frontendProc);
+
+	// Spawn backend
+	const backendProc = spawn({
+		cmd: isWindows
+			? ["cmd.exe", "/c", "bun", "run", "dev"]
+			: ["bun", "run", "dev"],
+		cwd: "./backend",
+		env: { ...process.env, FORCE_COLOR: "1" },
+		stdout: "pipe",
+		stderr: "pipe",
+	});
+	children.push(backendProc);
+
+	// Forward outputs with colored prefixes
+	streamOutput(frontendProc.stdout, "[frontend]", "\\x1b[35m", false);
+	streamOutput(frontendProc.stderr, "[frontend]", "\\x1b[31m", true);
+	streamOutput(backendProc.stdout, "[backend]", "\\x1b[34m", false);
+	streamOutput(backendProc.stderr, "[backend]", "\\x1b[31m", true);
+
+	// Wait for any child to exit
+	const exitCodes = await Promise.all([
+		frontendProc.exited,
+		backendProc.exited,
+	]);
+	cleanup();
+	process.exit(exitCodes[0] !== 0 ? exitCodes[0] : exitCodes[1]);
+}
+
+start().catch((err) => {
+	console.error("Failed to start fullstack services:", err);
+	cleanup();
+	process.exit(1);
+});
+`;
 }
 
 //  README
