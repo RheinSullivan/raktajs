@@ -23,7 +23,7 @@
  *   - "Was this helpful?" feedback strip
  */
 
-export const RAKTA_ERROR_OVERLAY_VERSION = "1.2.2";
+export const RAKTA_ERROR_OVERLAY_VERSION = "1.2.3";
 
 // Canonical error types
 

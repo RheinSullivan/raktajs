@@ -157,7 +157,7 @@ describe("create-rakta fullstack generator", () => {
 		);
 
 		expect(fileByPath.get("frontend/package.json")).toContain(
-			'"raktajs": "^1.2.2"',
+			'"raktajs": "^1.2.3"',
 		);
 		expect(fileByPath.get("frontend/rakta.config.ts")).toContain(
 			'defaultMode: "hybrid"',
@@ -719,13 +719,13 @@ describe("v1.2.0 regression tests", () => {
 			.filter((file) => file.path === "package.json")
 			.map((file) => (typeof file.content === "string" ? file.content : ""))
 			.join("\n");
-		expect(frontendDepsContent).toContain('"raktajs": "^1.2.2"');
+		expect(frontendDepsContent).toContain('"raktajs": "^1.2.3"');
 
 		// In fullstack, frontend package.json is under frontend/
 		const fullstackFrontendPkg = fullstackFiles.find(
 			(file) => file.path === "frontend/package.json",
 		);
-		expect(fullstackFrontendPkg?.content).toContain('"raktajs": "^1.2.2"');
+		expect(fullstackFrontendPkg?.content).toContain('"raktajs": "^1.2.3"');
 	});
 
 	// RPC: fullstack project must have rpc:types script in frontend

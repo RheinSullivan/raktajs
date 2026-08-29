@@ -298,17 +298,38 @@ import {
 	FaBook,
 	FaCheck,
 	FaCircleCheck,
+	FaCircleInfo,
 	FaCloud,
 	FaCode,
 	FaCopy,
+	FaEye,
+	FaEyeSlash,
+	FaGithub,
+	FaGlobe,
 	FaHandHoldingHeart,
 	FaHeart,
 	FaMagnifyingGlass,
 	FaMicrochip,
 	FaPlay,
 	FaRibbon,
+	FaRotateLeft,
+	FaServer,
+	FaTerminal,
+	FaVolumeHigh,
+	FaVolumeXmark,
 	FaXmark,
 } from "react-icons/fa6";
+import {
+	RiArrowRightLine,
+	RiCheckFill,
+	RiCupFill,
+	RiFileCopyFill,
+	RiGlobalFill,
+	RiHandHeartFill,
+	RiHeartFill,
+	RiShieldCheckFill,
+	RiSparklingFill,
+} from "react-icons/ri";
 ${cssImport}
 ${layoutImport}
 ${devIndicatorImport}
@@ -380,16 +401,35 @@ ${devIndicatorImport}
 (globalThis as typeof globalThis & Record<string, unknown>).FaBook = FaBook;
 (globalThis as typeof globalThis & Record<string, unknown>).FaCheck = FaCheck;
 (globalThis as typeof globalThis & Record<string, unknown>).FaCircleCheck = FaCircleCheck;
+(globalThis as typeof globalThis & Record<string, unknown>).FaCircleInfo = FaCircleInfo;
 (globalThis as typeof globalThis & Record<string, unknown>).FaCloud = FaCloud;
 (globalThis as typeof globalThis & Record<string, unknown>).FaCode = FaCode;
 (globalThis as typeof globalThis & Record<string, unknown>).FaCopy = FaCopy;
+(globalThis as typeof globalThis & Record<string, unknown>).FaEye = FaEye;
+(globalThis as typeof globalThis & Record<string, unknown>).FaEyeSlash = FaEyeSlash;
+(globalThis as typeof globalThis & Record<string, unknown>).FaGithub = FaGithub;
+(globalThis as typeof globalThis & Record<string, unknown>).FaGlobe = FaGlobe;
 (globalThis as typeof globalThis & Record<string, unknown>).FaHandHoldingHeart = FaHandHoldingHeart;
 (globalThis as typeof globalThis & Record<string, unknown>).FaHeart = FaHeart;
 (globalThis as typeof globalThis & Record<string, unknown>).FaMagnifyingGlass = FaMagnifyingGlass;
 (globalThis as typeof globalThis & Record<string, unknown>).FaMicrochip = FaMicrochip;
 (globalThis as typeof globalThis & Record<string, unknown>).FaPlay = FaPlay;
 (globalThis as typeof globalThis & Record<string, unknown>).FaRibbon = FaRibbon;
+(globalThis as typeof globalThis & Record<string, unknown>).FaRotateLeft = FaRotateLeft;
+(globalThis as typeof globalThis & Record<string, unknown>).FaServer = FaServer;
+(globalThis as typeof globalThis & Record<string, unknown>).FaTerminal = FaTerminal;
+(globalThis as typeof globalThis & Record<string, unknown>).FaVolumeHigh = FaVolumeHigh;
+(globalThis as typeof globalThis & Record<string, unknown>).FaVolumeXmark = FaVolumeXmark;
 (globalThis as typeof globalThis & Record<string, unknown>).FaXmark = FaXmark;
+(globalThis as typeof globalThis & Record<string, unknown>).RiArrowRightLine = RiArrowRightLine;
+(globalThis as typeof globalThis & Record<string, unknown>).RiCheckFill = RiCheckFill;
+(globalThis as typeof globalThis & Record<string, unknown>).RiCupFill = RiCupFill;
+(globalThis as typeof globalThis & Record<string, unknown>).RiFileCopyFill = RiFileCopyFill;
+(globalThis as typeof globalThis & Record<string, unknown>).RiGlobalFill = RiGlobalFill;
+(globalThis as typeof globalThis & Record<string, unknown>).RiHandHeartFill = RiHandHeartFill;
+(globalThis as typeof globalThis & Record<string, unknown>).RiHeartFill = RiHeartFill;
+(globalThis as typeof globalThis & Record<string, unknown>).RiShieldCheckFill = RiShieldCheckFill;
+(globalThis as typeof globalThis & Record<string, unknown>).RiSparklingFill = RiSparklingFill;
 
 ${starterGlobalLoaders}
 
