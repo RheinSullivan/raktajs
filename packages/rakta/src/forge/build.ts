@@ -440,7 +440,13 @@ function generateDeploymentOutputs(opts: {
 	needsServer: boolean;
 	artifacts: ForgeBuildArtifact[];
 }): void {
-	const { projectRoot, outDir, effectiveMode: _mode, needsServer, artifacts } = opts;
+	const {
+		projectRoot,
+		outDir,
+		effectiveMode: _mode,
+		needsServer,
+		artifacts,
+	} = opts;
 
 	// 1. Static host redirects (Netlify / Cloudflare Pages / Static hosts)
 	const redirectsPath = join(outDir, "_redirects");
@@ -512,11 +518,7 @@ function generateDeploymentOutputs(opts: {
 		);
 
 		if (needsServer) {
-			const functionsDir = join(
-				vercelOutputDir,
-				"functions",
-				"index.func",
-			);
+			const functionsDir = join(vercelOutputDir, "functions", "index.func");
 			mkdirSync(functionsDir, { recursive: true });
 			writeFileSync(
 				join(functionsDir, ".vc-config.json"),

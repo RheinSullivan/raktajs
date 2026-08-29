@@ -164,7 +164,10 @@ export default function ComponentsModal({
 				{/* Header */}
 				<div className="flex items-center justify-between border-b border-surface-stroke p-5">
 					<div className="flex items-center gap-3">
-						<FaMicrochip className="w-5 h-5 text-brand-pink" aria-hidden="true" />
+						<FaMicrochip
+							className="w-5 h-5 text-brand-pink"
+							aria-hidden="true"
+						/>
 						<h2 className="text-xl font-bold font-mono tracking-tight uppercase">
 							Rakta <span className="text-brand-pink">Component Library</span>
 						</h2>
@@ -251,8 +254,8 @@ export default function ComponentsModal({
 											</>
 										) : (
 											<>
-												<FaCopy className="w-3.5 h-3.5" aria-hidden="true" /> COPY
-												TO CLIPBOARD
+												<FaCopy className="w-3.5 h-3.5" aria-hidden="true" />{" "}
+												COPY TO CLIPBOARD
 											</>
 										)}
 									</button>

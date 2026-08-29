@@ -1,7 +1,11 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
 // DonationSection - Rakta.js Auto Import: gsap, react-icons, toast, audio
 
-export default function DonationSection({ lang: _lang }: { lang?: "ID" | "EN" }) {
+export default function DonationSection({
+	lang: _lang,
+}: {
+	lang?: "ID" | "EN";
+}) {
 	const solidaritySectionRef = useRef<HTMLElement | null>(null);
 	const [isCopiedDonation, setIsCopiedDonation] = useState(false);
 

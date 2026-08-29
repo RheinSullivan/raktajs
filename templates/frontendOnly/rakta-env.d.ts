@@ -503,7 +503,8 @@ declare global {
 		type MouseEvent<T = Element> = import("react").MouseEvent<T>;
 		type ChangeEvent<T = Element> = import("react").ChangeEvent<T>;
 		type FormEvent<T = Element> = import("react").FormEvent<T>;
-		type ComponentType<P = Record<string, unknown>> = import("react").ComponentType<P>;
+		type ComponentType<P = Record<string, unknown>> =
+			import("react").ComponentType<P>;
 	}
 
 	// ── Icons (react-icons/fa6 & react-icons/ri - auto-imported by Rakta.js build scanner) ──
@@ -513,7 +514,7 @@ declare global {
 		size?: number | string;
 		color?: string;
 		title?: string;
-		[key: string]: any;
+		[key: string]: unknown;
 	}>;
 
 	const FaArrowRight: IconComponent;

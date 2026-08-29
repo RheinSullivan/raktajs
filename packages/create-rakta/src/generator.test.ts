@@ -863,9 +863,7 @@ describe("v1.2.0 regression tests", () => {
 		expect(rootPkg.scripts?.["dev:frontend"]).toBe(
 			"bun --cwd frontend run dev",
 		);
-		expect(rootPkg.scripts?.["dev:backend"]).toBe(
-			"bun --cwd backend run dev",
-		);
+		expect(rootPkg.scripts?.["dev:backend"]).toBe("bun --cwd backend run dev");
 	});
 
 	test("fullstack generated project includes scripts/dev.ts cross-platform orchestrator", () => {

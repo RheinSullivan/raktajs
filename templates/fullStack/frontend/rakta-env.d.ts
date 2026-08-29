@@ -543,7 +543,8 @@ declare global {
 		type MouseEvent<T = Element> = import("react").MouseEvent<T>;
 		type ChangeEvent<T = Element> = import("react").ChangeEvent<T>;
 		type FormEvent<T = Element> = import("react").FormEvent<T>;
-		type ComponentType<P = Record<string, unknown>> = import("react").ComponentType<P>;
+		type ComponentType<P = Record<string, unknown>> =
+			import("react").ComponentType<P>;
 	}
 
 	// ── Icons (react-icons/fa6 & react-icons/ri - auto-imported by Rakta.js build scanner) ──
@@ -553,7 +554,7 @@ declare global {
 		size?: number | string;
 		color?: string;
 		title?: string;
-		[key: string]: any;
+		[key: string]: unknown;
 	}>;
 
 	const FaArrowRight: IconComponent;
@@ -607,76 +608,6 @@ declare global {
 	const Resource: typeof import("raktajs/components").Resource;
 	const Form: typeof import("raktajs/components").Form;
 	const Title: typeof import("raktajs/components").Title;
-
-	// ── Icons (react-icons/fa6 - auto-imported by Rakta.js) ──
-	const FaArrowRight: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaArrowRotateRight: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaBook: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaCheck: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaCircleCheck: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaCloud: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaCode: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaCopy: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaEye: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaEyeSlash: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaHandHoldingHeart: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaHeart: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaMagnifyingGlass: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaMicrochip: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaPlay: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaRibbon: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
-	const FaXmark: import("react").ComponentType<{
-		className?: string;
-		style?: import("react").CSSProperties;
-	}>;
 
 	// ── App Components (auto-resolved from app/ directory) ──
 	const BackgroundFish: import("react").ComponentType<Record<string, unknown>>;
