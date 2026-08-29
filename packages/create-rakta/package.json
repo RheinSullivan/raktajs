@@ -1,5 +1,5 @@
 {
-	"name": "create-rakta",
+	"name": "create-rakta-app",
 	"version": "1.2.2",
 	"description": "Create a fullstack Rakta.js application with frontend, backend, database, rendering mode, and CSS framework choices.",
 	"type": "module",
