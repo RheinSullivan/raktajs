@@ -1,7 +1,6 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
 // biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
 // DeployModal - wizard overlay simulasi deployment edge.
-// Menggunakan icon dari react-icons/fa6 dan react-icons/lu yang sudah di-auto-import oleh Rakta.js.
 
 type DeployStatus = "idle" | "building" | "success";
 

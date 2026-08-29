@@ -1,7 +1,6 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
 // biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
 // DocsModal - overlay System Manual dokumentasi Rakta.js.
-// Menggunakan icon dari react-icons/fa6 dan react-icons/lu yang sudah di-auto-import oleh Rakta.js.
 
 interface DocsModalProps {
 	readonly isOpen: boolean;

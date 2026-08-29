@@ -14,7 +14,6 @@ import type {
 	ProjectConfig,
 	ProjectFile,
 } from "./types";
-import { BACKEND_DISPLAY, CSS_DISPLAY, DATABASE_DISPLAY } from "./types";
 
 const DEFAULT_METADATA_TITLE = "Rakta.js - Free Palestine";
 const FAVICON_BYTES = readFileSync(
@@ -3530,11 +3529,87 @@ start().catch((err) => {
 function generateProjectReadme(projectConfig: ProjectConfig): string {
 	const { projectName, projectMode } = projectConfig;
 
-	if (projectMode === "frontend-only") {
-		return `# ${projectName}\n\nBuilt with Rakta.js - Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\nbun run dev\n\`\`\`\n\nDependencies are installed automatically during project creation. If you created the project with \`--no-install\`, run \`bun install\` once before starting development.\n\n## ShrimpRun\n\nYour starter includes ShrimpRun - an interactive game where a shrimp dodges obstacles. Press Space or click to jump!\n`;
-	}
+	const runCommands =
+		projectMode === "frontend-only"
+			? `# development\n$ bun run dev\n\n# watch mode\n$ bun run dev\n\n# production mode\n$ bun run start`
+			: `# development (frontend + backend)\n$ bun run dev\n\n# frontend only\n$ bun run dev:frontend\n\n# backend only\n$ bun run dev:backend\n\n# production mode\n$ bun run start`;
 
-	return `# ${projectName}\n\nBuilt with Rakta.js - Small in size. Fierce in speed. Alive in every route.\n\n## Stack\n\n| Layer | Technology |\n| --- | --- |\n| Frontend | Rakta.js + React + TypeScript |\n| CSS | ${CSS_DISPLAY[projectConfig.cssFramework]} |\n| Backend | ${BACKEND_DISPLAY[projectConfig.backendFramework]} |\n| Database | ${DATABASE_DISPLAY[projectConfig.database]} |\n| Runtime | Bun |\n\n## Run\n\n\`\`\`bash\n# Frontend + backend in one command\nbun run dev\n\n# Or separately:\nbun run dev:frontend\nbun run dev:backend\n\`\`\`\n\nDependencies are installed automatically during project creation. If you created the project with \`--no-install\`, run \`bun install\` once before starting development.\n\n## Endpoints\n\n- Frontend: http://localhost:3000\n- Backend: http://localhost:4000\n`;
+	return `<p align="center">
+  <a href="https://raktajs.dev" target="blank"><img src="public/rakta-logo.svg" width="120" alt="Rakta Logo" /></a>
+</p>
+
+<p align="center">A progressive <a href="https://react.dev" target="_blank">React</a> + <a href="https://bun.sh" target="_blank">Bun</a> framework for building efficient and scalable web applications.</p>
+<p align="center">
+<a href="https://www.npmjs.com/package/raktajs" target="_blank"><img src="https://img.shields.io/npm/v/raktajs.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/package/raktajs" target="_blank"><img src="https://img.shields.io/npm/l/raktajs.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/package/raktajs" target="_blank"><img src="https://img.shields.io/npm/dm/raktajs.svg" alt="NPM Downloads" /></a>
+<a href="https://github.com/RheinSullivan/raktajs" target="_blank"><img src="https://img.shields.io/badge/build-passing-brightgreen.svg" alt="Build Status" /></a>
+<a href="https://discord.com" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord" /></a>
+<a href="https://buymeacoffee.com/rheinsullivan" target="_blank"><img src="https://img.shields.io/badge/Donate-BuyMeACoffee-ff69b4.svg" alt="Donate" /></a>
+</p>
+
+## Description
+
+[Rakta.js](https://raktajs.dev) framework TypeScript starter repository for **${projectName}**. Small in size. Fierce in speed. Alive in every route.
+
+## Project setup
+
+\`\`\`bash
+$ bun install
+\`\`\`
+
+> Dependencies are installed automatically during project creation. If you created the project with \`--no-install\`, run \`bun install\` once before starting development.
+
+## Compile and run the project
+
+\`\`\`bash
+${runCommands}
+\`\`\`
+
+## Run tests
+
+\`\`\`bash
+# unit tests
+$ bun test
+
+# e2e tests
+$ bun test:e2e
+
+# test coverage
+$ bun test --coverage
+\`\`\`
+
+## Deployment
+
+When you're ready to deploy your Rakta.js application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://raktajs.dev/docs/deployment) for more information.
+
+If you are looking for a cloud-based platform to deploy your Rakta.js application, check out [Rakta Edge](https://raktajs.dev), our official deployment platform for deploying Rakta.js applications to serverless and edge nodes.
+
+## Resources
+
+Check out a few resources that may come in handy when working with Rakta.js:
+
+- Visit the [Rakta.js Documentation](https://raktajs.dev) to learn more about the framework.
+- For questions and support, please visit our [Discord channel](https://discord.com).
+- To dive deeper and get more hands-on experience, check out our [Showcase](https://raktajs.dev#showcase).
+- Deploy your application to Edge with the help of [Rakta CLI](https://raktajs.dev) in just a few clicks.
+- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://github.com/sponsors/RheinSullivan).
+- 🇵🇸 **Free Palestine** - Minimum 70% of public donations are allocated directly to emergency medical relief in Palestine.
+
+## Support
+
+Rakta is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://buymeacoffee.com/rheinsullivan).
+
+## Stay in touch
+
+- Author - [Muhammad Rizky Ramadhan (Rhein Sullivan)](https://github.com/RheinSullivan)
+- Website - [https://raktajs.dev](https://raktajs.dev)
+- Twitter - [@RheinSullivan](https://twitter.com/RheinSullivan)
+
+## License
+
+Rakta is [MIT licensed](LICENCE).
+`;
 }
 
 //  Main export

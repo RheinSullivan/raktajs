@@ -1,5 +1,5 @@
 /**
- * buildValidator — validates the build output contract after every `rakta build`.
+ * buildValidator - validates the build output contract after every `rakta build`.
  *
  * Fails loudly with actionable diagnostics when the output is incomplete or
  * inconsistent. Never silently produces an invalid deployment artifact.

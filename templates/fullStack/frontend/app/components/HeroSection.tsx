@@ -75,6 +75,7 @@ export default function HeroSection({
 	const headlineRef = useRef<HTMLHeadingElement>(null);
 	const bodyRef = useRef<HTMLParagraphElement>(null);
 	const ctaRef = useRef<HTMLDivElement>(null);
+	const scrollToFeatures = usePantura();
 
 	useEffect(() => {
 		const tl = gsap.timeline({ defaults: { ease: "power3.out" } });

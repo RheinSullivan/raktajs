@@ -23,9 +23,12 @@ export default function ShrimpRunGame({
 	onStartSimulation,
 	onTriggerJump,
 }: ShrimpRunGameProps) {
+	// Compute shrimp rotation: tilt up when jumping (positive velocity → positive Y),
+	// tilt down when falling. We derive from playerY movement direction via a ref.
 	const prevPlayerYRef = useRef(playerY);
 	const shrimpRotationRef = useRef(0);
 
+	// Approximate rotation from vertical movement direction each render
 	const deltaY = playerY - prevPlayerYRef.current;
 	prevPlayerYRef.current = playerY;
 	if (!hasCollision && isPlaying) {
@@ -67,10 +70,12 @@ export default function ShrimpRunGame({
 
 				{/* Game viewport */}
 				<div className="relative h-[260px] w-full overflow-hidden border-x border-b border-surface-stroke bg-black select-none game-viewport-bg">
+					{/* Background layers (z-0) */}
 					<BubbleLayer />
 					<BackgroundFish />
 					<SeaweedGrass />
 
+					{/* Tap/click zone when playing */}
 					{isPlaying && (
 						<button
 							type="button"
@@ -80,9 +85,10 @@ export default function ShrimpRunGame({
 						/>
 					)}
 
+					{/* Top accent bar */}
 					<div className="absolute top-0 left-0 right-0 h-px bg-brand-pink/40 z-20 pointer-events-none" />
 
-					{/* Shrimp character */}
+					{/* Shrimp character - positioned by bottom offset */}
 					<div
 						className="absolute left-[15%] z-20"
 						style={{ bottom: `${playerY}px` }}
@@ -132,6 +138,7 @@ export default function ShrimpRunGame({
 						</div>
 					)}
 
+					{/* Overlay when not playing */}
 					{!isPlaying && (
 						<div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/75 backdrop-blur-[2px] p-4">
 							<p className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest mb-1">

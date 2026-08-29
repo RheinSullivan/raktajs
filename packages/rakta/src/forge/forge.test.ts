@@ -420,7 +420,7 @@ describe("SSG Pipeline", () => {
 						isDynamic: false,
 						paramNames: [],
 					},
-					// CSR mode — should be skipped by SSG pipeline
+					// CSR mode - should be skipped by SSG pipeline
 					mode: "csr",
 				},
 			],

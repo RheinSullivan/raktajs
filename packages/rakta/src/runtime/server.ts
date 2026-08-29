@@ -162,7 +162,7 @@ function resolveAssetPaths(outDir: string): {
  * Renders a CSR HTML shell for SSR mode.
  * In a future version this will call ReactDOMServer.renderToString with the
  * compiled route module. For now it returns the HTML shell, which is
- * functionally correct — the client hydrates immediately on load.
+ * functionally correct - the client hydrates immediately on load.
  */
 async function renderSsrHtml(
 	_pathname: string,

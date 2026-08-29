@@ -12,7 +12,7 @@
  * Architecture note:
  *   Full server-side React rendering (ReactDOMServer.renderToString) requires
  *   the compiled route modules to be importable at build time. Rakta.js does
- *   not yet compile routes into importable server modules during the SSG pass —
+ *   not yet compile routes into importable server modules during the SSG pass -
  *   that is planned for v1.3. For now, the SSG pipeline renders the HTML shell
  *   (identical to what the dev server serves) and writes it as static HTML.
  *   This is equivalent to what Vite SSG tools like vite-ssg do in their first

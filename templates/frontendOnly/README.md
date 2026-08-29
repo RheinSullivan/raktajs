@@ -2,7 +2,7 @@
   <a href="https://raktajs.dev" target="blank"><img src="public/rakta-logo.svg" width="120" alt="Rakta Logo" /></a>
 </p>
 
-<p align="center">A progressive <a href="https://react.dev" target="_blank">React</a> + <a href="https://bun.sh" target="_blank">Bun</a> framework for building efficient and scalable fullstack applications.</p>
+<p align="center">A progressive <a href="https://react.dev" target="_blank">React</a> + <a href="https://bun.sh" target="_blank">Bun</a> framework for building efficient and scalable web applications.</p>
 <p align="center">
 <a href="https://www.npmjs.com/package/raktajs" target="_blank"><img src="https://img.shields.io/npm/v/raktajs.svg" alt="NPM Version" /></a>
 <a href="https://www.npmjs.com/package/raktajs" target="_blank"><img src="https://img.shields.io/npm/l/raktajs.svg" alt="Package License" /></a>
@@ -14,7 +14,7 @@
 
 ## Description
 
-[Rakta.js](https://raktajs.dev) framework fullstack starter repository. Small in size. Fierce in speed. Alive in every route.
+[Rakta.js](https://raktajs.dev) framework TypeScript starter repository. Small in size. Fierce in speed. Alive in every route.
 
 ## Project setup
 
@@ -27,14 +27,11 @@ $ bun install
 ## Compile and run the project
 
 ```bash
-# development (frontend + backend)
+# development
 $ bun run dev
 
-# frontend only
-$ bun run dev:frontend
-
-# backend only
-$ bun run dev:backend
+# watch mode
+$ bun run dev
 
 # production mode
 $ bun run start

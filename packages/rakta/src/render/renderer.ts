@@ -157,11 +157,11 @@ function makeFailure(
 /**
  * Render a page using the resolved mode from the context.
  *
- * CSR / SPA / hybrid — returns the HTML shell. React renders in browser.
- * SSR / streaming_ssr / edge / isr — returns the HTML shell. The production
+ * CSR / SPA / hybrid - returns the HTML shell. React renders in browser.
+ * SSR / streaming_ssr / edge / isr - returns the HTML shell. The production
  *   tide adapter performs server-side rendering by loading compiled route
  *   modules and calling ReactDOMServer.renderToString at request time.
- * SSG / CSG — the HTML shell is served in dev mode; forge/ssg.ts drives
+ * SSG / CSG - the HTML shell is served in dev mode; forge/ssg.ts drives
  *   static generation at build time, writing per-route HTML files.
  */
 export async function render(

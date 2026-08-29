@@ -213,7 +213,7 @@ const server = Bun.serve({
 });
 
 const displayHost = HOST === "0.0.0.0" || HOST === "::" ? "localhost" : HOST;
-console.log("\\n  ⩛ " + ${JSON.stringify(RAKTA_NAME)} + " v" + ${JSON.stringify(RAKTA_VERSION)} + " — Production Server");
+console.log("\\n  ⩛ " + ${JSON.stringify(RAKTA_NAME)} + " v" + ${JSON.stringify(RAKTA_VERSION)} + " - Production Server");
 console.log("    Local: http://" + displayHost + ":" + server.port + "\\n");
 `;
 }

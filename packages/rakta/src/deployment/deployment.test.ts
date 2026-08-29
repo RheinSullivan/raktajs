@@ -263,7 +263,7 @@ describe("Rakta deployment adapters", () => {
 		});
 
 		const toml = adapter.files.find((f) => f.path === "netlify.toml");
-		// The old adapter had rewrite to "/" — this caused 404.
+		// The old adapter had rewrite to "/" - this caused 404.
 		// Now it must rewrite to "/index.html"
 		expect(toml?.content).not.toContain('to = "/"');
 		expect(toml?.content).toContain('to = "/index.html"');

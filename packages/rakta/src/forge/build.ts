@@ -2,7 +2,7 @@
  * Rakta.js Forge Build Pipeline.
  *
  * This is the application production build entry point.
- * It is NOT a TypeScript compilation step — it transforms an application into
+ * It is NOT a TypeScript compilation step - it transforms an application into
  * deployable artifacts depending on the configured rendering mode.
  *
  * Pipeline:

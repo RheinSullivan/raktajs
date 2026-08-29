@@ -1,5 +1,5 @@
 /**
- * BuildManifest — machine-readable description of every production artifact
+ * BuildManifest - machine-readable description of every production artifact
  * that Rakta.js emits.
  *
  * Written to <outDir>/build-manifest.json after every successful build.
@@ -12,7 +12,7 @@ import { join } from "node:path";
 import { RAKTA_VERSION } from "../frameworkIdentity";
 import type { RenderMode } from "../render/types";
 
-// Schema version — increment when the shape changes in a breaking way.
+// Schema version - increment when the shape changes in a breaking way.
 export const BUILD_MANIFEST_VERSION = 1;
 
 export interface BuildManifestRoute {
