@@ -5,7 +5,8 @@ const OUT_DIR = "./dist";
 async function runTypeScriptBuild(): Promise<void> {
 	const buildProcess = Bun.spawn(
 		[
-			process.execPath,
+			"node",
+			"--max-old-space-size=4096",
 			"../../node_modules/typescript/lib/tsc.js",
 			"-p",
 			"./tsconfig.build.json",
