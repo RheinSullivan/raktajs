@@ -415,74 +415,81 @@ export default function App() {
 	return (
 		<div className="min-h-screen bg-black text-white relative font-sans selection:bg-brand-pink selection:text-white">
 			{/* Top Navigation Bar (Header) */}
-			<header className="bg-[#0d0e0f]/60 backdrop-blur-xl fixed top-0 left-0 right-0 z-50 border-b border-white/5">
+			<header className="bg-[#0d0e0f]/80 backdrop-blur-xl fixed top-0 left-0 right-0 z-50 border-b border-white/5">
 				<nav className="grid grid-cols-2 md:grid-cols-3 items-center w-full px-6 md:px-10 py-5 max-w-7xl mx-auto">
 					{/* Logo on the left */}
-					<div className="flex justify-start">
-						<a
-							className="font-mono text-xl font-extrabold text-[#FAFAFA] tracking-tighter flex items-center"
-							href="#"
+					<div className="flex justify-start items-center">
+						<click
+							className="font-mono text-xl font-extrabold text-[#FAFAFA] tracking-tighter flex items-center gap-2.5 group"
+							to="#"
 						>
-							<span>Rakta</span>
-							<span className="text-[#E11D48]">.js</span>
-						</a>
+							<photo
+								path="/rakta-logo.svg"
+								alt="Rakta.js Logo"
+								className="w-7 h-7 object-contain transition-transform group-hover:scale-105"
+							/>
+							<div className="flex items-center">
+								<span>Rakta</span>
+								<span className="text-[#E11D48]">.js</span>
+							</div>
+						</click>
 					</div>
 
 					{/* Center navigation links */}
 					<div className="hidden md:flex justify-center items-center gap-7">
-						<a
-							className="text-[#E11D48] font-bold border-b border-[#E11D48] pb-0.5 font-mono text-[11px] tracking-wider uppercase"
-							href="#showcase"
+						<click
+							className="text-[#E11D48] font-bold border-b-2 border-[#E11D48] pb-0.5 font-mono text-[11px] tracking-wider uppercase"
+							to="#showcase"
 						>
 							Showcase
-						</a>
-						<a
+						</click>
+						<click
 							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase"
-							href="#features"
+							to="#features"
 						>
 							Docs
-						</a>
-						<a
+						</click>
+						<click
 							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase"
-							href="#shrimprun"
+							to="#shrimprun"
 						>
 							Game
-						</a>
-						<a
+						</click>
+						<click
 							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase"
-							href="#humanitarian"
+							to="#humanitarian"
 						>
 							Solidarity
-						</a>
-						<a
+						</click>
+						<click
 							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase"
-							href="#cta"
+							to="#cta"
 						>
 							Started
-						</a>
+						</click>
 					</div>
 
 					{/* Action items on the right */}
 					<div className="flex justify-end items-center gap-5">
 						<div className="flex items-center gap-3.5 text-[#b5b5b5]/60">
-							<a
-								href="https://github.com/RheinSullivan/raktajs"
+							<click
+								to="https://github.com/RheinSullivan/raktajs"
 								target="_blank"
 								rel="noopener noreferrer"
 								title="View GitHub Repository"
-								className="hover:text-[#E11D48] cursor-pointer transition-colors p-1"
+								className="hover:text-[#E11D48] text-white/80 cursor-pointer transition-colors p-1"
 							>
 								<FaGithub size={18} />
-							</a>
+							</click>
 						</div>
-						<a
-							href="https://github.com/RheinSullivan/raktajs"
+						<click
+							to="https://github.com/RheinSullivan/raktajs"
 							target="_blank"
 							rel="noopener noreferrer"
 							className="bg-[#E11D48] text-[#FAFAFA] px-5 py-1.5 font-mono text-[11px] font-bold tracking-widest uppercase hover:brightness-110 active:scale-95 transition-all border border-[#E11D48]/30 text-center"
 						>
 							GitHub
-						</a>
+						</click>
 					</div>
 				</nav>
 			</header>
@@ -743,7 +750,7 @@ export default function App() {
 											style={{ animationDelay: "4s" }}
 										/>
 									</div>
-									<div className="absolute inset-0 pointer-events-none z-10 opacity-5 bg-[linear-gradient(to_bottom,rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(to_right,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_4px,3px_100%]" />
+									<div className="absolute inset-0 pointer-events-none z-10 opacity-5 bg-[linear-gradient(to_bottom,rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(to_right,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,255,0,0.06))] bg-[size:100%_4px,3px_100%]" />
 								</>
 							)}
 
@@ -886,8 +893,9 @@ export default function App() {
 
 							{/* Animated Shrimp Character */}
 							<div
-								className="absolute left-[18%] z-20 flex items-center justify-center"
+								className="absolute left-[18%] z-20 flex items-center justify-center pointer-events-none"
 								style={{
+									left: "18%",
 									bottom: `${playerY}px`,
 								}}
 								id="player-shrimp"
@@ -1258,8 +1266,8 @@ export default function App() {
 								)}
 							</button>
 
-							<a
-								href="https://buymeacoffee.com/rheinsullivan"
+							<click
+								to="https://buymeacoffee.com/rheinsullivan"
 								target="_blank"
 								rel="noopener noreferrer"
 								onClick={() => playJumpSound()}
@@ -1272,7 +1280,7 @@ export default function App() {
 								<span className="inline-flex items-center">
 									<RiArrowRightLine size={14} />
 								</span>
-							</a>
+							</click>
 						</div>
 					</div>
 
@@ -1370,9 +1378,17 @@ export default function App() {
 
 				<div className="max-w-7xl mx-auto px-6 md:px-10 flex flex-col md:flex-row justify-between items-start gap-16 mb-20 relative z-10">
 					<div className="flex flex-col items-start gap-6 max-w-xs">
-						<span className="font-mono text-2xl font-extrabold text-[#FAFAFA] tracking-tighter">
-							Rakta.js
-						</span>
+						<div className="flex items-center gap-3">
+							<photo
+								path="/rakta-logo.svg"
+								alt="Rakta.js Logo"
+								className="w-8 h-8 object-contain"
+							/>
+							<span className="font-mono text-2xl font-extrabold text-[#FAFAFA] tracking-tighter flex items-center">
+								<span>Rakta</span>
+								<span className="text-[#E11D48]">.js</span>
+							</span>
+						</div>
 						<p className="font-sans text-xs text-[#b5b5b5]/50 leading-relaxed">
 							The ultra-minimalist React framework designed for high-stakes
 							performance and developer bliss.
@@ -1383,75 +1399,75 @@ export default function App() {
 							<span className="text-[#FAFAFA] text-[10px] tracking-widest font-bold uppercase">
 								RESOURCES
 							</span>
-							<a
+							<click
 								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
-								href="#features"
+								to="#features"
 							>
 								Documentation
-							</a>
-							<a
+							</click>
+							<click
 								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
-								href="#showcase"
+								to="#showcase"
 							>
 								Showcase
-							</a>
+							</click>
 						</div>
 						<div className="flex flex-col gap-4 font-mono">
 							<span className="text-[#FAFAFA] text-[10px] tracking-widest font-bold uppercase">
 								COMMUNITY
 							</span>
-							<a
+							<click
 								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
-								href="https://github.com/RheinSullivan/raktajs"
+								to="https://github.com/RheinSullivan/raktajs"
 								target="_blank"
 								rel="noreferrer"
 							>
 								GitHub
-							</a>
-							<a
+							</click>
+							<click
 								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
-								href="https://discord.com"
+								to="https://discord.com"
 								target="_blank"
 								rel="noreferrer"
 							>
 								Discord
-							</a>
-							<a
+							</click>
+							<click
 								className="text-emerald-400/80 font-sans text-xs hover:text-emerald-300 transition-all font-semibold flex items-center gap-1"
-								href="#humanitarian"
+								to="#humanitarian"
 							>
 								<span>🇵🇸 Palestine Relief</span>
-							</a>
+							</click>
 						</div>
 						<div className="flex flex-col gap-4 font-mono">
 							<span className="text-[#FAFAFA] text-[10px] tracking-widest font-bold uppercase">
 								SOCIAL
 							</span>
-							<a
+							<click
 								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
-								href="https://twitter.com"
+								to="https://twitter.com"
 								target="_blank"
 								rel="noreferrer"
 							>
 								Twitter
-							</a>
-							<a
+							</click>
+							<click
 								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
-								href="#"
+								to="#"
 							>
 								Blog
-							</a>
+							</click>
 						</div>
 						<div className="flex flex-col gap-4 font-mono">
 							<span className="text-[#FAFAFA] text-[10px] tracking-widest font-bold uppercase">
 								LEGAL
 							</span>
-							<a
+							<click
 								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
-								href="#"
+								to="#"
 							>
 								Privacy
-							</a>
+							</click>
 						</div>
 					</div>
 				</div>

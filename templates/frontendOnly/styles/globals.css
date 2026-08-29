@@ -199,6 +199,36 @@ svg {
 [class~="left-12"] {
 	left: 3rem;
 }
+[class~="left-[12%]"] {
+	left: 12%;
+}
+[class~="left-[15%]"] {
+	left: 15%;
+}
+[class~="left-[18%]"] {
+	left: 18%;
+}
+[class~="left-[32%]"] {
+	left: 32%;
+}
+[class~="left-[40%]"] {
+	left: 40%;
+}
+[class~="left-[58%]"] {
+	left: 58%;
+}
+[class~="left-[68%]"] {
+	left: 68%;
+}
+[class~="left-[78%]"] {
+	left: 78%;
+}
+[class~="left-[88%]"] {
+	left: 88%;
+}
+[class~="left-[92%]"] {
+	left: 92%;
+}
 [class~="-left-2"] {
 	left: -0.5rem;
 }

@@ -118,8 +118,8 @@ export default function PackageStatsStrip({ lang }: PackageStatsStripProps) {
 					</div>
 				</details>
 
-				<a
-					href="https://www.npmjs.com/package/raktajs?activeTab=dependents"
+				<click
+					to="https://www.npmjs.com/package/raktajs?activeTab=dependents"
 					target="_blank"
 					rel="noreferrer"
 					className="flex items-center gap-4 border border-surface-stroke bg-black p-4 transition-colors hover:border-brand-pink focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink"
@@ -136,7 +136,7 @@ export default function PackageStatsStrip({ lang }: PackageStatsStripProps) {
 							{dependentValue} Dependents
 						</span>
 					</span>
-				</a>
+				</click>
 
 				<div className="border border-surface-stroke bg-black p-4 font-mono text-[11px] text-gray-500">
 					<div className="font-bold uppercase tracking-widest">

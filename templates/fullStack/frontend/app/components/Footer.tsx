@@ -115,25 +115,25 @@ export default function Footer({ lang }: { lang: "ID" | "EN" }) {
 								{currentCopy.status}
 							</span>
 							<span className="text-gray-700">|</span>
-							<a
-								href="https://github.com/RheinSullivan/raktajs"
+							<click
+								to="https://github.com/RheinSullivan/raktajs"
 								target="_blank"
 								rel="noreferrer"
 								className="flex items-center gap-1 transition-colors hover:text-brand-pink"
 							>
 								<FaGithub className="h-3 w-3" />
 								{currentCopy.github}
-							</a>
+							</click>
 							<span className="text-gray-700">|</span>
-							<a
-								href="https://github.com/RheinSullivan/raktajs/blob/main/LICENSE"
+							<click
+								to="https://github.com/RheinSullivan/raktajs/blob/main/LICENSE"
 								target="_blank"
 								rel="noreferrer"
 								className="flex items-center gap-1 transition-colors hover:text-brand-pink"
 							>
 								<FaBook className="h-2.5 w-2.5" />
 								{currentCopy.license}
-							</a>
+							</click>
 						</div>
 						<p className="text-gray-700 text-[9px] flex items-center gap-1">
 							<FaHeart className="h-2.5 w-2.5 text-brand-pink" />

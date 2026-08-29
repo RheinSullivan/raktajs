@@ -70,13 +70,13 @@ export default function Header({
 				{/* Controls */}
 				<div className="flex items-center gap-3">
 					{/* Solidarity link */}
-					<a
-						href="#humanitarian"
+					<click
+						to="#humanitarian"
 						className="hidden lg:inline-flex items-center gap-1 border border-green-900/50 bg-green-950/10 px-2.5 py-1 font-mono text-[10px] uppercase text-green-400 hover:border-green-500/60 hover:text-green-300 transition-colors"
 						aria-label="Palestine Solidarity"
 					>
 						🇵🇸 <span>SOLIDARITY</span>
-					</a>
+					</click>
 					{/* Aesthetic switcher */}
 					<div className="hidden md:flex items-center gap-2 border border-surface-stroke bg-black p-1 font-mono text-[10px]">
 						{(["LENIS-MODERN", "RETRO-CYBER", "NEO-BRUTALIST"] as const).map(

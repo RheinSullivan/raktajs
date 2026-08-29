@@ -121,8 +121,8 @@ export default function DonationSection({
 						)}
 					</button>
 
-					<a
-						href="https://buymeacoffee.com/rheinsullivan"
+					<click
+						to="https://buymeacoffee.com/rheinsullivan"
 						target="_blank"
 						rel="noopener noreferrer"
 						onClick={() => playJumpSound()}
@@ -135,7 +135,7 @@ export default function DonationSection({
 						<span className="inline-flex items-center">
 							<RiArrowRightLine size={14} />
 						</span>
-					</a>
+					</click>
 				</div>
 			</div>
 
