@@ -11,7 +11,7 @@ export default function DonationSection({
 
 	useEffect(() => {
 		if (!solidaritySectionRef.current) return;
-		const ctx = gsap.context(() => {
+		const animationContext = gsap.context(() => {
 			gsap.fromTo(
 				".gsap-solidarity-item",
 				{ opacity: 0, y: 24 },
@@ -25,13 +25,17 @@ export default function DonationSection({
 			);
 		}, solidaritySectionRef);
 
-		return () => ctx.revert();
+		return () => animationContext.revert();
 	}, []);
 
-	const handleCopyDonationLink = (e?: { stopPropagation?: () => void }) => {
-		if (e) e.stopPropagation();
-		if (typeof navigator !== "undefined" && navigator.clipboard) {
-			navigator.clipboard.writeText("https://buymeacoffee.com/rheinsullivan");
+	const handleCopyDonationLink = (clickEvent?: {
+		stopPropagation?: () => void;
+	}) => {
+		clickEvent?.stopPropagation?.();
+		if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+			void navigator.clipboard.writeText(
+				"https://buymeacoffee.com/rheinsullivan",
+			);
 		}
 		setIsCopiedDonation(true);
 		playJumpSound();

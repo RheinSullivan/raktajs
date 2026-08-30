@@ -2,36 +2,6 @@
 // biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
 // Halaman utama Rakta.js - Welcome Experience (Gambar 2).
 
-// Helper function to dynamically generate small, medium, and large coral sizes randomly
-const getRandomObstacleSize = (
-	_pos: "TOP" | "BOTTOM",
-): {
-	height: number;
-	width: number;
-	sizeClass: "KECIL" | "SEDANG" | "BESAR";
-} => {
-	const rand = Math.random();
-	let sizeClass: "KECIL" | "SEDANG" | "BESAR";
-	let height = 60;
-	let width = 40;
-
-	if (rand < 0.33) {
-		sizeClass = "KECIL";
-		height = Math.floor(Math.random() * 8) + 32; // 32 - 40px (Small & super easy to dodge)
-		width = Math.floor(Math.random() * 5) + 26; // 26 - 31px
-	} else if (rand < 0.67) {
-		sizeClass = "SEDANG";
-		height = Math.floor(Math.random() * 10) + 55; // 55 - 65px (Standard medium size)
-		width = Math.floor(Math.random() * 6) + 38; // 38 - 44px
-	} else {
-		sizeClass = "BESAR";
-		height = Math.floor(Math.random() * 12) + 75; // 75 - 87px (Challenge size, still extremely fair)
-		width = Math.floor(Math.random() * 6) + 48; // 48 - 54px
-	}
-
-	return { height, width, sizeClass };
-};
-
 export default function App() {
 	// Modal states
 	const [isDocsOpen, setIsDocsOpen] = useState(false);
@@ -43,30 +13,40 @@ export default function App() {
 	const [aestheticUnit, setAestheticUnit] =
 		useState<AestheticUnit>("LENIS-MODERN");
 	const [lowLatencyMode, setLowLatencyMode] = useState(true);
-	const [simSpeed, setSimSpeed] = useState<"NORMAL" | "FAST" | "TURBO">(
-		"NORMAL",
-	);
-
-	// Game/Simulation States
-	const [isPlaying, setIsPlaying] = useState(false);
-	const [score, setScore] = useState(0);
-	const [highScore, setHighScore] = useState(() => {
-		try {
-			return Number.parseInt(
-				localStorage.getItem("rakta_shrimprun_highscore") || "0",
-				10,
-			);
-		} catch {
-			return 0;
-		}
-	});
-	const [hasCollision, setHasCollision] = useState(false);
-	const [liveFps, setLiveFps] = useState(144.0);
 
 	// Configuration Change Floating Toast State
 	const [configToast, setConfigToast] = useState<string | null>(null);
 	const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [isCopiedDonation, setIsCopiedDonation] = useState(false);
+
+	// ShrimpRun game state and physics (all managed in useShrimpRun hook)
+	const {
+		isPlaying,
+		score,
+		highScore,
+		hasCollision,
+		liveFps,
+		simSpeed,
+		setSimSpeed,
+		playerY,
+		obstacleX,
+		obstaclePos,
+		obstacleHeight,
+		obstacleWidth,
+		obstaclePalette,
+		obstacleVariant,
+		obstacleScaleX,
+		obstacleSizeClass,
+		startSimulation,
+		triggerJump,
+	} = useShrimpRun();
+
+	const prevPlayerYRef = useRef(playerY);
+	const containerRef = useRef<HTMLDivElement>(null);
+
+	// Derive rotation from playerY delta for ShrimpCharacter visual
+	const deltaY = playerY - prevPlayerYRef.current;
+	prevPlayerYRef.current = playerY;
 
 	const showConfigToast = (message: string) => {
 		if (toastTimeoutRef.current) {
@@ -78,308 +58,50 @@ export default function App() {
 		}, 1800);
 	};
 
-	const handleCopyDonationLink = (e?: React.MouseEvent) => {
-		if (e) e.stopPropagation();
-		navigator.clipboard.writeText("https://buymeacoffee.com/rheinsullivan");
+	const handleCopyDonationLink = (e?: { stopPropagation?: () => void }) => {
+		if (e?.stopPropagation) e.stopPropagation();
+		if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+			void navigator.clipboard.writeText(
+				"https://buymeacoffee.com/rheinsullivan",
+			);
+		}
 		setIsCopiedDonation(true);
 		playJumpSound();
 		showConfigToast("BuyMeACoffee link copied to clipboard!");
 		setTimeout(() => setIsCopiedDonation(false), 2500);
 	};
 
-	// Position references (Ref-based game loop for 144fps-smooth physics)
-	const [playerY, setPlayerY] = useState(40); // in px from ground
-	const [obstacleX, setObstacleX] = useState(100); // in percentage (0 to 100)
-	const [obstaclePos, setObstaclePos] = useState<"TOP" | "BOTTOM">("BOTTOM");
-
-	// Highly-variable obstacle properties
-	const [obstaclePalette, setObstaclePalette] = useState(0);
-	const [obstacleVariant, setObstacleVariant] = useState(0);
-	const [obstacleScaleX, setObstacleScaleX] = useState(1);
-	const [obstacleHeight, setObstacleHeight] = useState(95);
-	const [obstacleWidth, setObstacleWidth] = useState(64);
-	const [obstacleSizeClass, setObstacleSizeClass] = useState<
-		"KECIL" | "SEDANG" | "BESAR"
-	>("SEDANG");
-
-	const playerYRef = useRef(40);
-	const obstacleXRef = useRef(100);
-	const obstaclePosRef = useRef<"TOP" | "BOTTOM">("BOTTOM");
-
-	const obstacleHeightRef = useRef(95);
-	const obstacleWidthRef = useRef(64);
-	const obstaclePaletteRef = useRef(0);
-	const obstacleVariantRef = useRef(0);
-	const obstacleScaleXRef = useRef(1);
-	const obstacleSizeClassRef = useRef<"KECIL" | "SEDANG" | "BESAR">("SEDANG");
-
-	const isPlayingRef = useRef(false);
-	const velocityRef = useRef(0);
-	const scoreRef = useRef(0);
-
-	const containerRef = useRef<HTMLDivElement>(null);
-	const gameLoopId = useRef<number | null>(null);
-	const lastTimeRef = useRef<number>(0);
-
-	// Synchronize refs with state for local check loops
-	useEffect(() => {
-		isPlayingRef.current = isPlaying;
-	}, [isPlaying]);
-
-	// Audio configuration sync
+	// Audio toggle
 	const handleToggleMute = () => {
 		const nextMuted = !isMuted;
 		setIsMutedState(nextMuted);
 		setMute(nextMuted);
 	};
 
-	// Sound test / UI click sound
+	// Aesthetic style change with sound feedback
 	const handleAestheticChange = (unit: AestheticUnit) => {
 		setAestheticUnit(unit);
 		playJumpSound();
 		showConfigToast(`STYLE CHANGED: ${unit.replace("-", " ")}`);
 	};
 
-	// Start/Restart Simulation
-	const startSimulation = () => {
-		// Reset positions and states to mid-water level
-		playerYRef.current = 80;
-		obstacleXRef.current = 100;
-
-		const initialPos = Math.random() > 0.5 ? "TOP" : "BOTTOM";
-		obstaclePosRef.current = initialPos;
-		setObstaclePos(initialPos);
-
-		const {
-			height: initialHeight,
-			width: initialWidth,
-			sizeClass: initialSizeClass,
-		} = getRandomObstacleSize(initialPos);
-		obstacleHeightRef.current = initialHeight;
-		setObstacleHeight(initialHeight);
-		obstacleWidthRef.current = initialWidth;
-		setObstacleWidth(initialWidth);
-		obstacleSizeClassRef.current = initialSizeClass;
-		setObstacleSizeClass(initialSizeClass);
-
-		const initialPalette = Math.floor(Math.random() * 5);
-		obstaclePaletteRef.current = initialPalette;
-		setObstaclePalette(initialPalette);
-
-		const initialVariant = Math.floor(Math.random() * 3);
-		obstacleVariantRef.current = initialVariant;
-		setObstacleVariant(initialVariant);
-
-		const initialScaleX = Math.random() > 0.5 ? 1 : -1;
-		obstacleScaleXRef.current = initialScaleX;
-		setObstacleScaleX(initialScaleX);
-
-		velocityRef.current = 0;
-		scoreRef.current = 0;
-
-		setPlayerY(80);
-		setObstacleX(100);
-		setScore(0);
-		setHasCollision(false);
-		setIsPlaying(true);
-		isPlayingRef.current = true;
-
-		lastTimeRef.current = performance.now();
-	};
-
-	// Jump/Swim control (continuous swim/flap, never locking or forcing ground return)
-	const triggerJump = () => {
-		if (!isPlayingRef.current) {
-			startSimulation();
-			return;
-		}
-
-		// Swimming upward stroke with slight water damping impulse
-		velocityRef.current = 6.2;
-		playJumpSound();
-	};
-
-	// Physics game loop
+	// Space bar jump listener
 	useEffect(() => {
-		const tick = (_timestamp: number) => {
-			if (!isPlayingRef.current) {
-				gameLoopId.current = requestAnimationFrame(tick);
-				return;
-			}
-
-			// Calculate delta time for perfectly rate-independent smooth animation
-			const now = performance.now();
-			let dt = now - lastTimeRef.current;
-			// Cap dt to prevent massive jumps when tab is inactive or window loses focus
-			if (dt > 100) dt = 16.666;
-			lastTimeRef.current = now;
-
-			// Delta time factor normalized to standard 60 FPS (16.666 ms per frame)
-			const dtFactor = dt / 16.666;
-
-			// Live FPS Simulation (smooth fluctuations centered around 144Hz)
-			const targetFps = lowLatencyMode ? 144.0 : 120.0;
-			const flux = Math.random() * 0.16 - 0.08;
-			setLiveFps(Number.parseFloat((targetFps + flux).toFixed(2)));
-
-			// Speed configuration modifier
-			let speedFactor = 1.0;
-			if (simSpeed === "FAST") speedFactor = 1.4;
-			if (simSpeed === "TURBO") speedFactor = 1.9;
-
-			// 1. Update swimming buoyancy physics (constant pull of water gravity) scaled by delta time
-			playerYRef.current += velocityRef.current * dtFactor;
-			velocityRef.current -= 0.32 * dtFactor; // Gentle water buoyancy damping
-
-			// Bottom boundary (seabed)
-			if (playerYRef.current < 0) {
-				playerYRef.current = 0;
-				velocityRef.current = 0;
-			}
-
-			const containerHeight = containerRef.current?.clientHeight || 380;
-			const maxSwimHeight = containerHeight - 65; // keep within screen bounds nicely
-
-			// Top boundary (ocean surface)
-			if (playerYRef.current > maxSwimHeight) {
-				playerYRef.current = maxSwimHeight;
-				velocityRef.current = 0;
-			}
-			setPlayerY(playerYRef.current);
-
-			// 2. Update OBSTACLE sliding (percentages 0 to 100), scaled by dtFactor for smooth, predictable speeds
-			obstacleXRef.current -= 0.42 * speedFactor * dtFactor;
-
-			if (obstacleXRef.current < -5) {
-				obstacleXRef.current = 105; // Reset obstacle to right side
-
-				// Randomly place coral at either TOP or BOTTOM
-				const nextPos = Math.random() > 0.5 ? "TOP" : "BOTTOM";
-				obstaclePosRef.current = nextPos;
-				setObstaclePos(nextPos);
-
-				// Highly-variable organic dimensions via our randomized category size generator
-				const {
-					height: nextHeight,
-					width: nextWidth,
-					sizeClass: nextSizeClass,
-				} = getRandomObstacleSize(nextPos);
-				obstacleHeightRef.current = nextHeight;
-				setObstacleHeight(nextHeight);
-				obstacleWidthRef.current = nextWidth;
-				setObstacleWidth(nextWidth);
-				obstacleSizeClassRef.current = nextSizeClass;
-				setObstacleSizeClass(nextSizeClass);
-
-				// Completely new randomized color palettes & forms on each pass
-				const nextPalette = Math.floor(Math.random() * 5);
-				obstaclePaletteRef.current = nextPalette;
-				setObstaclePalette(nextPalette);
-
-				const nextVariant = Math.floor(Math.random() * 3);
-				obstacleVariantRef.current = nextVariant;
-				setObstacleVariant(nextVariant);
-
-				const nextScaleX = Math.random() > 0.5 ? 1 : -1;
-				obstacleScaleXRef.current = nextScaleX;
-				setObstacleScaleX(nextScaleX);
-
-				scoreRef.current += 100;
-				setScore(scoreRef.current);
-				playScoreSound();
-
-				// Save High Score
-				if (scoreRef.current > highScore) {
-					setHighScore(scoreRef.current);
-					try {
-						localStorage.setItem(
-							"rakta_shrimprun_highscore",
-							scoreRef.current.toString(),
-						);
-					} catch (e) {
-						console.warn("Storage write failed", e);
-					}
-				}
-			}
-			setObstacleX(obstacleXRef.current);
-
-			// 3. Collision Detection (Pixel-perfect fair bounding boxes with small grazing buffers)
-			const width = containerRef.current?.clientWidth || 600;
-
-			// Position of shrimp container (64px wide, positioned at 18% of container width)
-			const playerLeftPx = 0.18 * width;
-
-			// Actual shrimp visual bounds inset inside its 64px container
-			const shrimpLeft = playerLeftPx + 10;
-			const shrimpRight = playerLeftPx + 54;
-
-			// Obstacle bounds in pixels
-			const obstacleLeft = (obstacleXRef.current / 100) * width;
-			const obstacleRight = obstacleLeft + obstacleWidthRef.current;
-
-			// Small grazing buffer (3px) to allow minor visual overlaps without game-over
-			const horizontalBuffer = 3;
-
-			// Horizontal overlap check
-			const isWithinHitboxHorizontal =
-				shrimpRight - horizontalBuffer > obstacleLeft &&
-				shrimpLeft + horizontalBuffer < obstacleRight;
-			let isCollided = false;
-
-			if (isWithinHitboxHorizontal) {
-				// Vertical overlap check
-				if (obstaclePosRef.current === "BOTTOM") {
-					// Bottom coral reef: shrimp's visual bottom is playerYRef.current + 14px.
-					if (playerYRef.current + 14 + 4 < obstacleHeightRef.current) {
-						isCollided = true;
-					}
-				} else {
-					// Top hanging coral reef: shrimp's visual top is playerYRef.current + 50px.
-					const coralBottomLimit = containerHeight - obstacleHeightRef.current;
-					if (playerYRef.current + 50 - 4 > coralBottomLimit) {
-						isCollided = true;
-					}
-				}
-			}
-
-			if (isCollided) {
-				// COLLISION DETECTED
-				isPlayingRef.current = false;
-				setIsPlaying(false);
-				setHasCollision(true);
-				playGameOverSound();
-			}
-
-			gameLoopId.current = requestAnimationFrame(tick);
-		};
-
-		gameLoopId.current = requestAnimationFrame(tick);
-
-		return () => {
-			if (gameLoopId.current) {
-				cancelAnimationFrame(gameLoopId.current);
-			}
-		};
-	}, [simSpeed, lowLatencyMode, highScore]);
-
-	// Key event listeners for jumping
-	useEffect(() => {
-		const handleKeyDown = (e: KeyboardEvent) => {
-			if (e.code === "Space") {
-				e.preventDefault();
+		const handleKeyDown = (keyboardEvent: KeyboardEvent) => {
+			if (keyboardEvent.code === "Space") {
+				keyboardEvent.preventDefault();
 				triggerJump();
 			}
 		};
-
 		window.addEventListener("keydown", handleKeyDown);
 		return () => window.removeEventListener("keydown", handleKeyDown);
-	}, []);
+	}, [triggerJump]);
 
 	// GSAP Animation for Humanitarian Solidarity Section
 	const solidaritySectionRef = useRef<HTMLElement | null>(null);
 	useEffect(() => {
 		if (!solidaritySectionRef.current) return;
-		const ctx = gsap.context(() => {
+		const animationContext = gsap.context(() => {
 			gsap.fromTo(
 				".gsap-solidarity-item",
 				{ opacity: 0, y: 24 },
@@ -394,7 +116,7 @@ export default function App() {
 			);
 		}, solidaritySectionRef);
 
-		return () => ctx.revert();
+		return () => animationContext.revert();
 	}, []); // Dynamic Theme Styling Variables based on aestheticUnit
 	const containerBorderClass =
 		aestheticUnit === "RETRO-CYBER"
@@ -413,13 +135,13 @@ export default function App() {
 	return (
 		<div className="min-h-screen bg-black text-white relative font-sans selection:bg-brand-pink selection:text-white">
 			{/* Top Navigation Bar (Header) */}
-			<header className="bg-[#0d0e0f]/80 backdrop-blur-xl fixed top-0 left-0 right-0 z-50 border-b border-white/5">
+			<header className="bg-[#0d0e0f] fixed top-0 left-0 right-0 z-50 border-b border-white/5">
 				<nav className="grid grid-cols-2 md:grid-cols-3 items-center w-full px-6 md:px-10 py-5 max-w-7xl mx-auto">
 					{/* Logo on the left */}
 					<div className="flex justify-start items-center">
 						<click
 							className="font-mono text-xl font-extrabold text-[#FAFAFA] tracking-tighter flex items-center gap-2.5 group"
-							to="#"
+							to="hero"
 						>
 							<photo
 								path="/rakta-logo.svg"
@@ -436,57 +158,47 @@ export default function App() {
 					{/* Center navigation links */}
 					<div className="hidden md:flex justify-center items-center gap-7">
 						<click
-							className="text-[#E11D48] font-bold border-b-2 border-[#E11D48] pb-0.5 font-mono text-[11px] tracking-wider uppercase"
-							to="#showcase"
+							className="text-[#E11D48] font-bold border-b-2 border-[#E11D48] pb-0.5 font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							to="showcase"
 						>
-							Showcase
+							SHOWCASE
 						</click>
 						<click
-							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase"
-							to="#features"
+							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							to="features"
 						>
-							Docs
+							DOCS
 						</click>
 						<click
-							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase"
-							to="#shrimprun"
+							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							to="shrimprun"
 						>
-							Game
+							GAME
 						</click>
 						<click
-							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase"
-							to="#humanitarian"
+							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							to="humanitarian"
 						>
-							Solidarity
+							SOLIDARITY
 						</click>
 						<click
-							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase"
-							to="#cta"
+							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							to="cta"
 						>
-							Started
+							STARTED
 						</click>
 					</div>
 
 					{/* Action items on the right */}
-					<div className="flex justify-end items-center gap-5">
-						<div className="flex items-center gap-3.5 text-[#b5b5b5]/60">
-							<click
-								to="https://github.com/RheinSullivan/raktajs"
-								target="_blank"
-								rel="noopener noreferrer"
-								title="View GitHub Repository"
-								className="hover:text-[#E11D48] text-white/80 cursor-pointer transition-colors p-1"
-							>
-								<FaGithub size={18} />
-							</click>
-						</div>
+					<div className="flex justify-end items-center">
 						<click
 							to="https://github.com/RheinSullivan/raktajs"
 							target="_blank"
 							rel="noopener noreferrer"
-							className="bg-[#E11D48] text-[#FAFAFA] px-5 py-1.5 font-mono text-[11px] font-bold tracking-widest uppercase hover:brightness-110 active:scale-95 transition-all border border-[#E11D48]/30 text-center"
+							className="flex items-center gap-2 bg-[#E11D48] text-[#FAFAFA] px-4 py-2 font-mono text-[11px] font-bold tracking-widest uppercase hover:brightness-110 active:scale-95 transition-all text-center"
 						>
-							GitHub
+							<FaGithub size={15} />
+							<span>GITHUB</span>
 						</click>
 					</div>
 				</nav>
@@ -908,10 +620,7 @@ export default function App() {
 											? 180
 											: !isPlaying
 												? Math.sin(Date.now() / 150) * 5
-												: Math.max(
-														-28,
-														Math.min(28, velocityRef.current * -4.2),
-													)
+												: Math.max(-28, Math.min(28, deltaY * 4.2))
 									}
 								/>
 							</div>
