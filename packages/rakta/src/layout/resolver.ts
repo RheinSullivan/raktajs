@@ -77,7 +77,7 @@ export function resolveLayoutChain(
 	}
 
 	// Sort chain by order (root first, deepest last)
-	chain.sort((a, b) => a.order - b.order);
+	chain.sort((firstEntry, secondEntry) => firstEntry.order - secondEntry.order);
 
 	return {
 		chain,
@@ -101,8 +101,10 @@ function matchesPath(pattern: string, pathname: string): boolean {
 }
 
 function normalizePath(pathname: string): string {
-	const p = pathname.startsWith("/") ? pathname : `/${pathname}`;
-	return p.length > 1 ? p.replace(/\/+$/, "") : p;
+	const normalizedPath = pathname.startsWith("/") ? pathname : `/${pathname}`;
+	return normalizedPath.length > 1
+		? normalizedPath.replace(/\/+$/, "")
+		: normalizedPath;
 }
 
 /**

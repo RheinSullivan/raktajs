@@ -4,12 +4,15 @@ import { buildProject } from "../forge/build";
 import { validateAndReport } from "../forge/buildValidator";
 import type { RenderMode } from "../render/types";
 
-function resolveProjectPath(cwd: string, pathValue: string): string {
+function resolveProjectPath(
+	workingDirectory: string,
+	pathValue: string,
+): string {
 	if (isAbsolute(pathValue)) {
 		return pathValue;
 	}
 
-	return join(cwd, pathValue);
+	return join(workingDirectory, pathValue);
 }
 
 const VALID_MODES: ReadonlySet<string> = new Set([
@@ -24,11 +27,11 @@ const VALID_MODES: ReadonlySet<string> = new Set([
 	"edge",
 ]);
 
-function parseModeFlag(args: string[]): RenderMode | undefined {
-	for (let i = 0; i < args.length; i++) {
-		const arg = args[i];
-		if (arg === "--mode" && i + 1 < args.length) {
-			const value = args[i + 1];
+function parseModeFlag(argumentList: string[]): RenderMode | undefined {
+	for (let index = 0; index < argumentList.length; index++) {
+		const argument = argumentList[index];
+		if (argument === "--mode" && index + 1 < argumentList.length) {
+			const value = argumentList[index + 1];
 			if (value !== undefined && VALID_MODES.has(value)) {
 				return value as RenderMode;
 			}
@@ -38,8 +41,8 @@ function parseModeFlag(args: string[]): RenderMode | undefined {
 			);
 			process.exit(1);
 		}
-		if (arg?.startsWith("--mode=")) {
-			const value = arg.slice("--mode=".length);
+		if (argument?.startsWith("--mode=")) {
+			const value = argument.slice("--mode=".length);
 			if (VALID_MODES.has(value)) {
 				return value as RenderMode;
 			}
@@ -54,10 +57,10 @@ function parseModeFlag(args: string[]): RenderMode | undefined {
 }
 
 export async function buildCommand(
-	cwd: string = process.cwd(),
-	args: string[] = process.argv.slice(2),
+	currentWorkingDirectory: string = process.cwd(),
+	commandArguments: string[] = process.argv.slice(2),
 ): Promise<void> {
-	const projectConfig = await loadConfig(cwd);
+	const projectConfig = await loadConfig(currentWorkingDirectory);
 
 	const appDirectory = projectConfig.appDir ?? "app";
 	const publicDirectory = projectConfig.publicDir ?? "public";
@@ -65,11 +68,14 @@ export async function buildCommand(
 	const entryFile = projectConfig.build.entryPoint ?? "entry.client.tsx";
 	const port = projectConfig.port ?? 3000;
 
-	const entryPoint = resolveProjectPath(join(cwd, appDirectory), entryFile);
-	const outDir = resolveProjectPath(cwd, outputDirectory);
+	const entryPoint = resolveProjectPath(
+		join(currentWorkingDirectory, appDirectory),
+		entryFile,
+	);
+	const outDir = resolveProjectPath(currentWorkingDirectory, outputDirectory);
 
 	// CLI --mode flag overrides rakta.config.ts rendering.defaultMode
-	const modeOverride = parseModeFlag(args);
+	const modeOverride = parseModeFlag(commandArguments);
 	const renderConfig =
 		modeOverride !== undefined
 			? { ...projectConfig.render, defaultMode: modeOverride }
@@ -88,11 +94,11 @@ export async function buildCommand(
 	const buildStart = Date.now();
 
 	const buildResult = await buildProject({
-		projectRoot: cwd,
+		projectRoot: currentWorkingDirectory,
 		entryPoint,
 		outDir,
-		appDir: join(cwd, appDirectory),
-		publicDir: join(cwd, publicDirectory),
+		appDir: join(currentWorkingDirectory, appDirectory),
+		publicDir: join(currentWorkingDirectory, publicDirectory),
 		appName: projectConfig.appName,
 		seo: projectConfig.seo,
 		port,
@@ -117,7 +123,9 @@ export async function buildCommand(
 
 		process.stderr.write(`  Check:\n`);
 		process.stderr.write(`    - Entry file: ${entryPoint}\n`);
-		process.stderr.write(`    - App directory: ${join(cwd, appDirectory)}\n`);
+		process.stderr.write(
+			`    - App directory: ${join(currentWorkingDirectory, appDirectory)}\n`,
+		);
 		process.stderr.write(
 			`    - That all imports in your app/ directory resolve correctly\n`,
 		);
@@ -148,33 +156,42 @@ export async function buildCommand(
 
 	// Print artifact summary
 	const scripts = buildResult.artifacts.filter(
-		(a) => a.kind === "script" && !a.outputPath.includes("route-manifest"),
+		(artifact) =>
+			artifact.kind === "script" &&
+			!artifact.outputPath.includes("route-manifest"),
 	);
 	const stylesheets = buildResult.artifacts.filter(
-		(a) => a.kind === "stylesheet",
+		(artifact) => artifact.kind === "stylesheet",
 	);
 	const htmlFiles = buildResult.artifacts.filter(
-		(a) => a.kind === "asset" && a.outputPath.endsWith(".html"),
+		(artifact) =>
+			artifact.kind === "asset" && artifact.outputPath.endsWith(".html"),
 	);
 
 	if (scripts.length > 0) {
-		const totalKb = (
-			scripts.reduce((sum, a) => sum + a.sizeBytes, 0) / 1024
+		const totalKilobytes = (
+			scripts.reduce(
+				(accumulatedBytes, artifact) => accumulatedBytes + artifact.sizeBytes,
+				0,
+			) / 1024
 		).toFixed(1);
 		console.log(
-			`    JS:              ${scripts.length} file(s) (${totalKb} KB)`,
+			`    JS:              ${scripts.length} files (${totalKilobytes} KB)`,
 		);
 	}
 	if (stylesheets.length > 0) {
-		const totalKb = (
-			stylesheets.reduce((sum, a) => sum + a.sizeBytes, 0) / 1024
+		const totalKilobytes = (
+			stylesheets.reduce(
+				(accumulatedBytes, artifact) => accumulatedBytes + artifact.sizeBytes,
+				0,
+			) / 1024
 		).toFixed(1);
 		console.log(
-			`    CSS:             ${stylesheets.length} file(s) (${totalKb} KB)`,
+			`    CSS:             ${stylesheets.length} files (${totalKilobytes} KB)`,
 		);
 	}
 	if (htmlFiles.length > 0) {
-		console.log(`    HTML:            ${htmlFiles.length} page(s) generated`);
+		console.log(`    HTML:            ${htmlFiles.length} pages generated`);
 	}
 
 	if (

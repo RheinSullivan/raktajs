@@ -38,7 +38,8 @@ export function createMiddlewareComposer(): MiddlewareComposer {
 
 	function sorted(): NamedMiddleware[] {
 		return Array.from(registry.values()).sort(
-			(a, b) => (a.order ?? 100) - (b.order ?? 100),
+			(firstMiddleware, secondMiddleware) =>
+				(firstMiddleware.order ?? 100) - (secondMiddleware.order ?? 100),
 		);
 	}
 
@@ -61,7 +62,9 @@ export function createMiddlewareComposer(): MiddlewareComposer {
 		},
 
 		all() {
-			return createMiddlewareStack(sorted().map((e) => e.middleware));
+			return createMiddlewareStack(
+				sorted().map((namedMiddleware) => namedMiddleware.middleware),
+			);
 		},
 
 		list() {

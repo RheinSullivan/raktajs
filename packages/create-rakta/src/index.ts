@@ -108,8 +108,8 @@ async function installDependencies(projectDirectory: string): Promise<void> {
 			shell,
 		});
 
-		installProcess.on("error", (err) => {
-			const errnoError = err as NodeJS.ErrnoException;
+		installProcess.on("error", (error) => {
+			const errnoError = error as NodeJS.ErrnoException;
 			rejectInstall(
 				new Error(
 					`Failed to spawn bun install (${errnoError.code ?? "unknown"}: ${errnoError.message}). ` +

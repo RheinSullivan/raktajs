@@ -11,7 +11,7 @@ export const BANNER = [
 	`${BOLD}${RED} ██║  ██║ ██║  ██║ ██║  ██╗    ██║    ██║  ██║ ██╗╚█████╔╝ ███████║${RESET}`,
 	`${BOLD}${RED} ╚═╝  ╚═╝ ╚═╝  ╚═╝ ╚═╝  ╚═╝    ╚═╝    ╚═╝  ╚═╝ ╚═╝ ╚════╝  ╚══════╝${RESET}`,
 	"",
-	`${BOLD} ────────────────────────Rhein Sullivan──────────────────────────────────${RESET}`,
+	`${BOLD} ────────────────────────Free Palestine──────────────────────────────────${RESET}`,
 	`${BOLD} Rakta.js - React.js, Bun, TypeScript, Easy Router, and Fullstack Generator${RESET}`,
 	`${BOLD} Small in size. Fierce in speed. Alive in every route.${RESET}`,
 	`${BOLD} ────────────────────────Vyagra Nexus™──────────────────────────────────${RESET}`,

@@ -120,8 +120,8 @@ async function start() {
 	process.exit(exitCodes[0] !== 0 ? exitCodes[0] : exitCodes[1]);
 }
 
-start().catch((err) => {
-	console.error("Failed to start fullstack services:", err);
+start().catch((error) => {
+	console.error("Failed to start fullstack services:", error);
 	cleanup();
 	process.exit(1);
 });

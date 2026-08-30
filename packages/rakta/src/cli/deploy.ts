@@ -41,32 +41,32 @@ const VALID_PLATFORMS: ReadonlySet<string> = new Set([
 ]);
 
 // Normalize shorthand aliases to canonical DeploymentTarget values
-function normalizePlatform(value: string): DeploymentTarget {
-	if (value === "cloudflare") return "cloudflare-pages";
-	if (value === "github") return "github-pages";
-	return value as DeploymentTarget;
+function normalizePlatform(platformValue: string): DeploymentTarget {
+	if (platformValue === "cloudflare") return "cloudflare-pages";
+	if (platformValue === "github") return "github-pages";
+	return platformValue as DeploymentTarget;
 }
 
-function parsePlatformFlag(args: string[]): string | undefined {
-	for (let i = 0; i < args.length; i++) {
-		const arg = args[i];
-		if (arg === "--platform" && i + 1 < args.length) {
-			return args[i + 1];
+function parsePlatformFlag(argumentList: string[]): string | undefined {
+	for (let index = 0; index < argumentList.length; index++) {
+		const argument = argumentList[index];
+		if (argument === "--platform" && index + 1 < argumentList.length) {
+			return argumentList[index + 1];
 		}
-		if (arg?.startsWith("--platform=")) {
-			return arg.slice("--platform=".length);
+		if (argument?.startsWith("--platform=")) {
+			return argument.slice("--platform=".length);
 		}
 	}
 	return undefined;
 }
 
 export async function deployCommand(
-	cwd: string = process.cwd(),
-	args: string[] = process.argv.slice(2),
+	currentWorkingDirectory: string = process.cwd(),
+	commandArguments: string[] = process.argv.slice(2),
 ): Promise<void> {
-	const platformArg = parsePlatformFlag(args);
+	const platformArgument = parsePlatformFlag(commandArguments);
 
-	if (platformArg === undefined || platformArg.trim().length === 0) {
+	if (platformArgument === undefined || platformArgument.trim().length === 0) {
 		process.stderr.write(
 			`\n  Rakta.js deploy error: --platform is required.\n` +
 				`\n  Usage: rakta deploy --platform <target>` +
@@ -75,25 +75,28 @@ export async function deployCommand(
 		process.exit(1);
 	}
 
-	if (!VALID_PLATFORMS.has(platformArg)) {
+	if (!VALID_PLATFORMS.has(platformArgument)) {
 		process.stderr.write(
-			`\n  Rakta.js deploy error: unknown platform "${platformArg}".\n` +
+			`\n  Rakta.js deploy error: unknown platform "${platformArgument}".\n` +
 				`\n  Valid platforms: ${[...VALID_PLATFORMS].join(", ")}\n\n`,
 		);
 		process.exit(1);
 	}
 
-	const projectConfig = await loadConfig(cwd);
-	const outDir = join(cwd, projectConfig.build.outDir ?? "dist");
-	const buildManifest = readBuildManifest(outDir);
+	const projectConfig = await loadConfig(currentWorkingDirectory);
+	const outputDirectory = join(
+		currentWorkingDirectory,
+		projectConfig.build.outDir ?? "dist",
+	);
+	const buildManifest = readBuildManifest(outputDirectory);
 	const rendering =
 		buildManifest?.rendering ?? projectConfig.render.defaultMode;
-	const target = normalizePlatform(platformArg);
+	const target = normalizePlatform(platformArgument);
 
 	console.log(`\n  ⩛ Rakta.js deploy adapter`);
 	console.log(`    Platform:  ${target}`);
 	console.log(`    Rendering: ${rendering.toUpperCase()}`);
-	console.log(`    Output:    ${outDir}\n`);
+	console.log(`    Output:    ${outputDirectory}\n`);
 
 	const adapter = createDeploymentAdapter(target, {
 		appName: projectConfig.appName,
@@ -113,17 +116,17 @@ export async function deployCommand(
 		return;
 	}
 
-	const written: string[] = [];
+	const writtenFiles: string[] = [];
 
 	for (const file of adapter.files) {
-		const absolutePath = join(cwd, file.path);
+		const absolutePath = join(currentWorkingDirectory, file.path);
 		mkdirSync(dirname(absolutePath), { recursive: true });
 		writeFileSync(absolutePath, file.content, "utf-8");
-		written.push(file.path);
+		writtenFiles.push(file.path);
 	}
 
-	console.log(`  ✓ Generated ${written.length} deployment file(s):`);
-	for (const filePath of written) {
+	console.log(`  ✓ Generated ${writtenFiles.length} deployment files:`);
+	for (const filePath of writtenFiles) {
 		console.log(`    ${filePath}`);
 	}
 	console.log(``);

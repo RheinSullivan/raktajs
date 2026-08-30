@@ -35,17 +35,19 @@ export function useImageZoom(): {
 	}, []);
 
 	const zoom = useCallback((): void => {
-		const el = ref.current;
-		if (!el || isZoomed) return;
+		const element = ref.current;
+		if (!element || isZoomed) return;
 
-		const img =
-			el.tagName === "IMG" ? (el as HTMLImageElement) : el.querySelector("img");
-		if (!img) return;
+		const imageElement =
+			element.tagName === "IMG"
+				? (element as HTMLImageElement)
+				: element.querySelector("img");
+		if (!imageElement) return;
 
 		if (typeof performance !== "undefined")
 			performance.mark("rakta:image-zoom");
 
-		const rect = img.getBoundingClientRect();
+		const boundingRectangle = imageElement.getBoundingClientRect();
 		const overlay = document.createElement("div");
 		overlayRef.current = overlay;
 
@@ -62,16 +64,19 @@ export function useImageZoom(): {
 			cursor: "zoom-out",
 		});
 
-		const zoomed = img.cloneNode(true) as HTMLImageElement;
-		const vw = window.innerWidth;
-		const vh = window.innerHeight;
-		const scale = Math.min((vw * 0.9) / rect.width, (vh * 0.9) / rect.height);
+		const zoomedImage = imageElement.cloneNode(true) as HTMLImageElement;
+		const viewportWidth = window.innerWidth;
+		const viewportHeight = window.innerHeight;
+		const scale = Math.min(
+			(viewportWidth * 0.9) / boundingRectangle.width,
+			(viewportHeight * 0.9) / boundingRectangle.height,
+		);
 
-		Object.assign(zoomed.style, {
+		Object.assign(zoomedImage.style, {
 			maxWidth: "90vw",
 			maxHeight: "90vh",
-			width: `${rect.width}px`,
-			height: `${rect.height}px`,
+			width: `${boundingRectangle.width}px`,
+			height: `${boundingRectangle.height}px`,
 			objectFit: "contain",
 			transformOrigin: "center",
 			transform: `scale(${scale})`,
@@ -79,7 +84,7 @@ export function useImageZoom(): {
 			borderRadius: "4px",
 		});
 
-		overlay.appendChild(zoomed);
+		overlay.appendChild(zoomedImage);
 		document.body.appendChild(overlay);
 
 		requestAnimationFrame(() => {
@@ -89,38 +94,38 @@ export function useImageZoom(): {
 		setIsZoomed(true);
 
 		overlay.addEventListener("click", unzoom);
-		overlay.addEventListener("keydown", (e: KeyboardEvent) => {
-			if (e.key === "Escape") unzoom();
+		overlay.addEventListener("keydown", (event: KeyboardEvent) => {
+			if (event.key === "Escape") unzoom();
 		});
 	}, [isZoomed, unzoom]);
 
 	useEffect(() => {
-		const el = ref.current;
-		if (!el) return;
+		const element = ref.current;
+		if (!element) return;
 
 		const handleClick = (): void => {
 			if (isZoomed) unzoom();
 			else zoom();
 		};
 
-		const handleKeyDown = (e: KeyboardEvent): void => {
-			if (e.key === "Enter" || e.key === " ") {
-				e.preventDefault();
+		const handleKeyDown = (event: KeyboardEvent): void => {
+			if (event.key === "Enter" || event.key === " ") {
+				event.preventDefault();
 				handleClick();
 			}
 		};
 
-		el.setAttribute("tabindex", "0");
-		el.setAttribute("role", "button");
-		el.setAttribute("aria-label", isZoomed ? "Close image" : "Zoom image");
-		el.style.cursor = isZoomed ? "zoom-out" : "zoom-in";
+		element.setAttribute("tabindex", "0");
+		element.setAttribute("role", "button");
+		element.setAttribute("aria-label", isZoomed ? "Close image" : "Zoom image");
+		element.style.cursor = isZoomed ? "zoom-out" : "zoom-in";
 
-		el.addEventListener("click", handleClick);
-		el.addEventListener("keydown", handleKeyDown);
+		element.addEventListener("click", handleClick);
+		element.addEventListener("keydown", handleKeyDown);
 
 		return () => {
-			el.removeEventListener("click", handleClick);
-			el.removeEventListener("keydown", handleKeyDown);
+			element.removeEventListener("click", handleClick);
+			element.removeEventListener("keydown", handleKeyDown);
 		};
 	}, [isZoomed, zoom, unzoom]);
 
@@ -136,43 +141,45 @@ export function useTrusmiGallery(images: readonly string[]): {
 	current: string;
 	prev: () => void;
 	next: () => void;
-	goTo: (i: number) => void;
+	goTo: (targetIndex: number) => void;
 } {
 	const [index, setIndex] = useState(0);
 
 	// Preload adjacent images
 	useEffect(() => {
-		const preload = (url: string): void => {
-			const img = new Image();
-			img.src = url;
+		const preload = (imageUrl: string): void => {
+			const preloadImage = new Image();
+			preloadImage.src = imageUrl;
 		};
 		if (images[index + 1]) preload(images[index + 1] as string);
 		if (images[index - 1]) preload(images[index - 1] as string);
 	}, [index, images]);
 
 	const prev = useCallback((): void => {
-		setIndex((i) => (i - 1 + images.length) % images.length);
+		setIndex(
+			(currentIndex) => (currentIndex - 1 + images.length) % images.length,
+		);
 	}, [images.length]);
 
 	const next = useCallback((): void => {
-		setIndex((i) => (i + 1) % images.length);
+		setIndex((currentIndex) => (currentIndex + 1) % images.length);
 	}, [images.length]);
 
 	const goTo = useCallback(
-		(i: number): void => {
-			setIndex(Math.max(0, Math.min(i, images.length - 1)));
+		(targetIndex: number): void => {
+			setIndex(Math.max(0, Math.min(targetIndex, images.length - 1)));
 		},
 		[images.length],
 	);
 
 	// Keyboard navigation
 	useEffect(() => {
-		const handleKey = (e: KeyboardEvent): void => {
-			if (e.key === "ArrowLeft") prev();
-			if (e.key === "ArrowRight") next();
+		const handleKeyDown = (event: KeyboardEvent): void => {
+			if (event.key === "ArrowLeft") prev();
+			if (event.key === "ArrowRight") next();
 		};
-		window.addEventListener("keydown", handleKey);
-		return () => window.removeEventListener("keydown", handleKey);
+		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, [prev, next]);
 
 	return {

@@ -5,10 +5,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-// ──────────────────────────────────────────────────────────────────────────────
 // rakta doctor
-// ──────────────────────────────────────────────────────────────────────────────
-
 export interface DoctorCheck {
 	readonly name: string;
 	readonly status: "ok" | "warn" | "error";
@@ -117,10 +114,7 @@ export async function doctorCommand(
 	return { checks, healthy, durationMs: Date.now() - start };
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
 // rakta analyze
-// ──────────────────────────────────────────────────────────────────────────────
-
 export interface AnalyzeReport {
 	readonly buildDir: string;
 	readonly totalSizeBytes: number;
@@ -181,10 +175,7 @@ export async function analyzeCommand(
 	};
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
 // rakta benchmark
-// ──────────────────────────────────────────────────────────────────────────────
-
 export interface BenchmarkResult {
 	readonly name: string;
 	readonly iterations: number;
@@ -219,10 +210,7 @@ export async function benchmarkCommand(
 	};
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
 // rakta inspect
-// ──────────────────────────────────────────────────────────────────────────────
-
 export interface InspectReport {
 	readonly projectName: string;
 	readonly version: string;
@@ -271,10 +259,7 @@ export function inspectCommand(cwd: string = process.cwd()): InspectReport {
 	}
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
 // rakta generate
-// ──────────────────────────────────────────────────────────────────────────────
-
 export type GenerateTarget = "page" | "component" | "hook" | "api" | "layout";
 
 export interface GenerateOptions {
@@ -359,10 +344,7 @@ export function generateCommand(options: GenerateOptions): GenerateResult {
 	}
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
 // rakta check (typecheck shortcut)
-// ──────────────────────────────────────────────────────────────────────────────
-
 export interface CheckResult {
 	readonly passed: boolean;
 	readonly errors: readonly string[];
@@ -392,10 +374,7 @@ export async function checkCommand(
 	};
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
 // rakta telemetry
-// ──────────────────────────────────────────────────────────────────────────────
-
 export interface TelemetryConfig {
 	readonly enabled: boolean;
 	readonly anonymousId?: string;

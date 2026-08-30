@@ -26,35 +26,36 @@ export function useMagnetic(
 	const ref = useRef<HTMLElement | null>(null);
 
 	useEffect(() => {
-		const el = ref.current;
-		if (!el || prefersReducedMotion()) return;
+		const element = ref.current;
+		if (!element || prefersReducedMotion()) return;
 
-		const handleMove = (e: MouseEvent): void => {
-			const rect = el.getBoundingClientRect();
-			const cx = rect.left + rect.width / 2;
-			const cy = rect.top + rect.height / 2;
-			const dx = e.clientX - cx;
-			const dy = e.clientY - cy;
-			const dist = Math.sqrt(dx * dx + dy * dy);
+		const handleMouseMove = (event: MouseEvent): void => {
+			const boundingRectangle = element.getBoundingClientRect();
+			const centerX = boundingRectangle.left + boundingRectangle.width / 2;
+			const centerY = boundingRectangle.top + boundingRectangle.height / 2;
+			const deltaX = event.clientX - centerX;
+			const deltaY = event.clientY - centerY;
+			const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-			if (dist < radius) {
-				const pull = (1 - dist / radius) * strength;
-				el.style.transform = `translate(${dx * pull}px, ${dy * pull}px)`;
-				el.style.transition = "transform 0.1s ease";
+			if (distance < radius) {
+				const pullFactor = (1 - distance / radius) * strength;
+				element.style.transform = `translate(${deltaX * pullFactor}px, ${deltaY * pullFactor}px)`;
+				element.style.transition = "transform 0.1s ease";
 			}
 		};
 
-		const handleLeave = (): void => {
-			el.style.transform = "translate(0, 0)";
-			el.style.transition = "transform 0.5s cubic-bezier(0.34,1.56,0.64,1)";
+		const handleMouseLeave = (): void => {
+			element.style.transform = "translate(0, 0)";
+			element.style.transition =
+				"transform 0.5s cubic-bezier(0.34,1.56,0.64,1)";
 		};
 
-		el.addEventListener("mousemove", handleMove);
-		el.addEventListener("mouseleave", handleLeave);
+		element.addEventListener("mousemove", handleMouseMove);
+		element.addEventListener("mouseleave", handleMouseLeave);
 
 		return () => {
-			el.removeEventListener("mousemove", handleMove);
-			el.removeEventListener("mouseleave", handleLeave);
+			element.removeEventListener("mousemove", handleMouseMove);
+			element.removeEventListener("mouseleave", handleMouseLeave);
 		};
 	}, [strength, radius]);
 
@@ -71,31 +72,35 @@ export function useTilt(maxTilt = 15): {
 	const ref = useRef<HTMLElement | null>(null);
 
 	useEffect(() => {
-		const el = ref.current;
-		if (!el || prefersReducedMotion()) return;
+		const element = ref.current;
+		if (!element || prefersReducedMotion()) return;
 
-		el.style.transformStyle = "preserve-3d";
-		el.style.perspective = "800px";
+		element.style.transformStyle = "preserve-3d";
+		element.style.perspective = "800px";
 
-		const handleMove = (e: MouseEvent): void => {
-			const rect = el.getBoundingClientRect();
-			const x = (e.clientX - rect.left) / rect.width - 0.5;
-			const y = (e.clientY - rect.top) / rect.height - 0.5;
-			el.style.transform = `rotateY(${x * maxTilt * 2}deg) rotateX(${-y * maxTilt * 2}deg)`;
-			el.style.transition = "transform 0.1s ease";
+		const handleMouseMove = (event: MouseEvent): void => {
+			const boundingRectangle = element.getBoundingClientRect();
+			const normalizedX =
+				(event.clientX - boundingRectangle.left) / boundingRectangle.width -
+				0.5;
+			const normalizedY =
+				(event.clientY - boundingRectangle.top) / boundingRectangle.height -
+				0.5;
+			element.style.transform = `rotateY(${normalizedX * maxTilt * 2}deg) rotateX(${-normalizedY * maxTilt * 2}deg)`;
+			element.style.transition = "transform 0.1s ease";
 		};
 
-		const handleLeave = (): void => {
-			el.style.transform = "rotateY(0deg) rotateX(0deg)";
-			el.style.transition = "transform 0.5s ease";
+		const handleMouseLeave = (): void => {
+			element.style.transform = "rotateY(0deg) rotateX(0deg)";
+			element.style.transition = "transform 0.5s ease";
 		};
 
-		el.addEventListener("mousemove", handleMove);
-		el.addEventListener("mouseleave", handleLeave);
+		element.addEventListener("mousemove", handleMouseMove);
+		element.addEventListener("mouseleave", handleMouseLeave);
 
 		return () => {
-			el.removeEventListener("mousemove", handleMove);
-			el.removeEventListener("mouseleave", handleLeave);
+			element.removeEventListener("mousemove", handleMouseMove);
+			element.removeEventListener("mouseleave", handleMouseLeave);
 		};
 	}, [maxTilt]);
 
@@ -113,26 +118,26 @@ export function useSpotlight(
 	const ref = useRef<HTMLElement | null>(null);
 
 	useEffect(() => {
-		const el = ref.current;
-		if (!el || prefersReducedMotion()) return;
+		const element = ref.current;
+		if (!element || prefersReducedMotion()) return;
 
-		const handleMove = (e: MouseEvent): void => {
-			const rect = el.getBoundingClientRect();
-			const x = e.clientX - rect.left;
-			const y = e.clientY - rect.top;
-			el.style.background = `radial-gradient(${size}px circle at ${x}px ${y}px, ${color}, transparent 70%)`;
+		const handleMouseMove = (event: MouseEvent): void => {
+			const boundingRectangle = element.getBoundingClientRect();
+			const relativeX = event.clientX - boundingRectangle.left;
+			const relativeY = event.clientY - boundingRectangle.top;
+			element.style.background = `radial-gradient(${size}px circle at ${relativeX}px ${relativeY}px, ${color}, transparent 70%)`;
 		};
 
-		const handleLeave = (): void => {
-			el.style.background = "";
+		const handleMouseLeave = (): void => {
+			element.style.background = "";
 		};
 
-		el.addEventListener("mousemove", handleMove);
-		el.addEventListener("mouseleave", handleLeave);
+		element.addEventListener("mousemove", handleMouseMove);
+		element.addEventListener("mouseleave", handleMouseLeave);
 
 		return () => {
-			el.removeEventListener("mousemove", handleMove);
-			el.removeEventListener("mouseleave", handleLeave);
+			element.removeEventListener("mousemove", handleMouseMove);
+			element.removeEventListener("mouseleave", handleMouseLeave);
 		};
 	}, [size, color]);
 
@@ -147,33 +152,45 @@ export function useCursorFollower(lag = 0.1): {
 	ref: React.RefObject<HTMLElement | null>;
 } {
 	const ref = useRef<HTMLElement | null>(null);
-	const pos = useRef({ x: 0, y: 0 });
-	const target = useRef({ x: 0, y: 0 });
-	const rafId = useRef<number>(0);
+	const currentPosition = useRef({ x: 0, y: 0 });
+	const targetPosition = useRef({ x: 0, y: 0 });
+	const animationFrameIdentifier = useRef<number>(0);
 
 	useEffect(() => {
-		const el = ref.current;
-		if (!el || prefersReducedMotion()) return;
+		const element = ref.current;
+		if (!element || prefersReducedMotion()) return;
 
-		const handleMove = (e: MouseEvent): void => {
-			target.current = { x: e.clientX, y: e.clientY };
+		const handleMouseMove = (event: MouseEvent): void => {
+			targetPosition.current = { x: event.clientX, y: event.clientY };
 		};
 
-		const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
+		const linearInterpolation = (
+			startValue: number,
+			endValue: number,
+			progressRatio: number,
+		): number => startValue + (endValue - startValue) * progressRatio;
 
-		const tick = (): void => {
-			pos.current.x = lerp(pos.current.x, target.current.x, lag);
-			pos.current.y = lerp(pos.current.y, target.current.y, lag);
-			el.style.transform = `translate(${pos.current.x}px, ${pos.current.y}px)`;
-			rafId.current = requestAnimationFrame(tick);
+		const renderTick = (): void => {
+			currentPosition.current.x = linearInterpolation(
+				currentPosition.current.x,
+				targetPosition.current.x,
+				lag,
+			);
+			currentPosition.current.y = linearInterpolation(
+				currentPosition.current.y,
+				targetPosition.current.y,
+				lag,
+			);
+			element.style.transform = `translate(${currentPosition.current.x}px, ${currentPosition.current.y}px)`;
+			animationFrameIdentifier.current = requestAnimationFrame(renderTick);
 		};
 
-		document.addEventListener("mousemove", handleMove);
-		rafId.current = requestAnimationFrame(tick);
+		document.addEventListener("mousemove", handleMouseMove);
+		animationFrameIdentifier.current = requestAnimationFrame(renderTick);
 
 		return () => {
-			document.removeEventListener("mousemove", handleMove);
-			cancelAnimationFrame(rafId.current);
+			document.removeEventListener("mousemove", handleMouseMove);
+			cancelAnimationFrame(animationFrameIdentifier.current);
 		};
 	}, [lag]);
 
@@ -192,79 +209,79 @@ export function useDrag(options?: {
 	const ref = useRef<HTMLElement | null>(null);
 
 	useEffect(() => {
-		const el = ref.current;
-		if (!el) return;
+		const element = ref.current;
+		if (!element) return;
 
 		const axis = options?.axis ?? "both";
 		let isDragging = false;
-		let startX = 0;
-		let startY = 0;
-		let ox = 0;
-		let oy = 0;
-		let vx = 0;
-		let vy = 0;
-		let lastX = 0;
-		let lastY = 0;
-		let rafId = 0;
+		let startPointerX = 0;
+		let startPointerY = 0;
+		let originOffsetX = 0;
+		let originOffsetY = 0;
+		let velocityX = 0;
+		let velocityY = 0;
+		let previousPointerX = 0;
+		let previousPointerY = 0;
+		let animationFrameIdentifier = 0;
 
-		const applyTransform = (x: number, y: number): void => {
-			const tx = axis === "y" ? 0 : x;
-			const ty = axis === "x" ? 0 : y;
-			el.style.transform = `translate(${tx}px, ${ty}px)`;
+		const applyTransform = (translateX: number, translateY: number): void => {
+			const finalTranslateX = axis === "y" ? 0 : translateX;
+			const finalTranslateY = axis === "x" ? 0 : translateY;
+			element.style.transform = `translate(${finalTranslateX}px, ${finalTranslateY}px)`;
 		};
 
-		const onDown = (e: PointerEvent): void => {
+		const handlePointerDown = (event: PointerEvent): void => {
 			isDragging = true;
-			el.setPointerCapture(e.pointerId);
-			startX = e.clientX - ox;
-			startY = e.clientY - oy;
-			lastX = e.clientX;
-			lastY = e.clientY;
-			vx = 0;
-			vy = 0;
-			cancelAnimationFrame(rafId);
-			el.style.transition = "none";
+			element.setPointerCapture(event.pointerId);
+			startPointerX = event.clientX - originOffsetX;
+			startPointerY = event.clientY - originOffsetY;
+			previousPointerX = event.clientX;
+			previousPointerY = event.clientY;
+			velocityX = 0;
+			velocityY = 0;
+			cancelAnimationFrame(animationFrameIdentifier);
+			element.style.transition = "none";
 		};
 
-		const onMove = (e: PointerEvent): void => {
+		const handlePointerMove = (event: PointerEvent): void => {
 			if (!isDragging) return;
-			vx = e.clientX - lastX;
-			vy = e.clientY - lastY;
-			lastX = e.clientX;
-			lastY = e.clientY;
-			ox = e.clientX - startX;
-			oy = e.clientY - startY;
-			applyTransform(ox, oy);
+			velocityX = event.clientX - previousPointerX;
+			velocityY = event.clientY - previousPointerY;
+			previousPointerX = event.clientX;
+			previousPointerY = event.clientY;
+			originOffsetX = event.clientX - startPointerX;
+			originOffsetY = event.clientY - startPointerY;
+			applyTransform(originOffsetX, originOffsetY);
 		};
 
-		const onUp = (): void => {
+		const handlePointerUp = (): void => {
 			isDragging = false;
-			el.style.transition = "";
-			// Momentum
-			const decay = (): void => {
-				vx *= 0.92;
-				vy *= 0.92;
-				ox += vx;
-				oy += vy;
-				applyTransform(ox, oy);
-				if (Math.abs(vx) > 0.5 || Math.abs(vy) > 0.5) {
-					rafId = requestAnimationFrame(decay);
+			element.style.transition = "";
+			// Momentum decay physics
+			const applyMomentumDecay = (): void => {
+				velocityX *= 0.92;
+				velocityY *= 0.92;
+				originOffsetX += velocityX;
+				originOffsetY += velocityY;
+				applyTransform(originOffsetX, originOffsetY);
+				if (Math.abs(velocityX) > 0.5 || Math.abs(velocityY) > 0.5) {
+					animationFrameIdentifier = requestAnimationFrame(applyMomentumDecay);
 				}
 			};
-			rafId = requestAnimationFrame(decay);
+			animationFrameIdentifier = requestAnimationFrame(applyMomentumDecay);
 		};
 
-		el.addEventListener("pointerdown", onDown);
-		el.addEventListener("pointermove", onMove);
-		el.addEventListener("pointerup", onUp);
-		el.addEventListener("pointercancel", onUp);
+		element.addEventListener("pointerdown", handlePointerDown);
+		element.addEventListener("pointermove", handlePointerMove);
+		element.addEventListener("pointerup", handlePointerUp);
+		element.addEventListener("pointercancel", handlePointerUp);
 
 		return () => {
-			cancelAnimationFrame(rafId);
-			el.removeEventListener("pointerdown", onDown);
-			el.removeEventListener("pointermove", onMove);
-			el.removeEventListener("pointerup", onUp);
-			el.removeEventListener("pointercancel", onUp);
+			cancelAnimationFrame(animationFrameIdentifier);
+			element.removeEventListener("pointerdown", handlePointerDown);
+			element.removeEventListener("pointermove", handlePointerMove);
+			element.removeEventListener("pointerup", handlePointerUp);
+			element.removeEventListener("pointercancel", handlePointerUp);
 		};
 	}, [options?.axis]);
 
@@ -281,13 +298,16 @@ export function useParallax(speed = 0.3): {
 	const ref = useRef<HTMLElement | null>(null);
 
 	const handleScroll = useCallback(() => {
-		const el = ref.current;
-		if (!el || prefersReducedMotion()) return;
-		const rect = el.getBoundingClientRect();
-		const viewH = window.innerHeight;
-		const progress = (viewH - rect.top) / (viewH + rect.height);
-		const offset = (progress - 0.5) * rect.height * speed;
-		el.style.transform = `translateY(${offset}px)`;
+		const element = ref.current;
+		if (!element || prefersReducedMotion()) return;
+		const boundingRectangle = element.getBoundingClientRect();
+		const viewportHeight = window.innerHeight;
+		const scrollProgress =
+			(viewportHeight - boundingRectangle.top) /
+			(viewportHeight + boundingRectangle.height);
+		const parallaxOffset =
+			(scrollProgress - 0.5) * boundingRectangle.height * speed;
+		element.style.transform = `translateY(${parallaxOffset}px)`;
 	}, [speed]);
 
 	useEffect(() => {
