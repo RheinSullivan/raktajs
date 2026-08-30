@@ -246,7 +246,7 @@ export function toManifestRoutes(
 	const ssgByPattern = new Map(results.map((r) => [r.pattern, r]));
 
 	return allEntries
-		.filter((e) => e.kind === "page")
+		.filter((entry) => entry.kind === "page")
 		.map((entry) => {
 			const ssgResult = ssgByPattern.get(entry.urlPattern);
 			const base: BuildManifestRoute = {

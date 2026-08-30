@@ -1,5 +1,7 @@
-// biome-ignore-all lint: Template welcome starter Rakta.js
-// Header - uses Rakta.js: <photo>, toast, react-icons, gsap
+// biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
+// biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
+// Header - sticky navigation bar with lang toggle, mute, aesthetic switcher, latency, GitHub button.
+// Active nav link shows a bottom-border underline indicator, not a hash symbol.
 
 export default function Header({
 	lang,
@@ -28,10 +30,7 @@ export default function Header({
 			lang === "ID"
 				? "Switched to English 🇬🇧"
 				: "Berganti ke Bahasa Indonesia 🇮🇩",
-			{
-				title: "LANGUAGE",
-				duration: 2000,
-			},
+			{ title: "LANGUAGE", duration: 2000 },
 		);
 	}, [lang, onLangToggle]);
 
@@ -43,13 +42,26 @@ export default function Header({
 		});
 	}, [isMuted, onMuteToggle]);
 
+	// Navigation items — href is the scroll target id or route path.
+	// The active indicator is a 2px bottom border on the link, not a hash symbol.
+	const navItems = [
+		{ label: "SHOWCASE", href: "features" },
+		{ label: "DOCS", href: "https://github.com/RheinSullivan/raktajs" },
+		{ label: "GAME", href: "game" },
+		{ label: "SOLIDARITY", href: "humanitarian" },
+		{
+			label: "STARTED",
+			href: "https://github.com/RheinSullivan/raktajs#quick-start",
+		},
+	] as const;
+
 	return (
 		<header
 			ref={headerRef}
-			className="sticky top-0 z-40 border-b border-surface-stroke bg-black/90 backdrop-blur-md"
+			className="sticky top-0 z-40 border-b border-surface-stroke bg-[#0d0e0f] backdrop-blur-md"
 		>
 			<div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-				{/* Brand: [LOGO] Rakta.js */}
+				{/* Brand */}
 				<click to="/" className="flex items-center gap-2.5 no-underline">
 					<photo
 						path="/rakta-logo.svg"
@@ -61,23 +73,48 @@ export default function Header({
 					<span className="font-mono text-sm font-bold tracking-wider text-white leading-none">
 						Rakta<span className="text-brand-pink">.js</span>
 					</span>
-					<span className="hidden sm:inline-flex items-center gap-1 border border-surface-stroke bg-zinc-900/80 px-2 py-0.5 font-mono text-[10px] uppercase text-gray-400 leading-none">
-						<FaTerminal className="h-2.5 w-2.5" />
-						v1.2.2 · FULLSTACK ENGINE
-					</span>
 				</click>
 
-				{/* Controls */}
+				{/* Center nav — active item gets a bottom-border underline, not a "#" prefix */}
+				<nav className="hidden md:flex items-center gap-6">
+					{navItems.map((item) => {
+						const isExternal =
+							item.href.startsWith("http://") ||
+							item.href.startsWith("https://");
+						return isExternal ? (
+							<a
+								key={item.label}
+								href={item.href}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="font-mono text-[11px] font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors pb-px border-b-2 border-transparent hover:border-brand-pink"
+							>
+								{item.label}
+							</a>
+						) : (
+							<pantura
+								key={item.label}
+								to={item.href}
+								className="font-mono text-[11px] font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors pb-px border-b-2 border-transparent hover:border-brand-pink"
+							>
+								{item.label}
+							</pantura>
+						);
+					})}
+				</nav>
+
+				{/* Right side controls */}
 				<div className="flex items-center gap-3">
-					{/* Solidarity link */}
-					<click
-						to="#humanitarian"
+					{/* Palestine solidarity pill */}
+					<pantura
+						to="humanitarian"
 						className="hidden lg:inline-flex items-center gap-1 border border-green-900/50 bg-green-950/10 px-2.5 py-1 font-mono text-[10px] uppercase text-green-400 hover:border-green-500/60 hover:text-green-300 transition-colors"
 						aria-label="Palestine Solidarity"
 					>
 						🇵🇸 <span>SOLIDARITY</span>
-					</click>
-					{/* Aesthetic switcher */}
+					</pantura>
+
+					{/* Aesthetic unit switcher */}
 					<div className="hidden md:flex items-center gap-2 border border-surface-stroke bg-black p-1 font-mono text-[10px]">
 						{(["LENIS-MODERN", "RETRO-CYBER", "NEO-BRUTALIST"] as const).map(
 							(unit) => (
@@ -113,7 +150,7 @@ export default function Header({
 						LATENCY: {lowLatencyMode ? "LOW" : "STD"}
 					</button>
 
-					{/* Mute toggle with react-icon */}
+					{/* Mute toggle */}
 					<button
 						type="button"
 						onClick={handleMuteToggle}
@@ -136,6 +173,18 @@ export default function Header({
 						<FaGlobe className="h-3 w-3" />
 						{lang}
 					</button>
+
+					{/* GitHub button — solid bg-brand-pink, not transparent */}
+					<a
+						href="https://github.com/RheinSullivan/raktajs"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="flex items-center gap-1.5 bg-brand-pink hover:bg-white text-white hover:text-black px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-widest transition-colors cursor-pointer"
+						aria-label="GitHub Repository"
+					>
+						<FaGithub className="h-3.5 w-3.5" />
+						<span className="hidden sm:inline">GITHUB</span>
+					</a>
 				</div>
 			</div>
 		</header>

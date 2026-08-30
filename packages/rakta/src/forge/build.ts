@@ -226,7 +226,9 @@ export async function buildProject(
 
 	// Fallback: if no non-chunk JS was found, pick the first JS output
 	if (jsEntryPath === "" && buildResult.outputs.length > 0) {
-		const firstJs = buildResult.outputs.find((o) => o.path.endsWith(".js"));
+		const firstJs = buildResult.outputs.find((output) =>
+			output.path.endsWith(".js"),
+		);
 		if (firstJs) jsEntryPath = firstJs.path;
 	}
 
@@ -285,7 +287,7 @@ export async function buildProject(
 			: resolve(options.outDir);
 
 		const ssgInputs: SsgRouteInput[] = manifest.routes
-			.filter((r) => r.kind === "page")
+			.filter((route) => route.kind === "page")
 			.map((entry) => ({
 				entry,
 				mode: options.renderConfig.routes[entry.urlPattern] ?? effectiveMode,
@@ -333,7 +335,7 @@ export async function buildProject(
 
 		// Build route list without htmlPath (served dynamically / by SPA rewrite)
 		ssgManifestRoutes = manifest.routes
-			.filter((r) => r.kind === "page")
+			.filter((route) => route.kind === "page")
 			.map((entry) => ({
 				pattern: entry.urlPattern,
 				filePath: entry.filePath,
@@ -382,9 +384,11 @@ export async function buildProject(
 		css: cssPaths,
 		assets: buildResult.outputs
 			.filter(
-				(o) => !o.path.endsWith(".css") && !o.path.includes("route-manifest"),
+				(output) =>
+					!output.path.endsWith(".css") &&
+					!output.path.includes("route-manifest"),
 			)
-			.map((o) => o.path),
+			.map((output) => output.path),
 	};
 
 	const buildManifest = createBuildManifest({
@@ -433,7 +437,7 @@ export async function buildProject(
  * - Netlify/Cloudflare: dist/_redirects for SPA routing
  * - Vercel: .vercel/output with config.json and static assets (Vercel Build Output API v3)
  */
-function generateDeploymentOutputs(opts: {
+function generateDeploymentOutputs(deployOptions: {
 	projectRoot: string;
 	outDir: string;
 	effectiveMode: RenderMode;
@@ -446,7 +450,7 @@ function generateDeploymentOutputs(opts: {
 		effectiveMode: _mode,
 		needsServer,
 		artifacts,
-	} = opts;
+	} = deployOptions;
 
 	// 1. Static host redirects (Netlify / Cloudflare Pages / Static hosts)
 	const redirectsPath = join(outDir, "_redirects");

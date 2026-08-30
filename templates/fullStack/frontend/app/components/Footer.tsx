@@ -46,7 +46,7 @@ export default function Footer({ lang }: { lang: "ID" | "EN" }) {
 	return (
 		<footer
 			ref={footerRef}
-			className="border-t border-surface-stroke bg-black px-4 py-10 sm:px-6"
+			className="border-t border-surface-stroke bg-[#0d0e0f] px-4 py-10 sm:px-6"
 		>
 			<div className="mx-auto max-w-6xl">
 				{/* Main Footer Row */}

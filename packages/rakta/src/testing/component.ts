@@ -54,9 +54,9 @@ export function renderComponent(html: string): RenderedComponent {
  * Assert that a rendered component contains expected text.
  */
 export function expectText(rendered: RenderedComponent, text: string): void {
-	const el = rendered.getByText(text);
+	const foundElement = rendered.getByText(text);
 
-	if (!el) {
+	if (!foundElement) {
 		throw new Error(
 			`Expected to find text "${text}" in rendered output.\nHTML: ${rendered.html()}`,
 		);
@@ -70,9 +70,9 @@ export function expectTestId(
 	rendered: RenderedComponent,
 	testId: string,
 ): void {
-	const el = rendered.getByTestId(testId);
+	const foundElement = rendered.getByTestId(testId);
 
-	if (!el) {
+	if (!foundElement) {
 		throw new Error(
 			`Expected to find [data-testid="${testId}"] in rendered output.\nHTML: ${rendered.html()}`,
 		);

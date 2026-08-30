@@ -181,8 +181,8 @@ async function buildDevClientBundle(
 	});
 
 	if (!buildResult.success) {
-		const errors = buildResult.logs.filter((l) => l.level === "error");
-		const warnings = buildResult.logs.filter((l) => l.level === "warning");
+		const errors = buildResult.logs.filter((log) => log.level === "error");
+		const warnings = buildResult.logs.filter((log) => log.level === "warning");
 
 		const lines: string[] = ["Bundle failed - Rakta.js client build error\n"];
 
@@ -423,7 +423,7 @@ export async function startDevServer(
 		port,
 		hostname: options.host,
 		websocket: {
-			open(ws: any) {
+			open(ws: import("bun").ServerWebSocket<unknown>) {
 				ws.subscribe("livereload");
 			},
 			message() {
@@ -431,13 +431,16 @@ export async function startDevServer(
 			},
 		},
 
-		async fetch(request: Request, server: any): Promise<Response> {
+		async fetch(
+			request: Request,
+			server: import("bun").Server<unknown>,
+		): Promise<Response> {
 			// Measure every request from arrival to response.
 			// This is the server-side half; browser-side timing is in JatiLens.
 			const requestStartMs = Date.now();
 
 			if (request.url.endsWith("/__livereload")) {
-				const upgraded = server.upgrade(request);
+				const upgraded = server.upgrade(request, { data: undefined });
 				if (upgraded) return new Response(null);
 			}
 

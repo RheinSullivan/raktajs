@@ -98,9 +98,9 @@ export function defineSharedElement(
 	config: SharedElementConfig,
 ): SharedElementConfig {
 	if (typeof document !== "undefined") {
-		const el = document.querySelector(config.selector);
-		if (el) {
-			(el as HTMLElement).style.viewTransitionName = config.id;
+		const targetElement = document.querySelector(config.selector);
+		if (targetElement) {
+			(targetElement as HTMLElement).style.viewTransitionName = config.id;
 		}
 	}
 	return config;
@@ -110,11 +110,11 @@ export function defineSharedElement(
  * useSharedElement - programmatic shared element hook.
  */
 export function useSharedElement(id: string): {
-	ref: (el: HTMLElement | null) => void;
+	ref: (element: HTMLElement | null) => void;
 } {
 	return {
-		ref: (el: HTMLElement | null) => {
-			if (el) el.style.viewTransitionName = id;
+		ref: (element: HTMLElement | null) => {
+			if (element) element.style.viewTransitionName = id;
 		},
 	};
 }
@@ -166,30 +166,30 @@ export function createMotionTimeline(): MotionTimeline {
 		| undefined;
 
 	if (gsap) {
-		const tl = gsap.timeline();
+		const gsapTimeline = gsap.timeline();
 		const timeline: MotionTimeline = {
-			to(target, props, opts) {
-				tl.to(target, { ...props, ...opts });
+			to(target, props, options) {
+				gsapTimeline.to(target, { ...props, ...options });
 				return timeline;
 			},
-			from(target, props, opts) {
-				tl.from(target, { ...props, ...opts });
+			from(target, props, options) {
+				gsapTimeline.from(target, { ...props, ...options });
 				return timeline;
 			},
 			pause() {
-				tl.pause();
+				gsapTimeline.pause();
 				return timeline;
 			},
 			play() {
-				tl.play();
+				gsapTimeline.play();
 				return timeline;
 			},
 			reverse() {
-				tl.reverse();
+				gsapTimeline.reverse();
 				return timeline;
 			},
 			kill() {
-				tl.kill();
+				gsapTimeline.kill();
 			},
 		};
 		return timeline;

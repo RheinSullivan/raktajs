@@ -237,7 +237,9 @@ export function createRaktaRequestHandler(
 		}
 
 		// 3. API routes
-		const apiRoutes = routeManifest.routes.filter((r) => r.kind === "api");
+		const apiRoutes = routeManifest.routes.filter(
+			(route) => route.kind === "api",
+		);
 		const apiMatch = matchRoute(pathname, apiRoutes);
 		if (apiMatch) {
 			const modulePath = join(options.appDir, apiMatch.entry.filePath);
