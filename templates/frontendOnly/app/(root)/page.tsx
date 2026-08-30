@@ -395,9 +395,7 @@ export default function App() {
 		}, solidaritySectionRef);
 
 		return () => ctx.revert();
-	}, []);
-
-	// Dynamic Theme Styling Variables based on aestheticUnit
+	}, []); // Dynamic Theme Styling Variables based on aestheticUnit
 	const containerBorderClass =
 		aestheticUnit === "RETRO-CYBER"
 			? "border-2 border-fuchsia-600 p-1 bg-fuchsia-950/20 shadow-[0_0_20px_rgba(240,46,170,0.5)] transition-all duration-300"
@@ -1365,17 +1363,8 @@ export default function App() {
 				</section>
 			</main>
 
-			{/* Footer Element WITH exclusive background-image hotlink */}
-			<footer
-				className="border-t border-white/5 bg-[#0d0e0f]/90 pt-20 pb-12 relative overflow-hidden"
-				style={{
-					backgroundImage: `url('https://lh3.googleusercontent.com/aida/AP1WRLt-u2z0I8QQa-lz7v4xuAy7_-SEjx9iK_2gAihPLP2Y7cE8xVyD3_xEQIboq7JajowWZ7gxnxwWwWUrYF-9OVlrfWV92x_58F0PTrOHmqdfMJlyB6-s4n_tB1AuahHSDxyn6wQdledyhbe89hi8dtnB5nHXg5lmmS8o1XuzUPBMqoS9FinRmJWUBCW3fapYfl1pJhBVtx0f8_iBatLEeHoGv5BYZIrFx0uQpURC5uan42Vfg0p3Tqa0WrA')`,
-					backgroundRepeat: "repeat",
-					backgroundAttachment: "scroll",
-				}}
-			>
-				<div className="absolute inset-0 bg-[#0d0e0f]/90 z-0 pointer-events-none" />
-
+			{/* Footer Element */}
+			<footer className="border-t border-white/5 bg-[#0d0e0f] pt-20 pb-12 relative overflow-hidden">
 				<div className="max-w-7xl mx-auto px-6 md:px-10 flex flex-col md:flex-row justify-between items-start gap-16 mb-20 relative z-10">
 					<div className="flex flex-col items-start gap-6 max-w-xs">
 						<div className="flex items-center gap-3">

@@ -41,6 +41,56 @@ import {
 import type { ForgeDevServerHandle, ForgeDevServerOptions } from "./types";
 
 const DEFAULT_DEV_PORT = 3000;
+const MAX_PORT_SCAN = 50;
+
+/**
+ * Probes whether a TCP port is available on the given host.
+ * Returns true if the port is free, false if already in use.
+ */
+async function isPortFree(port: number, host: string): Promise<boolean> {
+	return new Promise((resolve) => {
+		try {
+			const server = Bun.listen({
+				hostname: host === "0.0.0.0" || host === "::" ? "127.0.0.1" : host,
+				port,
+				socket: {
+					open(socket) {
+						socket.end();
+					},
+					data() {},
+					error() {},
+				},
+			});
+			server.stop(true);
+			resolve(true);
+		} catch {
+			resolve(false);
+		}
+	});
+}
+
+/**
+ * Finds the first available port starting from preferredPort.
+ * Scans up to MAX_PORT_SCAN consecutive ports before giving up.
+ */
+async function findAvailablePort(
+	preferredPort: number,
+	host: string,
+): Promise<number> {
+	const base = preferredPort > 0 ? preferredPort : DEFAULT_DEV_PORT;
+	for (let offset = 0; offset < MAX_PORT_SCAN; offset++) {
+		const candidate = base + offset;
+		if (await isPortFree(candidate, host)) {
+			return candidate;
+		}
+	}
+	// Let OS assign a free port
+	return 0;
+}
+
+function resolveDevPort(port: number): number {
+	return port > 0 ? port : DEFAULT_DEV_PORT;
+}
 
 const MIME_MAP: Readonly<Record<string, string>> = {
 	".html": "text/html; charset=utf-8",
@@ -62,10 +112,6 @@ const MIME_MAP: Readonly<Record<string, string>> = {
 function resolveMime(filePath: string): string {
 	const ext = filePath.slice(filePath.lastIndexOf(".")).toLowerCase();
 	return MIME_MAP[ext] ?? "application/octet-stream";
-}
-
-function resolveDevPort(port: number): number {
-	return port > 0 ? port : DEFAULT_DEV_PORT;
 }
 
 function isReadableFile(filePath: string): boolean {
@@ -194,7 +240,11 @@ export async function startDevServer(
 	options: ForgeDevServerOptions,
 ): Promise<ForgeDevServerHandle> {
 	let manifest = generateManifest(options.appDir);
-	const resolvedPort = resolveDevPort(options.port);
+	const preferredPort = resolveDevPort(options.port);
+	const resolvedPort = await findAvailablePort(
+		preferredPort,
+		options.host ?? "0.0.0.0",
+	);
 
 	// Track first-request compile start for compile state logging.
 	// We print "○ Compiling / ..." before the initial bundle is served.
@@ -369,11 +419,11 @@ export async function startDevServer(
 		return devToolsCommand;
 	}
 
-	const server = Bun.serve({
-		port: resolvedPort,
+	const createServeOptions = (port: number) => ({
+		port,
 		hostname: options.host,
 		websocket: {
-			open(ws) {
+			open(ws: any) {
 				ws.subscribe("livereload");
 			},
 			message() {
@@ -381,7 +431,7 @@ export async function startDevServer(
 			},
 		},
 
-		async fetch(request: Request, server): Promise<Response> {
+		async fetch(request: Request, server: any): Promise<Response> {
 			// Measure every request from arrival to response.
 			// This is the server-side half; browser-side timing is in JatiLens.
 			const requestStartMs = Date.now();
@@ -702,8 +752,22 @@ export async function startDevServer(
 		},
 	});
 
-	const serverPort =
-		typeof server.port === "number" ? server.port : resolvedPort;
+	let server: ReturnType<typeof Bun.serve>;
+	let serverPort = resolvedPort;
+
+	for (let offset = 0; offset < MAX_PORT_SCAN; offset++) {
+		const targetPort = resolvedPort + offset;
+		try {
+			server = Bun.serve(createServeOptions(targetPort));
+			serverPort = typeof server.port === "number" ? server.port : targetPort;
+			break;
+		} catch (_err) {
+			if (offset === MAX_PORT_SCAN - 1) {
+				server = Bun.serve(createServeOptions(0));
+				serverPort = typeof server.port === "number" ? server.port : 0;
+			}
+		}
+	}
 
 	const displayHost =
 		options.host === "0.0.0.0" || options.host === "::"
@@ -711,6 +775,13 @@ export async function startDevServer(
 			: options.host;
 
 	const localUrl = `http://${displayHost}:${serverPort}`;
+
+	// Inform user if we had to switch to a different port
+	if (serverPort !== preferredPort && preferredPort > 0) {
+		process.stderr.write(
+			`\x1b[33m⚠\x1b[0m  Port \x1b[1m${preferredPort}\x1b[0m is already in use. Using port \x1b[1m${serverPort}\x1b[0m instead.\n\n`,
+		);
+	}
 
 	// Print startup banner - version, local/network URLs, env files, ready time, config timing.
 	terminal.printStartup(localUrl, options.configMs);
