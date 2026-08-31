@@ -667,7 +667,7 @@ describe("v1.2.0 terminal output format regression tests", () => {
 		expect(source).toContain('const I2 = "        "');
 	});
 
-	test("printStartup accepts configMs parameter and emits config timing line", () => {
+	test("printStartup accepts configDurationMs parameter and emits config timing line", () => {
 		const t = createDevTerminal({
 			version: "1.2.0",
 			projectRoot: process.cwd(),
@@ -683,7 +683,7 @@ describe("v1.2.0 terminal output format regression tests", () => {
 		expect(configLine).toContain("291ms");
 	});
 
-	test("printStartup without configMs does not emit config timing line", () => {
+	test("printStartup without configDurationMs does not emit config timing line", () => {
 		const t = createDevTerminal({
 			version: "1.2.0",
 			projectRoot: process.cwd(),
@@ -800,31 +800,31 @@ describe("v1.2.0 terminal output format regression tests", () => {
 });
 
 describe("v1.2.0 config timing wiring regression tests", () => {
-	test("ForgeDevServerOptions includes optional configMs field", () => {
+	test("ForgeDevServerOptions includes optional configDurationMs field", () => {
 		const source = readFileSync(
 			resolvePackagePath("packages/rakta/src/forge/types.ts"),
 			"utf8",
 		);
-		expect(source).toContain("configMs");
-		expect(source).toContain("readonly configMs");
+		expect(source).toContain("configDurationMs");
+		expect(source).toContain("readonly configDurationMs");
 	});
 
-	test("dev.ts instruments configMs before calling startDevServer", () => {
+	test("dev.ts instruments configDurationMs before calling startDevServer", () => {
 		const source = readFileSync(
 			resolvePackagePath("packages/rakta/src/cli/dev.ts"),
 			"utf8",
 		);
-		expect(source).toContain("configStart");
-		expect(source).toContain("configMs");
+		expect(source).toContain("configStartTime");
+		expect(source).toContain("configDurationMs");
 		expect(source).toContain("Date.now()");
 	});
 
-	test("devServer.ts passes configMs to terminal.printStartup", () => {
+	test("devServer.ts passes configDurationMs to terminal.printStartup", () => {
 		const source = readFileSync(
 			resolvePackagePath("packages/rakta/src/forge/devServer.ts"),
 			"utf8",
 		);
-		expect(source).toContain("options.configMs");
+		expect(source).toContain("options.configDurationMs");
 		expect(source).toContain("printStartup");
 	});
 

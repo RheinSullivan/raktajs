@@ -7,9 +7,9 @@ import {
 import { loadConfig } from "../config/loadConfig";
 
 export async function importsGenerateCommand(
-	cwd: string = process.cwd(),
+	currentWorkingDirectory: string = process.cwd(),
 ): Promise<void> {
-	const config = await loadConfig(cwd);
+	const config = await loadConfig(currentWorkingDirectory);
 
 	if (!config.autoImport.enabled) {
 		console.warn(
@@ -19,7 +19,7 @@ export async function importsGenerateCommand(
 	}
 
 	const manifest = generateAutoImports({
-		frontendRoot: cwd,
+		frontendRoot: currentWorkingDirectory,
 		directories: config.autoImport.directories,
 		outputDirectory: config.autoImport.outputDirectory,
 		extensions: config.autoImport.extensions ?? [".ts", ".tsx", ".js", ".jsx"],

@@ -16,9 +16,9 @@ export interface ForgeDevServerOptions {
 	/**
 	 * How long the config file took to load and execute, in milliseconds.
 	 * Reported in the startup banner as:
-	 *   ✓ Running rakta.config.ts took <configMs>
+	 *   ✓ Running rakta.config.ts took <configDurationMs>
 	 */
-	readonly configMs?: number;
+	readonly configDurationMs?: number;
 }
 
 export interface ForgeBuildOptions {

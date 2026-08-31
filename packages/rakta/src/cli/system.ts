@@ -36,9 +36,11 @@ async function runProcess(command: string, args: string[]): Promise<number> {
 	return child.exited;
 }
 
-export async function analyzeCommand(cwd: string): Promise<void> {
-	const config = await loadConfig(cwd);
-	const outDir = join(cwd, config.build.outDir ?? "dist");
+export async function analyzeCommand(
+	currentWorkingDirectory: string,
+): Promise<void> {
+	const config = await loadConfig(currentWorkingDirectory);
+	const outDir = join(currentWorkingDirectory, config.build.outDir ?? "dist");
 	const report = inspectBuild({
 		outDir,
 		renderConfig: config.render,
@@ -47,13 +49,15 @@ export async function analyzeCommand(cwd: string): Promise<void> {
 	printInspectReport(report);
 }
 
-export async function benchmarkCommand(cwd: string): Promise<void> {
-	const config = await loadConfig(cwd);
+export async function benchmarkCommand(
+	currentWorkingDirectory: string,
+): Promise<void> {
+	const config = await loadConfig(currentWorkingDirectory);
 	const iterations = 1_000;
 	const started = performance.now();
 
 	for (let index = 0; index < iterations; index += 1) {
-		generateManifest(join(cwd, config.appDir));
+		generateManifest(join(currentWorkingDirectory, config.appDir));
 	}
 
 	const elapsedMs = performance.now() - started;
@@ -104,9 +108,9 @@ export async function formatCommand(): Promise<void> {
 
 export async function telemetryCommand(
 	mode: string | undefined,
-	cwd: string,
+	currentWorkingDirectory: string,
 ): Promise<void> {
-	const telemetryPath = join(cwd, TELEMETRY_FILE);
+	const telemetryPath = join(currentWorkingDirectory, TELEMETRY_FILE);
 	const current = existsSync(telemetryPath)
 		? (JSON.parse(readFileSync(telemetryPath, "utf-8")) as {
 				enabled?: boolean;
@@ -152,10 +156,10 @@ export async function telemetryCommand(
 export async function pluginCommand(
 	action: string | undefined,
 	name: string | undefined,
-	cwd: string,
+	currentWorkingDirectory: string,
 ): Promise<void> {
 	if (action === "list") {
-		const config = await loadConfig(cwd);
+		const config = await loadConfig(currentWorkingDirectory);
 		console.log("\n  Rakta plugin-capable features");
 		console.log("  ------------------------------------------------");
 		console.log(
@@ -170,7 +174,7 @@ export async function pluginCommand(
 	if (action === "create" && name !== undefined) {
 		const pluginName = name.replace(/^@/, "").replaceAll("/", "-");
 		writeIfNew(
-			join(cwd, "plugins", `${pluginName}.ts`),
+			join(currentWorkingDirectory, "plugins", `${pluginName}.ts`),
 			`import type { RaktaPlugin } from "raktajs/kernel";
 
 export const ${pluginName.replaceAll("-", "")}Plugin: RaktaPlugin = {
@@ -192,9 +196,9 @@ export const ${pluginName.replaceAll("-", "")}Plugin: RaktaPlugin = {
 
 export async function upgradeCommand(
 	targetVersion: string | undefined,
-	cwd: string,
+	currentWorkingDirectory: string,
 ): Promise<void> {
-	const packageJsonPath = join(cwd, "package.json");
+	const packageJsonPath = join(currentWorkingDirectory, "package.json");
 
 	if (!existsSync(packageJsonPath)) {
 		console.error("  Cannot find package.json in the current project.");
@@ -239,7 +243,7 @@ export async function upgradeCommand(
 export async function generateCommand(
 	target: string | undefined,
 	name: string | undefined,
-	cwd: string,
+	currentWorkingDirectory: string,
 ): Promise<void> {
 	if (target === "deployment") {
 		const selectedTarget = name ?? "static";
@@ -250,7 +254,7 @@ export async function generateCommand(
 			process.exit(1);
 		}
 
-		const config = await loadConfig(cwd);
+		const config = await loadConfig(currentWorkingDirectory);
 		const adapterOptions = {
 			appName: config.appName,
 			port: config.port,
@@ -262,7 +266,7 @@ export async function generateCommand(
 		const adapter = createDeploymentAdapter(selectedTarget, adapterOptions);
 
 		for (const file of adapter.files) {
-			writeIfNew(join(cwd, file.path), file.content);
+			writeIfNew(join(currentWorkingDirectory, file.path), file.content);
 		}
 
 		console.log(`  Deployment target: ${adapter.label}`);
@@ -276,6 +280,8 @@ export async function generateCommand(
 	console.log("  Usage: rakta generate deployment <target>");
 }
 
-export async function inspectCommand(cwd: string): Promise<void> {
-	await analyzeCommand(cwd);
+export async function inspectCommand(
+	currentWorkingDirectory: string,
+): Promise<void> {
+	await analyzeCommand(currentWorkingDirectory);
 }

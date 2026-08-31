@@ -103,8 +103,8 @@ export function buildHtmlShell(options: RendererOptions): string {
     </script>
     <script type="module">
       function hideSplash() {
-        const el = document.getElementById("rakta-loading");
-        if (el) el.classList.add("done");
+        const loadingElement = document.getElementById("rakta-loading");
+        if (loadingElement) loadingElement.classList.add("done");
       }
       document.addEventListener("rakta:mounted", hideSplash, { once: true });
       window.addEventListener("DOMContentLoaded", function () {

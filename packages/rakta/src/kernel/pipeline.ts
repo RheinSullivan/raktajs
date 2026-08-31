@@ -51,7 +51,9 @@ export function createStartupPipeline(): RaktaPipeline {
 		register(task) {
 			const list = getPhase(task.phase);
 			list.push(task);
-			list.sort((a, b) => (a.priority ?? 100) - (b.priority ?? 100));
+			list.sort(
+				(taskA, taskB) => (taskA.priority ?? 100) - (taskB.priority ?? 100),
+			);
 			tasksByPhase.set(task.phase, list);
 		},
 

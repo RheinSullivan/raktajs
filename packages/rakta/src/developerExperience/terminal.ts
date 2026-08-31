@@ -197,7 +197,7 @@ export class RaktaDevTerminal {
 	 *         ✓ Ready in 421ms
 	 *         ✓ Running rakta.config.ts took 291ms
 	 */
-	printStartup(localUrl: string, configMs?: number): void {
+	printStartup(localUrl: string, configDurationMs?: number): void {
 		const readyMs = Date.now() - this.#startedAt;
 		const glyph = bold(red(RAKTA_TERMINAL_GLYPH));
 		const version = bold(`Rakta.js ${this.#opts.version}`);
@@ -227,9 +227,9 @@ export class RaktaDevTerminal {
 			`${I1}${green("✓")} Ready in ${bold(this.#formatDuration(readyMs))}`,
 		);
 
-		if (configMs !== undefined && configMs >= 0) {
+		if (configDurationMs !== undefined && configDurationMs >= 0) {
 			console.log(
-				`${I1}${green("✓")} Running ${dim("rakta.config.ts")} took ${bold(this.#formatDuration(configMs))}`,
+				`${I1}${green("✓")} Running ${dim("rakta.config.ts")} took ${bold(this.#formatDuration(configDurationMs))}`,
 			);
 		}
 

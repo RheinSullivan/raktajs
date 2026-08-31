@@ -5,10 +5,12 @@ import { readBuildManifest } from "../forge/buildManifest";
 import { requiresServer } from "../render/modes";
 import { startProductionServer } from "../runtime/server";
 
-export async function startCommand(cwd: string = process.cwd()): Promise<void> {
-	const projectConfig = await loadConfig(cwd);
+export async function startCommand(
+	currentWorkingDirectory: string = process.cwd(),
+): Promise<void> {
+	const projectConfig = await loadConfig(currentWorkingDirectory);
 	const outputDirectory = projectConfig.build.outDir ?? "dist";
-	const outDir = join(cwd, outputDirectory);
+	const outDir = join(currentWorkingDirectory, outputDirectory);
 
 	// Check if a build exists
 	if (!existsSync(outDir)) {
@@ -60,9 +62,9 @@ export async function startCommand(cwd: string = process.cwd()): Promise<void> {
 	);
 
 	const { url } = await startProductionServer({
-		projectRoot: cwd,
-		appDir: join(cwd, projectConfig.appDir),
-		publicDir: join(cwd, projectConfig.publicDir),
+		projectRoot: currentWorkingDirectory,
+		appDir: join(currentWorkingDirectory, projectConfig.appDir),
+		publicDir: join(currentWorkingDirectory, projectConfig.publicDir),
 		outDir,
 		appName: projectConfig.appName,
 		seo: projectConfig.seo,

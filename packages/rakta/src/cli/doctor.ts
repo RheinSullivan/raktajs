@@ -10,9 +10,9 @@ interface CheckResult {
 }
 
 export async function doctorCommand(
-	cwd: string = process.cwd(),
+	currentWorkingDirectory: string = process.cwd(),
 ): Promise<void> {
-	const config = await loadConfig(cwd);
+	const config = await loadConfig(currentWorkingDirectory);
 
 	const checks: CheckResult[] = [
 		{
@@ -23,32 +23,36 @@ export async function doctorCommand(
 		{
 			label: "rakta.config.ts",
 			passed:
-				existsSync(join(cwd, "rakta.config.ts")) ||
-				existsSync(join(cwd, "rakta.config.js")),
+				existsSync(join(currentWorkingDirectory, "rakta.config.ts")) ||
+				existsSync(join(currentWorkingDirectory, "rakta.config.js")),
 		},
 		{
 			label: `app/ directory (${config.appDir})`,
-			passed: existsSync(join(cwd, config.appDir)),
+			passed: existsSync(join(currentWorkingDirectory, config.appDir)),
 		},
 		{
 			label: "app/page.tsx (root page)",
-			passed: existsSync(join(cwd, config.appDir, "page.tsx")),
+			passed: existsSync(
+				join(currentWorkingDirectory, config.appDir, "page.tsx"),
+			),
 		},
 		{
 			label: "app/layout.tsx (root layout)",
-			passed: existsSync(join(cwd, config.appDir, "layout.tsx")),
+			passed: existsSync(
+				join(currentWorkingDirectory, config.appDir, "layout.tsx"),
+			),
 		},
 		{
 			label: `public/ directory (${config.publicDir})`,
-			passed: existsSync(join(cwd, config.publicDir)),
+			passed: existsSync(join(currentWorkingDirectory, config.publicDir)),
 		},
 		{
 			label: "package.json",
-			passed: existsSync(join(cwd, "package.json")),
+			passed: existsSync(join(currentWorkingDirectory, "package.json")),
 		},
 		{
 			label: "tsconfig.json",
-			passed: existsSync(join(cwd, "tsconfig.json")),
+			passed: existsSync(join(currentWorkingDirectory, "tsconfig.json")),
 		},
 	];
 

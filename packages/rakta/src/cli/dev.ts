@@ -24,6 +24,6 @@ export async function devCommand(
 		seo: config.seo,
 		renderConfig: config.render,
 		devTools: devToolsEnabled,
-		configMs: configDurationMilliseconds,
+		configDurationMs: configDurationMilliseconds,
 	});
 }

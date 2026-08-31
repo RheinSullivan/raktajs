@@ -34,7 +34,7 @@ const RESET = "\x1b[0m";
 const cliArgs = process.argv.slice(2);
 const selectedCommand = cliArgs[0] ?? "help";
 const firstArgument = cliArgs[1];
-const cwd = process.cwd();
+const currentWorkingDirectory = process.cwd();
 
 const BANNER = [
 	"",
@@ -115,11 +115,11 @@ function getRequiredArgument(
 }
 
 async function runForgeInspect(): Promise<void> {
-	const projectConfig = await loadConfig(cwd);
+	const projectConfig = await loadConfig(currentWorkingDirectory);
 	const outputDirectory = projectConfig.build.outDir ?? "dist";
 
 	const inspectReport = inspectBuild({
-		outDir: join(cwd, outputDirectory),
+		outDir: join(currentWorkingDirectory, outputDirectory),
 		renderConfig: projectConfig.render,
 	});
 
@@ -137,22 +137,22 @@ async function main(): Promise<void> {
 			break;
 
 		case "dev":
-			await devCommand(cwd);
+			await devCommand(currentWorkingDirectory);
 			break;
 
 		case "build":
-			await buildCommand(cwd, cliArgs.slice(1));
+			await buildCommand(currentWorkingDirectory, cliArgs.slice(1));
 			if (cliArgs.includes("--analyze")) {
-				await analyzeCommand(cwd);
+				await analyzeCommand(currentWorkingDirectory);
 			}
 			break;
 
 		case "start":
-			await startCommand(cwd);
+			await startCommand(currentWorkingDirectory);
 			break;
 
 		case "routes":
-			await routesCommand(cwd);
+			await routesCommand(currentWorkingDirectory);
 			break;
 
 		case "create":
@@ -167,7 +167,7 @@ async function main(): Promise<void> {
 				await makeCommand(
 					target,
 					getRequiredArgument(`${selectedCommand} ${target}`, secondArgument),
-					cwd,
+					currentWorkingDirectory,
 				);
 				break;
 			}
@@ -186,7 +186,7 @@ async function main(): Promise<void> {
 			await makeCommand(
 				"page",
 				getRequiredArgument("make:page", firstArgument),
-				cwd,
+				currentWorkingDirectory,
 			);
 			break;
 
@@ -194,7 +194,7 @@ async function main(): Promise<void> {
 			await makeCommand(
 				"layout",
 				getRequiredArgument("make:layout", firstArgument),
-				cwd,
+				currentWorkingDirectory,
 			);
 			break;
 
@@ -202,7 +202,7 @@ async function main(): Promise<void> {
 			await makeCommand(
 				"component",
 				getRequiredArgument("make:component", firstArgument),
-				cwd,
+				currentWorkingDirectory,
 			);
 			break;
 
@@ -210,20 +210,20 @@ async function main(): Promise<void> {
 			await makeCommand(
 				"api",
 				getRequiredArgument("make:api", firstArgument),
-				cwd,
+				currentWorkingDirectory,
 			);
 			break;
 
 		case "seo:generate":
-			await seoGenerateCommand(cwd);
+			await seoGenerateCommand(currentWorkingDirectory);
 			break;
 
 		case "imports:generate":
-			await importsGenerateCommand(cwd);
+			await importsGenerateCommand(currentWorkingDirectory);
 			break;
 
 		case "rpc:types":
-			await rpcTypesCommand(cwd);
+			await rpcTypesCommand(currentWorkingDirectory);
 			break;
 
 		case "forge:inspect":
@@ -231,15 +231,15 @@ async function main(): Promise<void> {
 			break;
 
 		case "analyze":
-			await analyzeCommand(cwd);
+			await analyzeCommand(currentWorkingDirectory);
 			break;
 
 		case "benchmark":
-			await benchmarkCommand(cwd);
+			await benchmarkCommand(currentWorkingDirectory);
 			break;
 
 		case "upgrade":
-			await upgradeCommand(firstArgument, cwd);
+			await upgradeCommand(firstArgument, currentWorkingDirectory);
 			break;
 
 		case "check":
@@ -255,23 +255,31 @@ async function main(): Promise<void> {
 			break;
 
 		case "generate":
-			await generateCommand(firstArgument, secondArgument, cwd);
+			await generateCommand(
+				firstArgument,
+				secondArgument,
+				currentWorkingDirectory,
+			);
 			break;
 
 		case "inspect":
-			await inspectCommand(cwd);
+			await inspectCommand(currentWorkingDirectory);
 			break;
 
 		case "plugin":
-			await pluginCommand(firstArgument, secondArgument, cwd);
+			await pluginCommand(
+				firstArgument,
+				secondArgument,
+				currentWorkingDirectory,
+			);
 			break;
 
 		case "telemetry":
-			await telemetryCommand(firstArgument, cwd);
+			await telemetryCommand(firstArgument, currentWorkingDirectory);
 			break;
 
 		case "deploy":
-			await deployCommand(cwd, cliArgs.slice(1));
+			await deployCommand(currentWorkingDirectory, cliArgs.slice(1));
 			break;
 
 		case "tide:render":
@@ -281,7 +289,7 @@ async function main(): Promise<void> {
 			break;
 
 		case "doctor":
-			await doctorCommand(cwd);
+			await doctorCommand(currentWorkingDirectory);
 			break;
 
 		default:

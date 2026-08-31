@@ -4,9 +4,9 @@ import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 export async function rpcTypesCommand(
-	cwd: string = process.cwd(),
+	currentWorkingDirectory: string = process.cwd(),
 ): Promise<void> {
-	const sharedTypesDir = join(cwd, "..", "shared", "types");
+	const sharedTypesDir = join(currentWorkingDirectory, "..", "shared", "types");
 
 	if (!existsSync(sharedTypesDir)) {
 		mkdirSync(sharedTypesDir, { recursive: true });

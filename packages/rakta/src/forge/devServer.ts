@@ -787,7 +787,7 @@ export async function startDevServer(
 	}
 
 	// Print startup banner - version, local/network URLs, env files, ready time, config timing.
-	terminal.printStartup(localUrl, options.configMs);
+	terminal.printStartup(localUrl, options.configDurationMs);
 
 	try {
 		watch(options.projectRoot, { recursive: true }, (_eventType, filename) => {

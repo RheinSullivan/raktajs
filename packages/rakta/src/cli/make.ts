@@ -22,17 +22,20 @@ function writeIfNew(filePath: string, content: string): void {
 	console.log(`  Created: ${filePath}`);
 }
 
-function getRelativeFilePath(filePath: string, cwd: string): string {
-	return filePath.replace(`${cwd}/`, "");
+function getRelativeFilePath(
+	filePath: string,
+	currentWorkingDirectory: string,
+): string {
+	return filePath.replace(`${currentWorkingDirectory}/`, "");
 }
 
 export async function makeCommand(
 	target: MakeTarget,
 	name: string,
-	cwd: string = process.cwd(),
+	currentWorkingDirectory: string = process.cwd(),
 ): Promise<void> {
-	const config = await loadConfig(cwd);
-	const appDir = join(cwd, config.appDir);
+	const config = await loadConfig(currentWorkingDirectory);
+	const appDir = join(currentWorkingDirectory, config.appDir);
 	const componentName = toPascalCase(name);
 
 	switch (target) {
@@ -40,7 +43,7 @@ export async function makeCommand(
 			const filePath = join(appDir, name, "page.tsx");
 			writeIfNew(
 				filePath,
-				`// ${getRelativeFilePath(filePath, cwd)}
+				`// ${getRelativeFilePath(filePath, currentWorkingDirectory)}
 import React from "react";
 import type { Metadata } from "rakta/seo";
 
@@ -64,7 +67,7 @@ export default function ${componentName}Page() {
 			const filePath = join(appDir, name, "layout.tsx");
 			writeIfNew(
 				filePath,
-				`// ${getRelativeFilePath(filePath, cwd)}
+				`// ${getRelativeFilePath(filePath, currentWorkingDirectory)}
 import React from "react";
 import type { LayoutProps } from "rakta/router";
 
@@ -77,7 +80,12 @@ export default function ${componentName}Layout({ children }: LayoutProps) {
 		}
 
 		case "component": {
-			const filePath = join(cwd, "components", "ui", `${componentName}.tsx`);
+			const filePath = join(
+				currentWorkingDirectory,
+				"components",
+				"ui",
+				`${componentName}.tsx`,
+			);
 			writeIfNew(
 				filePath,
 				`// components/ui/${componentName}.tsx
@@ -102,7 +110,7 @@ export default ${componentName};
 			const filePath = join(appDir, "api", name, "route.ts");
 			writeIfNew(
 				filePath,
-				`// ${getRelativeFilePath(filePath, cwd)}
+				`// ${getRelativeFilePath(filePath, currentWorkingDirectory)}
 import type { RouteContext } from "rakta/router";
 
 export async function GET(_request: Request, context: RouteContext): Promise<Response> {

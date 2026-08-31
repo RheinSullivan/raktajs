@@ -5,10 +5,10 @@ import { join } from "node:path";
 import { loadConfig } from "../config/loadConfig";
 
 export async function seoGenerateCommand(
-	cwd: string = process.cwd(),
+	currentWorkingDirectory: string = process.cwd(),
 ): Promise<void> {
-	const config = await loadConfig(cwd);
-	const appDir = join(cwd, config.appDir);
+	const config = await loadConfig(currentWorkingDirectory);
+	const appDir = join(currentWorkingDirectory, config.appDir);
 
 	const sitemapDir = join(appDir, "api", "sitemap.xml");
 	const robotsDir = join(appDir, "api", "robots.txt");

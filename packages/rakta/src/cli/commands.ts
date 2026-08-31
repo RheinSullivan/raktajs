@@ -19,13 +19,13 @@ export interface DoctorReport {
 }
 
 export async function doctorCommand(
-	cwd: string = process.cwd(),
+	currentWorkingDirectory: string = process.cwd(),
 ): Promise<DoctorReport> {
 	const start = Date.now();
 	const checks: DoctorCheck[] = [];
 
 	// Check package.json exists
-	const pkgPath = join(cwd, "package.json");
+	const pkgPath = join(currentWorkingDirectory, "package.json");
 	if (existsSync(pkgPath)) {
 		checks.push({ name: "package.json", status: "ok", message: "Found." });
 	} else {
@@ -37,8 +37,8 @@ export async function doctorCommand(
 	}
 
 	// Check rakta.config.ts
-	const configTs = existsSync(join(cwd, "rakta.config.ts"));
-	const configJs = existsSync(join(cwd, "rakta.config.js"));
+	const configTs = existsSync(join(currentWorkingDirectory, "rakta.config.ts"));
+	const configJs = existsSync(join(currentWorkingDirectory, "rakta.config.js"));
 	if (configTs || configJs) {
 		checks.push({ name: "rakta.config", status: "ok", message: "Found." });
 	} else {
@@ -50,7 +50,7 @@ export async function doctorCommand(
 	}
 
 	// Check tsconfig.json
-	if (existsSync(join(cwd, "tsconfig.json"))) {
+	if (existsSync(join(currentWorkingDirectory, "tsconfig.json"))) {
 		checks.push({ name: "tsconfig.json", status: "ok", message: "Found." });
 	} else {
 		checks.push({
@@ -61,7 +61,7 @@ export async function doctorCommand(
 	}
 
 	// Check app directory
-	if (existsSync(join(cwd, "app"))) {
+	if (existsSync(join(currentWorkingDirectory, "app"))) {
 		checks.push({ name: "app/", status: "ok", message: "Found." });
 	} else {
 		checks.push({
@@ -72,7 +72,7 @@ export async function doctorCommand(
 	}
 
 	// Check node_modules
-	if (existsSync(join(cwd, "node_modules"))) {
+	if (existsSync(join(currentWorkingDirectory, "node_modules"))) {
 		checks.push({ name: "node_modules", status: "ok", message: "Installed." });
 	} else {
 		checks.push({
@@ -84,7 +84,12 @@ export async function doctorCommand(
 
 	// Check raktajs version
 	try {
-		const nmPkg = join(cwd, "node_modules", "raktajs", "package.json");
+		const nmPkg = join(
+			currentWorkingDirectory,
+			"node_modules",
+			"raktajs",
+			"package.json",
+		);
 		if (existsSync(nmPkg)) {
 			const pkg = JSON.parse(readFileSync(nmPkg, "utf-8")) as {
 				version: string;
@@ -123,11 +128,11 @@ export interface AnalyzeReport {
 }
 
 export async function analyzeCommand(
-	cwd: string = process.cwd(),
+	currentWorkingDirectory: string = process.cwd(),
 	outDir = "dist",
 ): Promise<AnalyzeReport> {
 	const start = Date.now();
-	const buildDir = join(cwd, outDir);
+	const buildDir = join(currentWorkingDirectory, outDir);
 	const files: { path: string; sizeBytes: number }[] = [];
 
 	if (!existsSync(buildDir)) {
@@ -219,8 +224,10 @@ export interface InspectReport {
 	readonly devDependencies: Readonly<Record<string, string>>;
 }
 
-export function inspectCommand(cwd: string = process.cwd()): InspectReport {
-	const pkgPath = join(cwd, "package.json");
+export function inspectCommand(
+	currentWorkingDirectory: string = process.cwd(),
+): InspectReport {
+	const pkgPath = join(currentWorkingDirectory, "package.json");
 
 	if (!existsSync(pkgPath)) {
 		return {
@@ -352,10 +359,12 @@ export interface CheckResult {
 }
 
 export async function checkCommand(
-	cwd: string = process.cwd(),
+	currentWorkingDirectory: string = process.cwd(),
 ): Promise<CheckResult> {
 	const start = Date.now();
-	const hasTsConfig = existsSync(join(cwd, "tsconfig.json"));
+	const hasTsConfig = existsSync(
+		join(currentWorkingDirectory, "tsconfig.json"),
+	);
 
 	if (!hasTsConfig) {
 		return {
@@ -383,9 +392,9 @@ export interface TelemetryConfig {
 const TELEMETRY_FILE = ".rakta-telemetry.json";
 
 export function readTelemetryConfig(
-	cwd: string = process.cwd(),
+	currentWorkingDirectory: string = process.cwd(),
 ): TelemetryConfig {
-	const filePath = join(cwd, TELEMETRY_FILE);
+	const filePath = join(currentWorkingDirectory, TELEMETRY_FILE);
 
 	if (!existsSync(filePath)) {
 		return { enabled: true }; // enabled by default
@@ -400,9 +409,9 @@ export function readTelemetryConfig(
 
 export function setTelemetryEnabled(
 	enabled: boolean,
-	cwd: string = process.cwd(),
+	currentWorkingDirectory: string = process.cwd(),
 ): void {
-	const filePath = join(cwd, TELEMETRY_FILE);
-	const existing = readTelemetryConfig(cwd);
+	const filePath = join(currentWorkingDirectory, TELEMETRY_FILE);
+	const existing = readTelemetryConfig(currentWorkingDirectory);
 	writeFileSync(filePath, JSON.stringify({ ...existing, enabled }, null, 2));
 }
