@@ -42,7 +42,7 @@ export default function Header({
 		});
 	}, [isMuted, onMuteToggle]);
 
-	// Navigation items — href is the scroll target id or route path.
+	// Navigation items - href is the scroll target id or route path.
 	// The active indicator is a 2px bottom border on the link, not a hash symbol.
 	const navItems = [
 		{ label: "SHOWCASE", href: "features" },
@@ -75,7 +75,7 @@ export default function Header({
 					</span>
 				</click>
 
-				{/* Center nav — active item gets a bottom-border underline, not a "#" prefix */}
+				{/* Center nav - active item gets a bottom-border underline, not a "#" prefix */}
 				<nav className="hidden md:flex items-center gap-6">
 					{navItems.map((item) => {
 						const isExternal =
@@ -174,7 +174,7 @@ export default function Header({
 						{lang}
 					</button>
 
-					{/* GitHub button — solid bg-brand-pink, not transparent */}
+					{/* GitHub button - solid bg-brand-pink, not transparent */}
 					<a
 						href="https://github.com/RheinSullivan/raktajs"
 						target="_blank"

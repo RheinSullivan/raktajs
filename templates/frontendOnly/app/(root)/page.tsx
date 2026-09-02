@@ -117,7 +117,9 @@ export default function App() {
 		}, solidaritySectionRef);
 
 		return () => animationContext.revert();
-	}, []); // Dynamic Theme Styling Variables based on aestheticUnit
+	}, []);
+
+	// Dynamic Theme Styling Variables based on aestheticUnit
 	const containerBorderClass =
 		aestheticUnit === "RETRO-CYBER"
 			? "border-2 border-fuchsia-600 p-1 bg-fuchsia-950/20 shadow-[0_0_20px_rgba(240,46,170,0.5)] transition-all duration-300"
@@ -904,7 +906,17 @@ export default function App() {
 							<div className="flex items-center gap-3">
 								<span className="font-mono text-[10px] text-brand-pink tracking-widest font-bold uppercase flex items-center gap-1.5">
 									<span className="inline-flex items-center">
-										<RiHandHeartFill size={14} />
+										<svg
+											stroke="currentColor"
+											fill="currentColor"
+											strokeWidth="0"
+											viewBox="0 0 24 24"
+											height="14"
+											width="14"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path d="M9.3349 11.5022L11.5049 11.5027C13.9902 11.5027 16.0049 13.5174 16.0049 16.0027L9.00388 16.0018L9.00488 17.0027L17.0049 17.0019V16.0027C17.0049 14.9202 16.6867 13.8996 16.1188 13.0019L19.0049 13.0027C20.9972 13.0027 22.7173 14.1679 23.521 15.8541C21.1562 18.9747 17.3268 21.0027 13.0049 21.0027C10.2436 21.0027 7.90437 20.4121 6.00447 19.3779L6.00592 10.0737C7.25147 10.2521 8.39122 10.7583 9.3349 11.5022ZM4.00488 9.00268C4.51772 9.00268 4.94039 9.38872 4.99816 9.88606L5.00488 10.0018V19.0027C5.00488 19.555 4.55717 20.0027 4.00488 20.0027H2.00488C1.4526 20.0027 1.00488 19.555 1.00488 19.0027V10.0027C1.00488 9.45039 1.4526 9.00268 2.00488 9.00268H4.00488ZM13.6513 3.57806L14.0046 3.93183L14.3584 3.57806C15.3347 2.60175 16.9177 2.60175 17.894 3.57806C18.8703 4.55437 18.8703 6.13728 17.894 7.11359L14.0049 11.0027L10.1158 7.11359C9.13948 6.13728 9.13948 4.55437 10.1158 3.57806C11.0921 2.60175 12.675 2.60175 13.6513 3.57806Z" />
+										</svg>
 									</span>
 									04 / SOLIDARITY
 								</span>
@@ -959,35 +971,75 @@ export default function App() {
 								{isCopiedDonation ? (
 									<>
 										<span className="text-emerald-400 inline-flex items-center">
-											<RiCheckFill size={16} />
+											<svg
+												stroke="currentColor"
+												fill="currentColor"
+												strokeWidth="0"
+												viewBox="0 0 24 24"
+												height="16"
+												width="16"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path d="M16.4524 8.22183L11.5019 13.1709L8.67421 10.3431L7.25999 11.7574L11.5026 16L17.8666 9.63604L16.4524 8.22183Z" />
+											</svg>
 										</span>
 										<span className="text-emerald-400">COPIED</span>
 									</>
 								) : (
 									<>
 										<span className="text-zinc-400 inline-flex items-center">
-											<RiFileCopyFill size={14} />
+											<svg
+												stroke="currentColor"
+												fill="currentColor"
+												strokeWidth="0"
+												viewBox="0 0 24 24"
+												height="14"
+												width="14"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path d="M6.9998 6V3C6.9998 2.44772 7.44752 2 7.9998 2H19.9998C20.5521 2 20.9998 2.44772 20.9998 3V17C20.9998 17.5523 20.5521 18 19.9998 18H16.9998V20.9991C16.9998 21.5519 16.5499 22 15.993 22H4.00666C3.45059 22 3 21.5554 3 20.9991L3.0026 7.00087C3.0027 6.44811 3.45264 6 4.00942 6H6.9998ZM8.9998 6H16.9998V16H18.9998V4H8.9998V6Z" />
+											</svg>
 										</span>
 										<span>COPY LINK</span>
 									</>
 								)}
 							</button>
 
-							<click
-								to="https://buymeacoffee.com/rheinsullivan"
+							<a
+								href="https://buymeacoffee.com/rheinsullivan"
 								target="_blank"
 								rel="noopener noreferrer"
 								onClick={() => playJumpSound()}
 								className="flex items-center justify-center gap-2 font-mono text-[11px] font-extrabold px-6 py-3.5 bg-brand-pink text-white hover:bg-white hover:text-black uppercase tracking-wider transition-all active:scale-95"
 							>
 								<span className="inline-flex items-center">
-									<RiCupFill size={16} />
+									<svg
+										stroke="currentColor"
+										fill="currentColor"
+										strokeWidth="0"
+										viewBox="0 0 24 24"
+										height="16"
+										width="16"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path d="M5 3H20C21.1046 3 22 3.89543 22 5V8C22 9.10457 21.1046 10 20 10H18V13C18 15.2091 16.2091 17 14 17H8C5.79086 17 4 15.2091 4 13V4C4 3.44772 4.44772 3 5 3ZM18 5V8H20V5H18ZM2 19H20V21H2V19Z" />
+									</svg>
 								</span>
 								<span>DONATE NOW</span>
 								<span className="inline-flex items-center">
-									<RiArrowRightLine size={14} />
+									<svg
+										stroke="currentColor"
+										fill="currentColor"
+										strokeWidth="0"
+										viewBox="0 0 24 24"
+										height="14"
+										width="14"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z" />
+									</svg>
 								</span>
-							</click>
+							</a>
 						</div>
 					</div>
 
@@ -998,7 +1050,17 @@ export default function App() {
 							<div>
 								<span className="font-mono text-[10px] text-brand-pink group-hover:text-black mb-8 block tracking-widest font-bold uppercase flex items-center gap-1.5">
 									<span className="inline-flex items-center">
-										<RiCupFill size={12} />
+										<svg
+											stroke="currentColor"
+											fill="currentColor"
+											strokeWidth="0"
+											viewBox="0 0 24 24"
+											height="12"
+											width="12"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path d="M5 3H20C21.1046 3 22 3.89543 22 5V8C22 9.10457 21.1046 10 20 10H18V13C18 15.2091 16.2091 17 14 17H8C5.79086 17 4 15.2091 4 13V4C4 3.44772 4.44772 3 5 3ZM18 5V8H20V5H18ZM2 19H20V21H2V19Z" />
+										</svg>
 									</span>
 									OFFICIAL CHANNEL
 								</span>
@@ -1013,7 +1075,17 @@ export default function App() {
 							</div>
 							<div className="font-mono text-[10px] font-extrabold tracking-wider flex items-center gap-2 text-zinc-400 group-hover:text-black">
 								<span className="text-emerald-400 group-hover:text-black inline-flex items-center">
-									<RiShieldCheckFill size={14} />
+									<svg
+										stroke="currentColor"
+										fill="currentColor"
+										strokeWidth="0"
+										viewBox="0 0 24 24"
+										height="14"
+										width="14"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path d="M12 1L20.2169 2.82598C20.6745 2.92766 21 3.33347 21 3.80217V13.7889C21 15.795 19.9974 17.6684 18.3282 18.7812L12 23L5.6718 18.7812C4.00261 17.6684 3 15.795 3 13.7889V3.80217C3 3.33347 3.32553 2.92766 3.78307 2.82598L12 1ZM11.2756 14.5858L8.27562 11.5858L9.68983 10.1716L11.2756 11.7574L15.2756 7.75736L16.6898 9.17157L11.2756 14.5858Z" />
+									</svg>
 								</span>
 								<span>VERIFIED REPOSITORY CHANNEL</span>
 							</div>
@@ -1024,7 +1096,17 @@ export default function App() {
 							<div>
 								<span className="font-mono text-[10px] text-brand-pink group-hover:text-black mb-8 block tracking-widest font-bold uppercase flex items-center gap-1.5">
 									<span className="inline-flex items-center">
-										<RiHeartFill size={12} />
+										<svg
+											stroke="currentColor"
+											fill="currentColor"
+											strokeWidth="0"
+											viewBox="0 0 24 24"
+											height="12"
+											width="12"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path d="M20.2427 4.7574C21.3679 5.88258 22 7.4087 22 8.99999C22 10.5913 21.3679 12.1174 20.2427 13.2426L13.2427 20.2426C13.1174 20.3679 12.9913 20.4913 12.8642 20.6129C10.6235 22.5705 7.13824 22.5705 4.89748 20.6129C2.65672 18.6554 2.36539 15.2911 4.00311 13.0011L3.99999 12.9979L11 5.99793C12.1046 4.89336 13.8954 4.89336 15 5.99793C16.1046 7.10249 16.1046 8.89335 15 9.99791L8.17157 16.8263L9.58578 18.2405L16.4142 11.4121C18.1953 9.63099 18.1953 6.73484 16.4142 4.95368C14.633 3.17253 11.7369 3.17253 9.95578 4.95368L3.12735 11.7821C0.65603 14.7491 1.05063 19.2681 4.13139 21.7552C7.21215 24.2422 11.788 24.2422 14.8688 21.7552C15.0784 21.5857 15.2799 21.4042 15.4727 21.2114L22.4727 14.2114C24.0358 12.6482 24.8984 10.5565 24.8984 8.38278C24.8984 6.20905 24.0358 4.11741 22.4727 2.55423C20.9095 0.991046 18.8179 0.128449 16.6441 0.128449C14.4704 0.128449 12.3788 0.991046 10.8156 2.55423L9.40138 3.96844L10.8156 5.38266L12.2298 3.96844C13.3551 2.84327 14.8812 2.21121 16.4725 2.21121C18.0638 2.21121 19.59 2.84327 20.7152 3.96844L20.2427 4.7574Z" />
+										</svg>
 									</span>
 									DIRECT ALLOCATION
 								</span>
@@ -1038,7 +1120,17 @@ export default function App() {
 							</div>
 							<div className="font-mono text-[10px] font-extrabold tracking-wider flex items-center gap-2 text-zinc-400 group-hover:text-black">
 								<span className="text-brand-pink group-hover:text-black inline-flex items-center">
-									<RiHeartFill size={14} />
+									<svg
+										stroke="currentColor"
+										fill="currentColor"
+										strokeWidth="0"
+										viewBox="0 0 24 24"
+										height="14"
+										width="14"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path d="M20.2427 4.7574C21.3679 5.88258 22 7.4087 22 8.99999C22 10.5913 21.3679 12.1174 20.2427 13.2426L13.2427 20.2426C13.1174 20.3679 12.9913 20.4913 12.8642 20.6129C10.6235 22.5705 7.13824 22.5705 4.89748 20.6129C2.65672 18.6554 2.36539 15.2911 4.00311 13.0011L3.99999 12.9979L11 5.99793C12.1046 4.89336 13.8954 4.89336 15 5.99793C16.1046 7.10249 16.1046 8.89335 15 9.99791L8.17157 16.8263L9.58578 18.2405L16.4142 11.4121C18.1953 9.63099 18.1953 6.73484 16.4142 4.95368C14.633 3.17253 11.7369 3.17253 9.95578 4.95368L3.12735 11.7821C0.65603 14.7491 1.05063 19.2681 4.13139 21.7552C7.21215 24.2422 11.788 24.2422 14.8688 21.7552C15.0784 21.5857 15.2799 21.4042 15.4727 21.2114L22.4727 14.2114C24.0358 12.6482 24.8984 10.5565 24.8984 8.38278C24.8984 6.20905 24.0358 4.11741 22.4727 2.55423C20.9095 0.991046 18.8179 0.128449 16.6441 0.128449C14.4704 0.128449 12.3788 0.991046 10.8156 2.55423L9.40138 3.96844L10.8156 5.38266L12.2298 3.96844C13.3551 2.84327 14.8812 2.21121 16.4725 2.21121C18.0638 2.21121 19.59 2.84327 20.7152 3.96844L20.2427 4.7574Z" />
+									</svg>
 								</span>
 								<span>PRIORITY HUMANITARIAN AID</span>
 							</div>
@@ -1049,7 +1141,17 @@ export default function App() {
 							<div>
 								<span className="font-mono text-[10px] text-brand-pink group-hover:text-black mb-8 block tracking-widest font-bold uppercase flex items-center gap-1.5">
 									<span className="inline-flex items-center">
-										<RiGlobalFill size={12} />
+										<svg
+											stroke="currentColor"
+											fill="currentColor"
+											strokeWidth="0"
+											viewBox="0 0 24 24"
+											height="12"
+											width="12"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM9.71002 19.6674C8.74743 17.6259 8.15732 15.3742 8.02731 13H4.06189C4.458 16.1765 6.71639 18.7747 9.71002 19.6674ZM10.0307 13C10.1811 15.4388 10.8778 17.7297 12 19.752C13.1222 17.7297 13.8189 15.4388 13.9693 13H10.0307ZM19.9381 13H15.9727C15.8427 15.3742 15.2526 17.6259 14.29 19.6674C17.2836 18.7747 19.542 16.1765 19.9381 13ZM4.06189 11H8.02731C8.15732 8.62577 8.74743 6.37407 9.71002 4.33256C6.71639 5.22533 4.458 7.8235 4.06189 11ZM10.0307 11H13.9693C13.8189 8.56122 13.1222 6.27025 12 4.24799C10.8778 6.27025 10.1811 8.56122 10.0307 11ZM14.29 4.33256C15.2526 6.37407 15.8427 8.62577 15.9727 11H19.9381C19.542 7.8235 17.2836 5.22533 14.29 4.33256Z" />
+										</svg>
 									</span>
 									INFRASTRUCTURE
 								</span>
@@ -1063,7 +1165,17 @@ export default function App() {
 							</div>
 							<div className="font-mono text-[10px] font-extrabold tracking-wider flex items-center gap-2 text-zinc-400 group-hover:text-black">
 								<span className="text-zinc-400 group-hover:text-black inline-flex items-center">
-									<RiSparklingFill size={14} />
+									<svg
+										stroke="currentColor"
+										fill="currentColor"
+										strokeWidth="0"
+										viewBox="0 0 24 24"
+										height="14"
+										width="14"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path d="M12.0049 2.00293C17.3923 2.00293 21.8114 6.2042 22.1738 11.5219L21.0639 10.412C20.6734 10.0215 20.0402 10.0215 19.6497 10.412C19.2592 10.8025 19.2592 11.4357 19.6497 11.8262L22.2355 14.412L24.8213 11.8262C25.2118 11.4357 25.2118 10.8025 24.8213 10.412C24.4308 10.0215 23.7976 10.0215 23.4071 10.412L22.4996 11.3195C22.0859 5.48074 17.4236 0.802929 11.7549 0.802929C9.98981 0.802929 8.32787 1.22846 6.85961 1.98204L8.02606 3.87729C9.16269 3.34479 10.4281 3.05293 11.7549 3.05293C11.8382 3.05293 11.9214 3.05398 12.0044 3.05606L12.0049 2.00293ZM3.57568 11.8263L1.63451 13.7674C1.24399 14.1579 1.24399 14.7911 1.63451 15.1816C2.02504 15.5722 2.65821 15.5722 3.04873 15.1816L4.50049 13.7299C4.91418 19.5686 9.57649 24.2464 15.2451 24.2464C17.0103 24.2464 18.6722 23.8209 20.1405 23.0673L18.974 21.172C17.8374 21.7046 16.572 21.9964 15.2451 21.9964C15.1618 21.9964 15.0786 21.9954 14.9956 21.9933L14.9951 23.0464C9.60777 23.0464 5.18868 18.8451 4.82628 13.5274L5.93619 14.6373C6.32671 15.0279 6.95988 15.0279 7.3504 14.6373C7.74093 14.2468 7.74093 13.6136 7.3504 13.2231L3.57568 11.8263Z" />
+									</svg>
 								</span>
 								<span>NO PERSONAL PROFIT</span>
 							</div>

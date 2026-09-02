@@ -158,7 +158,7 @@ export default function DonationSection({
 						)}
 					</button>
 
-					{/* Donate Now — native <a> tag, not <click>, because it opens external URL */}
+					{/* Donate Now - native <a> tag, not <click>, because it opens external URL */}
 					<a
 						href="https://buymeacoffee.com/rheinsullivan"
 						target="_blank"
