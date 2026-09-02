@@ -1,25 +1,25 @@
 {
-  "name": "my-rakta-fullstack-app",
-  "version": "1.2.3",
-  "private": true,
-  "type": "module",
-  "workspaces": [
-    "frontend",
-    "backend",
-    "shared"
-  ],
-  "scripts": {
-    "dev": "bun run scripts/dev.ts",
-    "dev:frontend": "bun --cwd frontend run dev",
-    "dev:backend": "bun --cwd backend run dev",
-    "build:frontend": "bun --cwd frontend run build",
-    "build:backend": "bun --cwd backend run build",
-    "build": "bun run build:frontend && bun run build:backend",
-    "start": "bun --cwd backend run start",
-    "migration": "bun --cwd backend run migration",
-    "migrate": "bun --cwd backend run migrate",
-    "seed": "bun --cwd backend run seed",
-    "db:seed": "bun --cwd backend run db:seed",
-    "typecheck": "bun --filter 'frontend' run typecheck && bun --filter 'backend' run typecheck"
-  }
+	"name": "my-rakta-fullstack-app",
+	"version": "1.2.3",
+	"private": true,
+	"type": "module",
+	"workspaces": [
+		"frontend",
+		"backend",
+		"shared"
+	],
+	"scripts": {
+		"dev": "bun run scripts/dev.ts",
+		"dev:frontend": "bun --cwd frontend run dev",
+		"dev:backend": "bun --cwd backend run dev",
+		"build:frontend": "bun --cwd frontend run build",
+		"build:backend": "bun --cwd backend run build",
+		"build": "bun run build:frontend && bun run build:backend",
+		"start": "bun --cwd backend run start",
+		"migration": "bun --cwd backend run migration",
+		"migrate": "bun --cwd backend run migrate",
+		"seed": "bun --cwd backend run seed",
+		"db:seed": "bun --cwd backend run db:seed",
+		"typecheck": "bun --filter 'frontend' run typecheck && bun --filter 'backend' run typecheck"
+	}
 }

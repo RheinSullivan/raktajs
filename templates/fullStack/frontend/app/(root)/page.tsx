@@ -160,31 +160,31 @@ export default function App() {
 					{/* Center navigation links */}
 					<div className="hidden md:flex justify-center items-center gap-7">
 						<click
-							className="text-[#E11D48] font-bold border-b-2 border-[#E11D48] pb-0.5 font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							className="bg-[#E11D48] text-white font-bold px-2 py-1 font-mono text-[11px] tracking-wider uppercase cursor-pointer"
 							to="showcase"
 						>
 							SHOWCASE
 						</click>
 						<click
-							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							className="text-[#b5b5b5] font-bold hover:bg-[#E11D48] hover:text-white px-2 py-1 transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
 							to="features"
 						>
 							DOCS
 						</click>
 						<click
-							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							className="text-[#b5b5b5] font-bold hover:bg-[#E11D48] hover:text-white px-2 py-1 transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
 							to="shrimprun"
 						>
 							GAME
 						</click>
 						<click
-							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							className="text-[#b5b5b5] font-bold hover:bg-[#E11D48] hover:text-white px-2 py-1 transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
 							to="humanitarian"
 						>
 							SOLIDARITY
 						</click>
 						<click
-							className="text-[#b5b5b5] font-bold hover:text-[#FAFAFA] transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							className="text-[#b5b5b5] font-bold hover:bg-[#E11D48] hover:text-white px-2 py-1 transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
 							to="cta"
 						>
 							STARTED
@@ -898,7 +898,7 @@ export default function App() {
 				<section
 					id="humanitarian"
 					ref={solidaritySectionRef}
-					className="border-t border-surface-stroke my-10 flex flex-col"
+					className="border-t border-surface-stroke my-10 flex flex-col bg-black"
 				>
 					{/* Header Bar matching Rakta Neo-Brutalist Layout */}
 					<div className="p-8 md:p-12 border-b border-surface-stroke flex flex-col md:flex-row md:items-end justify-between gap-8 bg-black">
