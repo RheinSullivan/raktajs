@@ -1,11 +1,630 @@
 // biome-ignore-all lint/suspicious/noTemplateCurlyInString: Starter templates intentionally contain template-string source code.
-export const STARTER_CORAL_OBSTACLE_CODE =
-	'// biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.\n// biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.\n// NOTE: Rakta.js uses automatic JSX transform - no React import needed.\n\ninterface CoralObstacleProps {\n\tposition: "TOP" | "BOTTOM";\n\theight: number;\n\twidth?: number;\n\tpaletteIndex?: number;\n\tvariant?: number;\n\tscaleX?: number;\n}\n\nexport default function CoralObstacle({\n\tposition,\n\theight,\n\twidth = 64,\n\tpaletteIndex = 0,\n\tvariant = 0,\n\tscaleX = 1,\n}: CoralObstacleProps) {\n\t// High-fidelity glowing marine palettes\n\tconst palettes = [\n\t\t{\n\t\t\tprimary: "#f43f5e",\n\t\t\tsecondary: "#fda4af",\n\t\t\tshadow: "#9f1239",\n\t\t\tpolyps: "#ffe4e6",\n\t\t\tname: "rose",\n\t\t}, // 0: Neon Rose\n\t\t{\n\t\t\tprimary: "#06b6d4",\n\t\t\tsecondary: "#67e8f9",\n\t\t\tshadow: "#155e75",\n\t\t\tpolyps: "#ecfeff",\n\t\t\tname: "cyan",\n\t\t}, // 1: Cyan Glow\n\t\t{\n\t\t\tprimary: "#a855f7",\n\t\t\tsecondary: "#d8b4fe",\n\t\t\tshadow: "#581c87",\n\t\t\tpolyps: "#faf5ff",\n\t\t\tname: "amethyst",\n\t\t}, // 2: Amethyst Purple\n\t\t{\n\t\t\tprimary: "#f59e0b",\n\t\t\tsecondary: "#fde047",\n\t\t\tshadow: "#78350f",\n\t\t\tpolyps: "#fefce8",\n\t\t\tname: "amber",\n\t\t}, // 3: Gold Amber\n\t\t{\n\t\t\tprimary: "#10b981",\n\t\t\tsecondary: "#6ee7b7",\n\t\t\tshadow: "#065f46",\n\t\t\tpolyps: "#e6fffa",\n\t\t\tname: "emerald",\n\t\t}, // 4: Neon Emerald\n\t];\n\n\t// paletteIndex % palettes.length always yields a valid in-bounds index\n\tconst palette = palettes[paletteIndex % palettes.length]!;\n\n\treturn (\n\t\t<div\n\t\t\tclassName="absolute flex items-center justify-center pointer-events-none"\n\t\t\tstyle={{\n\t\t\t\theight: `${height}px`,\n\t\t\t\twidth: `${width}px`,\n\t\t\t\ttransform: `scaleX(${scaleX})`,\n\t\t\t}}\n\t\t>\n\t\t\t<svg\n\t\t\t\tviewBox="0 0 80 120"\n\t\t\t\tclassName="w-full h-full drop-shadow-[0_6px_14px_rgba(0,0,0,0.7)]"\n\t\t\t\tpreserveAspectRatio="none"\n\t\t\t>\n\t\t\t\t<defs>\n\t\t\t\t\t<linearGradient\n\t\t\t\t\t\tid={`coralGrad-${palette.name}`}\n\t\t\t\t\t\tx1="0%"\n\t\t\t\t\t\ty1="0%"\n\t\t\t\t\t\tx2="100%"\n\t\t\t\t\t\ty2="100%"\n\t\t\t\t\t>\n\t\t\t\t\t\t<stop offset="0%" stopColor={palette.secondary} />\n\t\t\t\t\t\t<stop offset="50%" stopColor={palette.primary} />\n\t\t\t\t\t\t<stop offset="100%" stopColor={palette.shadow} />\n\t\t\t\t\t</linearGradient>\n\t\t\t\t\t<filter id="coralGlow">\n\t\t\t\t\t\t<feGaussianBlur stdDeviation="1.8" result="coloredBlur" />\n\t\t\t\t\t\t<feMerge>\n\t\t\t\t\t\t\t<feMergeNode in="coloredBlur" />\n\t\t\t\t\t\t\t<feMergeNode in="SourceGraphic" />\n\t\t\t\t\t\t</feMerge>\n\t\t\t\t\t</filter>\n\t\t\t\t</defs>\n\n\t\t\t\t<g\n\t\t\t\t\ttransform={\n\t\t\t\t\t\tposition === "TOP" ? "scale(1, -1) translate(0, -120)" : undefined\n\t\t\t\t\t}\n\t\t\t\t\tfilter="url(#coralGlow)"\n\t\t\t\t>\n\t\t\t\t\t{variant === 0 ? (\n\t\t\t\t\t\t// VARIANT 0: Staghorn Branching Coral\n\t\t\t\t\t\t<g>\n\t\t\t\t\t\t\t{/* Background sub-branches */}\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 35 120 C 30 100, 15 90, 10 70 C 5 50, 20 40, 15 25 C 10 10, 25 5, 30 15 C 35 30, 28 45, 38 65 Q 42 90, 40 120"\n\t\t\t\t\t\t\t\tfill={palette.shadow}\n\t\t\t\t\t\t\t\topacity="0.85"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 45 120 C 50 105, 65 95, 70 75 C 75 55, 60 45, 65 30 C 70 15, 55 10, 50 20 C 45 35, 52 45, 42 65 Q 40 90, 45 120"\n\t\t\t\t\t\t\t\tfill={palette.shadow}\n\t\t\t\t\t\t\t\topacity="0.85"\n\t\t\t\t\t\t\t/>\n\n\t\t\t\t\t\t\t{/* Main center branching structures */}\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 40 120 C 35 90, 20 80, 24 55 C 28 30, 15 20, 22 10 C 29 0, 37 15, 35 30 C 33 45, 42 55, 40 75 C 38 95, 42 110, 40 120 Z"\n\t\t\t\t\t\t\t\tfill={`url(#coralGrad-${palette.name})`}\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 40 120 C 45 95, 55 85, 52 65 C 49 45, 62 35, 58 20 C 54 5, 46 12, 48 25 C 50 38, 42 50, 44 70 C 46 90, 42 105, 40 120 Z"\n\t\t\t\t\t\t\t\tfill={`url(#coralGrad-${palette.name})`}\n\t\t\t\t\t\t\t/>\n\n\t\t\t\t\t\t\t{/* Fine details - Polyps and decorative nodes */}\n\t\t\t\t\t\t\t<circle cx="22" cy="11" r="3.5" fill={palette.secondary} />\n\t\t\t\t\t\t\t<circle cx="58" cy="21" r="3.5" fill={palette.secondary} />\n\t\t\t\t\t\t\t<circle cx="30" cy="15" r="2.5" fill={palette.secondary} />\n\n\t\t\t\t\t\t\t<g fill={palette.polyps}>\n\t\t\t\t\t\t\t\t<circle cx="28" cy="40" r="2" />\n\t\t\t\t\t\t\t\t<circle cx="24" cy="55" r="1.5" />\n\t\t\t\t\t\t\t\t<circle cx="34" cy="68" r="2" />\n\t\t\t\t\t\t\t\t<circle cx="50" cy="45" r="2" />\n\t\t\t\t\t\t\t\t<circle cx="54" cy="65" r="1.5" />\n\t\t\t\t\t\t\t\t<circle cx="44" cy="85" r="2.5" />\n\t\t\t\t\t\t\t\t<circle cx="36" cy="98" r="2" />\n\t\t\t\t\t\t\t</g>\n\t\t\t\t\t\t</g>\n\t\t\t\t\t) : variant === 1 ? (\n\t\t\t\t\t\t// VARIANT 1: Gorgonian Sea Fan\n\t\t\t\t\t\t<g>\n\t\t\t\t\t\t\t{/* Fan mesh background glow */}\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 40 120 C 40 95, 18 80, 12 50 C 6 20, 32 10, 40 28 C 48 10, 74 20, 68 50 C 62 80, 40 95, 40 120 Z"\n\t\t\t\t\t\t\t\tfill={`url(#coralGrad-${palette.name})`}\n\t\t\t\t\t\t\t\topacity="0.3"\n\t\t\t\t\t\t\t/>\n\n\t\t\t\t\t\t\t{/* Organic Fan Trunk */}\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 36 120 Q 38 90 32 60 T 18 25"\n\t\t\t\t\t\t\t\tfill="none"\n\t\t\t\t\t\t\t\tstroke={palette.shadow}\n\t\t\t\t\t\t\t\tstrokeWidth="5"\n\t\t\t\t\t\t\t\tstrokeLinecap="round"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 44 120 Q 42 90 48 60 T 62 25"\n\t\t\t\t\t\t\t\tfill="none"\n\t\t\t\t\t\t\t\tstroke={palette.shadow}\n\t\t\t\t\t\t\t\tstrokeWidth="5"\n\t\t\t\t\t\t\t\tstrokeLinecap="round"\n\t\t\t\t\t\t\t/>\n\n\t\t\t\t\t\t\t{/* Glowing Branch Ribs */}\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 40 120 Q 40 85 36 50 T 40 12"\n\t\t\t\t\t\t\t\tfill="none"\n\t\t\t\t\t\t\t\tstroke={`url(#coralGrad-${palette.name})`}\n\t\t\t\t\t\t\t\tstrokeWidth="5.5"\n\t\t\t\t\t\t\t\tstrokeLinecap="round"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 37 90 C 24 75, 16 60, 14 38 C 12 22, 28 15, 30 25"\n\t\t\t\t\t\t\t\tfill="none"\n\t\t\t\t\t\t\t\tstroke={`url(#coralGrad-${palette.name})`}\n\t\t\t\t\t\t\t\tstrokeWidth="4.5"\n\t\t\t\t\t\t\t\tstrokeLinecap="round"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 43 90 C 56 75, 64 60, 66 38 C 68 22, 52 15, 50 25"\n\t\t\t\t\t\t\t\tfill="none"\n\t\t\t\t\t\t\t\tstroke={`url(#coralGrad-${palette.name})`}\n\t\t\t\t\t\t\t\tstrokeWidth="4.5"\n\t\t\t\t\t\t\t\tstrokeLinecap="round"\n\t\t\t\t\t\t\t/>\n\n\t\t\t\t\t\t\t{/* Cross connection grid arcs */}\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 21 68 Q 40 55 59 68 M 15 42 Q 40 32 65 42 M 26 24 Q 40 18 54 24"\n\t\t\t\t\t\t\t\tfill="none"\n\t\t\t\t\t\t\t\tstroke={palette.secondary}\n\t\t\t\t\t\t\t\tstrokeWidth="2.5"\n\t\t\t\t\t\t\t\topacity="0.8"\n\t\t\t\t\t\t\t/>\n\n\t\t\t\t\t\t\t{/* Polyp beads on ribs */}\n\t\t\t\t\t\t\t<circle cx="40" cy="30" r="3" fill={palette.polyps} />\n\t\t\t\t\t\t\t<circle cx="24" cy="45" r="2.5" fill={palette.polyps} />\n\t\t\t\t\t\t\t<circle cx="56" cy="45" r="2.5" fill={palette.polyps} />\n\t\t\t\t\t\t\t<circle cx="30" cy="65" r="3" fill={palette.polyps} />\n\t\t\t\t\t\t\t<circle cx="50" cy="65" r="3" fill={palette.polyps} />\n\t\t\t\t\t\t\t<circle cx="15" cy="36" r="2" fill={palette.polyps} />\n\t\t\t\t\t\t\t<circle cx="65" cy="36" r="2" fill={palette.polyps} />\n\t\t\t\t\t\t</g>\n\t\t\t\t\t) : (\n\t\t\t\t\t\t// VARIANT 2: Glowing Tube Sponge\n\t\t\t\t\t\t<g>\n\t\t\t\t\t\t\t{/* Back shadows */}\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 12 120 L 12 60 A 10 10 0 0 1 32 60 L 32 120 Z"\n\t\t\t\t\t\t\t\tfill={palette.shadow}\n\t\t\t\t\t\t\t\topacity="0.6"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 48 120 L 48 50 A 10 10 0 0 1 68 50 L 68 120 Z"\n\t\t\t\t\t\t\t\tfill={palette.shadow}\n\t\t\t\t\t\t\t\topacity="0.6"\n\t\t\t\t\t\t\t/>\n\n\t\t\t\t\t\t\t{/* Middle Tube (Tallest) */}\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 28 120 L 28 35 C 28 28, 52 28, 52 35 L 52 120 Z"\n\t\t\t\t\t\t\t\tfill={`url(#coralGrad-${palette.name})`}\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<ellipse\n\t\t\t\t\t\t\t\tcx="40"\n\t\t\t\t\t\t\t\tcy="35"\n\t\t\t\t\t\t\t\trx="12"\n\t\t\t\t\t\t\t\try="5.5"\n\t\t\t\t\t\t\t\tfill={palette.shadow}\n\t\t\t\t\t\t\t\tstroke={palette.secondary}\n\t\t\t\t\t\t\t\tstrokeWidth="2.5"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<ellipse cx="40" cy="35" rx="7" ry="3" fill="#01040a" />\n\n\t\t\t\t\t\t\t{/* Left Tube */}\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 10 120 L 10 58 C 10 52, 30 52, 30 58 L 30 120 Z"\n\t\t\t\t\t\t\t\tfill={`url(#coralGrad-${palette.name})`}\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<ellipse\n\t\t\t\t\t\t\t\tcx="20"\n\t\t\t\t\t\t\t\tcy="58"\n\t\t\t\t\t\t\t\trx="10"\n\t\t\t\t\t\t\t\try="4.5"\n\t\t\t\t\t\t\t\tfill={palette.shadow}\n\t\t\t\t\t\t\t\tstroke={palette.secondary}\n\t\t\t\t\t\t\t\tstrokeWidth="2"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<ellipse cx="20" cy="58" rx="5" ry="2" fill="#01040a" />\n\n\t\t\t\t\t\t\t{/* Right Tube */}\n\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\td="M 50 120 L 50 48 C 50 42, 70 42, 70 48 L 70 120 Z"\n\t\t\t\t\t\t\t\tfill={`url(#coralGrad-${palette.name})`}\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<ellipse\n\t\t\t\t\t\t\t\tcx="60"\n\t\t\t\t\t\t\t\tcy="48"\n\t\t\t\t\t\t\t\trx="10"\n\t\t\t\t\t\t\t\try="4.5"\n\t\t\t\t\t\t\t\tfill={palette.shadow}\n\t\t\t\t\t\t\t\tstroke={palette.secondary}\n\t\t\t\t\t\t\t\tstrokeWidth="2"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<ellipse cx="60" cy="48" rx="5" ry="2" fill="#01040a" />\n\n\t\t\t\t\t\t\t{/* Textures/Breathe pores on tubes */}\n\t\t\t\t\t\t\t<g fill={palette.polyps} opacity="0.8">\n\t\t\t\t\t\t\t\t<circle cx="40" cy="65" r="2" />\n\t\t\t\t\t\t\t\t<circle cx="34" cy="80" r="1.5" />\n\t\t\t\t\t\t\t\t<circle cx="46" cy="95" r="2.5" />\n\t\t\t\t\t\t\t\t<circle cx="20" cy="85" r="1.8" />\n\t\t\t\t\t\t\t\t<circle cx="24" cy="100" r="2" />\n\t\t\t\t\t\t\t\t<circle cx="60" cy="75" r="2" />\n\t\t\t\t\t\t\t\t<circle cx="56" cy="90" r="1.5" />\n\t\t\t\t\t\t\t\t<circle cx="64" cy="105" r="1.8" />\n\t\t\t\t\t\t\t</g>\n\t\t\t\t\t\t</g>\n\t\t\t\t\t)}\n\t\t\t\t</g>\n\t\t\t</svg>\n\t\t</div>\n\t);\n}\n';
 
-export const STARTER_PAGE_CODE =
-	'// biome-ignore-all lint: Generated Rakta.js fallback starter mirrors the source template.\n// biome-ignore-all assist: Generated Rakta.js fallback starter mirrors the source template.\n\nexport default function App() {\n\treturn (\n\t\t<main className="min-h-screen bg-black text-white px-6 py-20">\n\t\t\t<section className="mx-auto flex max-w-5xl flex-col gap-8">\n\t\t\t\t<reborns id="hero" />\n\t\t\t\t<div className="flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-brand-pink">\n\t\t\t\t\t<photo path="/rakta-logo.svg" alt="Rakta.js Logo" className="h-8 w-8" />\n\t\t\t\t\tRakta.js starter\n\t\t\t\t</div>\n\t\t\t\t<h1 className="max-w-3xl text-5xl font-extrabold uppercase leading-none tracking-tight md:text-7xl">\n\t\t\t\t\tSmall in size. Fierce in speed. Alive in every route.\n\t\t\t\t</h1>\n\t\t\t\t<p className="max-w-2xl text-zinc-400">\n\t\t\t\t\tYour Rakta.js project is ready. Edit this page, add routes in app/, and keep the framework primitives close to the UI that needs them.\n\t\t\t\t</p>\n\t\t\t\t<div className="flex flex-wrap gap-3">\n\t\t\t\t\t<click to="https://raktajs.dev/docs" target="_blank" rel="noopener noreferrer" className="bg-brand-pink px-5 py-3 font-mono text-xs font-bold uppercase text-white">\n\t\t\t\t\t\tDocs\n\t\t\t\t\t</click>\n\t\t\t\t\t<pantura to="features" className="border border-white/20 px-5 py-3 font-mono text-xs font-bold uppercase text-white">\n\t\t\t\t\t\tExplore features\n\t\t\t\t\t</pantura>\n\t\t\t\t</div>\n\t\t\t</section>\n\t\t\t<section id="features" className="mx-auto mt-20 grid max-w-5xl gap-4 md:grid-cols-3">\n\t\t\t\t<reborns id="features" />\n\t\t\t\t{["File routing", "Auto imports", "Typed fullstack"].map((feature) => (\n\t\t\t\t\t<div key={feature} className="border border-white/10 bg-white/5 p-6">\n\t\t\t\t\t\t<h2 className="font-mono text-sm font-bold uppercase text-white">{feature}</h2>\n\t\t\t\t\t\t<p className="mt-3 text-sm text-zinc-400">Built into the default Rakta.js app experience.</p>\n\t\t\t\t\t</div>\n\t\t\t\t))}\n\t\t\t</section>\n\t\t</main>\n\t);\n}\n';
-export const STARTER_CSS_CODE =
-	'@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap");\n:root {\n\t--font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;\n\t--font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;\n\n\t--color-brand-pink: #e11d48;\n\t--color-brand-green: #00ff00;\n\t--color-surface-bg: #000000;\n\t--color-surface-card: #0d0d0d;\n\t--color-surface-stroke: #1f1f1f;\n}\n\nbody {\n\tbackground-color: #000000;\n\tcolor: #ffffff;\n\tfont-family: var(--font-sans);\n\toverflow-x: hidden;\n}\n\n/* Custom scrollbar for brutalist feel */\n::-webkit-scrollbar {\n\twidth: 6px;\n\theight: 6px;\n}\n::-webkit-scrollbar-track {\n\tbackground: #000000;\n}\n::-webkit-scrollbar-thumb {\n\tbackground: #e11d48;\n\tborder-radius: 0px;\n}\n::-webkit-scrollbar-thumb:hover {\n\tbackground: #be123c;\n}\n\n/* scanline animation */\n@keyframes scanline {\n\t0% {\n\t\ttransform: translateY(-100%);\n\t}\n\t100% {\n\t\ttransform: translateY(100%);\n\t}\n}\n\n.scanline {\n\tposition: fixed;\n\ttop: 0;\n\tleft: 0;\n\twidth: 100%;\n\theight: 120px;\n\tbackground: linear-gradient(\n\t\t0deg,\n\t\trgba(225, 29, 72, 0.08) 0%,\n\t\trgba(225, 29, 72, 0) 100%\n\t);\n\topacity: 0.8;\n\tpointer-events: none;\n\tz-index: 999;\n\tanimation: scanline 8s linear infinite;\n}\n\n/* Grid background animation */\n.bg-grid-glow {\n\tbackground-size: 40px 40px;\n\tbackground-image:\n\t\tlinear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),\n\t\tlinear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);\n}\n\n/* Highly-visible, organic waving seaweed animations */\n@keyframes seaweed-wave-1 {\n\t0% {\n\t\ttransform: skewX(-14deg) rotate(-8deg) scaleY(0.96);\n\t}\n\t50% {\n\t\ttransform: skewX(0deg) rotate(0deg) scaleY(1.04);\n\t}\n\t100% {\n\t\ttransform: skewX(14deg) rotate(8deg) scaleY(0.96);\n\t}\n}\n\n@keyframes seaweed-wave-2 {\n\t0% {\n\t\ttransform: skewX(10deg) rotate(6deg) scaleY(1.04);\n\t}\n\t50% {\n\t\ttransform: skewX(-2deg) rotate(-2deg) scaleY(0.96);\n\t}\n\t100% {\n\t\ttransform: skewX(-10deg) rotate(-6deg) scaleY(1.04);\n\t}\n}\n\n.seaweed-waving-left-1 {\n\ttransform-origin: bottom center;\n\tanimation: seaweed-wave-1 3.2s infinite ease-in-out alternate;\n\tdisplay: block;\n}\n\n.seaweed-waving-left-2 {\n\ttransform-origin: bottom center;\n\tanimation: seaweed-wave-2 3.8s infinite ease-in-out alternate;\n\tdisplay: block;\n}\n\n.seaweed-waving-right-1 {\n\ttransform-origin: bottom center;\n\tanimation: seaweed-wave-1 4.5s infinite ease-in-out alternate;\n\tdisplay: block;\n}\n\n.seaweed-waving-right-2 {\n\ttransform-origin: bottom center;\n\tanimation: seaweed-wave-2 3.6s infinite ease-in-out alternate;\n\tdisplay: block;\n}\n\n/* Rakta starter utility layer. This keeps the welcome page styled in Rakta\'s\n   Bun bundler even before a Tailwind compiler step is wired into the framework. */\n*,\n*::before,\n*::after {\n\tbox-sizing: border-box;\n}\nhtml {\n\tscroll-behavior: smooth;\n}\nbody {\n\tmargin: 0;\n\tmin-width: 320px;\n}\na {\n\tcolor: inherit;\n\ttext-decoration: none;\n}\nbutton,\ninput {\n\tfont: inherit;\n}\nbutton {\n\tbackground: none;\n\tcolor: inherit;\n\tborder: 0;\n}\nsvg {\n\tdisplay: block;\n}\n\n[class~="fixed"] {\n\tposition: fixed;\n}\n[class~="absolute"] {\n\tposition: absolute;\n}\n[class~="relative"] {\n\tposition: relative;\n}\n[class~="inset-0"] {\n\tinset: 0;\n}\n[class~="inset-x-0"] {\n\tleft: 0;\n\tright: 0;\n}\n[class~="top-0"] {\n\ttop: 0;\n}\n[class~="top-1"] {\n\ttop: 0.25rem;\n}\n[class~="top-2"] {\n\ttop: 0.5rem;\n}\n[class~="top-4"] {\n\ttop: 1rem;\n}\n[class~="top-6"] {\n\ttop: 1.5rem;\n}\n[class~="left-0"] {\n\tleft: 0;\n}\n[class~="left-2"] {\n\tleft: 0.5rem;\n}\n[class~="left-4"] {\n\tleft: 1rem;\n}\n[class~="left-6"] {\n\tleft: 1.5rem;\n}\n[class~="left-12"] {\n\tleft: 3rem;\n}\n[class~="left-[12%]"] {\n\tleft: 12%;\n}\n[class~="left-[15%]"] {\n\tleft: 15%;\n}\n[class~="left-[18%]"] {\n\tleft: 18%;\n}\n[class~="left-[32%]"] {\n\tleft: 32%;\n}\n[class~="left-[40%]"] {\n\tleft: 40%;\n}\n[class~="left-[58%]"] {\n\tleft: 58%;\n}\n[class~="left-[68%]"] {\n\tleft: 68%;\n}\n[class~="left-[78%]"] {\n\tleft: 78%;\n}\n[class~="left-[88%]"] {\n\tleft: 88%;\n}\n[class~="left-[92%]"] {\n\tleft: 92%;\n}\n[class~="-left-2"] {\n\tleft: -0.5rem;\n}\n[class~="right-0"] {\n\tright: 0;\n}\n[class~="right-6"] {\n\tright: 1.5rem;\n}\n[class~="right-16"] {\n\tright: 4rem;\n}\n[class~="bottom-0"] {\n\tbottom: 0;\n}\n[class~="bottom-2"] {\n\tbottom: 0.5rem;\n}\n[class~="bottom-4"] {\n\tbottom: 1rem;\n}\n[class~="bottom-12"] {\n\tbottom: 3rem;\n}\n[class~="z-0"] {\n\tz-index: 0;\n}\n[class~="z-10"] {\n\tz-index: 10;\n}\n[class~="z-20"] {\n\tz-index: 20;\n}\n[class~="z-30"] {\n\tz-index: 30;\n}\n[class~="z-50"] {\n\tz-index: 50;\n}\n\n[class~="block"] {\n\tdisplay: block;\n}\n[class~="inline-block"] {\n\tdisplay: inline-block;\n}\n[class~="inline-flex"] {\n\tdisplay: inline-flex;\n}\n[class~="flex"] {\n\tdisplay: flex;\n}\n[class~="grid"] {\n\tdisplay: grid;\n}\n[class~="hidden"] {\n\tdisplay: none;\n}\n[class~="flex-col"] {\n\tflex-direction: column;\n}\n[class~="flex-row"] {\n\tflex-direction: row;\n}\n[class~="flex-wrap"] {\n\tflex-wrap: wrap;\n}\n[class~="flex-1"] {\n\tflex: 1 1 0%;\n}\n[class~="items-center"] {\n\talign-items: center;\n}\n[class~="items-start"] {\n\talign-items: flex-start;\n}\n[class~="items-end"] {\n\talign-items: flex-end;\n}\n[class~="justify-center"] {\n\tjustify-content: center;\n}\n[class~="justify-between"] {\n\tjustify-content: space-between;\n}\n[class~="justify-end"] {\n\tjustify-content: flex-end;\n}\n[class~="place-items-center"] {\n\tplace-items: center;\n}\n[class~="self-stretch"] {\n\talign-self: stretch;\n}\n\n[class~="grid-cols-1"] {\n\tgrid-template-columns: repeat(1, minmax(0, 1fr));\n}\n[class~="grid-cols-2"] {\n\tgrid-template-columns: repeat(2, minmax(0, 1fr));\n}\n\n[class~="gap-0"] {\n\tgap: 0;\n}\n[class~="gap-1"] {\n\tgap: 0.25rem;\n}\n[class~="gap-1.5"] {\n\tgap: 0.375rem;\n}\n[class~="gap-2"] {\n\tgap: 0.5rem;\n}\n[class~="gap-2.5"] {\n\tgap: 0.625rem;\n}\n[class~="gap-3"] {\n\tgap: 0.75rem;\n}\n[class~="gap-3.5"] {\n\tgap: 0.875rem;\n}\n[class~="gap-4"] {\n\tgap: 1rem;\n}\n[class~="gap-5"] {\n\tgap: 1.25rem;\n}\n[class~="gap-6"] {\n\tgap: 1.5rem;\n}\n[class~="gap-7"] {\n\tgap: 1.75rem;\n}\n[class~="gap-10"] {\n\tgap: 2.5rem;\n}\n[class~="gap-12"] {\n\tgap: 3rem;\n}\n[class~="gap-16"] {\n\tgap: 4rem;\n}\n[class~="gap-x-4"] {\n\tcolumn-gap: 1rem;\n}\n[class~="gap-x-12"] {\n\tcolumn-gap: 3rem;\n}\n[class~="gap-y-1"] {\n\trow-gap: 0.25rem;\n}\n[class~="gap-y-1.5"] {\n\trow-gap: 0.375rem;\n}\n[class~="gap-y-10"] {\n\trow-gap: 2.5rem;\n}\n\n[class~="w-full"] {\n\twidth: 100%;\n}\n[class~="h-full"] {\n\theight: 100%;\n}\n[class~="min-h-screen"] {\n\tmin-height: 100vh;\n}\n[class~="w-1"] {\n\twidth: 0.25rem;\n}\n[class~="h-1"] {\n\theight: 0.25rem;\n}\n[class~="w-1.5"] {\n\twidth: 0.375rem;\n}\n[class~="h-1.5"] {\n\theight: 0.375rem;\n}\n[class~="w-2"] {\n\twidth: 0.5rem;\n}\n[class~="h-2"] {\n\theight: 0.5rem;\n}\n[class~="w-2.5"] {\n\twidth: 0.625rem;\n}\n[class~="h-2.5"] {\n\theight: 0.625rem;\n}\n[class~="w-3"] {\n\twidth: 0.75rem;\n}\n[class~="h-3"] {\n\theight: 0.75rem;\n}\n[class~="w-3.5"] {\n\twidth: 0.875rem;\n}\n[class~="h-3.5"] {\n\theight: 0.875rem;\n}\n[class~="w-4"] {\n\twidth: 1rem;\n}\n[class~="h-4"] {\n\theight: 1rem;\n}\n[class~="w-5"] {\n\twidth: 1.25rem;\n}\n[class~="h-5"] {\n\theight: 1.25rem;\n}\n[class~="w-6"] {\n\twidth: 1.5rem;\n}\n[class~="h-6"] {\n\theight: 1.5rem;\n}\n[class~="w-7"] {\n\twidth: 1.75rem;\n}\n[class~="w-8"] {\n\twidth: 2rem;\n}\n[class~="h-8"] {\n\theight: 2rem;\n}\n[class~="w-9"] {\n\twidth: 2.25rem;\n}\n[class~="w-10"] {\n\twidth: 2.5rem;\n}\n[class~="w-11"] {\n\twidth: 2.75rem;\n}\n[class~="w-12"] {\n\twidth: 3rem;\n}\n[class~="w-16"] {\n\twidth: 4rem;\n}\n[class~="h-16"] {\n\theight: 4rem;\n}\n[class~="w-20"] {\n\twidth: 5rem;\n}\n[class~="h-20"] {\n\theight: 5rem;\n}\n[class~="w-24"] {\n\twidth: 6rem;\n}\n[class~="h-24"] {\n\theight: 6rem;\n}\n[class~="w-32"] {\n\twidth: 8rem;\n}\n[class~="w-56"] {\n\twidth: 14rem;\n}\n[class~="h-28"] {\n\theight: 7rem;\n}\n[class~="h-32"] {\n\theight: 8rem;\n}\n[class~="h-44"] {\n\theight: 11rem;\n}\n[class~="h-48"] {\n\theight: 12rem;\n}\n[class~="h-[70vh]"] {\n\theight: 70vh;\n}\n[class~="h-[75vh]"] {\n\theight: 75vh;\n}\n[class~="h-[80vh]"] {\n\theight: 80vh;\n}\n[class~="h-[90px]"] {\n\theight: 90px;\n}\n[class~="h-[100px]"] {\n\theight: 100px;\n}\n[class~="h-[120px]"] {\n\theight: 120px;\n}\n[class~="h-[130px]"] {\n\theight: 130px;\n}\n[class~="h-[360px]"] {\n\theight: 360px;\n}\n[class~="min-h-[150px]"] {\n\tmin-height: 150px;\n}\n[class~="min-h-[160px]"] {\n\tmin-height: 160px;\n}\n[class~="min-h-[300px]"] {\n\tmin-height: 300px;\n}\n[class~="max-w-xs"] {\n\tmax-width: 20rem;\n}\n[class~="max-w-sm"] {\n\tmax-width: 24rem;\n}\n[class~="max-w-2xl"] {\n\tmax-width: 42rem;\n}\n[class~="max-w-3xl"] {\n\tmax-width: 48rem;\n}\n[class~="max-w-4xl"] {\n\tmax-width: 56rem;\n}\n[class~="max-w-5xl"] {\n\tmax-width: 64rem;\n}\n[class~="max-w-6xl"] {\n\tmax-width: 72rem;\n}\n[class~="max-w-7xl"] {\n\tmax-width: 80rem;\n}\n[class~="max-w-none"] {\n\tmax-width: none;\n}\n\n[class~="mx-auto"] {\n\tmargin-left: auto;\n\tmargin-right: auto;\n}\n[class~="mt-1"] {\n\tmargin-top: 0.25rem;\n}\n[class~="mt-1.5"] {\n\tmargin-top: 0.375rem;\n}\n[class~="mt-2"] {\n\tmargin-top: 0.5rem;\n}\n[class~="mt-3"] {\n\tmargin-top: 0.75rem;\n}\n[class~="mt-4"] {\n\tmargin-top: 1rem;\n}\n[class~="mt-6"] {\n\tmargin-top: 1.5rem;\n}\n[class~="mt-8"] {\n\tmargin-top: 2rem;\n}\n[class~="mt-10"] {\n\tmargin-top: 2.5rem;\n}\n[class~="mt-12"] {\n\tmargin-top: 3rem;\n}\n[class~="mb-1"] {\n\tmargin-bottom: 0.25rem;\n}\n[class~="mb-1.5"] {\n\tmargin-bottom: 0.375rem;\n}\n[class~="mb-2"] {\n\tmargin-bottom: 0.5rem;\n}\n[class~="mb-4"] {\n\tmargin-bottom: 1rem;\n}\n[class~="mb-6"] {\n\tmargin-bottom: 1.5rem;\n}\n[class~="mb-10"] {\n\tmargin-bottom: 2.5rem;\n}\n[class~="mb-20"] {\n\tmargin-bottom: 5rem;\n}\n[class~="ml-2"] {\n\tmargin-left: 0.5rem;\n}\n\n[class~="p-0.5"] {\n\tpadding: 0.125rem;\n}\n[class~="p-1"] {\n\tpadding: 0.25rem;\n}\n[class~="p-2"] {\n\tpadding: 0.5rem;\n}\n[class~="p-3"] {\n\tpadding: 0.75rem;\n}\n[class~="p-4"] {\n\tpadding: 1rem;\n}\n[class~="p-5"] {\n\tpadding: 1.25rem;\n}\n[class~="p-6"] {\n\tpadding: 1.5rem;\n}\n[class~="p-8"] {\n\tpadding: 2rem;\n}\n[class~="p-12"] {\n\tpadding: 3rem;\n}\n[class~="px-1"] {\n\tpadding-left: 0.25rem;\n\tpadding-right: 0.25rem;\n}\n[class~="px-1.5"] {\n\tpadding-left: 0.375rem;\n\tpadding-right: 0.375rem;\n}\n[class~="px-2"] {\n\tpadding-left: 0.5rem;\n\tpadding-right: 0.5rem;\n}\n[class~="px-3"] {\n\tpadding-left: 0.75rem;\n\tpadding-right: 0.75rem;\n}\n[class~="px-3.5"] {\n\tpadding-left: 0.875rem;\n\tpadding-right: 0.875rem;\n}\n[class~="px-4"] {\n\tpadding-left: 1rem;\n\tpadding-right: 1rem;\n}\n[class~="px-5"] {\n\tpadding-left: 1.25rem;\n\tpadding-right: 1.25rem;\n}\n[class~="px-6"] {\n\tpadding-left: 1.5rem;\n\tpadding-right: 1.5rem;\n}\n[class~="px-10"] {\n\tpadding-left: 2.5rem;\n\tpadding-right: 2.5rem;\n}\n[class~="py-0.5"] {\n\tpadding-top: 0.125rem;\n\tpadding-bottom: 0.125rem;\n}\n[class~="py-1"] {\n\tpadding-top: 0.25rem;\n\tpadding-bottom: 0.25rem;\n}\n[class~="py-1.5"] {\n\tpadding-top: 0.375rem;\n\tpadding-bottom: 0.375rem;\n}\n[class~="py-2"] {\n\tpadding-top: 0.5rem;\n\tpadding-bottom: 0.5rem;\n}\n[class~="py-2.5"] {\n\tpadding-top: 0.625rem;\n\tpadding-bottom: 0.625rem;\n}\n[class~="py-3"] {\n\tpadding-top: 0.75rem;\n\tpadding-bottom: 0.75rem;\n}\n[class~="py-5"] {\n\tpadding-top: 1.25rem;\n\tpadding-bottom: 1.25rem;\n}\n[class~="pt-4"] {\n\tpadding-top: 1rem;\n}\n[class~="pt-6"] {\n\tpadding-top: 1.5rem;\n}\n[class~="pt-10"] {\n\tpadding-top: 2.5rem;\n}\n[class~="pt-20"] {\n\tpadding-top: 5rem;\n}\n[class~="pt-24"] {\n\tpadding-top: 6rem;\n}\n[class~="pb-1"] {\n\tpadding-bottom: 0.25rem;\n}\n[class~="pb-12"] {\n\tpadding-bottom: 3rem;\n}\n[class~="pb-24"] {\n\tpadding-bottom: 6rem;\n}\n[class~="pl-4"] {\n\tpadding-left: 1rem;\n}\n[class~="pl-5"] {\n\tpadding-left: 1.25rem;\n}\n\n[class~="overflow-hidden"] {\n\toverflow: hidden;\n}\n[class~="overflow-visible"] {\n\toverflow: visible;\n}\n[class~="overflow-y-auto"] {\n\toverflow-y: auto;\n}\n[class~="overflow-x-auto"] {\n\toverflow-x: auto;\n}\n[class~="whitespace-pre"] {\n\twhite-space: pre;\n}\n[class~="whitespace-pre-wrap"] {\n\twhite-space: pre-wrap;\n}\n[class~="truncate"] {\n\toverflow: hidden;\n\ttext-overflow: ellipsis;\n\twhite-space: nowrap;\n}\n\n[class~="font-sans"] {\n\tfont-family: var(--font-sans);\n}\n[class~="font-mono"] {\n\tfont-family: var(--font-mono);\n}\n[class~="text-left"] {\n\ttext-align: left;\n}\n[class~="text-center"] {\n\ttext-align: center;\n}\n[class~="text-right"] {\n\ttext-align: right;\n}\n[class~="text-[8px]"] {\n\tfont-size: 8px;\n\tline-height: 1.2;\n}\n[class~="text-[9px]"] {\n\tfont-size: 9px;\n\tline-height: 1.2;\n}\n[class~="text-[10px]"] {\n\tfont-size: 10px;\n\tline-height: 1.25;\n}\n[class~="text-[11px]"] {\n\tfont-size: 11px;\n\tline-height: 1.35;\n}\n[class~="text-xs"] {\n\tfont-size: 0.75rem;\n\tline-height: 1rem;\n}\n[class~="text-sm"] {\n\tfont-size: 0.875rem;\n\tline-height: 1.25rem;\n}\n[class~="text-lg"] {\n\tfont-size: 1.125rem;\n\tline-height: 1.75rem;\n}\n[class~="text-xl"] {\n\tfont-size: 1.25rem;\n\tline-height: 1.75rem;\n}\n[class~="text-2xl"] {\n\tfont-size: 1.5rem;\n\tline-height: 2rem;\n}\n[class~="text-3xl"] {\n\tfont-size: 1.875rem;\n\tline-height: 2.25rem;\n}\n[class~="text-[48px]"] {\n\tfont-size: 48px;\n}\n[class~="leading-[0.85]"] {\n\tline-height: 0.85;\n}\n[class~="leading-5"] {\n\tline-height: 1.25rem;\n}\n[class~="leading-normal"] {\n\tline-height: 1.5;\n}\n[class~="leading-relaxed"] {\n\tline-height: 1.625;\n}\n[class~="font-medium"] {\n\tfont-weight: 500;\n}\n[class~="font-semibold"] {\n\tfont-weight: 600;\n}\n[class~="font-bold"] {\n\tfont-weight: 700;\n}\n[class~="font-extrabold"] {\n\tfont-weight: 800;\n}\n[class~="uppercase"] {\n\ttext-transform: uppercase;\n}\n[class~="italic"] {\n\tfont-style: italic;\n}\n[class~="tracking-tight"] {\n\tletter-spacing: -0.025em;\n}\n[class~="tracking-tighter"] {\n\tletter-spacing: -0.05em;\n}\n[class~="tracking-wider"] {\n\tletter-spacing: 0.05em;\n}\n[class~="tracking-widest"] {\n\tletter-spacing: 0.1em;\n}\n\n[class~="text-white"] {\n\tcolor: #fff;\n}\n[class~="text-black"] {\n\tcolor: #000;\n}\n[class~="text-brand-pink"] {\n\tcolor: var(--color-brand-pink);\n}\n[class~="text-brand-green"] {\n\tcolor: var(--color-brand-green);\n}\n[class~="text-zinc-300"] {\n\tcolor: #d4d4d8;\n}\n[class~="text-zinc-400"] {\n\tcolor: #a1a1aa;\n}\n[class~="text-zinc-500"] {\n\tcolor: #71717a;\n}\n[class~="text-zinc-600"] {\n\tcolor: #52525b;\n}\n[class~="text-gray-300"] {\n\tcolor: #d1d5db;\n}\n[class~="text-gray-400"] {\n\tcolor: #9ca3af;\n}\n[class~="text-gray-500"] {\n\tcolor: #6b7280;\n}\n[class~="text-gray-600"] {\n\tcolor: #4b5563;\n}\n[class~="text-yellow-500"] {\n\tcolor: #eab308;\n}\n[class~="text-amber-400"] {\n\tcolor: #fbbf24;\n}\n[class~="text-cyan-400"] {\n\tcolor: #22d3ee;\n}\n[class~="text-fuchsia-400"] {\n\tcolor: #e879f9;\n}\n[class~="text-pink-400"] {\n\tcolor: #f472b6;\n}\n[class~="text-red-600"] {\n\tcolor: #dc2626;\n}\n[class~="text-transparent"] {\n\tcolor: transparent;\n}\n\n[class~="bg-black"] {\n\tbackground-color: #000;\n}\n[class~="bg-white"] {\n\tbackground-color: #fff;\n}\n[class~="bg-transparent"] {\n\tbackground-color: transparent;\n}\n[class~="bg-brand-pink"] {\n\tbackground-color: var(--color-brand-pink);\n}\n[class~="bg-brand-green"] {\n\tbackground-color: var(--color-brand-green);\n}\n[class~="bg-surface-card"] {\n\tbackground-color: var(--color-surface-card);\n}\n[class~="bg-zinc-900"] {\n\tbackground-color: #18181b;\n}\n[class~="bg-zinc-950"] {\n\tbackground-color: #09090b;\n}\n[class~="bg-zinc-950/20"] {\n\tbackground-color: rgb(9 9 11 / 0.2);\n}\n[class~="bg-black/60"] {\n\tbackground-color: rgb(0 0 0 / 0.6);\n}\n[class~="bg-black/80"] {\n\tbackground-color: rgb(0 0 0 / 0.8);\n}\n[class~="bg-black/85"] {\n\tbackground-color: rgb(0 0 0 / 0.85);\n}\n[class~="bg-black/90"] {\n\tbackground-color: rgb(0 0 0 / 0.9);\n}\n[class~="bg-white/5"] {\n\tbackground-color: rgb(255 255 255 / 0.05);\n}\n[class~="bg-brand-pink/5"] {\n\tbackground-color: rgb(225 29 72 / 0.05);\n}\n[class~="bg-brand-pink/10"] {\n\tbackground-color: rgb(225 29 72 / 0.1);\n}\n[class~="bg-brand-green/5"] {\n\tbackground-color: rgb(0 255 0 / 0.05);\n}\n[class~="bg-yellow-500"] {\n\tbackground-color: #eab308;\n}\n[class~="bg-cyan-400"] {\n\tbackground-color: #22d3ee;\n}\n[class~="bg-cyan-500/10"] {\n\tbackground-color: rgb(6 182 212 / 0.1);\n}\n[class~="bg-cyan-400/5"] {\n\tbackground-color: rgb(34 211 238 / 0.05);\n}\n[class~="bg-cyan-200/40"] {\n\tbackground-color: rgb(165 243 252 / 0.4);\n}\n[class~="bg-cyan-200/30"] {\n\tbackground-color: rgb(165 243 252 / 0.3);\n}\n[class~="bg-white/40"] {\n\tbackground-color: rgb(255 255 255 / 0.4);\n}\n[class~="bg-amber-400/5"] {\n\tbackground-color: rgb(251 191 36 / 0.05);\n}\n[class~="bg-rose-400/5"] {\n\tbackground-color: rgb(251 113 133 / 0.05);\n}\n[class~="bg-emerald-950/10"] {\n\tbackground-color: rgb(2 44 34 / 0.1);\n}\n[class~="bg-emerald-950/20"] {\n\tbackground-color: rgb(2 44 34 / 0.2);\n}\n[class~="bg-[#050505]"] {\n\tbackground-color: #050505;\n}\n[class~="bg-[#080808]"] {\n\tbackground-color: #080808;\n}\n[class~="bg-[#0d0e0f]/60"] {\n\tbackground-color: rgb(13 14 15 / 0.6);\n}\n[class~="bg-[#0d0e0f]/90"] {\n\tbackground-color: rgb(13 14 15 / 0.9);\n}\n[class~="bg-[#020712]"] {\n\tbackground-color: #020712;\n}\n[class~="bg-[#0d0118]"] {\n\tbackground-color: #0d0118;\n}\n[class~="bg-[#FFFBEB]"] {\n\tbackground-color: #fffbeb;\n}\n[class~="bg-[#ffff00]"] {\n\tbackground-color: #ffff00;\n}\n\n[class~="bg-gradient-to-b"] {\n\tbackground-image: linear-gradient(to bottom, var(--tw-gradient-stops));\n}\n[class~="bg-gradient-to-r"] {\n\tbackground-image: linear-gradient(to right, var(--tw-gradient-stops));\n}\n[class~="bg-gradient-to-t"] {\n\tbackground-image: linear-gradient(to top, var(--tw-gradient-stops));\n}\n[class~="from-[#0e214d]"] {\n\t--tw-gradient-from: #0e214d;\n\t--tw-gradient-stops:\n\t\tvar(--tw-gradient-from), var(--tw-gradient-to, rgb(14 33 77 / 0));\n}\n[class~="via-[#061129]"] {\n\t--tw-gradient-stops:\n\t\tvar(--tw-gradient-from), #061129, var(--tw-gradient-to, rgb(6 17 41 / 0));\n}\n[class~="to-[#01040a]"] {\n\t--tw-gradient-to: #01040a;\n}\n[class~="from-[#1c0033]"] {\n\t--tw-gradient-from: #1c0033;\n\t--tw-gradient-stops:\n\t\tvar(--tw-gradient-from), var(--tw-gradient-to, rgb(28 0 51 / 0));\n}\n[class~="via-[#0b001a]"] {\n\t--tw-gradient-stops:\n\t\tvar(--tw-gradient-from), #0b001a, var(--tw-gradient-to, rgb(11 0 26 / 0));\n}\n[class~="to-[#04000b]"] {\n\t--tw-gradient-to: #04000b;\n}\n[class~="from-pink-400"] {\n\t--tw-gradient-from: #f472b6;\n\t--tw-gradient-stops:\n\t\tvar(--tw-gradient-from), var(--tw-gradient-to, rgb(244 114 182 / 0));\n}\n[class~="to-fuchsia-500"] {\n\t--tw-gradient-to: #d946ef;\n}\n\n[class~="border"] {\n\tborder-width: 1px;\n\tborder-style: solid;\n}\n[class~="border-0"] {\n\tborder-width: 0;\n}\n[class~="border-2"] {\n\tborder-width: 2px;\n\tborder-style: solid;\n}\n[class~="border-4"] {\n\tborder-width: 4px;\n\tborder-style: solid;\n}\n[class~="border-t"] {\n\tborder-top-width: 1px;\n\tborder-top-style: solid;\n}\n[class~="border-b"] {\n\tborder-bottom-width: 1px;\n\tborder-bottom-style: solid;\n}\n[class~="border-r"] {\n\tborder-right-width: 1px;\n\tborder-right-style: solid;\n}\n[class~="border-l"] {\n\tborder-left-width: 1px;\n\tborder-left-style: solid;\n}\n[class~="border-x"] {\n\tborder-left-width: 1px;\n\tborder-right-width: 1px;\n\tborder-left-style: solid;\n\tborder-right-style: solid;\n}\n[class~="border-white"] {\n\tborder-color: #fff;\n}\n[class~="border-black"] {\n\tborder-color: #000;\n}\n[class~="border-transparent"] {\n\tborder-color: transparent;\n}\n[class~="border-surface-stroke"] {\n\tborder-color: var(--color-surface-stroke);\n}\n[class~="border-brand-pink"] {\n\tborder-color: var(--color-brand-pink);\n}\n[class~="border-brand-green"] {\n\tborder-color: var(--color-brand-green);\n}\n[class~="border-zinc-300"] {\n\tborder-color: #d4d4d8;\n}\n[class~="border-zinc-700"] {\n\tborder-color: #3f3f46;\n}\n[class~="border-zinc-800"] {\n\tborder-color: #27272a;\n}\n[class~="border-white/5"] {\n\tborder-color: rgb(255 255 255 / 0.05);\n}\n[class~="border-white/20"] {\n\tborder-color: rgb(255 255 255 / 0.2);\n}\n[class~="border-brand-pink/20"] {\n\tborder-color: rgb(225 29 72 / 0.2);\n}\n[class~="border-brand-pink/30"] {\n\tborder-color: rgb(225 29 72 / 0.3);\n}\n[class~="border-brand-green/30"] {\n\tborder-color: rgb(0 255 0 / 0.3);\n}\n[class~="border-cyan-500/30"] {\n\tborder-color: rgb(6 182 212 / 0.3);\n}\n[class~="border-cyan-400/30"] {\n\tborder-color: rgb(34 211 238 / 0.3);\n}\n[class~="border-amber-400/30"] {\n\tborder-color: rgb(251 191 36 / 0.3);\n}\n[class~="border-rose-400/30"] {\n\tborder-color: rgb(251 113 133 / 0.3);\n}\n[class~="border-fuchsia-500"] {\n\tborder-color: #d946ef;\n}\n[class~="border-pink-500"] {\n\tborder-color: #ec4899;\n}\n[class~="rounded"] {\n\tborder-radius: 0.25rem;\n}\n[class~="rounded-full"] {\n\tborder-radius: 9999px;\n}\n[class~="rounded-none"] {\n\tborder-radius: 0;\n}\n\n[class~="divide-y"] > :not([hidden]) ~ :not([hidden]) {\n\tborder-top: 1px solid var(--color-surface-stroke);\n}\n[class~="divide-x"] > :not([hidden]) ~ :not([hidden]) {\n\tborder-left: 1px solid var(--color-surface-stroke);\n}\n\n[class~="object-cover"] {\n\tobject-fit: cover;\n}\n[class~="pointer-events-none"] {\n\tpointer-events: none;\n}\n[class~="cursor-pointer"] {\n\tcursor: pointer;\n}\n[class~="select-none"] {\n\tuser-select: none;\n}\n[class~="select-text"] {\n\tuser-select: text;\n}\n[class~="select-all"] {\n\tuser-select: all;\n}\n[class~="outline-none"] {\n\toutline: 2px solid transparent;\n\toutline-offset: 2px;\n}\n[class~="fill-current"] {\n\tfill: currentColor;\n}\n[class~="fill-black"] {\n\tfill: #000;\n}\n[class~="fill-rose-600"] {\n\tfill: #e11d48;\n}\n[class~="fill-orange-500"] {\n\tfill: #f97316;\n}\n[class~="backdrop-blur-sm"] {\n\tbackdrop-filter: blur(4px);\n}\n[class~="backdrop-blur-md"] {\n\tbackdrop-filter: blur(12px);\n}\n[class~="backdrop-blur-xl"] {\n\tbackdrop-filter: blur(24px);\n}\n[class~="mix-blend-screen"] {\n\tmix-blend-mode: screen;\n}\n[class~="bg-clip-text"] {\n\t-webkit-background-clip: text;\n\tbackground-clip: text;\n}\n\n[class~="opacity-5"] {\n\topacity: 0.05;\n}\n[class~="opacity-20"] {\n\topacity: 0.2;\n}\n[class~="opacity-25"] {\n\topacity: 0.25;\n}\n[class~="opacity-30"] {\n\topacity: 0.3;\n}\n[class~="opacity-40"] {\n\topacity: 0.4;\n}\n[class~="opacity-60"] {\n\topacity: 0.6;\n}\n[class~="opacity-75"] {\n\topacity: 0.75;\n}\n[class~="opacity-80"] {\n\topacity: 0.8;\n}\n[class~="opacity-[0.05]"] {\n\topacity: 0.05;\n}\n[class~="opacity-[0.12]"] {\n\topacity: 0.12;\n}\n\n[class~="transition-all"] {\n\ttransition-property: all;\n\ttransition-duration: 150ms;\n}\n[class~="transition-colors"] {\n\ttransition-property:\n\t\tcolor, background-color, border-color, text-decoration-color, fill, stroke;\n\ttransition-duration: 150ms;\n}\n[class~="transition-transform"] {\n\ttransition-property: transform;\n\ttransition-duration: 150ms;\n}\n[class~="duration-75"] {\n\ttransition-duration: 75ms;\n}\n[class~="duration-150"] {\n\ttransition-duration: 150ms;\n}\n[class~="duration-300"] {\n\ttransition-duration: 300ms;\n}\n[class~="ease-in-out"] {\n\ttransition-timing-function: ease-in-out;\n}\n\n[class~="translate-x-0"] {\n\ttransform: translateX(0);\n}\n[class~="translate-x-8"] {\n\ttransform: translateX(2rem);\n}\n[class~="-translate-y-4"] {\n\ttransform: translateY(-1rem);\n}\n[class~="-translate-y-8"] {\n\ttransform: translateY(-2rem);\n}\n[class~="translate-y-6"] {\n\ttransform: translateY(1.5rem);\n}\n[class~="translate-y-28"] {\n\ttransform: translateY(7rem);\n}\n[class~="scale-75"] {\n\ttransform: scale(0.75);\n}\n[class~="scale-90"] {\n\ttransform: scale(0.9);\n}\n[class~="active:scale-95"]:active {\n\ttransform: scale(0.95);\n}\n[class~="group"]:hover [class~="group-hover:translate-x-1.5"] {\n\ttransform: translateX(0.375rem);\n}\n\n[class~="hover:bg-white"]:hover {\n\tbackground-color: #fff;\n}\n[class~="hover:bg-brand-pink"]:hover {\n\tbackground-color: var(--color-brand-pink);\n}\n[class~="hover:bg-white/5"]:hover {\n\tbackground-color: rgb(255 255 255 / 0.05);\n}\n[class~="hover:text-black"]:hover {\n\tcolor: #000;\n}\n[class~="hover:text-white"]:hover {\n\tcolor: #fff;\n}\n[class~="hover:text-brand-pink"]:hover {\n\tcolor: var(--color-brand-pink);\n}\n[class~="hover:border-white"]:hover {\n\tborder-color: #fff;\n}\n[class~="hover:border-black"]:hover {\n\tborder-color: #000;\n}\n[class~="hover:brightness-110"]:hover {\n\tfilter: brightness(1.1);\n}\n[class~="hover:underline"]:hover {\n\ttext-decoration-line: underline;\n}\n\n[class~="animate-pulse"] {\n\tanimation: rakta-pulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;\n}\n[class~="animate-ping"] {\n\tanimation: rakta-ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;\n}\n[class~="animate-bounce"] {\n\tanimation: rakta-bounce 1s infinite;\n}\n[class~="animate-[bubble-rise_6s_infinite_linear]"] {\n\tanimation: bubble-rise 6s infinite linear;\n}\n[class~="animate-[bubble-rise_8s_infinite_linear]"] {\n\tanimation: bubble-rise 8s infinite linear;\n}\n[class~="animate-[bubble-rise_5s_infinite_linear]"] {\n\tanimation: bubble-rise 5s infinite linear;\n}\n[class~="animate-[bubble-rise_10s_infinite_linear]"] {\n\tanimation: bubble-rise 10s infinite linear;\n}\n[class~="animate-[bubble-rise_7s_infinite_linear]"] {\n\tanimation: bubble-rise 7s infinite linear;\n}\n[class~="animate-[cyber-rise_5s_infinite_linear]"] {\n\tanimation: cyber-rise 5s infinite linear;\n}\n[class~="animate-[cyber-rise_6s_infinite_linear]"] {\n\tanimation: cyber-rise 6s infinite linear;\n}\n[class~="animate-[cyber-rise_7s_infinite_linear]"] {\n\tanimation: cyber-rise 7s infinite linear;\n}\n[class~="animate-[cyber-rise_8s_infinite_linear]"] {\n\tanimation: cyber-rise 8s infinite linear;\n}\n[class~="animate-[shrimp-float_2s_infinite_ease-in-out]"] {\n\tanimation: shrimp-float 2s infinite ease-in-out;\n}\n[class~="animate-[shrimp-swim_0.4s_infinite_alternate]"] {\n\tanimation: shrimp-swim 0.4s infinite alternate;\n}\n[class~="animate-[shrimp-tail_0.2s_infinite_alternate]"] {\n\tanimation: shrimp-tail 0.2s infinite alternate;\n}\n[class~="animate-[shrimp-tail_0.8s_infinite_alternate]"] {\n\tanimation: shrimp-tail 0.8s infinite alternate;\n}\n[class~="animate-[shrimp-legs_0.15s_infinite_alternate]"] {\n\tanimation: shrimp-legs 0.15s infinite alternate;\n}\n[class~="animate-[shrimp-legs_0.6s_infinite_alternate]"] {\n\tanimation: shrimp-legs 0.6s infinite alternate;\n}\n[class~="animate-[shrimp-antenna_0.6s_infinite_alternate]"] {\n\tanimation: shrimp-antenna 0.6s infinite alternate;\n}\n[class~="animate-[shrimp-antenna_1.5s_infinite_alternate]"] {\n\tanimation: shrimp-antenna 1.5s infinite alternate;\n}\n[class~="animate-[bubble-up_0.8s_infinite_ease-out_infinite]"] {\n\tanimation: bubble-up 0.8s infinite ease-out;\n}\n[class~="animate-[bubble-up_1.2s_infinite_ease-out_infinite_0.3s]"] {\n\tanimation: bubble-up 1.2s infinite ease-out 0.3s;\n}\n[class~="animate-[bubble-up_1s_infinite_ease-out_infinite_0.1s]"] {\n\tanimation: bubble-up 1s infinite ease-out 0.1s;\n}\n\n#player-shrimp,\n#player-shrimp > div,\n#player-shrimp svg {\n\twidth: 4rem;\n\theight: 4rem;\n}\n\n#game-viewport {\n\tposition: relative;\n\theight: 360px;\n\toverflow: hidden;\n}\n\n#obstacle-cube svg {\n\twidth: 100%;\n\theight: 100%;\n}\n\n@keyframes rakta-pulse {\n\t0%,\n\t100% {\n\t\topacity: 1;\n\t}\n\t50% {\n\t\topacity: 0.45;\n\t}\n}\n\n@keyframes rakta-ping {\n\t75%,\n\t100% {\n\t\topacity: 0;\n\t\ttransform: scale(2);\n\t}\n}\n\n@keyframes rakta-bounce {\n\t0%,\n\t100% {\n\t\tanimation-timing-function: cubic-bezier(0.8, 0, 1, 1);\n\t\ttransform: translateY(-8%);\n\t}\n\t50% {\n\t\tanimation-timing-function: cubic-bezier(0, 0, 0.2, 1);\n\t\ttransform: none;\n\t}\n}\n\n@media (min-width: 640px) {\n\t[class~="sm:grid-cols-2"] {\n\t\tgrid-template-columns: repeat(2, minmax(0, 1fr));\n\t}\n\t[class~="sm:flex-row"] {\n\t\tflex-direction: row;\n\t}\n\t[class~="sm:items-center"] {\n\t\talign-items: center;\n\t}\n\t[class~="sm:text-[72px]"] {\n\t\tfont-size: 72px;\n\t}\n}\n\n@media (min-width: 768px) {\n\t[class~="md:flex"] {\n\t\tdisplay: flex;\n\t}\n\t[class~="md:grid-cols-3"] {\n\t\tgrid-template-columns: repeat(3, minmax(0, 1fr));\n\t}\n\t[class~="md:grid-cols-4"] {\n\t\tgrid-template-columns: repeat(4, minmax(0, 1fr));\n\t}\n\t[class~="md:flex-row"] {\n\t\tflex-direction: row;\n\t}\n\t[class~="md:items-center"] {\n\t\talign-items: center;\n\t}\n\t[class~="md:justify-end"] {\n\t\tjustify-content: flex-end;\n\t}\n\t[class~="md:self-auto"] {\n\t\talign-self: auto;\n\t}\n\t[class~="md:w-56"] {\n\t\twidth: 14rem;\n\t}\n\t[class~="md:w-64"] {\n\t\twidth: 16rem;\n\t}\n\t[class~="md:h-[400px]"] {\n\t\theight: 400px;\n\t}\n\t[class~="md:text-[110px]"] {\n\t\tfont-size: 110px;\n\t}\n\t[class~="md:text-4xl"] {\n\t\tfont-size: 2.25rem;\n\t\tline-height: 2.5rem;\n\t}\n\t[class~="md:p-8"] {\n\t\tpadding: 2rem;\n\t}\n\t[class~="md:p-12"] {\n\t\tpadding: 3rem;\n\t}\n\t[class~="md:px-10"] {\n\t\tpadding-left: 2.5rem;\n\t\tpadding-right: 2.5rem;\n\t}\n\t[class~="md:px-12"] {\n\t\tpadding-left: 3rem;\n\t\tpadding-right: 3rem;\n\t}\n\t[class~="md:pt-32"] {\n\t\tpadding-top: 8rem;\n\t}\n\t[class~="md:border-b-0"] {\n\t\tborder-bottom-width: 0;\n\t}\n\t[class~="md:border-r"] {\n\t\tborder-right-width: 1px;\n\t\tborder-right-style: solid;\n\t}\n\t[class~="md:divide-y-0"] > :not([hidden]) ~ :not([hidden]) {\n\t\tborder-top-width: 0;\n\t}\n\t[class~="md:divide-x"] > :not([hidden]) ~ :not([hidden]) {\n\t\tborder-left: 1px solid var(--color-surface-stroke);\n\t}\n}\n';
+export const STARTER_CORAL_OBSTACLE_CODE = `// biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.
+// biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.
+// NOTE: Rakta.js uses automatic JSX transform - no React import needed.
 
-export const STARTER_TYPES_CODE =
-	'// biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.\n// biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.\nexport interface SystemMetric {\n\tname: string;\n\tvalue: string | number;\n\tstatus: "nominal" | "warning" | "critical";\n}\n\nexport interface GameHighScore {\n\tname: string;\n\tscore: number;\n\tdate: string;\n}\n\nexport type AestheticUnit = "LENIS-MODERN" | "RETRO-CYBER" | "NEO-BRUTALIST";\n\nexport interface DocArticle {\n\tid: string;\n\ttitle: string;\n\tcategory: string;\n\tcontent: string;\n}\n';
+interface CoralObstacleProps {
+	position: "TOP" | "BOTTOM";
+	height: number;
+	width?: number;
+	paletteIndex?: number;
+	variant?: number;
+	scaleX?: number;
+}
+
+export default function CoralObstacle({
+	position,
+	height,
+	width = 64,
+	paletteIndex = 0,
+	variant = 0,
+	scaleX = 1,
+}: CoralObstacleProps) {
+	const palettes = [
+		{ primary: "#f43f5e", secondary: "#fda4af", shadow: "#9f1239", polyps: "#ffe4e6", name: "rose" },
+		{ primary: "#06b6d4", secondary: "#67e8f9", shadow: "#155e75", polyps: "#ecfeff", name: "cyan" },
+		{ primary: "#a855f7", secondary: "#d8b4fe", shadow: "#581c87", polyps: "#faf5ff", name: "amethyst" },
+		{ primary: "#f59e0b", secondary: "#fde047", shadow: "#78350f", polyps: "#fefce8", name: "amber" },
+		{ primary: "#10b981", secondary: "#6ee7b7", shadow: "#065f46", polyps: "#e6fffa", name: "emerald" },
+	];
+	const palette = palettes[paletteIndex % palettes.length]!;
+	return (
+		<div className="absolute flex items-center justify-center pointer-events-none" style={{ height: \`\${height}px\`, width: \`\${width}px\`, transform: \`scaleX(\${scaleX})\` }}>
+			<svg viewBox="0 0 80 120" className="w-full h-full drop-shadow-[0_6px_14px_rgba(0,0,0,0.7)]" preserveAspectRatio="none">
+				<defs>
+					<linearGradient id={\`coralGrad-\${palette.name}\`} x1="0%" y1="0%" x2="100%" y2="100%">
+						<stop offset="0%" stopColor={palette.secondary} />
+						<stop offset="50%" stopColor={palette.primary} />
+						<stop offset="100%" stopColor={palette.shadow} />
+					</linearGradient>
+					<filter id="coralGlow">
+						<feGaussianBlur stdDeviation="1.8" result="coloredBlur" />
+						<feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge>
+					</filter>
+				</defs>
+				<g transform={position === "TOP" ? "scale(1, -1) translate(0, -120)" : undefined} filter="url(#coralGlow)">
+					{variant === 0 ? (
+						<g>
+							<path d="M 35 120 C 30 100, 15 90, 10 70 C 5 50, 20 40, 15 25 C 10 10, 25 5, 30 15 C 35 30, 28 45, 38 65 Q 42 90, 40 120" fill={palette.shadow} opacity="0.85" />
+							<path d="M 40 120 C 35 90, 20 80, 24 55 C 28 30, 15 20, 22 10 C 29 0, 37 15, 35 30 C 33 45, 42 55, 40 75 C 38 95, 42 110, 40 120 Z" fill={\`url(#coralGrad-\${palette.name})\`} />
+							<circle cx="22" cy="11" r="3.5" fill={palette.secondary} />
+						</g>
+					) : <g><path d="M 40 120 C 40 95, 18 80, 12 50 C 6 20, 32 10, 40 28 C 48 10, 74 20, 68 50 C 62 80, 40 95, 40 120 Z" fill={\`url(#coralGrad-\${palette.name})\`} opacity="0.3" /></g>}
+				</g>
+			</svg>
+		</div>
+	);
+}
+`;
+
+export const STARTER_TYPES_CODE = `// biome-ignore-all lint: Generated Rakta.js welcome starter mirrors the source design.
+// biome-ignore-all assist: Generated Rakta.js welcome starter mirrors the source design.
+export interface SystemMetric {
+	name: string;
+	value: string | number;
+	status: "nominal" | "warning" | "critical";
+}
+
+export interface GameHighScore {
+	name: string;
+	score: number;
+	date: string;
+}
+
+export type AestheticUnit = "LENIS-MODERN" | "RETRO-CYBER" | "NEO-BRUTALIST";
+
+export interface DocArticle {
+	id: string;
+	title: string;
+	category: string;
+	content: string;
+}
+`;
+
+export const STARTER_CSS_CODE = `@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap");
+:root {
+	--font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+	--font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+	--color-brand-pink: #e11d48;
+	--color-brand-green: #00ff00;
+	--color-surface-bg: #000000;
+	--color-surface-card: #0d0d0d;
+	--color-surface-stroke: #1f1f1f;
+}
+body {
+	background-color: #000000;
+	color: #ffffff;
+	font-family: var(--font-sans);
+	overflow-x: hidden;
+}
+`;
+
+export const STARTER_PAGE_CODE = `// biome-ignore-all lint: Template welcome starter Rakta.js , cerminan desain resmi.
+// biome-ignore-all assist: Template welcome starter Rakta.js , cerminan desain resmi.
+// Halaman utama Rakta.js - Welcome Experience converted from React.js original by Muhammad Rizky Ramadhan (Rhein Sullivan)
+
+export default function App() {
+	// Modal states
+	const [isDocsOpen, setIsDocsOpen] = useState(false);
+	const [isComponentsOpen, setIsComponentsOpen] = useState(false);
+	const [isDeployOpen, setIsDeployOpen] = useState(false);
+
+	// Layout & Settings States
+	const [isMuted, setIsMutedState] = useState(false);
+	const [aestheticUnit, setAestheticUnit] =
+		useState<AestheticUnit>("LENIS-MODERN");
+	const [lowLatencyMode, setLowLatencyMode] = useState(true);
+
+	// Configuration Change Floating Toast State
+	const [configToast, setConfigToast] = useState<string | null>(null);
+	const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const [isCopiedDonation, setIsCopiedDonation] = useState(false);
+
+	const showConfigToast = (message: string) => {
+		if (toastTimeoutRef.current) {
+			clearTimeout(toastTimeoutRef.current);
+		}
+		setConfigToast(message);
+		toastTimeoutRef.current = setTimeout(() => {
+			setConfigToast(null);
+		}, 1800);
+	};
+
+	const handleCopyDonationLink = (e?: { stopPropagation?: () => void }) => {
+		if (e?.stopPropagation) e.stopPropagation();
+		if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+			void navigator.clipboard.writeText(
+				"https://buymeacoffee.com/rheinsullivan",
+			);
+		}
+		setIsCopiedDonation(true);
+		showConfigToast("BuyMeACoffee link copied to clipboard!");
+		setTimeout(() => setIsCopiedDonation(false), 2500);
+	};
+
+	// Audio toggle
+	const handleToggleMute = () => {
+		const nextMuted = !isMuted;
+		setIsMutedState(nextMuted);
+		setMute(nextMuted);
+	};
+
+	// Aesthetic style change with sound feedback
+	const handleAestheticChange = (unit: AestheticUnit) => {
+		setAestheticUnit(unit);
+		showConfigToast(\`STYLE CHANGED: \${unit.replace("-", " ")}\`);
+	};
+
+	return (
+		<div className="min-h-screen bg-black text-white relative font-sans selection:bg-brand-pink selection:text-white">
+			{/* Top Navigation Bar (Header) */}
+			<header className="bg-[#0d0e0f] fixed top-0 left-0 right-0 z-50 border-b border-white/5">
+				<nav className="grid grid-cols-2 md:grid-cols-3 items-center w-full px-6 md:px-10 py-5 max-w-7xl mx-auto">
+					{/* Logo on the left */}
+					<div className="flex justify-start items-center">
+						<click
+							className="font-mono text-xl font-extrabold text-[#FAFAFA] tracking-tighter flex items-center gap-2.5 group"
+							to="hero"
+						>
+							<photo
+								path="/rakta-logo.svg"
+								alt="Rakta.js Logo"
+								className="w-7 h-7 object-contain transition-transform group-hover:scale-105"
+							/>
+							<div className="flex items-center">
+								<span>Rakta</span>
+								<span className="text-[#E11D48]">.js</span>
+							</div>
+						</click>
+					</div>
+
+					{/* Center navigation links */}
+					<div className="hidden md:flex justify-center items-center gap-7">
+						<click
+							className="bg-[#E11D48] text-white font-bold px-2 py-1 font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							to="showcase"
+						>
+							SHOWCASE
+						</click>
+						<click
+							className="text-[#b5b5b5] font-bold hover:bg-[#E11D48] hover:text-white px-2 py-1 transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							to="features"
+						>
+							DOCS
+						</click>
+						<click
+							className="text-[#b5b5b5] font-bold hover:bg-[#E11D48] hover:text-white px-2 py-1 transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							to="shrimprun"
+						>
+							GAME
+						</click>
+						<click
+							className="text-[#b5b5b5] font-bold hover:bg-[#E11D48] hover:text-white px-2 py-1 transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							to="humanitarian"
+						>
+							SOLIDARITY
+						</click>
+						<click
+							className="text-[#b5b5b5] font-bold hover:bg-[#E11D48] hover:text-white px-2 py-1 transition-colors font-mono text-[11px] tracking-wider uppercase cursor-pointer"
+							to="cta"
+						>
+							STARTED
+						</click>
+					</div>
+
+					{/* Action items on the right */}
+					<div className="flex justify-end items-center">
+						<click
+							to="https://github.com/RheinSullivan/raktajs"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="flex items-center gap-2 bg-[#E11D48] text-[#FAFAFA] px-4 py-2 font-mono text-[11px] font-bold tracking-widest uppercase hover:brightness-110 active:scale-95 transition-all text-center"
+						>
+							<FaGithub size={15} />
+							<span>GITHUB</span>
+						</click>
+					</div>
+				</nav>
+			</header>
+
+			{/* Main Content Area */}
+			<main className="pt-24 md:pt-32 px-6 md:px-12 max-w-7xl mx-auto flex flex-col gap-12 relative z-10">
+				{/* Humanitarian Solidarity Section (Section 4) */}
+				<section
+					id="humanitarian"
+					className="border-t border-surface-stroke my-10 flex flex-col bg-black"
+				>
+					{/* Header Bar matching Rakta Neo-Brutalist Layout */}
+					<div className="p-8 md:p-12 border-b border-surface-stroke flex flex-col md:flex-row md:items-end justify-between gap-8 bg-black">
+						<div className="flex flex-col gap-4 max-w-2xl">
+							<div className="flex items-center gap-3">
+								<span className="font-mono text-[10px] text-brand-pink tracking-widest font-bold uppercase flex items-center gap-1.5">
+									<span className="inline-flex items-center">
+										<svg
+											stroke="currentColor"
+											fill="currentColor"
+											strokeWidth="0"
+											viewBox="0 0 24 24"
+											height="14"
+											width="14"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path d="M9.3349 11.5022L11.5049 11.5027C13.9902 11.5027 16.0049 13.5174 16.0049 16.0027L9.00388 16.0018L9.00488 17.0027L17.0049 17.0019V16.0027C17.0049 14.9202 16.6867 13.8996 16.1188 13.0019L19.0049 13.0027C20.9972 13.0027 22.7173 14.1679 23.521 15.8541C21.1562 18.9747 17.3268 21.0027 13.0049 21.0027C10.2436 21.0027 7.90437 20.4121 6.00447 19.3779L6.00592 10.0737C7.25147 10.2521 8.39122 10.7583 9.3349 11.5022ZM4.00488 9.00268C4.51772 9.00268 4.94039 9.38872 4.99816 9.88606L5.00488 10.0018V19.0027C5.00488 19.555 4.55717 20.0027 4.00488 20.0027H2.00488C1.4526 20.0027 1.00488 19.555 1.00488 19.0027V10.0027C1.00488 9.45039 1.4526 9.00268 2.00488 9.00268H4.00488ZM13.6513 3.57806L14.0046 3.93183L14.3584 3.57806C15.3347 2.60175 16.9177 2.60175 17.894 3.57806C18.8703 4.55437 18.8703 6.13728 17.894 7.11359L14.0049 11.0027L10.1158 7.11359C9.13948 6.13728 9.13948 4.55437 10.1158 3.57806C11.0921 2.60175 12.675 2.60175 13.6513 3.57806Z" />
+										</svg>
+									</span>
+									04 / SOLIDARITY
+								</span>
+								<span className="text-zinc-700">|</span>
+								<div className="flex items-center gap-2 bg-zinc-950 border border-zinc-800 px-2.5 py-1">
+									<svg
+										viewBox="0 0 30 20"
+										className="w-4 h-3 border border-white/20 shrink-0"
+									>
+										<rect width="30" height="10" fill="#E11D48" />
+										<rect y="10" width="30" height="10" fill="#FFFFFF" />
+									</svg>
+									<span className="font-mono text-[11px] font-bold text-white tracking-wider">
+										INDONESIA
+									</span>
+									<span className="text-zinc-600 font-mono text-xs">⇄</span>
+									<svg
+										viewBox="0 0 30 20"
+										className="w-4 h-3 border border-white/20 shrink-0"
+									>
+										<rect width="30" height="6.66" fill="#000000" />
+										<rect y="6.66" width="30" height="6.66" fill="#FFFFFF" />
+										<rect y="13.33" width="30" height="6.66" fill="#009736" />
+										<polygon points="0,0 12,10 0,20" fill="#E4312B" />
+									</svg>
+									<span className="font-mono text-[11px] font-bold text-white tracking-wider">
+										PALESTINE
+									</span>
+								</div>
+							</div>
+
+							<h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-white uppercase tracking-tight leading-[0.9]">
+								HUMANITARIAN RELIEF
+							</h2>
+
+							<p className="font-sans text-xs sm:text-sm text-zinc-500 leading-relaxed">
+								Direct humanitarian solidarity by the Indonesian developer
+								ecosystem to provide emergency medical relief, clean water, and
+								food aid in Palestine.
+							</p>
+						</div>
+
+						{/* Direct Action Buttons */}
+						<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+							<button
+								onClick={handleCopyDonationLink}
+								type="button"
+								className="flex items-center justify-center gap-2 font-mono text-[11px] font-bold px-5 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white uppercase tracking-wider transition-all cursor-pointer active:scale-95 border border-zinc-800"
+							>
+								{isCopiedDonation ? (
+									<>
+										<span className="text-emerald-400 inline-flex items-center">
+											<svg
+												stroke="currentColor"
+												fill="currentColor"
+												strokeWidth="0"
+												viewBox="0 0 24 24"
+												height="16"
+												width="16"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path d="M16.4524 8.22183L11.5019 13.1709L8.67421 10.3431L7.25999 11.7574L11.5026 16L17.8666 9.63604L16.4524 8.22183Z" />
+											</svg>
+										</span>
+										<span className="text-emerald-400">COPIED</span>
+									</>
+								) : (
+									<>
+										<span className="text-zinc-400 inline-flex items-center">
+											<svg
+												stroke="currentColor"
+												fill="currentColor"
+												strokeWidth="0"
+												viewBox="0 0 24 24"
+												height="14"
+												width="14"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path d="M6.9998 6V3C6.9998 2.44772 7.44752 2 7.9998 2H19.9998C20.5521 2 20.9998 2.44772 20.9998 3V17C20.9998 17.5523 20.5521 18 19.9998 18H16.9998V20.9991C16.9998 21.5519 16.5499 22 15.993 22H4.00666C3.45059 22 3 21.5554 3 20.9991L3.0026 7.00087C3.0027 6.44811 3.45264 6 4.00942 6H6.9998ZM8.9998 6H16.9998V16H18.9998V4H8.9998V6Z" />
+											</svg>
+										</span>
+										<span>COPY LINK</span>
+									</>
+								)}
+							</button>
+
+							<a
+								href="https://buymeacoffee.com/rheinsullivan"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="flex items-center justify-center gap-2 font-mono text-[11px] font-extrabold px-6 py-3.5 bg-brand-pink text-white hover:bg-white hover:text-black uppercase tracking-wider transition-all active:scale-95"
+							>
+								<span className="inline-flex items-center">
+									<svg
+										stroke="currentColor"
+										fill="currentColor"
+										strokeWidth="0"
+										viewBox="0 0 24 24"
+										height="16"
+										width="16"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path d="M5 3H20C21.1046 3 22 3.89543 22 5V8C22 9.10457 21.1046 10 20 10H18V13C18 15.2091 16.2091 17 14 17H8C5.79086 17 4 15.2091 4 13V4C4 3.44772 4.44772 3 5 3ZM18 5V8H20V5H18ZM2 19H20V21H2V19Z" />
+									</svg>
+								</span>
+								<span>DONATE NOW</span>
+								<span className="inline-flex items-center">
+									<svg
+										stroke="currentColor"
+										fill="currentColor"
+										strokeWidth="0"
+										viewBox="0 0 24 24"
+										height="14"
+										width="14"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z" />
+									</svg>
+								</span>
+							</a>
+						</div>
+					</div>
+
+					{/* 3-Column Grid */}
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-0">
+						{/* Card 1: Channel & Allocation Notice */}
+						<div className="border-b border-surface-stroke md:border-b-0 md:border-r border-surface-stroke p-8 md:p-12 flex flex-col justify-between min-h-[260px] bg-black hover:bg-white hover:text-black group transition-all duration-300">
+							<div>
+								<span className="font-mono text-[10px] text-brand-pink group-hover:text-black mb-8 block tracking-widest font-bold uppercase flex items-center gap-1.5">
+									<span className="inline-flex items-center">
+										<svg
+											stroke="currentColor"
+											fill="currentColor"
+											strokeWidth="0"
+											viewBox="0 0 24 24"
+											height="12"
+											width="12"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path d="M5 3H20C21.1046 3 22 3.89543 22 5V8C22 9.10457 21.1046 10 20 10H18V13C18 15.2091 16.2091 17 14 17H8C5.79086 17 4 15.2091 4 13V4C4 3.44772 4.44772 3 5 3ZM18 5V8H20V5H18ZM2 19H20V21H2V19Z" />
+										</svg>
+									</span>
+									OFFICIAL CHANNEL
+								</span>
+								<h3 className="font-sans text-2xl font-extrabold mb-3 uppercase tracking-tight">
+									BUYMEACOFFEE
+								</h3>
+								<p className="font-sans text-xs text-zinc-500 group-hover:text-black/70 leading-relaxed mb-4">
+									buymeacoffee.com/rheinsullivan · Max. 30% framework
+									operational cost, the rest goes entirely to humanitarian
+									relief.
+								</p>
+							</div>
+							<div className="font-mono text-[10px] font-extrabold tracking-wider flex items-center gap-2 text-zinc-400 group-hover:text-black">
+								<span className="text-emerald-400 group-hover:text-black inline-flex items-center">
+									<svg
+										stroke="currentColor"
+										fill="currentColor"
+										strokeWidth="0"
+										viewBox="0 0 24 24"
+										height="14"
+										width="14"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path d="M12 1L20.2169 2.82598C20.6745 2.92766 21 3.33347 21 3.80217V13.7889C21 15.795 19.9974 17.6684 18.3282 18.7812L12 23L5.6718 18.7812C4.00261 17.6684 3 15.795 3 13.7889V3.80217C3 3.33347 3.32553 2.92766 3.78307 2.82598L12 1ZM11.2756 14.5858L8.27562 11.5858L9.68983 10.1716L11.2756 11.7574L15.2756 7.75736L16.6898 9.17157L11.2756 14.5858Z" />
+									</svg>
+								</span>
+								<span>VERIFIED REPOSITORY CHANNEL</span>
+							</div>
+						</div>
+
+						{/* Card 2: Relief Allocation */}
+						<div className="border-b border-surface-stroke md:border-b-0 md:border-r border-surface-stroke p-8 md:p-12 flex flex-col justify-between min-h-[260px] bg-black hover:bg-white hover:text-black group transition-all duration-300">
+							<div>
+								<span className="font-mono text-[10px] text-brand-pink group-hover:text-black mb-8 block tracking-widest font-bold uppercase flex items-center gap-1.5">
+									<span className="inline-flex items-center">
+										<svg
+											stroke="currentColor"
+											fill="currentColor"
+											strokeWidth="0"
+											viewBox="0 0 24 24"
+											height="12"
+											width="12"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path d="M20.2427 4.7574C21.3679 5.88258 22 7.4087 22 8.99999C22 10.5913 21.3679 12.1174 20.2427 13.2426L13.2427 20.2426C13.1174 20.3679 12.9913 20.4913 12.8642 20.6129C10.6235 22.5705 7.13824 22.5705 4.89748 20.6129C2.65672 18.6554 2.36539 15.2911 4.00311 13.0011L3.99999 12.9979L11 5.99793C12.1046 4.89336 13.8954 4.89336 15 5.99793C16.1046 7.10249 16.1046 8.89335 15 9.99791L8.17157 16.8263L9.58578 18.2405L16.4142 11.4121C18.1953 9.63099 18.1953 6.73484 16.4142 4.95368C14.633 3.17253 11.7369 3.17253 9.95578 4.95368L3.12735 11.7821C0.65603 14.7491 1.05063 19.2681 4.13139 21.7552C7.21215 24.2422 11.788 24.2422 14.8688 21.7552C15.0784 21.5857 15.2799 21.4042 15.4727 21.2114L22.4727 14.2114C24.0358 12.6482 24.8984 10.5565 24.8984 8.38278C24.8984 6.20905 24.0358 4.11741 22.4727 2.55423C20.9095 0.991046 18.8179 0.128449 16.6441 0.128449C14.4704 0.128449 12.3788 0.991046 10.8156 2.55423L9.40138 3.96844L10.8156 5.38266L12.2298 3.96844C13.3551 2.84327 14.8812 2.21121 16.4725 2.21121C18.0638 2.21121 19.59 2.84327 20.7152 3.96844L20.2427 4.7574Z" />
+										</svg>
+									</span>
+									DIRECT ALLOCATION
+								</span>
+								<h3 className="font-sans text-2xl font-extrabold mb-3 uppercase tracking-tight">
+									≥ 70% PALESTINE
+								</h3>
+								<p className="font-sans text-xs text-zinc-500 group-hover:text-black/70 leading-relaxed mb-4">
+									Emergency medical supply shipments, trauma care units, clean
+									water filtration, and food rations.
+								</p>
+							</div>
+							<div className="font-mono text-[10px] font-extrabold tracking-wider flex items-center gap-2 text-zinc-400 group-hover:text-black">
+								<span className="text-brand-pink group-hover:text-black inline-flex items-center">
+									<svg
+										stroke="currentColor"
+										fill="currentColor"
+										strokeWidth="0"
+										viewBox="0 0 24 24"
+										height="14"
+										width="14"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path d="M20.2427 4.7574C21.3679 5.88258 22 7.4087 22 8.99999C22 10.5913 21.3679 12.1174 20.2427 13.2426L13.2427 20.2426C13.1174 20.3679 12.9913 20.4913 12.8642 20.6129C10.6235 22.5705 7.13824 22.5705 4.89748 20.6129C2.65672 18.6554 2.36539 15.2911 4.00311 13.0011L3.99999 12.9979L11 5.99793C12.1046 4.89336 13.8954 4.89336 15 5.99793C16.1046 7.10249 16.1046 8.89335 15 9.99791L8.17157 16.8263L9.58578 18.2405L16.4142 11.4121C18.1953 9.63099 18.1953 6.73484 16.4142 4.95368C14.633 3.17253 11.7369 3.17253 9.95578 4.95368L3.12735 11.7821C0.65603 14.7491 1.05063 19.2681 4.13139 21.7552C7.21215 24.2422 11.788 24.2422 14.8688 21.7552C15.0784 21.5857 15.2799 21.4042 15.4727 21.2114L22.4727 14.2114C24.0358 12.6482 24.8984 10.5565 24.8984 8.38278C24.8984 6.20905 24.0358 4.11741 22.4727 2.55423C20.9095 0.991046 18.8179 0.128449 16.6441 0.128449C14.4704 0.128449 12.3788 0.991046 10.8156 2.55423L9.40138 3.96844L10.8156 5.38266L12.2298 3.96844C13.3551 2.84327 14.8812 2.21121 16.4725 2.21121C18.0638 2.21121 19.59 2.84327 20.7152 3.96844L20.2427 4.7574Z" />
+									</svg>
+								</span>
+								<span>PRIORITY HUMANITARIAN AID</span>
+							</div>
+						</div>
+
+						{/* Card 3: Framework Operational Overhead */}
+						<div className="p-8 md:p-12 flex flex-col justify-between min-h-[260px] bg-black hover:bg-white hover:text-black group transition-all duration-300">
+							<div>
+								<span className="font-mono text-[10px] text-brand-pink group-hover:text-black mb-8 block tracking-widest font-bold uppercase flex items-center gap-1.5">
+									<span className="inline-flex items-center">
+										<svg
+											stroke="currentColor"
+											fill="currentColor"
+											strokeWidth="0"
+											viewBox="0 0 24 24"
+											height="12"
+											width="12"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM9.71002 19.6674C8.74743 17.6259 8.15732 15.3742 8.02731 13H4.06189C4.458 16.1765 6.71639 18.7747 9.71002 19.6674ZM10.0307 13C10.1811 15.4388 10.8778 17.7297 12 19.752C13.1222 17.7297 13.8189 15.4388 13.9693 13H10.0307ZM19.9381 13H15.9727C15.8427 15.3742 15.2526 17.6259 14.29 19.6674C17.2836 18.7747 19.542 16.1765 19.9381 13ZM4.06189 11H8.02731C8.15732 8.62577 8.74743 6.37407 9.71002 4.33256C6.71639 5.22533 4.458 7.8235 4.06189 11ZM10.0307 11H13.9693C13.8189 8.56122 13.1222 6.27025 12 4.24799C10.8778 6.27025 10.1811 8.56122 10.0307 11ZM14.29 4.33256C15.2526 6.37407 15.8427 8.62577 15.9727 11H19.9381C19.542 7.8235 17.2836 5.22533 14.29 4.33256Z" />
+										</svg>
+									</span>
+									INFRASTRUCTURE
+								</span>
+								<h3 className="font-sans text-2xl font-extrabold mb-3 uppercase tracking-tight">
+									≤ 30% OPERATIONS
+								</h3>
+								<p className="font-sans text-xs text-zinc-500 group-hover:text-black/70 leading-relaxed mb-4">
+									Dedicated strictly to edge distribution nodes, repository
+									bandwidth, and continuous integration server costs.
+								</p>
+							</div>
+							<div className="font-mono text-[10px] font-extrabold tracking-wider flex items-center gap-2 text-zinc-400 group-hover:text-black">
+								<span className="text-zinc-400 group-hover:text-black inline-flex items-center">
+									<svg
+										stroke="currentColor"
+										fill="currentColor"
+										strokeWidth="0"
+										viewBox="0 0 24 24"
+										height="14"
+										width="14"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path d="M12.0049 2.00293C17.3923 2.00293 21.8114 6.2042 22.1738 11.5219L21.0639 10.412C20.6734 10.0215 20.0402 10.0215 19.6497 10.412C19.2592 10.8025 19.2592 11.4357 19.6497 11.8262L22.2355 14.412L24.8213 11.8262C25.2118 11.4357 25.2118 10.8025 24.8213 10.412C24.4308 10.0215 23.7976 10.0215 23.4071 10.412L22.4996 11.3195C22.0859 5.48074 17.4236 0.802929 11.7549 0.802929C9.98981 0.802929 8.32787 1.22846 6.85961 1.98204L8.02606 3.87729C9.16269 3.34479 10.4281 3.05293 11.7549 3.05293C11.8382 3.05293 11.9214 3.05398 12.0044 3.05606L12.0049 2.00293ZM3.57568 11.8263L1.63451 13.7674C1.24399 14.1579 1.24399 14.7911 1.63451 15.1816C2.02504 15.5722 2.65821 15.5722 3.04873 15.1816L4.50049 13.7299C4.91418 19.5686 9.57649 24.2464 15.2451 24.2464C17.0103 24.2464 18.6722 23.8209 20.1405 23.0673L18.974 21.172C17.8374 21.7046 16.572 21.9964 15.2451 21.9964C15.1618 21.9964 15.0786 21.9954 14.9956 21.9933L14.9951 23.0464C9.60777 23.0464 5.18868 18.8451 4.82628 13.5274L5.93619 14.6373C6.32671 15.0279 6.95988 15.0279 7.3504 14.6373C7.74093 14.2468 7.74093 13.6136 7.3504 13.2231L3.57568 11.8263Z" />
+									</svg>
+								</span>
+								<span>NO PERSONAL PROFIT</span>
+							</div>
+						</div>
+					</div>
+				</section>
+			</main>
+
+			{/* Footer Element */}
+			<footer className="border-t border-white/5 bg-[#0d0e0f] pt-20 pb-12 relative overflow-hidden">
+				<div className="max-w-7xl mx-auto px-6 md:px-10 flex flex-col md:flex-row justify-between items-start gap-16 mb-20 relative z-10">
+					<div className="flex flex-col items-start gap-6 max-w-xs">
+						<div className="flex items-center gap-3">
+							<photo
+								path="/rakta-logo.svg"
+								alt="Rakta.js Logo"
+								className="w-8 h-8 object-contain"
+							/>
+							<span className="font-mono text-2xl font-extrabold text-[#FAFAFA] tracking-tighter flex items-center">
+								<span>Rakta</span>
+								<span className="text-[#E11D48]">.js</span>
+							</span>
+						</div>
+						<p className="font-sans text-xs text-[#b5b5b5]/50 leading-relaxed">
+							The ultra-minimalist React framework designed for high-stakes
+							performance and developer bliss.
+						</p>
+					</div>
+					<div className="grid grid-cols-2 md:grid-cols-4 gap-x-12 gap-y-10">
+						<div className="flex flex-col gap-4 font-mono">
+							<span className="text-[#FAFAFA] text-[10px] tracking-widest font-bold uppercase">
+								RESOURCES
+							</span>
+							<click
+								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
+								to="#features"
+							>
+								Documentation
+							</click>
+							<click
+								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
+								to="#showcase"
+							>
+								Showcase
+							</click>
+						</div>
+						<div className="flex flex-col gap-4 font-mono">
+							<span className="text-[#FAFAFA] text-[10px] tracking-widest font-bold uppercase">
+								COMMUNITY
+							</span>
+							<click
+								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
+								to="https://github.com/RheinSullivan/raktajs"
+								target="_blank"
+								rel="noreferrer"
+							>
+								GitHub
+							</click>
+							<click
+								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
+								to="https://discord.com"
+								target="_blank"
+								rel="noreferrer"
+							>
+								Discord
+							</click>
+							<click
+								className="text-emerald-400/80 font-sans text-xs hover:text-emerald-300 transition-all font-semibold flex items-center gap-1"
+								to="#humanitarian"
+							>
+								<span>🇵🇸 Palestine Relief</span>
+							</click>
+						</div>
+						<div className="flex flex-col gap-4 font-mono">
+							<span className="text-[#FAFAFA] text-[10px] tracking-widest font-bold uppercase">
+								SOCIAL
+							</span>
+							<click
+								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
+								to="https://twitter.com"
+								target="_blank"
+								rel="noreferrer"
+							>
+								Twitter
+							</click>
+							<click
+								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
+								to="#"
+							>
+								Blog
+							</click>
+						</div>
+						<div className="flex flex-col gap-4 font-mono">
+							<span className="text-[#FAFAFA] text-[10px] tracking-widest font-bold uppercase">
+								LEGAL
+							</span>
+							<click
+								className="text-[#b5b5b5]/60 font-sans text-xs hover:text-[#E11D48] transition-all"
+								to="#"
+							>
+								Privacy
+							</click>
+						</div>
+					</div>
+				</div>
+
+				<div className="max-w-7xl mx-auto px-6 md:px-10 flex justify-between items-center border-t border-white/5 pt-10 relative z-10">
+					<p className="text-[#b5b5b5]/30 font-mono text-[10px]">
+						© 2026 Rakta.js Inc. Engineered for speed.
+					</p>
+					<div className="flex gap-6 text-[#b5b5b5]/30">
+						<span className="text-[12px] font-mono">Vyagra Nexus™</span>
+						<span className="text-[12px] font-mono">Cirebon</span>
+					</div>
+				</div>
+			</footer>
+		</div>
+	);
+}
+`;
