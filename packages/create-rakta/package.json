@@ -1,7 +1,7 @@
 {
 	"name": "create-rakta-app",
 	"version": "1.2.4",
-	"description": "Create a fullstack Rakta.js application with frontend, backend, database, rendering mode, and CSS framework choices.",
+	"description": "Create Rakta.js apps instantly - Interactive CLI for React fullstack projects with SSR, TypeScript, Bun, and modern tooling. Zero config required.",
 	"type": "module",
 	"license": "MIT",
 	"author": "Rhein Sullivan | Vyagra Nexusâ„¢",
@@ -16,21 +16,17 @@
 	},
 	"keywords": [
 		"rakta",
-		"rakta.js",
-		"rheinsullivan",
 		"create-rakta-app",
-		"vyagranexus",
-		"framework",
-		"frontend",
-		"react",
-		"bun",
-		"typescript",
-		"fullstack",
-		"cli",
-		"scaffold",
-		"generator",
-		"app-router",
-		"gaman"
+		"react-scaffold",
+		"fullstack-cli",
+		"project-generator",
+		"typescript-starter",
+		"bun-create",
+		"next-alternative",
+		"interactive-cli",
+		"zero-config",
+		"modern-stack",
+		"web-framework-cli"
 	],
 	"publishConfig": {
 		"access": "public"
