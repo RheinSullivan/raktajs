@@ -52,6 +52,7 @@ RELEASE_READY_v1.0.5_REPORT.md
 appArchitecture.md
 monorepoArchitecture.md
 docs/GITHUB_RELEASE_DESCRIPTION.md
+docs/NPM_OPTIMIZATION_STRATEGY.md
 
 # Environment files
 .env
