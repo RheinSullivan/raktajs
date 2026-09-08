@@ -188,12 +188,20 @@ async function buildDevClientBundle(
 
 		if (errors.length > 0) {
 			lines.push(`Errors (${errors.length}):`);
-			for (const log of errors) lines.push(formatBuildDiagnostic(log));
+			for (const log of errors) {
+				lines.push(formatBuildDiagnostic(log));
+			}
 		}
 		if (warnings.length > 0) {
 			lines.push(`\nWarnings (${warnings.length}):`);
-			for (const log of warnings) lines.push(formatBuildDiagnostic(log));
+			for (const log of warnings) {
+				lines.push(formatBuildDiagnostic(log));
+			}
 		}
+
+		// Print full error details to console immediately
+		console.error(`\n${lines.join("\n")}`);
+
 		lines.push(
 			`\nEntry file: ${clientEntry}`,
 			`Project:    ${options.projectRoot}`,

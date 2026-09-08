@@ -43,7 +43,6 @@ when **Fullstack app** is selected.
 | `/api/cms/posts/:id` | `PATCH/DELETE` | Updates or deletes CMS posts |
 
 Demo credentials:
-
 ```txt
 email: admin@rakta.local
 password: rakta-password

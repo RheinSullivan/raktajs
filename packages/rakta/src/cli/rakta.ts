@@ -302,9 +302,21 @@ async function main(): Promise<void> {
 }
 
 main().catch((caughtError: unknown) => {
-	const errorMessage =
-		caughtError instanceof Error ? caughtError.message : String(caughtError);
+	if (caughtError instanceof Error) {
+		console.error(
+			`\n${BOLD}${RED}Rakta.js error:${RESET} ${caughtError.message}\n`,
+		);
 
-	console.error(`\n${BOLD}${RED}Rakta.js error:${RESET} ${errorMessage}\n`);
+		// Print stack trace in development for debugging
+		if (process.env.NODE_ENV !== "production" && caughtError.stack) {
+			console.error(`${DIM}Stack trace:${RESET}`);
+			console.error(caughtError.stack);
+		}
+	} else {
+		console.error(
+			`\n${BOLD}${RED}Rakta.js error:${RESET} ${String(caughtError)}\n`,
+		);
+	}
+
 	process.exit(1);
 });
