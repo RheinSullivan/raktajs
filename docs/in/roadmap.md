@@ -156,4 +156,4 @@ Setiap versi harus mempertahankan:
 
 *Terakhir diperbarui: v1.1.8*
 
-*Rakta.js dibuat oleh Rhein Sullivan (Muhammad Rizky Ramadhan) dari Cirebon & Jakarta Selatan, Indonesia - Vyagra Nexus™ 🇮🇩 · 🇵🇸 Free Palestine.*
+*Rakta.js dibuat oleh Rhein Sullivan (Muhammad Rizky Ramadhan) dari Cirebon & Jakarta Selatan, Indonesia - [Vyagra Nexus™](https://vyagranexus.rheinsullivan.web.id/in) 🇮🇩 · 🇵🇸 Free Palestine.*

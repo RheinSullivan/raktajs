@@ -345,6 +345,6 @@ Rakta.js names its features after the heritage of Cirebon, West Java, Indonesia 
 
 ## License
 
-MIT - [Rhein Sullivan](https://github.com/RheinSullivan) | Vyagra Nexus™
+MIT - [Rhein Sullivan](https://github.com/RheinSullivan) | [Vyagra Nexus™](https://vyagranexus.rheinsullivan.web.id/in)
 
 🇮🇩 Made from Cirebon & South Jakarta, Indonesia, Indonesia. 🇵🇸 Free Palestine.

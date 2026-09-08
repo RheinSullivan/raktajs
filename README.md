@@ -72,7 +72,7 @@
 
 ## Story & Vision
 
-Rakta.js was created by **Muhammad Rizky Ramadhan**, a software developer from **Cirebon & South Jakarta, Indonesia**, known in the developer community as **Rhein Sullivan**, lead of **Vyagra Nexus™**.
+Rakta.js was created by **Muhammad Rizky Ramadhan**, a software developer from **Cirebon & South Jakarta, Indonesia**, known in the developer community as **Rhein Sullivan**, lead of **[Vyagra Nexus™](https://vyagranexus.rheinsullivan.web.id/in)**.
 
 The vision behind Rakta.js is simple: stop repeating the same setup across every project. Features like *file-based routing*, *auto-import with zero manual import statements*, *type-safe RPC*, an integrated *frontend-backend monolith* architecture, and *built-in authentication* are all available in one unified package - no fragmentation, no layered configuration, no fighting your tools.
 
@@ -336,6 +336,6 @@ Built by **Muhammad Rizky Ramadhan**, also known as **Rhein Sullivan**, from **C
 
 ## License
 
-MIT - Rakta.js | Vyagra Nexus™ ❤️ 🇮🇩 Indonesia & 🇵🇸 Palestine
+MIT - Rakta.js | [Vyagra Nexus™](https://vyagranexus.rheinsullivan.web.id/in) ❤️ 🇮🇩 Indonesia & 🇵🇸 Palestine
 
 [LICENCE](./LICENCE)

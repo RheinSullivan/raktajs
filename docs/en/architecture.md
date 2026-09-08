@@ -191,4 +191,4 @@ Powered by Bun + esbuild. Manages the dev server, production build, and subpath 
 
 ---
 
-*Rakta.js - Built by Rhein Sullivan (Muhammad Rizky Ramadhan) from Cirebon & South Jakarta, Indonesia. Vyagra Nexus. Free Palestine.*
+*Rakta.js - Built by Rhein Sullivan (Muhammad Rizky Ramadhan) from Cirebon & South Jakarta, Indonesia. [Vyagra Nexus™](https://vyagranexus.rheinsullivan.web.id/in). Free Palestine.*

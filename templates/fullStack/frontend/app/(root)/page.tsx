@@ -1287,7 +1287,14 @@ export default function App() {
 						© 2026 Rakta.js Inc. Engineered for speed.
 					</p>
 					<div className="flex gap-6 text-[#b5b5b5]/30">
-						<span className="text-[12px] font-mono">Vyagra Nexus™</span>
+						<a
+							href="https://vyagranexus.rheinsullivan.web.id/in"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="text-[12px] font-mono hover:text-[#E11D48] transition-colors"
+						>
+							Vyagra Nexus™
+						</a>
 						<span className="text-[12px] font-mono">Cirebon</span>
 					</div>
 				</div>
