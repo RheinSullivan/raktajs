@@ -65,6 +65,13 @@ export interface RaktaCanonicalError {
 	readonly timestamp: number;
 }
 
+export interface RaktaErrorOverlayStore {
+	readonly addError: (error: RaktaCanonicalError) => void;
+	readonly clearErrors: () => void;
+	readonly getErrors: () => ReadonlyArray<RaktaCanonicalError>;
+	readonly subscribe: (listener: () => void) => () => void;
+}
+
 // Error CSS
 
 const OVERLAY_CSS = `
@@ -625,6 +632,13 @@ export function mountErrorOverlay(): () => void {
 	const errors: RaktaCanonicalError[] = [];
 	let currentIndex = 0;
 	let errorCounter = 0;
+	const subscribers = new Set<() => void>();
+
+	function notifySubscribers(): void {
+		for (const listener of subscribers) {
+			listener();
+		}
+	}
 
 	// Inject stylesheet
 	const style = document.createElement("style");
@@ -719,12 +733,14 @@ export function mountErrorOverlay(): () => void {
 		errors.push(error);
 		currentIndex = errors.length - 1;
 		render();
+		notifySubscribers();
 	}
 
 	function clearErrors(): void {
 		errors.length = 0;
 		currentIndex = 0;
 		render();
+		notifySubscribers();
 	}
 
 	// Runtime error capture
@@ -802,14 +818,23 @@ export function mountErrorOverlay(): () => void {
 
 	// Expose public API on window for devTools integration
 
+	const overlayStore: RaktaErrorOverlayStore = {
+		addError,
+		clearErrors,
+		getErrors: () => errors,
+		subscribe: (listener) => {
+			subscribers.add(listener);
+			return () => {
+				subscribers.delete(listener);
+			};
+		},
+	};
+
 	(
 		window as typeof window & {
-			__rakta_error_overlay__?: {
-				addError: typeof addError;
-				clearErrors: typeof clearErrors;
-			};
+			__rakta_error_overlay__?: RaktaErrorOverlayStore;
 		}
-	).__rakta_error_overlay__ = { addError, clearErrors };
+	).__rakta_error_overlay__ = overlayStore;
 
 	return () => {
 		clearTimeout(attachTimer);

@@ -1,3 +1,8 @@
+import type {
+	RaktaCanonicalError,
+	RaktaErrorOverlayStore,
+} from "./errorOverlay";
+
 export type RaktaDevToolsTheme = "system" | "light" | "dark";
 export type RaktaDevToolsPosition =
 	| "bottom-left"
@@ -7,7 +12,32 @@ export type RaktaDevToolsPosition =
 	| "top-center"
 	| "top-right";
 export type RaktaDevToolsSize = "small" | "medium" | "large";
-export type RaktaDevToolsPanelView = "main" | "route-info" | "preferences";
+export type RaktaDevToolsPanelView =
+	| "main"
+	| "route-info"
+	| "preferences"
+	| "issues";
+export type RaktaDevToolsSeverity = "error" | "warning" | "info" | "success";
+export type RaktaDevToolsSubject =
+	| "route"
+	| "bundler"
+	| "compiler"
+	| "hmr"
+	| "dev-server"
+	| "api"
+	| "route-info"
+	| "config"
+	| "cache"
+	| "restart";
+
+export interface RaktaDevToolsDiagnostic {
+	readonly severity: RaktaDevToolsSeverity;
+	readonly subject: RaktaDevToolsSubject;
+	readonly message: string;
+	readonly source?: string;
+	readonly location?: string;
+	readonly action?: string;
+}
 
 export interface RaktaDevToolsPreferences {
 	readonly theme: RaktaDevToolsTheme;
@@ -54,6 +84,7 @@ export interface DevIndicatorOptions {
 	readonly logoDataUrl: string;
 	readonly routeInfo?: RaktaDevToolsRouteInfo;
 	readonly controlBasePath?: string;
+	readonly diagnostics?: ReadonlyArray<RaktaDevToolsDiagnostic>;
 }
 
 interface RaktaDevToolsState {
@@ -63,6 +94,10 @@ interface RaktaDevToolsState {
 	routeInfo: RaktaDevToolsRouteInfo;
 	activeCommand: "restart" | "cache-reset" | null;
 	commandMessage: string;
+	commandDiagnostic: RaktaDevToolsDiagnostic | null;
+	routeInfoDiagnostic: RaktaDevToolsDiagnostic | null;
+	runtimeDiagnostics: ReadonlyArray<RaktaDevToolsDiagnostic>;
+	expandedIssue: number | null;
 }
 
 const FEATURE_NAME = "Rakta DevTools";
@@ -98,6 +133,26 @@ const SIZE_LABELS: Readonly<Record<RaktaDevToolsSize, string>> = {
 	small: "Small",
 	medium: "Medium",
 	large: "Large",
+};
+
+const SEVERITY_LABELS: Readonly<Record<RaktaDevToolsSeverity, string>> = {
+	error: "Error",
+	warning: "Warning",
+	info: "Info",
+	success: "Success",
+};
+
+const SUBJECT_LABELS: Readonly<Record<RaktaDevToolsSubject, string>> = {
+	route: "Route",
+	bundler: "Bundler",
+	compiler: "Compiler",
+	hmr: "HMR",
+	"dev-server": "Dev Server",
+	api: "API",
+	"route-info": "Route Info",
+	config: "Configuration",
+	cache: "Cache",
+	restart: "Restart",
 };
 
 const RESERVED_SHORTCUTS = new Set([
@@ -138,6 +193,14 @@ const CSS = `
   --rakta-devtools-border: #303239;
   --rakta-devtools-accent: #c60005;
   --rakta-devtools-accent-soft: rgba(198, 0, 5, 0.18);
+  --rakta-devtools-error: #ff4d55;
+  --rakta-devtools-error-soft: rgba(255, 77, 85, 0.14);
+  --rakta-devtools-warning: #ffb224;
+  --rakta-devtools-warning-soft: rgba(255, 178, 36, 0.14);
+  --rakta-devtools-success: #3fb950;
+  --rakta-devtools-success-soft: rgba(63, 185, 80, 0.14);
+  --rakta-devtools-info: #8ab4f8;
+  --rakta-devtools-info-soft: rgba(138, 180, 248, 0.14);
   --rakta-devtools-shadow: 0 18px 55px rgba(0, 0, 0, 0.42);
   box-sizing: border-box;
 }
@@ -149,6 +212,14 @@ const CSS = `
   --rakta-devtools-muted: #4d5159;
   --rakta-devtools-subtle: #737984;
   --rakta-devtools-border: #d9dde3;
+  --rakta-devtools-error: #d9202e;
+  --rakta-devtools-error-soft: rgba(217, 32, 46, 0.1);
+  --rakta-devtools-warning: #9a670e;
+  --rakta-devtools-warning-soft: rgba(154, 103, 14, 0.1);
+  --rakta-devtools-success: #1a7f4b;
+  --rakta-devtools-success-soft: rgba(26, 127, 75, 0.1);
+  --rakta-devtools-info: #2563eb;
+  --rakta-devtools-info-soft: rgba(37, 99, 235, 0.1);
   --rakta-devtools-shadow: 0 18px 55px rgba(16, 24, 40, 0.16);
 }
 [data-rakta-devtools] * {
@@ -397,6 +468,131 @@ button.rakta-devtools-row:hover {
   color: var(--rakta-devtools-muted);
   overflow-wrap: anywhere;
 }
+.rakta-devtools-indicator[data-status="error"] {
+  border-color: var(--rakta-devtools-error);
+  box-shadow:
+    0 0 0 3px var(--rakta-devtools-error-soft),
+    0 10px 30px rgba(0, 0, 0, 0.22);
+}
+.rakta-devtools-indicator[data-status="warning"] {
+  border-color: var(--rakta-devtools-warning);
+  box-shadow:
+    0 0 0 3px var(--rakta-devtools-warning-soft),
+    0 10px 30px rgba(0, 0, 0, 0.22);
+}
+.rakta-devtools-row[data-status="error"] {
+  border: 1px solid var(--rakta-devtools-error);
+  background: var(--rakta-devtools-error-soft);
+}
+.rakta-devtools-row[data-status="warning"] {
+  border: 1px solid var(--rakta-devtools-warning);
+  background: var(--rakta-devtools-warning-soft);
+}
+.rakta-devtools-row[data-status="info"] {
+  border: 1px solid var(--rakta-devtools-info);
+}
+.rakta-devtools-row[data-status="loading"] {
+  border: 1px solid var(--rakta-devtools-border);
+  background: var(--rakta-devtools-muted-surface);
+  opacity: 0.85;
+}
+.rakta-devtools-severity {
+  display: inline-block;
+  flex: 0 0 auto;
+  border: 1px solid var(--rakta-devtools-border);
+  border-radius: 999px;
+  padding: 1px 7px;
+  color: var(--rakta-devtools-muted);
+  background: var(--rakta-devtools-muted-surface);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.rakta-devtools-severity[data-severity="error"] {
+  border-color: var(--rakta-devtools-error);
+  color: var(--rakta-devtools-error);
+  background: var(--rakta-devtools-error-soft);
+}
+.rakta-devtools-severity[data-severity="warning"] {
+  border-color: var(--rakta-devtools-warning);
+  color: var(--rakta-devtools-warning);
+  background: var(--rakta-devtools-warning-soft);
+}
+.rakta-devtools-severity[data-severity="success"] {
+  border-color: var(--rakta-devtools-success);
+  color: var(--rakta-devtools-success);
+  background: var(--rakta-devtools-success-soft);
+}
+.rakta-devtools-severity[data-severity="info"] {
+  border-color: var(--rakta-devtools-info);
+  color: var(--rakta-devtools-info);
+  background: var(--rakta-devtools-info-soft);
+}
+.rakta-devtools-severity[data-status="loading"] {
+  border-color: var(--rakta-devtools-border);
+  color: var(--rakta-devtools-muted);
+  background: var(--rakta-devtools-muted-surface);
+}
+.rakta-devtools-issue {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border: 1px solid var(--rakta-devtools-border);
+  border-left: 3px solid var(--rakta-devtools-border);
+  border-radius: 6px;
+  background: var(--rakta-devtools-surface);
+}
+.rakta-devtools-issue[data-severity="error"] {
+  border-left-color: var(--rakta-devtools-error);
+}
+.rakta-devtools-issue[data-severity="warning"] {
+  border-left-color: var(--rakta-devtools-warning);
+}
+.rakta-devtools-issue[data-severity="success"] {
+  border-left-color: var(--rakta-devtools-success);
+}
+.rakta-devtools-issue[data-severity="info"] {
+  border-left-color: var(--rakta-devtools-info);
+}
+.rakta-devtools-issue-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.rakta-devtools-issue-subject {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--rakta-devtools-text);
+  font-weight: 600;
+}
+.rakta-devtools-issue-message {
+  color: var(--rakta-devtools-text);
+  overflow-wrap: anywhere;
+}
+.rakta-devtools-issue-detail {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--rakta-devtools-border);
+}
+.rakta-devtools-issue-detail-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 4px;
+}
+.rakta-devtools-issue-detail-label {
+  flex: 0 0 64px;
+  color: var(--rakta-devtools-subtle);
+  font-weight: 600;
+}
+.rakta-devtools-issue-detail-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--rakta-devtools-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
 @media (max-width: 420px) {
   [data-rakta-devtools] {
     --rakta-devtools-edge: 12px;
@@ -421,6 +617,14 @@ button.rakta-devtools-row:hover {
     --rakta-devtools-muted: #4d5159;
     --rakta-devtools-subtle: #737984;
     --rakta-devtools-border: #d9dde3;
+    --rakta-devtools-error: #d9202e;
+    --rakta-devtools-error-soft: rgba(217, 32, 46, 0.1);
+    --rakta-devtools-warning: #9a670e;
+    --rakta-devtools-warning-soft: rgba(154, 103, 14, 0.1);
+    --rakta-devtools-success: #1a7f4b;
+    --rakta-devtools-success-soft: rgba(26, 127, 75, 0.1);
+    --rakta-devtools-info: #2563eb;
+    --rakta-devtools-info-soft: rgba(37, 99, 235, 0.1);
     --rakta-devtools-shadow: 0 18px 55px rgba(16, 24, 40, 0.16);
   }
 }
@@ -431,6 +635,13 @@ button.rakta-devtools-row:hover {
   @keyframes rakta-devtools-enter {
     from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+  .rakta-devtools-indicator[data-status="loading"] {
+    animation: rakta-devtools-loading-pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes rakta-devtools-loading-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
   }
 }
 `;
@@ -624,6 +835,130 @@ function renderModeLabel(renderMode: string): string {
 	return labels[renderMode] ?? renderMode.toUpperCase();
 }
 
+function severityLabel(severity: RaktaDevToolsSeverity): string {
+	return SEVERITY_LABELS[severity];
+}
+
+function subjectLabel(subject: RaktaDevToolsSubject): string {
+	return SUBJECT_LABELS[subject];
+}
+
+function severityRank(severity: RaktaDevToolsSeverity): number {
+	switch (severity) {
+		case "error":
+			return 0;
+		case "warning":
+			return 1;
+		case "info":
+			return 2;
+		case "success":
+			return 3;
+	}
+}
+
+function canonicalErrorSubject(
+	severity: RaktaCanonicalError["severity"],
+): RaktaDevToolsSubject {
+	switch (severity) {
+		case "build":
+			return "compiler";
+		case "route":
+			return "route";
+		case "config":
+			return "config";
+		case "module":
+			return "bundler";
+		default:
+			return "api";
+	}
+}
+
+function mapCanonicalErrorToDiagnostic(
+	error: RaktaCanonicalError,
+): RaktaDevToolsDiagnostic {
+	const codeFrame = error.codeFrame;
+	const location =
+		codeFrame === undefined
+			? undefined
+			: `${codeFrame.file}:${codeFrame.line}:${codeFrame.column}`;
+	const source = error.componentName;
+
+	const optionalFields: {
+		source?: string;
+		location?: string;
+	} = {};
+
+	if (source !== undefined) {
+		optionalFields.source = source;
+	}
+
+	if (location !== undefined) {
+		optionalFields.location = location;
+	}
+
+	return {
+		severity: "error",
+		subject: canonicalErrorSubject(error.severity),
+		message: error.message,
+		...optionalFields,
+	};
+}
+
+function worstSeverity(
+	diagnostics: ReadonlyArray<RaktaDevToolsDiagnostic>,
+	subjects?: ReadonlySet<RaktaDevToolsSubject>,
+): RaktaDevToolsSeverity | null {
+	let worst: RaktaDevToolsSeverity | null = null;
+
+	for (const diagnostic of diagnostics) {
+		if (subjects !== undefined && !subjects.has(diagnostic.subject)) {
+			continue;
+		}
+
+		if (
+			worst === null ||
+			severityRank(diagnostic.severity) < severityRank(worst)
+		) {
+			worst = diagnostic.severity;
+		}
+	}
+
+	return worst;
+}
+
+function allDiagnostics(
+	options: DevIndicatorOptions,
+	state: RaktaDevToolsState,
+): ReadonlyArray<RaktaDevToolsDiagnostic> {
+	return [
+		...(options.diagnostics ?? []),
+		...state.runtimeDiagnostics,
+		...(state.commandDiagnostic === null ? [] : [state.commandDiagnostic]),
+		...(state.routeInfoDiagnostic === null ? [] : [state.routeInfoDiagnostic]),
+	];
+}
+
+function indicatorStatus(
+	state: RaktaDevToolsState,
+	diagnostics: ReadonlyArray<RaktaDevToolsDiagnostic>,
+): "error" | "warning" | "loading" | "default" {
+	const worst = worstSeverity(diagnostics, undefined);
+	if (worst === "error") return "error";
+	if (worst === "warning") return "warning";
+	if (state.activeCommand !== null) return "loading";
+	return "default";
+}
+
+const ROUTE_SUBJECTS: ReadonlySet<RaktaDevToolsSubject> = new Set(["route"]);
+const ROUTE_INFO_SUBJECTS: ReadonlySet<RaktaDevToolsSubject> = new Set([
+	"route",
+	"route-info",
+]);
+const BUNDLER_SUBJECTS: ReadonlySet<RaktaDevToolsSubject> = new Set([
+	"bundler",
+	"compiler",
+]);
+
 function buildRouteTree(routeInfo: RaktaDevToolsRouteInfo): string {
 	const visibleSegments = routeInfo.segments.filter(
 		(segment) => !segment.isGroup,
@@ -657,6 +992,13 @@ function buildHeaderHtml(options: DevIndicatorOptions, title: string): string {
 </div>`;
 }
 
+function buildSeverityPillHtml(
+	severity: RaktaDevToolsSeverity,
+	labelText = severityLabel(severity),
+): string {
+	return `<span class="rakta-devtools-severity" data-severity="${escapeHtml(severity)}">${escapeHtml(labelText)}</span>`;
+}
+
 function buildMainViewHtml(
 	options: DevIndicatorOptions,
 	state: RaktaDevToolsState,
@@ -664,25 +1006,55 @@ function buildMainViewHtml(
 	const routeInfo = state.routeInfo;
 	const bundler = options.bundler ?? "Bun.build (CherbonsEngine)";
 	const commandDisabled = state.activeCommand === null ? "" : " disabled";
+	const diagnostics = allDiagnostics(options, state);
+	const overallWorst = worstSeverity(diagnostics, undefined);
+	const routeWorst = worstSeverity(diagnostics, ROUTE_SUBJECTS);
+	const routeInfoWorst = worstSeverity(diagnostics, ROUTE_INFO_SUBJECTS);
+	const bundlerWorst = worstSeverity(diagnostics, BUNDLER_SUBJECTS);
+	const restartLoading = state.activeCommand === "restart";
+	const cacheLoading = state.activeCommand === "cache-reset";
+
+	const rowStatus = (subjectStatus: RaktaDevToolsSeverity | null): string => {
+		return subjectStatus === null
+			? ""
+			: ` data-status="${escapeHtml(subjectStatus)}"`;
+	};
+
+	const restoration = (subjectStatus: RaktaDevToolsSeverity | null): string => {
+		return subjectStatus === null
+			? ""
+			: ` ${buildSeverityPillHtml(subjectStatus)}`;
+	};
+
+	const issuesRow =
+		diagnostics.length === 0
+			? ""
+			: `<button class="rakta-devtools-row" type="button" data-action="issues">
+      <span class="rakta-devtools-label">Issues</span>
+      ${overallWorst === null ? "" : buildSeverityPillHtml(overallWorst, String(diagnostics.length))}
+    </button>`;
 
 	return `${buildHeaderHtml(options, FEATURE_NAME)}
 <div class="rakta-devtools-content">
-  <div class="rakta-devtools-row">
+  <div class="rakta-devtools-row"${rowStatus(routeWorst)}>
     <span class="rakta-devtools-label">Route</span>
     <span class="rakta-devtools-value">${escapeHtml(routeInfo.currentPathname)}</span>
+    ${restoration(routeWorst)}
   </div>
   <div class="rakta-devtools-row">
     <span class="rakta-devtools-label">Status</span>
     <span class="rakta-devtools-pill">${escapeHtml(renderModeLabel(routeInfo.renderMode))}</span>
   </div>
-  <div class="rakta-devtools-row">
+  <div class="rakta-devtools-row"${rowStatus(bundlerWorst)}>
     <span class="rakta-devtools-label">Bundler</span>
     <span class="rakta-devtools-value">${escapeHtml(bundler)}</span>
+    ${restoration(bundlerWorst)}
   </div>
   <div class="rakta-devtools-section">
-    <button class="rakta-devtools-row" type="button" data-action="route-info">
+    <button class="rakta-devtools-row" type="button" data-action="route-info"${rowStatus(routeInfoWorst)}>
       <span class="rakta-devtools-label">Route Info</span>
       <span class="rakta-devtools-value" aria-hidden="true">›</span>
+      ${restoration(routeInfoWorst)}
     </button>
     <button class="rakta-devtools-row" type="button" data-action="preferences">
       <span class="rakta-devtools-label">Preferences</span>
@@ -690,13 +1062,14 @@ function buildMainViewHtml(
     </button>
   </div>
   <div class="rakta-devtools-section">
-    <button class="rakta-devtools-row" type="button" data-command="restart"${commandDisabled}>
+    ${issuesRow}
+    <button class="rakta-devtools-row" type="button" data-command="restart"${commandDisabled}${restartLoading ? ' data-status="loading"' : ""}>
       <span class="rakta-devtools-label">Restart Dev Server</span>
-      <span class="rakta-devtools-value">${state.activeCommand === "restart" ? "Working" : "Run"}</span>
+      <span class="rakta-devtools-value">${restartLoading ? "Working" : "Run"}</span>
     </button>
-    <button class="rakta-devtools-row" type="button" data-command="cache-reset"${commandDisabled}>
+    <button class="rakta-devtools-row" type="button" data-command="cache-reset"${commandDisabled}${cacheLoading ? ' data-status="loading"' : ""}>
       <span class="rakta-devtools-label">Reset Bundler Cache</span>
-      <span class="rakta-devtools-value">${state.activeCommand === "cache-reset" ? "Working" : "Run"}</span>
+      <span class="rakta-devtools-value">${cacheLoading ? "Working" : "Run"}</span>
     </button>
   </div>
 </div>
@@ -745,6 +1118,56 @@ function buildRouteInfoViewHtml(
 </div>
 <div class="rakta-devtools-footer">
   <span>Manifest ${escapeHtml(routeInfo.manifestGeneratedAt || "in memory")}</span>
+</div>`;
+}
+
+function buildIssueCardHtml(
+	diagnostic: RaktaDevToolsDiagnostic,
+	index: number,
+	expandedIssue: number | null,
+): string {
+	const expanded = expandedIssue === index;
+	const detailsHtml = expanded
+		? `<div class="rakta-devtools-issue-detail">
+    <div class="rakta-devtools-issue-detail-row"><span class="rakta-devtools-issue-detail-label">Message</span><span class="rakta-devtools-issue-detail-value">${escapeHtml(diagnostic.message)}</span></div>
+    <div class="rakta-devtools-issue-detail-row"><span class="rakta-devtools-issue-detail-label">Source</span><span class="rakta-devtools-issue-detail-value">${escapeHtml(diagnostic.source ?? "Unavailable")}</span></div>
+    <div class="rakta-devtools-issue-detail-row"><span class="rakta-devtools-issue-detail-label">Location</span><span class="rakta-devtools-issue-detail-value">${escapeHtml(diagnostic.location ?? "Unavailable")}</span></div>
+    <div class="rakta-devtools-issue-detail-row"><span class="rakta-devtools-issue-detail-label">Action</span><span class="rakta-devtools-issue-detail-value">${escapeHtml(diagnostic.action ?? "Unavailable")}</span></div>
+  </div>`
+		: "";
+
+	return `<div class="rakta-devtools-issue" data-severity="${escapeHtml(diagnostic.severity)}">
+  <div class="rakta-devtools-issue-head">
+    ${buildSeverityPillHtml(diagnostic.severity)}
+    <span class="rakta-devtools-issue-subject">${escapeHtml(subjectLabel(diagnostic.subject))}</span>
+    <button class="rakta-devtools-button" type="button" data-action="toggle-issue" data-index="${String(index)}" aria-expanded="${expanded ? "true" : "false"}">${expanded ? "Hide Details" : "View Details"}</button>
+  </div>
+  <div class="rakta-devtools-issue-message">${escapeHtml(diagnostic.message)}</div>
+  ${detailsHtml}
+</div>`;
+}
+
+function buildIssuesViewHtml(
+	options: DevIndicatorOptions,
+	state: RaktaDevToolsState,
+): string {
+	const diagnostics = allDiagnostics(options, state);
+	const issueCards = diagnostics.map((diagnostic, index) =>
+		buildIssueCardHtml(diagnostic, index, state.expandedIssue),
+	);
+
+	return `${buildHeaderHtml(options, "Diagnostics")}
+<div class="rakta-devtools-content">
+  <button class="rakta-devtools-button" type="button" data-action="main">Back</button>
+  ${
+		issueCards.length === 0
+			? '<div class="rakta-devtools-row"><span class="rakta-devtools-label">No active issues</span></div>'
+			: issueCards.join("\n")
+	}
+</div>
+<div class="rakta-devtools-footer">
+  <span class="rakta-devtools-status">${escapeHtml(state.commandMessage)}</span>
+  <span>${String(diagnostics.length)} ${diagnostics.length === 1 ? "issue" : "issues"}</span>
 </div>`;
 }
 
@@ -821,6 +1244,10 @@ function renderPanelHtml(
 		return buildPreferencesViewHtml(options, state);
 	}
 
+	if (state.panelView === "issues") {
+		return buildIssuesViewHtml(options, state);
+	}
+
 	return buildMainViewHtml(options, state);
 }
 
@@ -828,18 +1255,21 @@ async function fetchRouteInfo(
 	controlBasePath: string,
 	pathname: string,
 	fallbackRouteInfo: RaktaDevToolsRouteInfo,
-): Promise<RaktaDevToolsRouteInfo> {
+): Promise<{ routeInfo: RaktaDevToolsRouteInfo; ok: boolean }> {
 	try {
 		const response = await fetch(
 			`${controlBasePath}/route?pathname=${encodeURIComponent(pathname)}`,
 			{ headers: { Accept: "application/json" } },
 		);
 		if (!response.ok) {
-			return fallbackRouteInfo;
+			return { routeInfo: fallbackRouteInfo, ok: false };
 		}
-		return (await response.json()) as RaktaDevToolsRouteInfo;
+		return {
+			routeInfo: (await response.json()) as RaktaDevToolsRouteInfo,
+			ok: true,
+		};
 	} catch {
-		return fallbackRouteInfo;
+		return { routeInfo: fallbackRouteInfo, ok: false };
 	}
 }
 
@@ -945,10 +1375,20 @@ export function mountDevIndicator(options: DevIndicatorOptions): void {
 		routeInfo: options.routeInfo ?? createFallbackRouteInfo(options),
 		activeCommand: null,
 		commandMessage: "",
+		commandDiagnostic: null,
+		routeInfoDiagnostic: null,
+		runtimeDiagnostics: [],
+		expandedIssue: null,
 	};
+
+	function updateIndicatorStatus(): void {
+		const diagnostics = allDiagnostics(options, state);
+		indicatorButton.dataset.status = indicatorStatus(state, diagnostics);
+	}
 
 	function render(): void {
 		applyPreferences(root, state.preferences);
+		updateIndicatorStatus();
 		panel.dataset.open = String(state.isOpen);
 		indicatorButton.setAttribute("aria-expanded", String(state.isOpen));
 		panel.innerHTML = renderPanelHtml(options, state);
@@ -957,6 +1397,7 @@ export function mountDevIndicator(options: DevIndicatorOptions): void {
 
 	function openPanel(): void {
 		restoreFocusElement =
+			typeof HTMLElement !== "undefined" &&
 			document.activeElement instanceof HTMLElement
 				? document.activeElement
 				: indicatorButton;
@@ -986,13 +1427,23 @@ export function mountDevIndicator(options: DevIndicatorOptions): void {
 			...state.routeInfo,
 			currentPathname: window.location.pathname,
 		};
-		state.routeInfo = await fetchRouteInfo(
+		const result = await fetchRouteInfo(
 			controlBasePath,
 			window.location.pathname,
 			fallbackRouteInfo,
 		);
+		state.routeInfo = result.routeInfo;
+		state.routeInfoDiagnostic = result.ok
+			? null
+			: {
+					severity: "warning",
+					subject: "route-info",
+					message: "Route info unavailable.",
+				};
 		if (state.isOpen) {
 			render();
+		} else {
+			updateIndicatorStatus();
 		}
 	}
 
@@ -1020,6 +1471,13 @@ export function mountDevIndicator(options: DevIndicatorOptions): void {
 
 		const result = await runDevToolsCommand(controlBasePath, command);
 		state.activeCommand = null;
+		state.commandDiagnostic = result.ok
+			? null
+			: {
+					severity: "error",
+					subject: command === "restart" ? "restart" : "cache",
+					message: result.message,
+				};
 		state.commandMessage = result.message;
 		render();
 
@@ -1035,6 +1493,12 @@ export function mountDevIndicator(options: DevIndicatorOptions): void {
 				if (action === "main") state.panelView = "main";
 				if (action === "route-info") state.panelView = "route-info";
 				if (action === "preferences") state.panelView = "preferences";
+				if (action === "issues") state.panelView = "issues";
+				if (action === "toggle-issue") {
+					const rawIndex = button.dataset.index;
+					const index = rawIndex === undefined ? -1 : Number(rawIndex);
+					state.expandedIssue = state.expandedIssue === index ? null : index;
+				}
 				if (action === "hide-session") {
 					hideForSession(root);
 					return;
@@ -1162,6 +1626,34 @@ export function mountDevIndicator(options: DevIndicatorOptions): void {
 	window.addEventListener("popstate", () => {
 		void refreshRouteInfo();
 	});
+
+	const overlayStore = (
+		window as typeof window & {
+			__rakta_error_overlay__?: RaktaErrorOverlayStore;
+		}
+	).__rakta_error_overlay__;
+
+	if (
+		overlayStore !== undefined &&
+		typeof overlayStore.getErrors === "function"
+	) {
+		const syncOverlayDiagnostics = (): void => {
+			state.runtimeDiagnostics = overlayStore
+				.getErrors()
+				.map(mapCanonicalErrorToDiagnostic);
+			if (state.isOpen) {
+				render();
+			} else {
+				updateIndicatorStatus();
+			}
+		};
+
+		syncOverlayDiagnostics();
+
+		if (typeof overlayStore.subscribe === "function") {
+			overlayStore.subscribe(syncOverlayDiagnostics);
+		}
+	}
 
 	render();
 	void refreshRouteInfo();

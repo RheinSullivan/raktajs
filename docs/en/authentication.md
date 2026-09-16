@@ -83,6 +83,8 @@ When generating a fullstack project, choose from:
 | `/api/auth/logout-all` | POST | Yes | Revoke all sessions |
 | `/api/auth/forgot-password` | POST | No | Request OTP |
 | `/api/auth/reset-password` | POST | No | Reset with OTP |
+| `/api/auth/oauth/:provider/login` | GET | No | Start sign-in through a selected provider |
+| `/api/auth/oauth/:provider/callback` | GET | No | Provider callback, returns to the frontend |
 
 ---
 
@@ -174,15 +176,22 @@ AUTH_SECRET=replace-with-random-32-char-secret
 SESSION_MODE=multiple
 AUTH_STRATEGY=jwt
 CORS_ORIGIN=http://localhost:3000
+OAUTH_REDIRECT_BASE_URL=http://localhost:4000
 ```
 
 ---
 
 ## OAuth Providers (Optional)
 
-When generating a project, you can optionally select OAuth providers (Google, GitHub, Apple, etc.). This extends Rakta.js authentication - it does not replace it.
+When generating a fullstack project you can select one or more OAuth providers, or leave them out completely. Choosing none skips every OAuth route and hides the provider buttons on the sign-in page. Whatever you pick is wired into three places:
 
-OAuth configuration is done manually - no third-party auth platform is used.
+- **Backend routes** — every supported backend (Gaman.js, Nest.js, Express, Adonis, Hono, Laravel, CodeIgniter, Flask, Django, Prabogo, Beego, Rails, Hanami, Spring Boot, Jakarta EE) generates an authorization and a callback route per selected provider, for example `/api/auth/oauth/google/login` and `/api/auth/oauth/google/callback`.
+- **Environment variables** — each backend's `.env.example` lists the provider variables directly instead of generic placeholders (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, and the matching set for the others). `OAUTH_REDIRECT_BASE_URL` is the default callback base when a provider-specific redirect URI is not set.
+- **Sign-in page** — the fullstack template renders one button per selected provider (brand icon plus name) under the email and password form. The buttons only appear for providers you chose during generation.
+
+Seven providers are built in: Google, GitHub, Apple, Microsoft, Discord, GitLab, and Facebook. You can also pick **custom**, which keeps the flow identical but leaves the authorize and token URLs for you to fill in.
+
+Configuration stays manual. Rakta.js never depends on a third-party auth platform. You create the application on the provider's side, copy the client ID and secret into your environment, and register the callback URL against your app.
 
 ---
 

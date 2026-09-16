@@ -2,6 +2,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { generateBackendFiles } from "./backends/backendRegistry";
+import { getOAuthProviders, hasOAuth } from "./backends/oauthSupport";
 import {
 	STARTER_CORAL_OBSTACLE_CODE,
 	STARTER_CSS_CODE,
@@ -11,9 +12,11 @@ import {
 import type {
 	CssFramework,
 	Database,
+	OAuthProvider,
 	ProjectConfig,
 	ProjectFile,
 } from "./types";
+import { OAUTH_PROVIDER_DISPLAY } from "./types";
 
 const DEFAULT_METADATA_TITLE = "Rakta.js - Free Palestine";
 const FAVICON_BYTES = readFileSync(
@@ -297,6 +300,51 @@ function getFrontendTemplateFiles(
 	);
 }
 
+const OAUTH_PROVIDER_ICONS: Partial<Record<OAuthProvider, string>> = {
+	google: "FaGoogle",
+	github: "FaGithub",
+	apple: "FaApple",
+	microsoft: "FaMicrosoft",
+	discord: "FaDiscord",
+	gitlab: "FaGitlab",
+	facebook: "FaFacebook",
+	custom: "FaKey",
+};
+
+function injectOAuthProvidersIntoLoginPage(
+	content: string,
+	providers: readonly OAuthProvider[],
+): string {
+	const marker = `<div className="flex items-center justify-between font-mono text-xs text-gray-400 border-t border-surface-stroke pt-4">`;
+	if (!content.includes(marker)) {
+		return content;
+	}
+
+	const oauthBlock = `\t\t\t\t{/* OAuth sign-in providers */}
+\t\t\t\t<div className="grid w-full gap-3 border-t border-surface-stroke pt-4">
+\t\t\t\t\t<p className="font-mono text-xs uppercase text-gray-400">
+\t\t\t\t\t\tOr continue with
+\t\t\t\t\t</p>
+\t\t\t\t\t<div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+${providers
+	.map(
+		(provider) => `\t\t\t\t\t\t<a
+\t\t\t\t\t\t\thref="http://localhost:4000/api/auth/oauth/${provider}/login"
+\t\t\t\t\t\t\tclassName="flex items-center justify-center gap-2 border border-surface-stroke px-4 py-3 font-mono text-xs text-gray-300 transition-colors hover:border-brand-pink hover:text-white"
+\t\t\t\t\t\t\taria-label="Continue with ${OAUTH_PROVIDER_DISPLAY[provider]}"
+\t\t\t\t\t\t>
+\t\t\t\t\t\t\t<${OAUTH_PROVIDER_ICONS[provider] ?? "FaKey"} className="h-3 w-3 text-brand-pink" /> ${OAUTH_PROVIDER_DISPLAY[provider]}
+\t\t\t\t\t\t</a>`,
+	)
+	.join("\n")}
+\t\t\t\t\t</div>
+\t\t\t\t</div>
+
+`;
+
+	return content.replace(marker, `${oauthBlock}\t\t\t\t${marker}`);
+}
+
 function personalizeFrontendTemplate(
 	filePath: string,
 	content: string,
@@ -403,6 +451,16 @@ function personalizeFrontendTemplate(
 
 	if (!projectConfig.autoImport && normalizedPath.startsWith("frontend/app/")) {
 		return applyHookImportMode(content, false);
+	}
+
+	if (
+		normalizedPath === "frontend/app/(auth)/login/page.tsx" &&
+		hasOAuth(projectConfig)
+	) {
+		return injectOAuthProvidersIntoLoginPage(
+			content,
+			getOAuthProviders(projectConfig),
+		);
 	}
 
 	return content;
@@ -2634,28 +2692,39 @@ declare global {
     [key: string]: any;
   }>;
 
+  const FaApple: IconComponent;
   const FaArrowRight: IconComponent;
   const FaArrowRotateRight: IconComponent;
   const FaBook: IconComponent;
+  const FaChartLine: IconComponent;
   const FaCheck: IconComponent;
   const FaCircleCheck: IconComponent;
   const FaCircleInfo: IconComponent;
   const FaCloud: IconComponent;
   const FaCode: IconComponent;
   const FaCopy: IconComponent;
+  const FaDiscord: IconComponent;
   const FaEye: IconComponent;
   const FaEyeSlash: IconComponent;
+  const FaFacebook: IconComponent;
   const FaGithub: IconComponent;
+  const FaGitlab: IconComponent;
   const FaGlobe: IconComponent;
+  const FaGoogle: IconComponent;
   const FaHandHoldingHeart: IconComponent;
   const FaHeart: IconComponent;
+  const FaKey: IconComponent;
+  const FaLayerGroup: IconComponent;
+  const FaLock: IconComponent;
   const FaMagnifyingGlass: IconComponent;
+  const FaMicrosoft: IconComponent;
   const FaMicrochip: IconComponent;
   const FaPlay: IconComponent;
   const FaRibbon: IconComponent;
   const FaRotateLeft: IconComponent;
   const FaServer: IconComponent;
   const FaTerminal: IconComponent;
+  const FaUserTie: IconComponent;
   const FaVolumeHigh: IconComponent;
   const FaVolumeXmark: IconComponent;
   const FaXmark: IconComponent;

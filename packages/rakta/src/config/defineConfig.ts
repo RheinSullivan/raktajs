@@ -10,6 +10,7 @@ export interface SeoConfig {
 	readonly defaultTitle?: string;
 	readonly titleTemplate?: string;
 	readonly defaultDescription?: string;
+	readonly defaultKeywords?: string | string[];
 	readonly siteUrl?: string;
 	readonly defaultOpenGraphImage?: string;
 }
@@ -91,6 +92,7 @@ export const defaultConfig: Required<RaktaConfig> = {
 		defaultTitle: "Rakta.js - Free Palestine",
 		titleTemplate: "%s | Rakta.js",
 		defaultDescription: "Built with Rakta.js",
+		defaultKeywords: [],
 		siteUrl: "http://localhost:3000",
 	},
 	server: {

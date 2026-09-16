@@ -12,6 +12,7 @@ declare module "raktajs" {
 		readonly seo?: {
 			readonly defaultTitle?: string;
 			readonly defaultDescription?: string;
+			readonly defaultKeywords?: string | readonly string[];
 		};
 		readonly render?: {
 			readonly defaultMode?: string;

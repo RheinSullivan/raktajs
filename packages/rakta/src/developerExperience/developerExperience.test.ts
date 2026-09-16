@@ -17,6 +17,11 @@ import {
 	resolveRaktaDevToolsRouteInfo,
 } from "../forge/devTools";
 import type { RouteManifestEntry, RouteSegment } from "../router/types";
+import type {
+	RaktaDevToolsDiagnostic,
+	RaktaDevToolsSeverity,
+	RaktaDevToolsSubject,
+} from "./devIndicator";
 import {
 	DEFAULT_RAKTA_DEVTOOLS_PREFERENCES,
 	isReservedShortcut,
@@ -949,5 +954,94 @@ describe("v1.2.0 template dependency regression tests", () => {
 				}
 			}
 		}
+	});
+});
+
+describe("Rakta DevTools visual states", () => {
+	const devIndicatorSource = readFileSync(
+		resolvePackagePath(
+			"packages/rakta/src/developerExperience/devIndicator.ts",
+		),
+		"utf8",
+	);
+
+	test("error state uses a red border on the indicator", () => {
+		expect(devIndicatorSource).toContain(
+			'.rakta-devtools-indicator[data-status="error"]',
+		);
+		expect(devIndicatorSource).toContain(
+			"border-color: var(--rakta-devtools-error)",
+		);
+	});
+
+	test("warning state is visually distinct from error", () => {
+		expect(devIndicatorSource).toContain(
+			'.rakta-devtools-indicator[data-status="warning"]',
+		);
+		expect(devIndicatorSource).toContain(
+			"border-color: var(--rakta-devtools-warning)",
+		);
+	});
+
+	test("loading state is not treated as an error", () => {
+		expect(devIndicatorSource).toContain(
+			'.rakta-devtools-indicator[data-status="loading"]',
+		);
+		expect(devIndicatorSource).not.toContain(
+			'[data-status="loading"] { border-color: var(--rakta-devtools-error)',
+		);
+	});
+
+	test("error details fall back to Unavailable instead of fabricated values", () => {
+		expect(devIndicatorSource).toContain("escapeHtml(diagnostic.message)");
+		expect(devIndicatorSource).toContain('diagnostic.source ?? "Unavailable"');
+		expect(devIndicatorSource).toContain(
+			'diagnostic.location ?? "Unavailable"',
+		);
+		expect(devIndicatorSource).toContain('diagnostic.action ?? "Unavailable"');
+	});
+
+	test("DevIndicatorOptions accepts diagnostics with severity and subject", () => {
+		const diagnostic: RaktaDevToolsDiagnostic = {
+			severity: "error",
+			subject: "route",
+			message: "Failed to load route",
+		};
+		expect(diagnostic.severity).toBe("error");
+		expect(diagnostic.subject).toBe("route");
+	});
+
+	test("severity model distinguishes error, warning, info, and success", () => {
+		const severities: ReadonlyArray<RaktaDevToolsSeverity> = [
+			"error",
+			"warning",
+			"info",
+			"success",
+		];
+		expect(severities).toContain("error");
+		expect(severities).toContain("warning");
+	});
+
+	test("subjects cover route, bundler, compiler, HMR, and restart tooling", () => {
+		const subjects: ReadonlyArray<RaktaDevToolsSubject> = [
+			"route",
+			"bundler",
+			"compiler",
+			"hmr",
+			"dev-server",
+			"api",
+			"route-info",
+			"config",
+			"cache",
+			"restart",
+		];
+		expect(subjects).toContain("route");
+		expect(subjects).toContain("cache");
+	});
+
+	test("existing Rakta logo is reused, not replaced", () => {
+		expect(devIndicatorSource).toContain("options.logoDataUrl");
+		expect(devIndicatorSource).not.toContain("Next.js Logo");
+		expect(devIndicatorSource).not.toContain("NuxtLogo");
 	});
 });

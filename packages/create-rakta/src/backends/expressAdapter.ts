@@ -1,5 +1,11 @@
 import type { ProjectConfig, ProjectFile } from "../types";
 import type { BackendAdapter, BackendCapabilities } from "./backendAdapter";
+import {
+	buildJsOAuthConfigFile,
+	buildOAuthEnvExample,
+	getOAuthProviders,
+	hasOAuth,
+} from "./oauthSupport";
 
 export const expressCapabilities: BackendCapabilities = {
 	framework: "express",
@@ -27,6 +33,8 @@ export const expressAdapter: BackendAdapter = {
 	generateFiles(projectConfiguration: ProjectConfig): ProjectFile[] {
 		const projectName = projectConfiguration.projectName;
 		const isSawitDatabase = projectConfiguration.database === "sawitdb";
+		const oauthProviders = getOAuthProviders(projectConfiguration);
+		const hasOAuthEnabled = hasOAuth(projectConfiguration);
 
 		const packageJsonContent = JSON.stringify(
 			{
@@ -58,7 +66,39 @@ export const expressAdapter: BackendAdapter = {
 			2,
 		);
 
-		const indexContent = `import express, { Request, Response } from "express";
+		const oauthImportLine = hasOAuthEnabled
+			? 'import { oauthConfig } from "./auth/oauth.config";\n\n'
+			: "";
+
+		const oauthInlineRoutes = hasOAuthEnabled
+			? `
+// OAuth provider login and callback endpoints
+application.get("/api/auth/oauth/:provider/login", (req: Request, res: Response) => {
+  const provider = (req.params as Record<string, string>).provider ?? "google";
+  const upperProvider = provider.toUpperCase();
+  const clientId = process.env[\`\${upperProvider}_CLIENT_ID\`] ?? "";
+  const redirectUri =
+    process.env[\`\${upperProvider}_REDIRECT_URI\`] ??
+    oauthConfig.buildRedirectUri(provider);
+  const authorizeEndpoint = oauthConfig.authorizeEndpoints[provider] ?? "";
+  const scope = oauthConfig.scopes[provider] ?? "openid profile email";
+
+  res.redirect(
+    \`\${authorizeEndpoint}?client_id=\${encodeURIComponent(clientId)}&redirect_uri=\${encodeURIComponent(redirectUri)}&response_type=code&scope=\${encodeURIComponent(scope)}\`,
+  );
+});
+
+application.get("/api/auth/oauth/:provider/callback", (req: Request, res: Response) => {
+  const provider = (req.params as Record<string, string>).provider ?? "google";
+  const code = req.query.code ?? "";
+  res.redirect(
+    \`http://localhost:3000/auth/sign-in?oauth=\${provider}&code=\${encodeURIComponent(String(code))}\`,
+  );
+});
+`
+			: "";
+
+		const indexContent = `${oauthImportLine}import express, { Request, Response } from "express";
 import cors from "cors";
 
 const application = express();
@@ -78,6 +118,16 @@ application.get("/api/users", (_request: Request, response: Response) => {
   ]);
 });
 
+application.get("/api/cms/posts", (_request: Request, response: Response) => {
+  response.json([
+    { id: "post_1", title: "Welcome to Rakta.js + Express.js", published: true },
+  ]);
+});
+
+application.post("/api/cms/posts", (request: Request, response: Response) => {
+  response.status(201).json({ id: \`post_\${Date.now()}\`, ...(request.body ?? {}) });
+});
+${oauthInlineRoutes}
 application.listen(port, () => {
   console.log(\`Express.js backend listening on http://localhost:\${port}\`);
 });
@@ -87,9 +137,24 @@ application.listen(port, () => {
 			{ path: "backend/package.json", content: packageJsonContent },
 			{ path: "backend/src/index.ts", content: indexContent },
 			{
+				path: "backend/.env.example",
+				content: buildOAuthEnvExample(
+					"PORT=4000\nNODE_ENV=development\n",
+					oauthProviders,
+				),
+			},
+			{
 				path: "backend/README.md",
 				content: `# ${projectName} Backend (Express.js)\n\nMinimal Node.js backend.\n\n## Commands\n- Dev: \`npm run dev\`\n- Build: \`npm run build\`\n`,
 			},
+			...(hasOAuthEnabled
+				? [
+						{
+							path: "backend/src/auth/oauth.config.ts",
+							content: buildJsOAuthConfigFile(oauthProviders),
+						},
+					]
+				: []),
 		];
 	},
 };

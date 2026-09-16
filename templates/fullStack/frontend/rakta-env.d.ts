@@ -557,6 +557,7 @@ declare global {
 		[key: string]: unknown;
 	}>;
 
+	const FaApple: IconComponent;
 	const FaArrowRight: IconComponent;
 	const FaArrowRotateRight: IconComponent;
 	const FaBook: IconComponent;
@@ -566,13 +567,19 @@ declare global {
 	const FaCloud: IconComponent;
 	const FaCode: IconComponent;
 	const FaCopy: IconComponent;
+	const FaDiscord: IconComponent;
 	const FaEye: IconComponent;
 	const FaEyeSlash: IconComponent;
+	const FaFacebook: IconComponent;
 	const FaGithub: IconComponent;
+	const FaGitlab: IconComponent;
 	const FaGlobe: IconComponent;
+	const FaGoogle: IconComponent;
 	const FaHandHoldingHeart: IconComponent;
 	const FaHeart: IconComponent;
+	const FaKey: IconComponent;
 	const FaMagnifyingGlass: IconComponent;
+	const FaMicrosoft: IconComponent;
 	const FaMicrochip: IconComponent;
 	const FaPlay: IconComponent;
 	const FaRibbon: IconComponent;

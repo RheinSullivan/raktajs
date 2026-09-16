@@ -18,6 +18,7 @@ export interface RendererOptions {
 	readonly appName: string;
 	readonly title?: string | undefined;
 	readonly description?: string | undefined;
+	readonly keywords?: string | ReadonlyArray<string> | undefined;
 	readonly faviconPath?: string | undefined;
 	readonly scriptPath: string;
 	readonly cssPath: string;
@@ -57,6 +58,10 @@ export function buildHtmlShell(options: RendererOptions): string {
 		options.description !== undefined
 			? `<meta name="description" content="${options.description}" />`
 			: "";
+	const keywordsMeta =
+		options.keywords !== undefined
+			? `<meta name="keywords" content="${Array.isArray(options.keywords) ? options.keywords.join(", ") : options.keywords}" />`
+			: "";
 
 	// Inline critical CSS: keeps the loading state visible immediately while
 	// the full stylesheet and JS bundle are still being fetched.
@@ -84,6 +89,7 @@ export function buildHtmlShell(options: RendererOptions): string {
     <meta name="generator" content="${RAKTA_NAME}" />
     <title>${title}</title>
     ${descriptionMeta}
+    ${keywordsMeta}
     <link rel="icon" href="${faviconHref}" sizes="any" type="image/x-icon" />
     <link rel="shortcut icon" href="${faviconHref}" type="image/x-icon" />
     <link rel="apple-touch-icon" href="${faviconHref}" />

@@ -147,6 +147,121 @@ describe("create-rakta fullstack generator", () => {
 		expect(envExample).toContain("GITHUB_CLIENT_ID");
 	});
 
+	test("all backend adapters generate OAuth routes and env when providers are selected", () => {
+		const backends: ReadonlyArray<ProjectConfig["backendFramework"]> = [
+			"gaman",
+			"nestjs",
+			"express",
+			"adonis",
+			"hono",
+			"laravel",
+			"codeigniter",
+			"flask",
+			"django",
+			"prabogo",
+			"beego",
+			"rails",
+			"hanami",
+			"spring-boot",
+			"jakarta-ee",
+		];
+
+		for (const backendFramework of backends) {
+			const files = generateProjectFiles({
+				...fullstackConfig,
+				backendFramework,
+				oauthProviders: ["google", "github"],
+			});
+			const fileMap = new Map(
+				files.map((file) => [
+					file.path,
+					typeof file.content === "string" ? file.content : "",
+				]),
+			);
+			const allBackendContent = files
+				.filter((file) => file.path.startsWith("backend/"))
+				.map((file) => (typeof file.content === "string" ? file.content : ""))
+				.join("\n");
+
+			expect(allBackendContent, backendFramework).toContain("/api/auth/oauth/");
+			expect(fileMap.get("backend/.env.example"), backendFramework).toContain(
+				"GOOGLE_CLIENT_ID",
+			);
+			expect(fileMap.get("backend/.env.example"), backendFramework).toContain(
+				"GITHUB_CLIENT_ID",
+			);
+		}
+	});
+
+	test("all backend adapters generate CMS posts endpoints", () => {
+		const backends: ReadonlyArray<ProjectConfig["backendFramework"]> = [
+			"gaman",
+			"nestjs",
+			"express",
+			"adonis",
+			"hono",
+			"laravel",
+			"codeigniter",
+			"flask",
+			"django",
+			"prabogo",
+			"beego",
+			"rails",
+			"hanami",
+			"spring-boot",
+			"jakarta-ee",
+		];
+
+		for (const backendFramework of backends) {
+			const files = generateProjectFiles({
+				...fullstackConfig,
+				backendFramework,
+				oauthProviders: ["none"],
+			});
+			const allBackendContent = files
+				.filter((file) => file.path.startsWith("backend/"))
+				.map((file) => (typeof file.content === "string" ? file.content : ""))
+				.join("\n");
+
+			expect(allBackendContent, backendFramework).toContain("cms/posts");
+			expect(allBackendContent, backendFramework).toContain(
+				"Welcome to Rakta.js + ",
+			);
+		}
+	});
+
+	test("login page shows dynamic OAuth provider buttons when providers are selected", () => {
+		const files = generateProjectFiles({
+			...fullstackConfig,
+			oauthProviders: ["google", "github", "discord"],
+		});
+		const login = files.find(
+			(file) => file.path === "frontend/app/(auth)/login/page.tsx",
+		);
+
+		expect(login).toBeDefined();
+		expect(login?.content).toContain("Continue with Google");
+		expect(login?.content).toContain("Continue with GitHub");
+		expect(login?.content).toContain("Continue with Discord");
+		expect(login?.content).toContain(
+			"http://localhost:4000/api/auth/oauth/google/login",
+		);
+		expect(login?.content).toContain(
+			"http://localhost:4000/api/auth/oauth/github/login",
+		);
+	});
+
+	test("login page has no OAuth buttons when no providers are selected", () => {
+		const files = generateProjectFiles(fullstackConfig);
+		const login = files.find(
+			(file) => file.path === "frontend/app/(auth)/login/page.tsx",
+		);
+
+		expect(login).toBeDefined();
+		expect(login?.content).not.toContain("OAuth sign-in providers");
+		expect(login?.content).not.toContain("Continue with Google");
+	});
+
 	test("generates unified rendering and current Rakta.js dependency", () => {
 		const files = generateProjectFiles(fullstackConfig);
 		const fileByPath = new Map(

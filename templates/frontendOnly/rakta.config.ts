@@ -12,6 +12,7 @@ export default defineRaktaConfig({
 		defaultTitle: "Rakta.js - Free Palestine",
 		defaultDescription:
 			"Frontend-only Rakta.js app with zero-import components and ShrimpRun.",
+		defaultKeywords: [],
 	},
 	render: {
 		defaultMode: "hybrid",

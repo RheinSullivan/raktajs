@@ -83,6 +83,8 @@ Saat generate fullstack project, pilih dari:
 | `/api/auth/logout-all` | POST | Ya | Cabut semua session |
 | `/api/auth/forgot-password` | POST | Tidak | Minta OTP |
 | `/api/auth/reset-password` | POST | Tidak | Reset dengan OTP |
+| `/api/auth/oauth/:provider/login` | GET | Tidak | Mulai sign-in lewat provider yang dipilih |
+| `/api/auth/oauth/:provider/callback` | GET | Tidak | Callback dari provider, kembali ke frontend |
 
 ---
 
@@ -174,15 +176,22 @@ AUTH_SECRET=ganti-dengan-secret-acak-32-karakter
 SESSION_MODE=multiple
 AUTH_STRATEGY=jwt
 CORS_ORIGIN=http://localhost:3000
+OAUTH_REDIRECT_BASE_URL=http://localhost:4000
 ```
 
 ---
 
 ## OAuth Providers (Opsional)
 
-Saat generate project, kamu bisa memilih OAuth providers (Google, GitHub, Apple, dll.) secara opsional. Ini memperluas autentikasi Rakta.js - tidak menggantikannya.
+Saat generate project fullstack, kamu bisa memilih satu atau lebih provider OAuth, atau mengosongkannya sama sekali. Jika tidak ada yang dipilih, semua route OAuth dilewati dan tombol provider di halaman sign-in disembunyikan. Provider yang kamu pilih dipasang ke tiga tempat:
 
-Konfigurasi OAuth dilakukan secara manual - tidak ada platform auth pihak ketiga yang digunakan.
+- **Route backend** — semua backend yang didukung (Gaman.js, Nest.js, Express, Adonis, Hono, Laravel, CodeIgniter, Flask, Django, Prabogo, Beego, Rails, Hanami, Spring Boot, Jakarta EE) menghasilkan route authorization dan callback untuk setiap provider terpilih, misalnya `/api/auth/oauth/google/login` dan `/api/auth/oauth/google/callback`.
+- **Environment variables** — `.env.example` setiap backend langsung menuliskan variabel per provider (bukan placeholder generik), seperti `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, dan pasangannya untuk provider lain. `OAUTH_REDIRECT_BASE_URL` menjadi dasar callback default bila redirect URI spesifik-provider tidak diisi.
+- **Halaman sign-in** — template fullstack merender satu tombol per provider terpilih (ikon merek plus nama) di bawah form email dan password. Tombol hanya muncul untuk provider yang kamu pilih saat generate.
+
+Ada tujuh provider bawaan: Google, GitHub, Apple, Microsoft, Discord, GitLab, dan Facebook. Kamu juga bisa memilih **custom**, yang alurnya sama persis tetapi URL authorize dan token diisi sendiri oleh kamu.
+
+Konfigurasi tetap manual. Rakta.js tidak pernah bergantung pada platform auth pihak ketiga. Kamu membuat aplikasi di sisi provider, menyalin client ID dan secret ke environment, lalu mendaftarkan URL callback ke aplikasi kamu.
 
 ---
 

@@ -68,7 +68,7 @@ SESSION_MODE=multiple
 # Google OAuth (uncomment untuk mengaktifkan)
 # GOOGLE_CLIENT_ID=
 # GOOGLE_CLIENT_SECRET=
-# GOOGLE_REDIRECT_URI=http://localhost:4000/api/auth/callback/google
+# GOOGLE_REDIRECT_URI=http://localhost:4000/api/auth/oauth/google/callback
 ```
 
 ---

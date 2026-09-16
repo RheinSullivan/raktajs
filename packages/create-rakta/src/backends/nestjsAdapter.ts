@@ -1,5 +1,11 @@
 import type { ProjectConfig, ProjectFile } from "../types";
 import type { BackendAdapter, BackendCapabilities } from "./backendAdapter";
+import {
+	buildJsOAuthConfigFile,
+	buildOAuthEnvExample,
+	getOAuthProviders,
+	hasOAuth,
+} from "./oauthSupport";
 
 export const nestjsCapabilities: BackendCapabilities = {
 	framework: "nestjs",
@@ -26,6 +32,8 @@ export const nestjsAdapter: BackendAdapter = {
 	capabilities: nestjsCapabilities,
 	generateFiles(projectConfiguration: ProjectConfig): ProjectFile[] {
 		const projectName = projectConfiguration.projectName;
+		const oauthProviders = getOAuthProviders(projectConfiguration);
+		const hasOAuthEnabled = hasOAuth(projectConfiguration);
 
 		const packageJsonContent = JSON.stringify(
 			{
@@ -70,9 +78,10 @@ bootstrap();
 
 		const appModuleContent = `import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
-
+import { CmsController } from "./cms.controller";
+${hasOAuthEnabled ? 'import { OAuthController } from "./oauth.controller";\n' : ""}
 @Module({
-  controllers: [AppController],
+  controllers: [AppController, CmsController${hasOAuthEnabled ? ", OAuthController" : ""}],
   providers: [],
 })
 export class AppModule {}
@@ -97,15 +106,98 @@ export class AppController {
 }
 `;
 
-		return [
+		const cmsControllerContent = `import { Body, Controller, Get, Post } from "@nestjs/common";
+
+interface CmsPost {
+  id: string;
+  title: string;
+  published: boolean;
+}
+
+@Controller("api/cms/posts")
+export class CmsController {
+  private readonly seededPosts: CmsPost[] = [
+    { id: "post_1", title: "Welcome to Rakta.js + Nest.js", published: true },
+    { id: "post_2", title: "Building CMS routes with decorators", published: true },
+  ];
+
+  @Get()
+  getPosts(): CmsPost[] {
+    return this.seededPosts;
+  }
+
+  @Post()
+  createPost(@Body() body: Partial<CmsPost>): CmsPost {
+    return { id: \`post_\${Date.now()}\`, title: body.title ?? "Untitled", published: true };
+  }
+}
+`;
+
+		const oauthControllerContent = `import { Controller, Get, Param, Query, Redirect } from "@nestjs/common";
+import { oauthConfig } from "./auth/oauth.config";
+
+@Controller()
+export class OAuthController {
+  @Get("api/auth/oauth/:provider/login")
+  @Redirect()
+  redirectToProvider(@Param("provider") provider: string): { url: string; statusCode: number } {
+    const upperProvider = provider.toUpperCase();
+    const clientId = process.env[\`\${upperProvider}_CLIENT_ID\`] ?? "";
+    const redirectUri =
+      process.env[\`\${upperProvider}_REDIRECT_URI\`] ??
+      oauthConfig.buildRedirectUri(provider);
+    const authorizeEndpoint = oauthConfig.authorizeEndpoints[provider] ?? "";
+    const scope = oauthConfig.scopes[provider] ?? "openid profile email";
+
+    return {
+      url: \`\${authorizeEndpoint}?client_id=\${encodeURIComponent(clientId)}&redirect_uri=\${encodeURIComponent(redirectUri)}&response_type=code&scope=\${encodeURIComponent(scope)}\`,
+      statusCode: 302,
+    };
+  }
+
+  @Get("api/auth/oauth/:provider/callback")
+  @Redirect()
+  callback(@Param("provider") provider: string, @Query("code") code: string): { url: string; statusCode: number } {
+    return {
+      url: \`http://localhost:3000/auth/sign-in?oauth=\${provider}&code=\${encodeURIComponent(code ?? "")}\`,
+      statusCode: 302,
+    };
+  }
+}
+`;
+
+		const resultFiles: ProjectFile[] = [
 			{ path: "backend/package.json", content: packageJsonContent },
 			{ path: "backend/src/main.ts", content: mainContent },
 			{ path: "backend/src/app.module.ts", content: appModuleContent },
 			{ path: "backend/src/app.controller.ts", content: appControllerContent },
+			{ path: "backend/src/cms.controller.ts", content: cmsControllerContent },
+			{
+				path: "backend/.env.example",
+				content: buildOAuthEnvExample(
+					"PORT=4000\nNODE_ENV=development\n",
+					oauthProviders,
+				),
+			},
 			{
 				path: "backend/README.md",
 				content: `# ${projectName} Backend (Nest.js)\n\nStructured Node.js backend.\n\n## Commands\n- Dev: \`npm run dev\`\n- Build: \`npm run build\`\n`,
 			},
 		];
+
+		if (hasOAuthEnabled) {
+			resultFiles.push(
+				{
+					path: "backend/src/auth/oauth.config.ts",
+					content: buildJsOAuthConfigFile(oauthProviders),
+				},
+				{
+					path: "backend/src/oauth.controller.ts",
+					content: oauthControllerContent,
+				},
+			);
+		}
+
+		return resultFiles;
 	},
 };

@@ -1,6 +1,6 @@
 {
 	"name": "raktajs",
-	"version": "1.2.5",
+	"version": "1.2.6",
 	"description": "Rakta.js - Ultra-fast React framework with SSR, SSG, and edge runtime. Small bundle, blazing performance, zero-config TypeScript and Bun support.",
 	"type": "module",
 	"license": "MIT",

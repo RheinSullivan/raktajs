@@ -40,6 +40,7 @@ export interface SsgRendererOptions {
 	readonly appName: string;
 	readonly title?: string | undefined;
 	readonly description?: string | undefined;
+	readonly keywords?: string | ReadonlyArray<string> | undefined;
 	/** Path to the client JS asset, e.g. "/app.js" or "/client/app.abc123.js". */
 	readonly scriptPath: string;
 	/** Path to the CSS asset. */
@@ -158,6 +159,7 @@ export async function generateStaticPages(
 				appName: options.renderer.appName,
 				title: options.renderer.title,
 				description: options.renderer.description,
+				keywords: options.renderer.keywords,
 				scriptPath: options.renderer.scriptPath,
 				cssPath: options.renderer.cssPath,
 				lang: options.renderer.lang,
@@ -225,6 +227,7 @@ export function writeCsrIndexHtml(
 			appName: rendererOptions.appName,
 			title: rendererOptions.title,
 			description: rendererOptions.description,
+			keywords: rendererOptions.keywords,
 			scriptPath: rendererOptions.scriptPath,
 			cssPath: rendererOptions.cssPath,
 			lang: rendererOptions.lang,

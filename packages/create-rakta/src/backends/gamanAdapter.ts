@@ -1,5 +1,10 @@
 import type { ProjectConfig, ProjectFile } from "../types";
 import type { BackendAdapter, BackendCapabilities } from "./backendAdapter";
+import {
+	buildOAuthEnvLines,
+	getOAuthProviders,
+	hasOAuth,
+} from "./oauthSupport";
 
 export const gamanCapabilities: BackendCapabilities = {
 	framework: "gaman",
@@ -34,9 +39,8 @@ export const gamanAdapter: BackendAdapter = {
 	generateFiles(projectConfiguration: ProjectConfig): ProjectFile[] {
 		const projectName = projectConfiguration.projectName;
 		const isSawitDatabase = projectConfiguration.database === "sawitdb";
-		const oauthProviders = projectConfiguration.oauthProviders ?? ["none"];
-		const hasOAuth =
-			oauthProviders.length > 0 && !oauthProviders.includes("none");
+		const oauthProviders = getOAuthProviders(projectConfiguration);
+		const hasOAuthEnabled = hasOAuth(projectConfiguration);
 
 		const packageJsonContent = JSON.stringify(
 			{
@@ -90,15 +94,17 @@ NODE_ENV=development
 DATABASE_URL=${isSawitDatabase ? "sawit://localhost/data.sawit" : "postgresql://localhost:5432/db"}
 JWT_SECRET=rakta_gaman_super_secret_key_change_in_production
 REFRESH_TOKEN_SECRET=rakta_gaman_refresh_secret_key
+OAUTH_REDIRECT_BASE_URL=http://localhost:4000
 SAWIT_DB_FILE=./storage/database.sawit
 `;
 
-		if (hasOAuth) {
-			for (const provider of oauthProviders) {
-				if (provider !== "none") {
-					const upperProvider = provider.toUpperCase();
-					environmentContent += `${upperProvider}_CLIENT_ID=mock_client_id\n${upperProvider}_CLIENT_SECRET=mock_client_secret\n`;
-				}
+		if (hasOAuthEnabled) {
+			const oauthEnvLines = buildOAuthEnvLines(
+				oauthProviders,
+				"http://localhost:4000",
+			);
+			if (oauthEnvLines.length > 0) {
+				environmentContent += `\n${oauthEnvLines}\n`;
 			}
 		}
 
@@ -202,11 +208,22 @@ export class Router {
 }
 `;
 
+		const oauthApiRoutesPart = hasOAuthEnabled
+			? `
+${oauthProviders
+	.map(
+		(provider) =>
+			`apiRouter.get("/api/auth/oauth/${provider}/login", oauthLoginHandler);
+apiRouter.get("/api/auth/oauth/${provider}/callback", oauthCallbackHandler);`,
+	)
+	.join("\n")}`
+			: "";
+
 		const apiRoutesContent = `import { Router } from "./router";
 import { registerHandler, loginHandler, refreshTokenHandler, logoutAllHandler, meHandler, forgotPasswordHandler, resetPasswordHandler } from "../controllers/auth.controller";
 import { getUsersHandler, getUserByIdHandler } from "../controllers/user.controller";
 import { getPostsHandler, createPostHandler } from "../controllers/cms.controller";
-
+${hasOAuthEnabled ? 'import { oauthLoginHandler, oauthCallbackHandler } from "../controllers/oauth.controller";\n' : ""}
 export const apiRouter = new Router();
 
 apiRouter.post("/api/auth/register", registerHandler);
@@ -222,7 +239,7 @@ apiRouter.get("/api/users", getUsersHandler);
 apiRouter.get("/api/users/detail", getUserByIdHandler);
 
 apiRouter.get("/api/cms/posts", getPostsHandler);
-apiRouter.post("/api/cms/posts", createPostHandler);
+apiRouter.post("/api/cms/posts", createPostHandler);${oauthApiRoutesPart}
 `;
 
 		const userRouterModuleContent = `import { Router } from "../../routes/router";
@@ -419,6 +436,85 @@ export const databaseClient = {
 };
 `;
 
+		const oauthControllerContent = `import { oauthConfig } from "../auth/oauth.config";
+
+function resolveOAuthProvider(requestUrl: string): string {
+  const pathSegments = new URL(requestUrl).pathname.split("/");
+  return pathSegments.at(-2) ?? "google";
+}
+
+export async function oauthLoginHandler(request: Request): Promise<Response> {
+  const provider = resolveOAuthProvider(request.url);
+  const upperProvider = provider.toUpperCase();
+  const clientId = process.env[\`\${upperProvider}_CLIENT_ID\`] ?? "";
+  const redirectUri =
+    process.env[\`\${upperProvider}_REDIRECT_URI\`] ??
+    oauthConfig.buildRedirectUri(provider);
+  const authorizeEndpoint = oauthConfig.authorizeEndpoints[provider] ?? "";
+  const scope = oauthConfig.scopes[provider] ?? "openid profile email";
+
+  const authorizeUrl = \`\${authorizeEndpoint}?client_id=\${encodeURIComponent(clientId)}&redirect_uri=\${encodeURIComponent(redirectUri)}&response_type=code&scope=\${encodeURIComponent(scope)}\`;
+
+  return Response.redirect(authorizeUrl, 302);
+}
+
+export async function oauthCallbackHandler(request: Request): Promise<Response> {
+  const requestUrl = new URL(request.url);
+  const provider = resolveOAuthProvider(request.url);
+  const authorizationCode = requestUrl.searchParams.get("code") ?? "";
+
+  // Real flow: exchange the authorization code for tokens with the provider,
+  // look up or create the user, then issue a Rakta JWT. This stub returns to
+  // the frontend so the round-trip is wired end to end.
+  const frontendRedirect = \`http://localhost:3000/auth/sign-in?oauth=\${provider}&code=\${encodeURIComponent(authorizationCode)}\`;
+
+  return Response.redirect(frontendRedirect, 302);
+}
+`;
+
+		const oauthProvidersList = JSON.stringify(oauthProviders);
+		const oauthConfigContent = `export const oauthConfig = {
+  providers: ${oauthProvidersList},
+  redirectBaseUrl: process.env.OAUTH_REDIRECT_BASE_URL || "http://localhost:4000",
+  authorizeEndpoints: {
+    google: "https://accounts.google.com/o/oauth2/v2/auth",
+    github: "https://github.com/login/oauth/authorize",
+    apple: "https://appleid.apple.com/auth/authorize",
+    microsoft: "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+    discord: "https://discord.com/oauth2/authorize",
+    gitlab: "https://gitlab.com/oauth/authorize",
+    facebook: "https://www.facebook.com/v19.0/dialog/oauth",
+    custom: "CUSTOM_AUTHORIZE_URL",
+  },
+  tokenEndpoints: {
+    google: "https://oauth2.googleapis.com/token",
+    github: "https://github.com/login/oauth/access_token",
+    apple: "https://appleid.apple.com/auth/token",
+    microsoft: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+    discord: "https://discord.com/api/oauth2/token",
+    gitlab: "https://gitlab.com/oauth/token",
+    facebook: "https://graph.facebook.com/v19.0/oauth/access_token",
+    custom: "CUSTOM_TOKEN_URL",
+  },
+  scopes: {
+    google: "openid profile email",
+    github: "read:user user:email",
+    apple: "name email",
+    microsoft: "user.read openid profile email",
+    discord: "identify email",
+    gitlab: "read_user",
+    facebook: "email public_profile",
+    custom: "openid profile email",
+  },
+  buildOAuthUrl(provider: string) {
+    return \`/api/auth/oauth/\${provider}\`;
+  },
+  buildRedirectUri(provider: string) {
+    return \`\${this.redirectBaseUrl}/api/auth/oauth/\${provider}/callback\`;
+  }
+};
+`;
+
 		const resultFiles: ProjectFile[] = [
 			{ path: "backend/package.json", content: packageJsonContent },
 			{ path: "backend/tsconfig.json", content: tsConfigContent },
@@ -453,18 +549,17 @@ export const databaseClient = {
 			},
 		];
 
-		if (hasOAuth) {
-			const oauthConfigContent = `export const oauthConfig = {
-  providers: ${JSON.stringify(oauthProviders)},
-  buildOAuthUrl(provider: string) {
-    return \`/api/auth/oauth/\${provider}\`;
-  }
-};
-`;
-			resultFiles.push({
-				path: "backend/src/auth/oauth.config.ts",
-				content: oauthConfigContent,
-			});
+		if (hasOAuthEnabled) {
+			resultFiles.push(
+				{
+					path: "backend/src/auth/oauth.config.ts",
+					content: oauthConfigContent,
+				},
+				{
+					path: "backend/src/controllers/oauth.controller.ts",
+					content: oauthControllerContent,
+				},
+			);
 		}
 
 		return resultFiles;

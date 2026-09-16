@@ -239,14 +239,14 @@ export default function App() {
 				{/* Hero Section */}
 				<section className="flex flex-col gap-6 items-start">
 					<span className="font-mono text-xs font-bold text-brand-pink border border-brand-pink px-3.5 py-1.5 tracking-wider uppercase bg-brand-pink/5">
-						V1.2.3-STABLE
+						V1.2.6-STABLE
 					</span>
 					<h1 className="font-sans font-extrabold text-white uppercase tracking-tighter leading-[0.85] text-[48px] sm:text-[72px] md:text-[110px]">
 						RAKTA IS READY
 					</h1>
 					<p className="font-sans text-lg text-zinc-400 max-w-2xl leading-relaxed">
-						Your high-performance environment is live. Start building the next
-						era of web.
+						Small in size. Fierce in speed. Alive in every route. Powered by
+						React, Bun, and TypeScript.
 					</p>
 				</section>
 
@@ -257,7 +257,7 @@ export default function App() {
 							ENGINE
 						</span>
 						<span className="font-mono text-xl text-white font-semibold">
-							1.2.3-STABLE
+							1.2.6-STABLE
 						</span>
 					</div>
 					<div className="p-6 md:p-8 flex flex-col gap-2 group hover:bg-white/5 transition-colors">
@@ -281,10 +281,10 @@ export default function App() {
 					</div>
 					<div className="p-6 md:p-8 flex flex-col gap-2 group hover:bg-white/5 transition-colors">
 						<span className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
-							REGION
+							RUNTIME
 						</span>
 						<span className="font-mono text-xl text-white font-semibold">
-							LOCAL
+							BUN / NODE
 						</span>
 					</div>
 				</section>
@@ -1184,8 +1184,18 @@ export default function App() {
 				</section>
 			</main>
 
-			{/* Footer Element */}
-			<footer className="border-t border-white/5 bg-[#0d0e0f] pt-20 pb-12 relative overflow-hidden">
+			{/* Footer Element WITH exclusive background-image hotlink - PRESERVED */}
+			<footer
+				className="border-t border-white/5 bg-[#0d0e0f]/90 pt-20 pb-12 relative overflow-hidden"
+				style={{
+					backgroundImage:
+						"url('https://lh3.googleusercontent.com/aida/AP1WRLt-u2z0I8QQa-lz7v4xuAy7_-SEjx9iK_2gAihPLP2Y7cE8xVyD3_xEQIboq7JajowWZ7gxnxwWwWUrYF-9OVlrfWV92x_58F0PTrOHmqdfMJlyB6-s4n_tB1AuahHSDxyn6wQdledyhbe89hi8dtnB5nHXg5lmmS8o1XuzUPBMqoS9FinRmJWUBCW3fapYfl1pJhBVtx0f8_iBatLEeHoGv5BYZIrFx0uQpURC5uan42Vfg0p3Tqa0WrA')",
+					backgroundRepeat: "repeat",
+					backgroundAttachment: "scroll",
+				}}
+			>
+				<div className="absolute inset-0 bg-[#0d0e0f]/90 z-0 pointer-events-none" />
+
 				<div className="max-w-7xl mx-auto px-6 md:px-10 flex flex-col md:flex-row justify-between items-start gap-16 mb-20 relative z-10">
 					<div className="flex flex-col items-start gap-6 max-w-xs">
 						<div className="flex items-center gap-3">

@@ -1,5 +1,11 @@
 import type { ProjectConfig, ProjectFile } from "../types";
 import type { BackendAdapter, BackendCapabilities } from "./backendAdapter";
+import {
+	buildJsOAuthConfigFile,
+	buildOAuthEnvExample,
+	getOAuthProviders,
+	hasOAuth,
+} from "./oauthSupport";
 
 export const honoCapabilities: BackendCapabilities = {
 	framework: "hono",
@@ -33,6 +39,8 @@ export const honoAdapter: BackendAdapter = {
 	generateFiles(projectConfiguration: ProjectConfig): ProjectFile[] {
 		const projectName = projectConfiguration.projectName;
 		const isSawitDatabase = projectConfiguration.database === "sawitdb";
+		const oauthProviders = getOAuthProviders(projectConfiguration);
+		const hasOAuthEnabled = hasOAuth(projectConfiguration);
 
 		const packageJsonContent = JSON.stringify(
 			{
@@ -58,7 +66,38 @@ export const honoAdapter: BackendAdapter = {
 			2,
 		);
 
-		const indexContent = `import { Hono } from "hono";
+		const oauthHonoImport = hasOAuthEnabled
+			? 'import { oauthConfig } from "./auth/oauth.config";\n'
+			: "";
+
+		const oauthHonoRoutes = hasOAuthEnabled
+			? `
+application.get("/api/auth/oauth/:provider/login", (context) => {
+  const provider = context.req.param("provider") ?? "google";
+  const upperProvider = provider.toUpperCase();
+  const clientId = process.env[\`\${upperProvider}_CLIENT_ID\`] ?? "";
+  const redirectUri =
+    process.env[\`\${upperProvider}_REDIRECT_URI\`] ??
+    oauthConfig.buildRedirectUri(provider);
+  const authorizeEndpoint = oauthConfig.authorizeEndpoints[provider] ?? "";
+  const scope = oauthConfig.scopes[provider] ?? "openid profile email";
+
+  return context.redirect(
+    \`\${authorizeEndpoint}?client_id=\${encodeURIComponent(clientId)}&redirect_uri=\${encodeURIComponent(redirectUri)}&response_type=code&scope=\${encodeURIComponent(scope)}\`,
+  );
+});
+
+application.get("/api/auth/oauth/:provider/callback", (context) => {
+  const provider = context.req.param("provider") ?? "google";
+  const code = context.req.query("code") ?? "";
+  return context.redirect(
+    \`http://localhost:3000/auth/sign-in?oauth=\${provider}&code=\${encodeURIComponent(code)}\`,
+  );
+});
+`
+			: "";
+
+		const indexContent = `${oauthHonoImport}import { Hono } from "hono";
 import { cors } from "hono/cors";
 
 const application = new Hono();
@@ -82,6 +121,17 @@ application.get("/api/users", (context) => {
   ]);
 });
 
+application.get("/api/cms/posts", (context) => {
+  return context.json([
+    { id: "post_1", title: "Welcome to Rakta.js + Hono.js", published: true },
+  ]);
+});
+
+application.post("/api/cms/posts", async (context) => {
+  const body = await context.req.json().catch(() => ({}));
+  return context.json({ id: \`post_\${Date.now()}\`, ...body, published: true }, 201);
+});
+
 ${
 	isSawitDatabase
 		? `application.get("/api/sawit-status", (context) => {
@@ -94,6 +144,7 @@ ${
 		: ""
 }
 
+${oauthHonoRoutes}
 export default {
   port,
   fetch: application.fetch,
@@ -112,9 +163,24 @@ if (typeof Bun !== "undefined") {
 			{ path: "backend/package.json", content: packageJsonContent },
 			{ path: "backend/src/index.ts", content: indexContent },
 			{
+				path: "backend/.env.example",
+				content: buildOAuthEnvExample(
+					"PORT=4000\nNODE_ENV=development\n",
+					oauthProviders,
+				),
+			},
+			{
 				path: "backend/README.md",
 				content: `# ${projectName} Backend (Hono.js)\n\nWeb-standard multi-runtime JavaScript framework.\n\n## Commands\n- Dev: \`bun run dev\`\n- Start: \`bun run start\`\n`,
 			},
+			...(hasOAuthEnabled
+				? [
+						{
+							path: "backend/src/auth/oauth.config.ts",
+							content: buildJsOAuthConfigFile(oauthProviders),
+						},
+					]
+				: []),
 		];
 	},
 };

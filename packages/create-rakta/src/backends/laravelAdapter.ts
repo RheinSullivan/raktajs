@@ -1,5 +1,10 @@
 import type { ProjectConfig, ProjectFile } from "../types";
 import type { BackendAdapter, BackendCapabilities } from "./backendAdapter";
+import {
+	buildOAuthEnvLines,
+	getOAuthProviders,
+	hasOAuth,
+} from "./oauthSupport";
 
 export const laravelCapabilities: BackendCapabilities = {
 	framework: "laravel",
@@ -27,6 +32,8 @@ export const laravelAdapter: BackendAdapter = {
 	generateFiles(projectConfiguration: ProjectConfig): ProjectFile[] {
 		const projectName = projectConfiguration.projectName;
 		const isSawitDatabase = projectConfiguration.database === "sawitdb";
+		const oauthProviders = getOAuthProviders(projectConfiguration);
+		const hasOAuthEnabled = hasOAuth(projectConfiguration);
 
 		const composerContent = JSON.stringify(
 			{
@@ -49,7 +56,7 @@ export const laravelAdapter: BackendAdapter = {
 			2,
 		);
 
-		const environmentContent = `APP_NAME=${projectName}
+		let environmentContent = `APP_NAME=${projectName}
 APP_ENV=local
 APP_KEY=base64:RaktaLaravelGeneratedSecretKey2026=
 APP_DEBUG=true
@@ -64,6 +71,14 @@ DB_PASSWORD=
 ${isSawitDatabase ? "SAWIT_DB_FILE=./storage/database.sawit\n" : ""}
 `;
 
+		if (hasOAuthEnabled) {
+			const oauthEnvLines = buildOAuthEnvLines(
+				oauthProviders,
+				"http://localhost:4000",
+			);
+			environmentContent += `${oauthEnvLines}\n`;
+		}
+
 		const artisanContent = `#!/usr/bin/env php
 <?php
 
@@ -73,12 +88,22 @@ echo "Rakta.js Laravel CLI (Artisan Engine)\n";
 echo "Run 'php artisan serve --port=4000' to start backend development server.\n";
 `;
 
+		const oauthRoutesPart = hasOAuthEnabled
+			? `
+use App\\Http\\Controllers\\OAuthController;
+
+Route::get('/auth/oauth/{provider}/login', [OAuthController::class, 'redirect']);
+Route::get('/auth/oauth/{provider}/callback', [OAuthController::class, 'callback']);
+`
+			: "";
+
 		const apiRoutesContent = `<?php
 
 use Illuminate\\Http\\Request;
 use Illuminate\\Support\\Facades\\Route;
 use App\\Http\\Controllers\\AuthController;
 use App\\Http\\Controllers\\UserController;
+use App\\Http\\Controllers\\CmsController;
 
 Route::get('/health', function () {
     return response()->json([
@@ -92,7 +117,10 @@ Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 
 Route::get('/users', [UserController::class, 'index']);
-`;
+
+Route::get('/cms/posts', [CmsController::class, 'index']);
+Route::post('/cms/posts', [CmsController::class, 'store']);
+${oauthRoutesPart}`;
 
 		const databaseConfigContent = `<?php
 
@@ -174,6 +202,32 @@ class UserController extends Controller
 }
 `;
 
+		const cmsControllerContent = `<?php
+
+namespace App\\Http\\Controllers;
+
+use Illuminate\\Http\\Request;
+
+class CmsController extends Controller
+{
+    public function index()
+    {
+        return response()->json([
+            ['id' => 1, 'title' => 'Welcome to Rakta.js + Laravel', 'published' => true],
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        return response()->json([
+            'id' => time(),
+            'title' => $request->input('title', 'Untitled'),
+            'published' => true,
+        ], 201);
+    }
+}
+`;
+
 		const userModelContent = `<?php
 
 namespace App\\Models;
@@ -221,6 +275,62 @@ return new class extends Migration
 };
 `;
 
+		const oauthControllerContent = `<?php
+
+namespace App\\Http\\Controllers;
+
+use Illuminate\\Http\\Request;
+use Illuminate\\Support\\Facades\\Http;
+
+class OAuthController extends Controller
+{
+    public function redirect(Request $request, string $provider)
+    {
+        $upperProvider = strtoupper($provider);
+        $clientId = env($upperProvider . '_CLIENT_ID', '');
+        $redirectUri = env($upperProvider . '_REDIRECT_URI', 'http://localhost:4000/api/auth/oauth/' . $provider . '/callback');
+
+        $endpoints = [
+            'google' => 'https://accounts.google.com/o/oauth2/v2/auth',
+            'github' => 'https://github.com/login/oauth/authorize',
+            'apple' => 'https://appleid.apple.com/auth/authorize',
+            'microsoft' => 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+            'discord' => 'https://discord.com/oauth2/authorize',
+            'gitlab' => 'https://gitlab.com/oauth/authorize',
+            'facebook' => 'https://www.facebook.com/v19.0/dialog/oauth',
+        ];
+
+        $scopes = [
+            'google' => 'openid profile email',
+            'github' => 'read:user user:email',
+            'apple' => 'name email',
+            'microsoft' => 'user.read openid profile email',
+            'discord' => 'identify email',
+            'gitlab' => 'read_user',
+            'facebook' => 'email public_profile',
+        ];
+
+        $authorizeEndpoint = $endpoints[$provider] ?? '';
+        $scope = $scopes[$provider] ?? 'openid profile email';
+        $authorizeUrl = $authorizeEndpoint
+            . '?client_id=' . urlencode($clientId)
+            . '&redirect_uri=' . urlencode($redirectUri)
+            . '&response_type=code'
+            . '&scope=' . urlencode($scope);
+
+        return redirect()->away($authorizeUrl);
+    }
+
+    public function callback(Request $request, string $provider)
+    {
+        $code = $request->query('code', '');
+        // Real flow: exchange $code for tokens, link or create the user, then
+        // return a Sanctum token. The stub redirects back to the frontend.
+        return redirect()->away('http://localhost:3000/auth/sign-in?oauth=' . $provider . '&code=' . urlencode($code));
+    }
+}
+`;
+
 		return [
 			{ path: "backend/composer.json", content: composerContent },
 			{ path: "backend/artisan", content: artisanContent },
@@ -236,6 +346,10 @@ return new class extends Migration
 				path: "backend/app/Http/Controllers/UserController.php",
 				content: userControllerContent,
 			},
+			{
+				path: "backend/app/Http/Controllers/CmsController.php",
+				content: cmsControllerContent,
+			},
 			{ path: "backend/app/Models/User.php", content: userModelContent },
 			{
 				path: "backend/database/migrations/2026_01_01_000000_create_users_table.php",
@@ -245,6 +359,14 @@ return new class extends Migration
 				path: "backend/README.md",
 				content: `# ${projectName} Backend (Laravel)\n\nLaravel backend generated for Rakta.js fullstack ecosystem.\n\n## Commands\n- Dev: \`php artisan serve --port=4000\`\n`,
 			},
+			...(hasOAuthEnabled
+				? [
+						{
+							path: "backend/app/Http/Controllers/OAuthController.php",
+							content: oauthControllerContent,
+						},
+					]
+				: []),
 		];
 	},
 };

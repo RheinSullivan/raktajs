@@ -20,9 +20,15 @@ function buildImportLines(exports: ReadonlyArray<DiscoveredExport>): string {
 	}
 
 	return exports
-		.map(
-			(discoveredExport) => `export * from "${discoveredExport.importPath}";`,
-		)
+		.flatMap((discoveredExport) => {
+			const lines = [`export * from "${discoveredExport.importPath}";`];
+			if (discoveredExport.hasDefaultExport && discoveredExport.simpleName) {
+				lines.push(
+					`export { default as ${discoveredExport.simpleName} } from "${discoveredExport.importPath}";`,
+				);
+			}
+			return lines;
+		})
 		.join("\n");
 }
 
@@ -33,14 +39,17 @@ function buildGlobalDeclarations(
 
 	const globalLines: string[] = [];
 
+	const declaredNames = new Set<string>();
 	for (const item of exports) {
-		const names = new Set<string>();
-		if (item.name) names.add(item.name);
-		if (item.simpleName) names.add(item.simpleName);
-
-		for (const name of names) {
+		for (const name of item.exportedNames) {
+			if (declaredNames.has(name)) continue;
+			declaredNames.add(name);
+			const exportAccess =
+				item.hasDefaultExport && name === item.simpleName
+					? ".default"
+					: `[${JSON.stringify(name)}]`;
 			globalLines.push(
-				`  const ${name}: typeof import("${item.importPath}").default;`,
+				`  const ${name}: typeof import("${item.importPath}")${exportAccess};`,
 			);
 		}
 	}

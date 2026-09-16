@@ -6,7 +6,12 @@ export {
 	createProfilerReport,
 	inspectAutoImports,
 } from "./analyzer";
-export type { DevIndicatorOptions } from "./devIndicator";
+export type {
+	DevIndicatorOptions,
+	RaktaDevToolsDiagnostic,
+	RaktaDevToolsSeverity,
+	RaktaDevToolsSubject,
+} from "./devIndicator";
 export { mountDevIndicator } from "./devIndicator";
 export type { DevTerminalOptions, RequestLogEntry } from "./terminal";
 export {

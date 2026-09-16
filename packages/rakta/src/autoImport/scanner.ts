@@ -1,4 +1,4 @@
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { basename, extname, join, relative } from "node:path";
 import type { AutoImportKind, DiscoveredExport } from "./types";
 
@@ -76,6 +76,47 @@ function deriveExportName(
 		name: pascalName,
 		simpleName,
 	};
+}
+
+function discoverExportNames(
+	filePath: string,
+	simpleName: string,
+): { exportedNames: string[]; hasDefaultExport: boolean } {
+	const source = readFileSync(filePath, "utf-8");
+	const exportedNames = new Set<string>();
+	const valueExportPattern =
+		/\bexport\s+(?:declare\s+)?(?:const|let|var|function|class|enum)\s+([A-Za-z_$][\w$]*)/g;
+	const namedExportPattern = /\bexport\s*{([^}]+)}/g;
+
+	for (const match of source.matchAll(valueExportPattern)) {
+		const exportName = match[1];
+		if (exportName) exportedNames.add(exportName);
+	}
+
+	for (const match of source.matchAll(namedExportPattern)) {
+		const exportList = match[1];
+		if (!exportList) continue;
+
+		for (const entry of exportList.split(",")) {
+			const value = entry.trim();
+			if (!value) continue;
+			if (value.startsWith("type ")) continue;
+
+			const [originalName, alias] = value.split(/\s+as\s+/);
+			if (!originalName) continue;
+			if (originalName === "default") {
+				if (alias) exportedNames.add(alias.trim());
+				continue;
+			}
+			const exportedName = (alias ?? originalName).trim();
+			if (exportedName) exportedNames.add(exportedName);
+		}
+	}
+
+	const hasDefaultExport = /\bexport\s+default\b/.test(source);
+	if (hasDefaultExport) exportedNames.add(simpleName);
+
+	return { exportedNames: [...exportedNames], hasDefaultExport };
 }
 
 function walkDirectory(
@@ -158,10 +199,12 @@ export function scanForExports(
 				: `./${relativeFromOutput}`;
 
 			const { name, simpleName } = deriveExportName(filePath, directoryAbs);
+			const exportDetails = discoverExportNames(filePath, simpleName);
 
 			discovered.push({
 				name,
 				simpleName,
+				...exportDetails,
 				filePath: relative(options.frontendRoot, filePath).replace(/\\/g, "/"),
 				importPath,
 				kind: detectKind(filePath),

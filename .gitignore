@@ -53,6 +53,7 @@ appArchitecture.md
 monorepoArchitecture.md
 docs/GITHUB_RELEASE_DESCRIPTION.md
 docs/NPM_OPTIMIZATION_STRATEGY.md
+DESIGN.md
 
 # Environment files
 .env

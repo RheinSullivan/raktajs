@@ -275,6 +275,9 @@ export async function buildProject(
 		...(options.seo?.defaultDescription !== undefined
 			? { description: options.seo.defaultDescription }
 			: {}),
+		...(options.seo?.defaultKeywords !== undefined
+			? { keywords: options.seo.defaultKeywords }
+			: {}),
 	};
 
 	// 6. Mode-specific pipeline steps

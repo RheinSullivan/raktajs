@@ -1,7 +1,26 @@
 // biome-ignore-all lint: Template welcome starter Rakta.js
 // Dynamic Bracket Route - Rakta.js: gsap, <click>, react-icons, toast, useRef/useEffect/useCallback
+// Portfolio item detail resolved from the dynamic route.
 
-export default function UserDetailPage() {
+const PROJECT_DETAILS: Record<
+	string,
+	{ name: string; stack: string; year: string }
+> = {
+	"1": {
+		name: "Rakta.js Framework",
+		stack: "Bun · React · TypeScript",
+		year: "2026",
+	},
+	"2": { name: "ShrimpRun Arcade", stack: "JSX · SVG · GSAP", year: "2026" },
+	"3": { name: "Gaman.js Backend", stack: "Bun · SQLite · JWT", year: "2025" },
+	"4": {
+		name: "Pantura Commerce",
+		stack: "Rakta · Edge · Redis",
+		year: "2025",
+	},
+};
+
+export default function PortfolioDetailPage() {
 	const [idParam, setIdParam] = useState("1");
 	const cardRef = useRef<HTMLDivElement>(null);
 
@@ -24,6 +43,12 @@ export default function UserDetailPage() {
 		);
 	}, [idParam]);
 
+	const detail = PROJECT_DETAILS[idParam] ?? {
+		name: "Portfolio Item",
+		stack: "Unknown Stack",
+		year: "—",
+	};
+
 	const handleCopyPayload = useCallback(() => {
 		const payload = JSON.stringify(
 			{
@@ -45,7 +70,7 @@ export default function UserDetailPage() {
 	return (
 		<div className="flex flex-col gap-6 max-w-4xl mx-auto font-sans antialiased">
 			{/* Breadcrumb */}
-			<div className="flex items-center gap-2 font-mono text-xs text-gray-500 uppercase">
+			<div className="flex items-center gap-2 font-mono text-xs text-zinc-500 uppercase">
 				<click
 					to="/dashboard"
 					className="hover:text-brand-pink transition-colors flex items-center gap-1"
@@ -53,19 +78,19 @@ export default function UserDetailPage() {
 					<FaTerminal className="h-3 w-3" /> Dashboard
 				</click>
 				<FaArrowRight className="h-3 w-3" />
-				<span className="text-white">User Record #{idParam}</span>
+				<span className="text-white">Project #{idParam}</span>
 			</div>
 
 			{/* Title */}
 			<div className="border-b border-surface-stroke pb-6">
-				<div className="inline-flex items-center gap-2 border border-brand-pink/30 bg-rose-950/20 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-brand-pink mb-2">
+				<div className="inline-flex items-center gap-2 border border-brand-pink/30 bg-rose-950/20 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-brand-pink mb-2 rounded-md">
 					<span className="h-1.5 w-1.5 animate-pulse rounded-full bg-brand-pink" />
 					DYNAMIC ROUTE MATCHED: /dashboard/[id]
 				</div>
 				<h1 className="font-mono text-3xl font-black uppercase text-white tracking-tight">
-					User Record Details
+					Project Detail
 				</h1>
-				<p className="font-mono text-xs text-gray-400 mt-1">
+				<p className="font-mono text-xs text-zinc-400 mt-1">
 					Inspecting dynamic parameters resolved by Rakta.js router scanner.
 				</p>
 			</div>
@@ -73,43 +98,49 @@ export default function UserDetailPage() {
 			{/* Record Box */}
 			<div
 				ref={cardRef}
-				className="border border-surface-stroke bg-[#080808] p-6 grid gap-4 font-mono text-xs"
+				className="rounded-xl border border-zinc-800 bg-[#100f12] p-6 grid gap-4 font-mono text-xs shadow-lg shadow-black/40"
 			>
 				{[
-					{ label: "PARAM KEY", value: ":id", color: "text-brand-pink" },
-					{ label: "RESOLVED VALUE", value: idParam, color: "text-white" },
+					{ label: "PROJECT NAME", value: detail.name, color: "text-white" },
 					{
-						label: "ROUTER PATTERN",
-						value: "/dashboard/:id",
-						color: "text-brand-green",
+						label: "TECH STACK",
+						value: detail.stack,
+						color: "text-brand-pink",
 					},
+					{ label: "YEAR", value: detail.year, color: "text-brand-green" },
 				].map((row) => (
 					<div
 						key={row.label}
 						className="flex justify-between border-b border-surface-stroke pb-3"
 					>
-						<span className="text-gray-500 uppercase">{row.label}</span>
+						<span className="text-zinc-500 uppercase">{row.label}</span>
 						<span className={`font-bold ${row.color}`}>{row.value}</span>
 					</div>
 				))}
 
+				<div className="mt-4 flex items-center gap-3">
+					<span className="text-zinc-500 uppercase">ROUTER PATTERN</span>
+					<span className="font-bold text-brand-green">/dashboard/:id</span>
+				</div>
+
 				<div className="mt-4">
 					<div className="flex items-center justify-between mb-2">
-						<span className="text-gray-500 uppercase">
+						<span className="text-zinc-500 uppercase">
 							SIMULATED JSON PAYLOAD
 						</span>
 						<button
 							type="button"
 							onClick={handleCopyPayload}
-							className="flex items-center gap-1 border border-surface-stroke bg-zinc-900 px-2 py-1 text-[10px] uppercase text-gray-400 hover:text-white transition-colors cursor-pointer"
+							className="flex items-center gap-1 rounded-md border border-surface-stroke bg-zinc-900 px-2 py-1 text-[10px] uppercase text-zinc-400 hover:text-white transition-colors cursor-pointer"
 						>
 							<FaCopy className="h-2.5 w-2.5" /> Copy
 						</button>
 					</div>
-					<pre className="bg-black border border-surface-stroke p-4 text-brand-green text-[11px] overflow-x-auto">
+					<pre className="bg-black rounded-lg border border-zinc-800 p-4 text-brand-green text-[11px] overflow-x-auto">
 						{JSON.stringify(
 							{
 								id: idParam,
+								name: detail.name,
 								matchedPattern: "/dashboard/:id",
 								timestamp: new Date().toISOString(),
 								status: "SUCCESS",
@@ -126,7 +157,7 @@ export default function UserDetailPage() {
 			<div>
 				<click
 					to="/dashboard"
-					className="inline-flex items-center gap-2 border border-brand-pink bg-brand-pink px-6 py-3 font-mono text-xs font-bold uppercase text-white hover:bg-white hover:text-black transition-colors"
+					className="inline-flex items-center gap-2 rounded-md border border-brand-pink bg-brand-pink px-6 py-3 font-mono text-xs font-bold uppercase text-white hover:bg-white hover:text-black transition-colors"
 				>
 					<FaArrowRight className="h-3 w-3 rotate-180" /> Back to Dashboard
 				</click>

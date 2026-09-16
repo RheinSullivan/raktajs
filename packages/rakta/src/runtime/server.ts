@@ -176,6 +176,7 @@ async function renderSsrHtml(
 		appName,
 		title: seo.defaultTitle,
 		description: seo.defaultDescription,
+		keywords: seo.defaultKeywords,
 		scriptPath,
 		cssPath,
 		lang: "en",

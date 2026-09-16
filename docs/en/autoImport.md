@@ -116,6 +116,141 @@ import { lengkoState, empalEffect } from "raktajs/hooks";
 
 ---
 
+## Using Auto Import as a Standalone Library
+
+TrusmiThread's generator is **not locked inside Rakta.js**. It is a small, framework-agnostic Node.js API that any React-based project can call directly — no Rakta runtime, no `rakta.config.ts`, and no Rakta server required. The whole engine depends only on Node's `fs` and `path` modules.
+
+### Install
+
+```bash
+bun add raktajs
+# or: npm install raktajs
+```
+
+### Library API
+
+Import from the `raktajs/autoImport` subpath:
+
+| Export | Description |
+| --- | --- |
+| `generateAutoImports(options)` | Scans your configured directories and writes a typed re-export barrel (plus optional global type declarations). Returns an `AutoImportManifest`. |
+| `scanForExports(options)` | Scans directories and returns raw `DiscoveredExport[]` without writing anything to disk. |
+| `printAutoImportSummary(manifest)` | Prints a formatted summary of the discovered exports. |
+
+`AutoImportGeneratorOptions`:
+
+| Option | Type | Notes |
+| --- | --- | --- |
+| `frontendRoot` | `string` | Absolute path to your project root. |
+| `directories` | `string[]` | Directories (relative to `frontendRoot`) to scan. |
+| `outputDirectory` | `string` | Where the generated files are written (relative to `frontendRoot`). |
+| `extensions` | `string[]` | Optional file extensions to scan. Defaults to `.ts`, `.tsx`, `.js`, `.jsx`. |
+| `generateDts` | `boolean` | Also write `autoImports.d.ts` with `declare global` type declarations. |
+
+### What Gets Generated
+
+Running the generator with `frontendRoot: process.cwd()`, `directories: ["components", "lib"]`, `outputDirectory: ".autoimports"`, and `generateDts: true` produces:
+
+- `.autoimports/autoImports.ts` — a typed barrel that re-exports every discovered module:
+
+  ```ts
+  export * from "../src/components/Navbar";
+  export { default as Navbar } from "../src/components/Navbar";
+  ```
+
+- `.autoimports/autoImports.d.ts` — the same barrel plus a `declare global` block, so the discovered symbols light up in IntelliSense across your entire project, even before you write an import.
+
+### Framework Integration Examples
+
+The idea is the same everywhere: run generation at the start of your dev/build lifecycle, then import from the generated barrel.
+
+#### React + Vite
+
+`package.json`:
+
+```json
+{
+  "scripts": {
+    "predev": "node ./scripts/autoimport.mjs",
+    "prebuild": "node ./scripts/autoimport.mjs"
+  }
+}
+```
+
+`scripts/autoimport.mjs`:
+
+```js
+import { generateAutoImports, printAutoImportSummary } from "raktajs/autoImport";
+
+const manifest = generateAutoImports({
+  frontendRoot: process.cwd(),
+  directories: ["src/components", "src/lib", "src/stores", "src/schemas"],
+  outputDirectory: ".autoimports",
+  generateDts: true,
+});
+
+printAutoImportSummary(manifest);
+```
+
+Then use it in any component:
+
+```tsx
+import { Navbar, useCartStore, slugify } from "../../.autoimports/autoImports";
+```
+
+#### Next.js (App Router)
+
+Run the same script via `predev` / `prebuild` (or `postinstall` for fresh clones), then import from the barrel in server components, client components, layouts, and route handlers:
+
+```tsx
+import { userSchema, http } from "@/components/.autoimports/autoImports";
+```
+
+Server-only utilities (e.g. database helpers) can flow through your Next.js barrel without leaking into the client bundle — apply the usual `"server-only"` convention just like any other module.
+
+#### Remix
+
+Wire `predev` / `prebuild` to the generator and import helpers, stores, and schemas from the barrel inside `loaders`, `actions`, and components — the exports are framework-agnostic.
+
+#### Gatsby
+
+Run generation during bootstrap from `gatsby-node.js` so the barrel exists before GraphQL typegen and page compilation:
+
+```js
+// gatsby-node.js
+const { generateAutoImports } = require("raktajs/autoImport");
+
+exports.onPreBootstrap = () => {
+  generateAutoImports({
+    frontendRoot: process.cwd(),
+    directories: ["src/components", "src/lib"],
+    outputDirectory: ".autoimports",
+    generateDts: true,
+  });
+};
+```
+
+Then import from the barrel in pages and component shadowing.
+
+#### Expo / React Native
+
+The engine is DOM-free and Node-only, so it works fine in React Native tooling. Call it from a `prestart` / `preexport` script and use the barrel for helpers, stores, schemas, and shared data. Prefer explicit barrel imports on React Native — JSX globals are not a resolve-time feature of native bundlers the way they are on the web.
+
+### Typed Barrel vs. True Zero-Import
+
+Two developer-experience levels:
+
+- **Typed barrel (universal).** Import from the generated `autoImports.ts`. This works in every React-based framework and gives full IntelliSense. All examples above use this.
+- **True zero-import JSX** (`<Navbar />` with no import line). This requires a compile-time step that injects imports into every file. Rakta.js ships that transformer inside its own build and dev server. In other frameworks the same DX needs a bundler or Babel plugin that consumes `generateAutoImports` output. The generated `autoImports.d.ts` gives you global *type* declarations everywhere, but runtime resolution must be injected by your bundler.
+
+### Notes
+
+- Re-run generation whenever you add, rename, or delete files. Hook it into `postinstall` as well.
+- Never edit the generated files — every run overwrites them.
+- Keep `directories` focused on the folders you actually auto-import; a lean barrel compiles faster.
+
+---
+
 ## Related Docs
 
 - [`gettingStarted.md`](./gettingStarted.md) - Create your first Rakta.js app
